@@ -10,22 +10,33 @@
     overflow: hidden;
 }
 
-h2{
-  font-size: 20px;
+// Self-clearing container
+
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
 }
+
 
 // Colors
 
 $sidebarBG: #f4e8d1;
-$mainBG: tint($sidebarBG, 75);
+$mainBG:    tint($sidebarBG, 75);
 
-$brown: #693c10;
-$orange: #e94e1b;
-$yellow: #f9b233;
-$green: #0b8e36;
-$red: #be1522;
-$blue: #312783;
-$black: #121212;
+$brown:     #693c10;
+$orange:    #e94e1b;
+$yellow:    #f9b233;
+$green:     #0b8e36;
+$red:       #be1522;
+$blue:      #312783;
+$black:     #121212;
+
+$bgBlue:    #DAEDF7;
+$bgGreen:   tint($green, 50);
+$bgYellow:  tint($yellow, 30);
+$bgRed:     tint($red, 50);
+$bgBrown:   tint($brown, 65);
 
 // Type
 
@@ -34,13 +45,17 @@ body{
   background: $mainBG;
 }
 
+h2{
+  font-size: 20px;
+}
+
 a {
-    text-decoration: none;
-    color: $brown;
-    //@include single-transition(color, 0.3s, ease-out, 0s);
-    position: relative;
-    padding: .5em;
-    margin: -.5em;
+  text-decoration: none;
+  color: $brown;
+  //@include single-transition(color, 0.3s, ease-out, 0s);
+  position: relative;
+  padding: .5em;
+  margin: -.5em;
 }
 
 a:hover {
@@ -49,25 +64,57 @@ a:hover {
   text-decoration: none;
 }
 
-.badge{
-  background: tint($brown, 65);
-  text-shadow: 2px 2px $brown;
-  &.badge-success{
-    background: tint($green, 50);
-  }
-  &.badge-warning{
-    background: tint($yellow, 30);
-  }
-  &.badge-error{
-    background: tint($red, 30);
-  }
-  &.badge-info{
-    background: tint($blue, 50);
-  }
-  &.badge-inverse{
-    background: $black;
+// Notification badges, panels and alerts
 
-  }
+@mixin notificationsColors($bgColor) {
+  background: $bgColor;
+  color: shade($bgColor, 50);
+  border-color: shade($bgColor, 50);
+}
+
+.badge{
+  letter-spacing: 1px;
+  padding: 1px 8px 2px;
+  border: 1px solid white;
+  @include notificationsColors($bgBrown);
+}
+
+.panel{
+  letter-spacing: 1px;
+  @include notificationsColors($bgBrown);
+}
+
+.alert{
+  padding: 15px 35px 8px 14px;
+  border: 4px solid white;
+  @include border-radius(10px);
+  @include notificationsColors($bgBrown);
+}
+
+.badge-success,
+.alert-success,
+.panel.success{
+  @include notificationsColors($bgGreen);
+}
+.badge-warning,
+.alert-warning,
+.panel.warning{
+  @include notificationsColors($bgYellow);
+}
+.badge-error,
+.alert-error,
+.panel.error {
+ @include notificationsColors($bgRed);
+}
+.badge-info,
+.alert-info,
+.panel.info{
+  @include notificationsColors($bgBlue);
+}
+.badge-inverse,
+.alert-inverse,
+.panel.inverse{
+  background: $black;
 }
 
 // Lists
@@ -137,7 +184,32 @@ nav{
   }
 }
 
+.row-fluid.statistics{
+  max-height: 98px;
+  margin-bottom: 15px;
+}
+
+.panel{
+  background: $yellow;
+  border: 4px solid tint($yellow, 20);
+  @include border-radius(10px);
+  padding:6px 10px;
+  span{
+    font-size: 12px;
+  }
+  h1{
+    text-align: center;
+    margin: 0 0 20px 0;
+  }
+}
+
 h2.top{
   border-bottom: 1px solid $brown;
   padding-bottom: 5px;
+  margin-bottom: 20px;
+}
+
+h3.top{
+  margin-top: -16px;
+  padding-top: 0;
 }
