@@ -1,0 +1,1076 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"conta",
+				"contactPage"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"touch",
+				"touchend"
+			],
+			[
+				"phone",
+				"phoneControls"
+			],
+			[
+				"border",
+				"border-bottom"
+			],
+			[
+				"margin",
+				"margin-top"
+			],
+			[
+				"li",
+				"list-style"
+			],
+			[
+				"mouse",
+				"mouseover  (function)"
+			],
+			[
+				"file",
+				"filesParsed"
+			],
+			[
+				"text",
+				"text-align"
+			],
+			[
+				"bor",
+				"border-radius"
+			],
+			[
+				"you",
+				"youtubeEmbed"
+			],
+			[
+				"youtube",
+				"youtubeEmbed"
+			],
+			[
+				"yu",
+				"youtubeEmbed"
+			],
+			[
+				"yout",
+				"youtubeEmbed"
+			],
+			[
+				"curr",
+				"currentItem"
+			],
+			[
+				"wait",
+				"waitClass"
+			],
+			[
+				"out",
+				"outsideWrapper"
+			],
+			[
+				"nav",
+				"naviBreakpoint"
+			],
+			[
+				"navi",
+				"naviBreakpoint  (variable)"
+			],
+			[
+				"fle",
+				"flexslider"
+			],
+			[
+				"for",
+				"forceEndIntro"
+			],
+			[
+				"desc",
+				"description"
+			],
+			[
+				"index",
+				"indexOf"
+			],
+			[
+				"sour",
+				"source_file"
+			],
+			[
+				"error",
+				"error_log"
+			],
+			[
+				"init",
+				"initJoop"
+			],
+			[
+				"show",
+				"showStorefinder"
+			],
+			[
+				"glo",
+				"globalShopURL"
+			],
+			[
+				"sho",
+				"showShoplink"
+			],
+			[
+				"hide",
+				"hideSpinner"
+			],
+			[
+				"fixed",
+				"fixedInfoWidth"
+			],
+			[
+				"curren",
+				"currentItem"
+			],
+			[
+				"galer",
+				"galleryBreakpoint"
+			],
+			[
+				"image",
+				"imageContainer"
+			],
+			[
+				"parent",
+				"parentItem"
+			],
+			[
+				"class",
+				"classList  (variable)"
+			],
+			[
+				"clos",
+				"closest"
+			],
+			[
+				"all",
+				"allHaveWidth"
+			],
+			[
+				"allha",
+				"allHaveWidth"
+			],
+			[
+				"padding-",
+				"padding-right"
+			],
+			[
+				"no",
+				"no-repeat  (value)"
+			],
+			[
+				"de",
+				"debug"
+			],
+			[
+				"block",
+				"blockHashChange"
+			],
+			[
+				"font-",
+				"font-style"
+			],
+			[
+				"center",
+				"centerTeaserBoxes"
+			],
+			[
+				"fit",
+				"fitFlexslider"
+			],
+			[
+				"flex",
+				"flexslider"
+			],
+			[
+				"remove",
+				"removeClass  (function)"
+			],
+			[
+				"get",
+				"getHashes"
+			],
+			[
+				"teas",
+				"teaserMargin"
+			],
+			[
+				"load",
+				"loadAppropriateImages"
+			],
+			[
+				"inli",
+				"inlineBreakpoint"
+			],
+			[
+				"pre",
+				"preloading"
+			],
+			[
+				"margi",
+				"topNaviMargin"
+			],
+			[
+				"dark",
+				"darkBlue"
+			],
+			[
+				"scroll",
+				"scrollIsFake"
+			],
+			[
+				"fullsc",
+				"fullscreenImage"
+			],
+			[
+				"outer",
+				"outsideWrapper"
+			],
+			[
+				"stage",
+				"stageMargin"
+			],
+			[
+				"add",
+				"addClass  (function)"
+			],
+			[
+				"next",
+				"nextfunction"
+			],
+			[
+				"update",
+				"updateGalleryLayout"
+			],
+			[
+				"run",
+				"runWhenElementHasWidth"
+			],
+			[
+				"remo",
+				"removeClass  (function)"
+			],
+			[
+				"up",
+				"updateGalleryLayout"
+			],
+			[
+				"fade",
+				"fadeIn"
+			],
+			[
+				"has",
+				"hasClass  (function)"
+			],
+			[
+				"real",
+				"realScrolling"
+			],
+			[
+				"into",
+				"introComplete"
+			],
+			[
+				"tea",
+				"teaserMargin"
+			],
+			[
+				"original",
+				"original-width"
+			],
+			[
+				"re",
+				"redrawGalleryLayout"
+			],
+			[
+				"upda",
+				"updateGalleryLayout"
+			],
+			[
+				"blurr",
+				"blurredImage"
+			],
+			[
+				"gallery",
+				"galleryBreakpoint"
+			],
+			[
+				"zoo",
+				"zoompos"
+			],
+			[
+				"res",
+				"resizeWhenElementHasWidth"
+			],
+			[
+				"cl",
+				"cleanPerma"
+			],
+			[
+				"close",
+				"closeFullscreen"
+			],
+			[
+				"full",
+				"fullscreenImage"
+			],
+			[
+				"int",
+				"introComplete"
+			],
+			[
+				"dar",
+				"darkestBlue"
+			],
+			[
+				"back",
+				"background"
+			],
+			[
+				"galler",
+				"galleryBreakpoint"
+			],
+			[
+				"header",
+				"headerTitle"
+			],
+			[
+				"str_",
+				"str_replace"
+			],
+			[
+				"repla",
+				"replaceImageNumberInHashWith"
+			],
+			[
+				"new",
+				"newImageNumber"
+			],
+			[
+				"old",
+				"oldScrollPos"
+			],
+			[
+				"parse",
+				"parseInt"
+			],
+			[
+				"clone",
+				"clonedElement"
+			],
+			[
+				"shop",
+				"shopLinks"
+			],
+			[
+				"blo",
+				"blockScrolling"
+			],
+			[
+				"vert",
+				"vertical-align"
+			],
+			[
+				"blur",
+				"blurDir"
+			],
+			[
+				"pos",
+				"position"
+			],
+			[
+				"hasC",
+				"hasClass"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"inl",
+				"inlineBreakpoint"
+			],
+			[
+				"prev",
+				"previous"
+			],
+			[
+				"mar",
+				"margin-left"
+			],
+			[
+				"MARGIN",
+				"margin-bottom"
+			],
+			[
+				"deb",
+				"debouncedScroll"
+			],
+			[
+				"flex-a",
+				"flex-active-slide"
+			],
+			[
+				"on",
+				"onResize"
+			],
+			[
+				"over",
+				"overflow:   (property)"
+			],
+			[
+				"make",
+				"makeInline"
+			],
+			[
+				"teaser",
+				"teaserContainer"
+			],
+			[
+				"arr",
+				"arrowTarget"
+			],
+			[
+				"set",
+				"setPositions"
+			],
+			[
+				"txt",
+				"text-align"
+			],
+			[
+				"menu",
+				"menuTop"
+			],
+			[
+				"se",
+				"setPositions"
+			],
+			[
+				"max",
+				"maxWrapperWidth"
+			],
+			[
+				"padding",
+				"padding-left"
+			],
+			[
+				"ima",
+				"imageLocation"
+			],
+			[
+				"colum",
+				"columnPadding"
+			],
+			[
+				"vi",
+				"viewportHeight"
+			],
+			[
+				"col",
+				"columnWidth"
+			],
+			[
+				"small",
+				"smallGutter"
+			],
+			[
+				"smal",
+				"smallGutter"
+			],
+			[
+				"gutter",
+				"smallGutter"
+			],
+			[
+				"view",
+				"viewportWidth"
+			],
+			[
+				"base",
+				"basename"
+			],
+			[
+				"news",
+				"newsItemView"
+			],
+			[
+				"eve",
+				"event"
+			],
+			[
+				"hover",
+				"hoverBG"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 37,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"lin",
+				"SublimeLinter: Disable Linting"
+			],
+			[
+				"pack",
+				"Package Control: Discover Packages"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Discover Packages"
+			],
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"disc",
+				"Package Control: Discover Packages"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 593.0
+	},
+	"console":
+	{
+		"height": 115.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/espy/Sites/Atem/criticalobjects.info/app/scripts/criticalobjects.js",
+		"/Users/espy/Sites/tillwiedeck.com/wp-content/themes/till/old_mediaqueries.css",
+		"/Users/espy/Sites/tillwiedeck.com/Arbeitsdaten/webfontkit-20130104-143501.zip Folder/stylesheet.css",
+		"/Users/espy/Sites/tillwiedeck.com/wp-content/themes/till/secondary_nav.php",
+		"/Users/espy/Sites/tillwiedeck.com/wp-content/themes/till/functions.php",
+		"/Users/espy/Sites/tillwiedeck.com/wp-content/themes/till/page-publications.php",
+		"/Users/espy/Sites/tillwiedeck.com/wp-content/themes/till/header.php",
+		"/Users/espy/Sites/tillwiedeck.com/wp-config.php",
+		"/private/etc/apache2/extra/httpd-vhosts.conf",
+		"/private/etc/apache2/httpd.conf",
+		"/Users/espy/Library/Caches/Cleanup At Startup/Transmit/C0B2E0D3-E666-4AC6-A81E-B6DEB6B1501B/index.php",
+		"/Users/espy/.profile",
+		"/Users/espy/Sites/Joop/wordpress/wp-config-prod-staging.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/_/js/joop.min.js",
+		"/Users/espy/Sites/stoermer/app/wp-config.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/style.css",
+		"/Users/espy/Sites/Joop/Arbeitsdaten Rebuild/svg/joop-icons60732/style.css",
+		"/Users/espy/Sites/Joop/wordpress/.htaccess",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/header.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/js/smp.js",
+		"/Users/espy/Sites/padberg/assets/js/code.js",
+		"/Users/espy/Sites/Joop/wordpress/wp-config-staging.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/_/js/functions.js",
+		"/Users/espy/Sites/Joop/Arbeitsdaten Rebuild/svg/joop-icons37427/style.css",
+		"/Users/espy/Sites/Joop/Arbeitsdaten Rebuild/svg/joop-icons9546/style.css",
+		"/Users/espy/Sites/Joop/Arbeitsdaten Rebuild/svg/joop-icons92480/style.css",
+		"/Users/espy/Sites/Joop/Arbeitsdaten Rebuild/svg/icomoon52376/style.css",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/_/styles/flexslider.css",
+		"/Users/espy/Sites/Joop/wordpress/adaptive-images.php",
+		"/Users/espy/Sites/Atem/criticalobjects.info/app/index.html",
+		"/Users/espy/Sites/Atem/criticalobjects.info/app/.htaccess",
+		"/Users/espy/Sites/padberg/src/styles.less",
+		"/Users/espy/Sites/Joop/Arbeitsdaten Rebuild/proxima/webfontkit-20121120-043114.zip Folder/stylesheet.css",
+		"/Users/espy/Sites/Atem/temp/app/scripts/atem.js",
+		"/Users/espy/Sites/Joop/wordpress/wp-includes/nav-menu-template.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/_/blur.php",
+		"/Users/espy/Sites/Joop/proto_startseite_01/index.html",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/gallery.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/overview.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/functions.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/twentyeleven/single.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/twentyeleven/inc/theme-options.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/twentyeleven/functions.php",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/joop/library/css/style.css",
+		"/Users/espy/Sites/Joop/wordpress/wp-content/themes/twentyeleven/content-single.php",
+		"/usr/local/lib/node_modules/yeoman/tasks/server.js",
+		"/Users/espy/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/css/smp.css",
+		"/Users/espy/Sites/SandyCamScraper/index.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/plugins/qtranslate/qtranslate_javascript.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/loop.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/index.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/partners.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/partner.php",
+		"/Users/espy/Sites/stoermer/app/.htaccess",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/js/jquery.history.js",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/js/json2.js",
+		"/Users/espy/Sites/nabis/dev/js/nabis.js",
+		"/Users/espy/Sites/padberg/application/view/start.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/plugins/qtranslate/qtranslate_wphacks.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/functions.php",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/style.css",
+		"/Users/espy/Sites/Atem/temp/app/index.html",
+		"/Users/espy/Sites/stoermer/app/wp-content/themes/SMP/header.php",
+		"/Users/espy/Sites/mbshare_productizer/config/database.yml",
+		"/Users/espy/Sites/mbshare_productizer/app/models/app.rb",
+		"/Users/espy/Library/Application Support/Postgres/var/postgresql.conf",
+		"/Users/espy/Sites/mbshare_productizer/config/environment.rb",
+		"/Users/espy/Sites/mbshare_productizer/config/environments/development.rb",
+		"/Users/espy/Sites/mbshare_productizer/db/resources.json",
+		"/Users/espy/Sites/mbshare_productizer/app/assets/javascripts/edit.js",
+		"/Users/espy/Sites/mbshare_productizer/app/views/cities/index.html.erb",
+		"/Users/espy/Sites/mbshare_productizer/app/views/moods/index.html.erb",
+		"/Users/espy/Sites/mbshare_productizer/app/views/vehicles/index.html.erb",
+		"/Users/espy/Sites/mbshare_productizer/app/views/homes/_resources.html.erb",
+		"/Users/espy/Sites/mbshare_arbeitsdaten/mbshare/app/assets/stylesheets/_base.scss",
+		"/Users/espy/Sites/mbshare_productizer/app/assets/javascripts/application_editor.widgets.js",
+		"/Users/espy/Sites/mbshare_productizer/app/assets/javascripts/productorizer.js",
+		"/Users/espy/Sites/mbshare_arbeitsdaten/mbshare/app/assets/stylesheets/app_editor.scss",
+		"/Users/espy/Sites/mbshare_arbeitsdaten/mbshare/app/assets/stylesheets/_app_config_backend.scss",
+		"/Users/espy/Sites/mbshare_productizer/app/assets/javascripts/application_editor.js",
+		"/Users/espy/Sites/mbshare_productizer/app/controllers/share_images_controller.rb",
+		"/Users/espy/Sites/mbshare_productizer/app/controllers/homes_controller.rb",
+		"/Users/espy/Sites/mbshare_productizer/app/models/teaser.rb",
+		"/Users/espy/Sites/mbshare_arbeitsdaten/mbshare/app/assets/stylesheets/application.scss",
+		"/Users/espy/Sites/mbshare_productizer/app/views/teasers/edit.html.erb",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/polaroid.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/login.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/displayPhoto.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/page.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/gallery.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/common/sliding.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/photo.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/Exception/error.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/piktomat.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/photoSession.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/gettoken.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/base.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/republicaWhichDay.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/loggedOut.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/loggedIn.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/facebookTab.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/timeline.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/news.html.twig",
+		"/Users/espy/02 - Arbeit/SPD/3_HTML/current/js/utilities.js",
+		"/Users/espy/02 - Arbeit/SPD/3_HTML/current/js/application.js",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/user.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Controller/User/FacebookTabController.php",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Controller/User/DefaultController.php",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/views/User/default.html.twig",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Controller/User/PageController.php",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Controller/User/NewsController.php",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Controller/User/GalleryController.php",
+		"/Users/espy/Sites/tweetomat/static/index.html",
+		"/Users/espy/Sites/tweetomat/tweetomat/app/config/parameters.ini",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Controller/User/UserController.php",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Entity/Tweetomat/PhotoSession.php",
+		"/Users/espy/Sites/tweetomat/tweetomat/app/config/config.yml",
+		"/Users/espy/Sites/tweetomat/static/js/tweetomat.js",
+		"/Users/espy/Sites/tweetomat/tweetomat/app/logs/prod.log",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Resources/config/routing/user.yml",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Controller/User/UserAccessController.php",
+		"/Users/espy/Sites/tweetomat/tweetomat/src/Vodafone/TweetomatBundle/Service/WebContent.php",
+		"/Users/espy/Sites/tweetomat/static/source/css/global.less",
+		"/Users/espy/Sites/tweetomat/static/source/css/layout.less",
+		"/private/etc/php.ini",
+		"/Users/espy/Sites/tweetomat/tweetomat/app/config/parameters.ini.dist",
+		"/Users/espy/Sites/tweetomat/tweetomat/vendor/doctrine-mongodb/lib/Doctrine/MongoDB/Connection.php"
+	],
+	"find":
+	{
+		"height": 33.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"contactpage",
+			"45",
+			"phoneControls",
+			"phonePrev",
+			"100",
+			"postScroll",
+			"phoneNext",
+			"848",
+			"693",
+			"primary",
+			"click",
+			"url",
+			"margin",
+			"-2",
+			"next",
+			"imprint",
+			"overlay",
+			"profile",
+			"cufon",
+			"archive",
+			"Projects",
+			"projects",
+			"1018",
+			"410px",
+			"693",
+			"978",
+			"52",
+			"652px",
+			"652",
+			"652px",
+			"font-size",
+			"indic",
+			"144",
+			"div",
+			"w",
+			"978px",
+			"sidebar",
+			"imageNumber",
+			"date",
+			"typefaces",
+			".index",
+			"title",
+			".index",
+			"index",
+			"console.l",
+			"date",
+			"e",
+			"evt",
+			"content",
+			"handleFileSelect",
+			"false",
+			"bind",
+			"addEventListener",
+			"dropZone",
+			"console.log",
+			".menu",
+			"menu",
+			"wait",
+			"preload",
+			"info.fixed",
+			"console.log",
+			".fixed",
+			"preloading",
+			".info.fixed",
+			"preloading",
+			".fixed",
+			"removeClass('prel",
+			"important",
+			"fixme",
+			"todo",
+			"item",
+			"data('src",
+			"loadAppropriateImage",
+			"data('src",
+			"< naviBreakpoint",
+			"naviBreakpoint",
+			"3em",
+			"3m",
+			"stagenext",
+			"slider",
+			"teasercontainer",
+			"console.l",
+			"hidespinner",
+			"console.log",
+			"endofintro",
+			"runWhenElementHasWidth",
+			"hideSpinner()",
+			"footer",
+			"console.log",
+			"top",
+			"square",
+			"h1.title",
+			"description",
+			"before",
+			"info",
+			"clone",
+			"cö",
+			"globalShopURL",
+			"'<li class=\"shopLink\"><a href=\"'",
+			"linkBoxContent",
+			"rror_log",
+			"console.log",
+			"body.full",
+			"fullscreenImage",
+			"$browser_cache",
+			"ignore",
+			"erro",
+			"source_file",
+			"requested_uri",
+			"history",
+			"fullscreen",
+			"fullscreenimage",
+			"footer",
+			"flexslider",
+			"menu",
+			"shoplinks",
+			"console",
+			"spinner",
+			"if(spinner) spinner.stop();",
+			"current-menu-item,",
+			"menu",
+			"current-menu-item",
+			"spinner",
+			"height",
+			"info",
+			"imagenavi",
+			"shoplinks",
+			"imagenavi"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "README.md",
+					"settings":
+					{
+						"buffer_size": 37,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								37,
+								37
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"encoding_helper_confidence": 1.0,
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_helper_encoding_sublime": "UTF-8",
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"jquery": true,
+								"regexdash": true,
+								"strict": false,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": true,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Markdown/Markdown.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 27.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"part",
+				"partners.php"
+			],
+			[
+				"index",
+				"index.php"
+			],
+			[
+				"func",
+				"functions.php"
+			],
+			[
+				"human",
+				"humans.txt"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 210.0,
+	"status_bar_visible": true
+}
