@@ -10,6 +10,10 @@
     overflow: hidden;
 }
 
+h2{
+  font-size: 20px;
+}
+
 // Colors
 
 $sidebarBG: #f4e8d1;
@@ -47,6 +51,7 @@ a:hover {
 
 .badge{
   background: tint($brown, 65);
+  text-shadow: 2px 2px $brown;
   &.badge-success{
     background: tint($green, 50);
   }
@@ -67,12 +72,6 @@ a:hover {
 
 // Lists
 
-ul{
-  margin-left: 0;
-  li{
-    list-style: none;
-  }
-}
 
 // Sidebar
 
@@ -105,6 +104,7 @@ nav{
     padding-top: 10px;
     li{
       line-height: 30px;
+      list-style: none;
       a{
         display: block;
       }
@@ -127,4 +127,17 @@ nav{
 
 .main{
   width:100%;
+  padding: 73px 20px 72px 240px;
+  .content{
+    max-width: 52em;
+    margin: 0;
+    &.centered{
+      margin: 0 auto;
+    }
+  }
+}
+
+h2.top{
+  border-bottom: 1px solid $brown;
+  padding-bottom: 5px;
 }
