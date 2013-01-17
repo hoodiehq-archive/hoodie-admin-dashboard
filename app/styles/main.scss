@@ -1,1 +1,130 @@
 @import "compass_twitter_bootstrap";
+
+/* apply a natural box layout model to all elements */
+* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+// Image replacement / Hide text
+.ir {
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+// Colors
+
+$sidebarBG: #f4e8d1;
+$mainBG: tint($sidebarBG, 75);
+
+$brown: #693c10;
+$orange: #e94e1b;
+$yellow: #f9b233;
+$green: #0b8e36;
+$red: #be1522;
+$blue: #312783;
+$black: #121212;
+
+// Type
+
+body{
+  color: $brown;
+  background: $mainBG;
+}
+
+a {
+    text-decoration: none;
+    color: $brown;
+    //@include single-transition(color, 0.3s, ease-out, 0s);
+    position: relative;
+    padding: .5em;
+    margin: -.5em;
+}
+
+a:hover {
+  color: $brown;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.badge{
+  background: tint($brown, 65);
+  &.badge-success{
+    background: tint($green, 50);
+  }
+  &.badge-warning{
+    background: tint($yellow, 30);
+  }
+  &.badge-error{
+    background: tint($red, 30);
+  }
+  &.badge-info{
+    background: tint($blue, 50);
+  }
+  &.badge-inverse{
+    background: $black;
+
+  }
+}
+
+// Lists
+
+ul{
+  margin-left: 0;
+  li{
+    list-style: none;
+  }
+}
+
+// Sidebar
+
+.sidebar{
+  background: $sidebarBG;
+  width: 220px;
+  overflow: hidden;
+  height:2000px;
+  float:left;
+  border-right: 4px solid shade($sidebarBG, 10);
+  header{
+    margin: 0 20px;
+    .logo{
+      background: url('../images/hoodie_pocket_logo_176.png') no-repeat;
+      height: 53px;
+      margin-top: 20px;
+    }
+    h1{
+      margin-top: 5px;
+    }
+  }
+}
+
+// Navigation
+
+nav{
+  ul{
+    border-top: 1px solid $brown;
+    margin: 10px 20px 0;
+    padding-top: 10px;
+    li{
+      line-height: 30px;
+      a{
+        display: block;
+      }
+      .badge{
+        float:right;
+        padding-top: 2px;
+        margin-top: 6px;
+        min-height: 1.5em;
+      }
+      &.active{
+        a{
+          font-weight: 800;
+        }
+      }
+    }
+  }
+}
+
+// Main
+
+.main{
+  width:100%;
+}

@@ -12,24 +12,35 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        
+
         <link rel="stylesheet" href="styles/main.css">
         <script src="scripts/vendor/modernizr.min.js"></script>
     </head>
     <body>
-    <div class="container" style="margin-top:50px">
-        <div class="hero-unit">
-            <h1>Wotcha!</h1>
-            <p>You now have</p>
-            <ul>
-                <li>HTML5 Boilerplate</li>
-                <li>Twitter Bootstrap</li>
-                <li>Twitter Bootstrap plugins</li>
-            </ul>
-            <p>installed.</p>
-            <h3>Enjoy coding! - Yeoman</h3>
-        </div>
+
+    <div class="sidebar">
+      <header>
+        <div class="logo ir">Hoodie Pocket</div>
+        <h1><a href="">Minutes.io</a></h1>
+      </header>
+      <nav>
+        <ul class="core">
+          <li><a href="">Users<span class="badge">1</span></a></li>
+          <li><a href="">Data</a></li>
+        </ul>
+        <ul class="modules">
+          <li><a href="">Mail<span class="badge badge-warning">4</span></a></li>
+          <li class="active"><a href="">Signup confirmation<span class="badge badge-success"></span></a></li>
+          <li><a href="">Password reset<span class="badge badge-success"></span></a></li>
+          <li><a href="">Account deletion<span class="badge badge-info"></span></a></li>
+          <li><a href="">Log<span class="badge badge-error"></span></a></li>
+        </ul>
+      </nav>
     </div>
+    <div class="main">
+      <p>Hello</p>
+    </div>
+
 
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
@@ -39,17 +50,7 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="scripts/vendor/jquery.min.js"><\/script>')</script>
-        
-        
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
-    
     <!-- build:js scripts/plugins.js -->
     <script src="scripts/vendor/bootstrap/bootstrap-affix.js"></script>
     <script src="scripts/vendor/bootstrap/bootstrap-alert.js"></script>
