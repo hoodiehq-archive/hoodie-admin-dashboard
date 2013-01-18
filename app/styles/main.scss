@@ -287,30 +287,44 @@ h3.top{
     .form{
       width: 70%;
       float:left;
-      label.checkbox{
+      padding-bottom: 10px;
+      .note{
+        font-size: 12px;
+        color: tint($brown, 50);
+      }
+      label.checkbox,
+      label.radio{
         margin-top: 5px;
+      }
+      input[type="radio"], input[type="checkbox"] {
+        margin-top: 3px;
       }
     }
   }
 
-select,
-textarea,
-input[type="text"],
-input[type="password"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="date"],
-input[type="month"],
-input[type="time"],
-input[type="week"],
-input[type="number"],
-input[type="email"],
-input[type="url"],
-input[type="search"],
-input[type="tel"],
-input[type="color"],
-.uneditable-input {
-  height: 30px;
-}
+  select,
+  textarea,
+  input[type="text"],
+  input[type="password"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="color"],
+  .uneditable-input {
+    height: 30px;
+    display: block;
+    width: 100%;
+  }
 
+  textarea{
+    height: auto;
+  }
 }

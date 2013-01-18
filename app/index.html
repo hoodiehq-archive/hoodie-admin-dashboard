@@ -21,19 +21,19 @@
     <div class="sidebar">
       <header>
         <div class="logo ir">Hoodie Pocket</div>
-        <h1><a href="">Minutes.io</a></h1>
+        <h1><a href="#">Minutes.io</a></h1>
       </header>
       <nav>
         <ul class="core">
-          <li><a href="">Users<span class="badge">1</span></a></li>
-          <li><a href="">Data</a></li>
+          <li><a href="#">Users<span class="badge">1</span></a></li>
+          <li><a href="#">Data</a></li>
         </ul>
         <ul class="modules">
-          <li><a href="">E-Mail out<span class="badge badge-warning">4</span></a></li>
-          <li class="active"><a href="">Signup confirmation<span class="badge badge-success"></span></a></li>
-          <li><a href="">Password reset<span class="badge badge-success"></span></a></li>
-          <li><a href="">Account deletion<span class="badge badge-info"></span></a></li>
-          <li><a href="">Log<span class="badge badge-error">49</span></a></li>
+          <li><a href="#">E-Mail out<span class="badge badge-warning">4</span></a></li>
+          <li class="active"><a href="#">Signup confirmation<span class="badge badge-success"></span></a></li>
+          <li><a href="#">Password reset<span class="badge badge-success"></span></a></li>
+          <li><a href="#">Account deletion<span class="badge badge-info"></span></a></li>
+          <li><a href="#">Log<span class="badge badge-error">49</span></a></li>
         </ul>
       </nav>
     </div>
@@ -223,10 +223,35 @@
           </section>
           <section>
             <div class="formLabel">
+              <label>Disabled text field</label>
+            </div>
+            <div class="form">
+              <input type="text" placeholder="Type something…" disabled>
+            </div>
+          </section>
+          <section>
+            <div class="formLabel">
               <label>Simple text field with a really long label</label>
             </div>
             <div class="form">
               <input type="text" placeholder="Type something…">
+            </div>
+          </section>
+          <section>
+            <div class="formLabel">
+              <label>Field with note</label>
+            </div>
+            <div class="form">
+              <input type="text" placeholder="Type something…">
+              <span class="note">You can use this to lorem ipsum quite a lot of stuff if you really wanted to, seriously.</span>
+            </div>
+          </section>
+          <section>
+            <div class="formLabel">
+              <label>Simple textarea</label>
+            </div>
+            <div class="form">
+              <textarea rows="4">This is a textarea</textarea>
             </div>
           </section>
           <section>
@@ -239,6 +264,49 @@
               </label>
             </div>
           </section>
+          <section>
+            <div class="formLabel">
+              <label>Single checkbox with note</label>
+            </div>
+            <div class="form">
+              <label class="checkbox">
+                <input type="checkbox"> Remember me
+              </label>
+              <span class="note">You can use this to lorem ipsum quite a lot of stuff if you really wanted to, seriously.</span>
+            </div>
+          </section>
+          <section>
+            <div class="formLabel">
+              <label>Multiple checkboxes</label>
+            </div>
+            <div class="form">
+              <label class="checkbox">
+                <input type="checkbox"> Remember me
+              </label>
+              <label class="checkbox">
+                <input type="checkbox"> And me!
+              </label>
+              <label class="checkbox">
+                <input type="checkbox"> Me too please!
+              </label>
+            </div>
+          </section>
+          <section>
+            <div class="formLabel">
+              <label>Multiple radio buttons</label>
+            </div>
+            <div class="form">
+              <label class="radio">
+                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                Option one is this and that—be sure to include why it's great
+              </label>
+              <label class="radio">
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Option two can be something else and selecting it will deselect option one
+              </label>
+            </div>
+          </section>
+
         </div>
 
       </div>
