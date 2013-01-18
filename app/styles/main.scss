@@ -159,7 +159,7 @@ a:hover {
   background: $sidebarBG;
   width: 220px;
   overflow: hidden;
-  height:3000px;
+  height:4000px;
   float:left;
   border-right: 4px solid shade($sidebarBG, 10);
   header{
@@ -266,6 +266,7 @@ h3.top{
     margin-bottom: 10px;
     line-height: 40px;
     border-bottom: 1px solid $brown;
+    color: $brown;
   }
   .description{
     margin-bottom: 10px;
@@ -274,7 +275,8 @@ h3.top{
   section{
     border-top: 1px solid tint($brown, 75);
     padding-top: 10px;
-    @include group();
+    @include clearfix();
+    overflow: hidden;
     .formLabel{
       width: 30%;
       float:left;
