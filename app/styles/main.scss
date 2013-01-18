@@ -12,10 +12,16 @@
 
 // Self-clearing container
 
-.group:after {
-  content: "";
-  display: table;
-  clear: both;
+@mixin group(){
+  &:after{
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.group {
+  @include group();
 }
 
 
@@ -153,7 +159,7 @@ a:hover {
   background: $sidebarBG;
   width: 220px;
   overflow: hidden;
-  height:2000px;
+  height:3000px;
   float:left;
   border-right: 4px solid shade($sidebarBG, 10);
   header{
@@ -251,4 +257,58 @@ h3.top{
     display: block;
     float:right;
   }
+}
+
+// Modules
+
+.module{
+  legend{
+    margin-bottom: 10px;
+    line-height: 40px;
+    border-bottom: 1px solid $brown;
+  }
+  .description{
+    margin-bottom: 10px;
+    display: block;
+  }
+  section{
+    border-top: 1px solid tint($brown, 75);
+    padding-top: 10px;
+    @include group();
+    .formLabel{
+      width: 30%;
+      float:left;
+      margin-top: 5px;
+      padding-right: 10px;
+      padding-bottom: 10px;
+    }
+    .form{
+      width: 70%;
+      float:left;
+      label.checkbox{
+        margin-top: 5px;
+      }
+    }
+  }
+
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+  height: 30px;
+}
+
 }
