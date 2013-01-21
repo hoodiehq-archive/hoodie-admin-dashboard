@@ -1,11 +1,8 @@
 class pocket.Views.applicationView extends Backbone.View
-  template: 'application'
 
   initialize: ->
     super
 
     @setElement( $('html') )
+    new pocket.Views.dashboardView
 
-  render: ->
-    @$el.html pocket.Templates[@template](this)
-    super
