@@ -71,6 +71,12 @@ module.exports = function( grunt ) {
           'app/images/**/*'
         ],
         tasks: 'reload'
+      },
+      handlebars: {
+        files: [
+          'app/modules/*/templates/*.hbs'
+        ],
+        tasks: 'handlebars reload'
       }
     },
 
@@ -170,9 +176,38 @@ module.exports = function( grunt ) {
       baseUrl: './scripts',
       wrap: true
     },
+
+    handlebars: {
+      compile: {
+        files: {
+            "temp/scripts/compiled-templates.js": [
+            "app/scripts/templates/**/*.hbs"
+          ]
+        },
+        options: {
+          namespace: 'pocket.Templates',
+          processName: function(filename) {
+            // funky name processing here
+            return filename
+                    .replace(/^app\/scripts\/templates\//, '')
+                    .replace(/\.hbs$/, '');
+          }
+        }
+      }
+    }
   });
 
   // Alias the `test` task to run the `mocha` task instead
   grunt.registerTask('test', 'mocha');
+
+  grunt.loadNpmTasks('grunt-contrib-handlebars');
+
+  grunt.renameTask('build', 'original-build'); // optional
+
+  // override default build task, the built-in yeoman build task spits out all the tasks it runs in your command line
+  grunt.registerTask('build', 'intro clean compass coffee handlebars mkdirs usemin-handler rjs concat css min img rev usemin manifest copy time');
+
+  grunt.renameTask('clean', 'old-clean');
+  grunt.registerTask('clean', 'old-clean handlebars');
 
 };

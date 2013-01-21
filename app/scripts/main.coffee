@@ -15,7 +15,7 @@ window.pocket =
   init: ->
     console.log "Hello from Backbone! Woop"
     view = new pocket.Views.applicationView
-    debugger
+    view.render()
 
 $(document).ready ->
   pocket.init()
