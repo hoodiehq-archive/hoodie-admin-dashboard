@@ -19,5 +19,7 @@ window.pocket =
     view = new pocket.Views.applicationView
     #view.render()
 
+window.escapeExpression = Handlebars.Utils.escapeExpression
+
 $(document).ready ->
   pocket.init()
