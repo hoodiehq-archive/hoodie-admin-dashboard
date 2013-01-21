@@ -12,5 +12,5 @@ class pocket.Views.dashboardView extends Backbone.View
     window.hoodie.admin.stats(1358610679).then(@render)
 
   render: (@stats) =>
-    @$el.html pocket.Templates[@template](window.Handlebars, this)
+    @$el.html Handlebars.VM.template(JST[@template]) this
     super

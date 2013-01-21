@@ -185,7 +185,8 @@ module.exports = function( grunt ) {
           ]
         },
         options: {
-          namespace: 'pocket.Templates',
+          // namespace: 'pocket.Templates',
+          namespace: 'JST',
           processName: function(filename) {
             // funky name processing here
             return filename

@@ -41,7 +41,7 @@
               <td>resend / new</td>
               <td>edit / delete</td>
             </tr>
-            {{#with users}}
+            {{#each users}}
             <tr>
               <td>{{name}}</td>
               <td>{{lastLogin}}</td>
@@ -50,7 +50,7 @@
               <td>resend / new</td>
               <td>edit / delete</td>
             </tr>
-            {{/with}}
+            {{/each}}
           </tbody>
         </table>
         <div class="tableStatus">
