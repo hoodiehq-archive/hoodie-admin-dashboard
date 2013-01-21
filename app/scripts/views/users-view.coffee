@@ -11,6 +11,6 @@ class pocket.Views.usersView extends Backbone.View
   loadUsers: ->
     window.hoodie.admin.users.findAll().then(@render)
 
-  render: (@stats) =>
+  render: (@users) =>
     @$el.html pocket.Templates[@template](window.Handlebars, this)
     super

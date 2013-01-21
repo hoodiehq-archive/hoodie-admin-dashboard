@@ -41,6 +41,16 @@
               <td>resend / new</td>
               <td>edit / delete</td>
             </tr>
+            {{#with users}}
+            <tr>
+              <td>{{name}}</td>
+              <td>{{lastLogin}}</td>
+              <td>{{signedUpAt}}</td>
+              <td>{{state}}</td>
+              <td>resend / new</td>
+              <td>edit / delete</td>
+            </tr>
+            {{/with}}
           </tbody>
         </table>
         <div class="tableStatus">
