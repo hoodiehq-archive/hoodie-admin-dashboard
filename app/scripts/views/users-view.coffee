@@ -1,15 +1,15 @@
-class pocket.Views.dashboardView extends Backbone.View
-  template: 'dashboard'
+class pocket.Views.usersView extends Backbone.View
+  template: 'users'
 
   initialize: ->
     super
     @setElement( $('.main') )
 
   active: ->
-    @loadStats()
+    @loadUsers()
 
-  loadStats: ->
-    window.hoodie.admin.stats(1358610679).then(@render)
+  loadUsers: ->
+    window.hoodie.admin.users.findAll().then(@render)
 
   render: (@stats) =>
     @$el.html pocket.Templates[@template](window.Handlebars, this)
