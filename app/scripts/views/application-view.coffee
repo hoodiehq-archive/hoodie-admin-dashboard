@@ -9,6 +9,8 @@ class pocket.Views.applicationView extends Backbone.View
     @setElement( $('html') )
     @dashboard = new pocket.Views.dashboardView
     @users = new pocket.Views.usersView
+    @sidebar = new pocket.Views.sidebarView
+    return null
 
   handleLinks: (event) ->
     path = $(this).attr 'href'
@@ -17,4 +19,3 @@ class pocket.Views.applicationView extends Backbone.View
     if /^\/[^\/]/.test(path)
        router.navigate path.substr(1), true
        return false
-

@@ -16,10 +16,9 @@ window.pocket =
   Routers: {}
   init: ->
     console.log "Hello from Backbone! Woop"
-    @app = new pocket.Views.applicationView
     @router = new pocket.Routers.ApplicationRouter
+    @app = new pocket.Views.applicationView
     Backbone.history.start()
-    #view.render()
 
 window.escapeExpression = Handlebars.Utils.escapeExpression
 

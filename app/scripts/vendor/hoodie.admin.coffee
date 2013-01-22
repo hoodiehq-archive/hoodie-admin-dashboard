@@ -3,7 +3,17 @@ class HoodieAdminClass
   constructor: (hoodie) ->
     @hoodie = hoodie
 
+    @app = () ->
+
+      # dummy app info
+      info =
+        name: "minutes.io"
+
+      @hoodie.resolveWith(info)
+
     @users =
+      total: () =>
+        @hoodie.resolveWith(4211)
       findAll: (options) =>
         users = [
           name: "hello@alex.com"
@@ -21,7 +31,7 @@ class HoodieAdminClass
           signedUpAt: "2012-12-20T16:07:20.574Z"
           state: "deleted"
         ]
-        @hoodie.resolveWith(users).promise()
+        @hoodie.resolveWith(users)
 
       search: ->
 
@@ -50,7 +60,7 @@ class HoodieAdminClass
       unless since
         for key of stats
           stats[key] = stats[key] * 17
-      @hoodie.resolveWith(stats).promise()
+      @hoodie.resolveWith(stats)
 
     @modules = (since) ->
 
@@ -67,6 +77,6 @@ class HoodieAdminClass
       unless since
         for key of stats
           stats[key] = stats[key] * 17
-      @hoodie.resolveWith(stats).promise()
+      @hoodie.resolveWith(stats)
 
 Hoodie.extend "admin", HoodieAdminClass
