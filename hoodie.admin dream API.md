@@ -14,4 +14,8 @@ hoodie.admin.on('error', handleError)
 hoodie.admin.on('log', handleLog)
 
 hoodie.admin.logs.findAll()
+
+// I could imagine a specail signIn method might make sense.
+// Probably with password only ('admin' being hardcod as username)
+hoodie.admin.signIn( password )
 ```
