@@ -1,4 +1,4 @@
-class pocket.Views.sidebarView extends Backbone.View
+class pocket.Views.sidebarView extends pocket.Views.baseView
   template: 'sidebar'
 
   handleNavigationStates: (route) ->
@@ -16,6 +16,7 @@ class pocket.Views.sidebarView extends Backbone.View
     @render()
     @loadUserTotal()
     @loadAppName()
+    @loadModules()
 
   loadUserTotal: ->
     window.hoodie.admin.users.total().then(@renderUserTotal)
@@ -28,6 +29,20 @@ class pocket.Views.sidebarView extends Backbone.View
 
   renderAppName: (@appInfo) =>
     @$el.find('header h1 a').text @appInfo.name
+
+  loadModules: ->
+    window.hoodie.admin.modules.findAll().then(@renderModules)
+
+  renderModules: (@modules) =>
+    for key, module of @modules
+      module.url = module.name.replace('worker-', '')
+      module.cleanName = @makeURLHuman module.url
+      module.badgeStatus = 'badge-'+module.status
+      if module.messages
+        module.messageAmount = module.messages.length
+      else
+        module.messageAmount = ''
+    @$el.find('nav ul.modules').html Handlebars.VM.template(JST['sidebar-modules']) this
 
   render: () =>
     @$el.html Handlebars.VM.template(JST[@template]) this

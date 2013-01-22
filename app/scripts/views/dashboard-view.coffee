@@ -1,4 +1,4 @@
-class pocket.Views.dashboardView extends Backbone.View
+class pocket.Views.dashboardView extends pocket.Views.baseView
   template: 'dashboard'
 
   initialize: ->

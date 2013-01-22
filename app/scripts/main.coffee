@@ -9,12 +9,26 @@ hoodie.request("GET", "/").done((data) ->
   console.log error
 ###
 
+###
+Handlebars.registerHelper('render_handlebars', function(name, context) {
+  # we need the sub template compiled here
+  # in order to be able to generate the top level template
+  var subTemplate =  Handlebars.compile($('#' + name).html());
+  var subTemplateContext = $.extend({},this,context.hash);
+  return new Handlebars.SafeString(subTemplate(subTemplateContext));
+});
+###
+
 window.pocket =
   Models: {}
   Collections: {}
   Views: {}
   Routers: {}
+  registerHandlebarsHelpers: ->
+    Handlebars.registerHelper 'testHelper', (name, context) ->
+      return "HANDLEBARS TESTHELPER"
   init: ->
+    @registerHandlebarsHelpers()
     console.log "Hello from Backbone! Woop"
     @router = new pocket.Routers.ApplicationRouter
     @app = new pocket.Views.applicationView

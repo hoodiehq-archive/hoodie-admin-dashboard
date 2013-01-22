@@ -12,5 +12,6 @@ class pocket.Routers.ApplicationRouter extends Backbone.Router
     pocket.app.users.active()
 
   modules: (params) ->
+    pocket.app.modules.active(params)
 
 
