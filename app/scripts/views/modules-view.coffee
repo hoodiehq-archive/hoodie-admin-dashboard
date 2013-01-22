@@ -18,4 +18,6 @@ class pocket.Views.modulesView extends pocket.Views.baseView
       if JST["modules/"+module.name]
         module.formHTML = Handlebars.VM.template(JST["modules/"+module.name]) this
     @$el.html Handlebars.VM.template(JST[@template]) this
+    $('.formCondition').each (index, el) ->
+      pocket.handleConditionalFormElements(el, 0)
     super

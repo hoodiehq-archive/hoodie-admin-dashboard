@@ -9,26 +9,49 @@ hoodie.request("GET", "/").done((data) ->
   console.log error
 ###
 
-###
-Handlebars.registerHelper('render_handlebars', function(name, context) {
-  # we need the sub template compiled here
-  # in order to be able to generate the top level template
-  var subTemplate =  Handlebars.compile($('#' + name).html());
-  var subTemplateContext = $.extend({},this,context.hash);
-  return new Handlebars.SafeString(subTemplate(subTemplateContext));
-});
-###
-
 window.pocket =
   Models: {}
   Collections: {}
   Views: {}
   Routers: {}
+
+  handleConditionalFormElements: (el, speed = 250) ->
+    conditions = $(el).data "conditions"
+    conditions = conditions.split ','
+    for condition in conditions
+      requirement = condition.split(':')[0]
+      target = condition.split(':')[1]
+      requirementMet = false
+
+      # checkboxes are extra special little bunnies
+      if $(el).is('input[type=checkbox]')
+        # is it supposed to be checked?
+        if $(el).is(':checked') && requirement == "true"
+          requirementMet = true
+        # is it supposed to be unchecked?
+        if !$(el).is(':checked') && requirement == "false"
+          requirementMet = true
+
+      # other non-checkbox inputs
+      if $(el).val() is requirement
+        requirementMet = true
+
+      if requirementMet
+        $(target).slideDown speed
+      else
+        $(target).slideUp speed
+
+  registerListeners: ->
+    $("body").on "change", ".formCondition", (event) =>
+      @handleConditionalFormElements(event.target)
+
   registerHandlebarsHelpers: ->
     Handlebars.registerHelper 'testHelper', (name, context) ->
       return "HANDLEBARS TESTHELPER"
+
   init: ->
     @registerHandlebarsHelpers()
+    @registerListeners()
     console.log "Hello from Backbone! Woop"
     @router = new pocket.Routers.ApplicationRouter
     @app = new pocket.Views.applicationView

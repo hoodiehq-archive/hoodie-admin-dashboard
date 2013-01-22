@@ -1,0 +1,31 @@
+<span class="description">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>
+<form action="">
+  <section>
+    <div class="formLabel">
+      <label>Signup confirmation</label>
+    </div>
+    <div class="form">
+      <label class="checkbox">
+        <input type="checkbox" class="formCondition" data-conditions="true:.confirmationOptions,false:.inverseConfirmationOptions"> is mandatory
+      </label>
+    </div>
+  </section>
+  <section class="confirmationOptions">
+    <div class="formLabel">
+      <label>This is only visible if checked</label>
+    </div>
+    <div class="form">
+      <input type="email" placeholder="please-reply@appname.com" required>
+      <span class="note">From address for all of your app's emails.</span>
+    </div>
+  </section>
+  <section class="inverseConfirmationOptions">
+    <div class="formLabel">
+      <label>This is only visible if unchecked</label>
+    </div>
+    <div class="form">
+      <input type="email" placeholder="please-reply@appname.com" required>
+      <span class="note">From address for all of your app's emails.</span>
+    </div>
+  </section>
+</form>
