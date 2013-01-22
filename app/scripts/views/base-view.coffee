@@ -9,7 +9,6 @@ class pocket.Views.baseView extends Backbone.View
     result = result.charAt(0).toUpperCase() + result.slice(1)
 
   defaultReplyMail: (@appName) ->
-    console.log("appName: ",@appName);
     if !@appName
       return "please-reply@your-app.com"
     if @appName.indexOf(".") is -1
