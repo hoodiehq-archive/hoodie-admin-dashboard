@@ -12,7 +12,9 @@ class pocket.Views.applicationView extends pocket.Views.baseView
     return null
 
   initViews: (@appInfo) =>
+    console.log "once"
     pocket.appInfo = @appInfo;
+    pocket.appInfo.defaultReplyMailAddress = @defaultReplyMail @appInfo.name
     @sidebar = new pocket.Views.sidebarView
     @dashboard = new pocket.Views.dashboardView
     @users = new pocket.Views.usersView
