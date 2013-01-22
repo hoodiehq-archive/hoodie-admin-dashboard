@@ -16,6 +16,7 @@ class pocket.Views.modulesView extends pocket.Views.baseView
       module.url = module.name.replace('worker-', '')
       module.cleanName = @makeURLHuman module.url
       if JST["modules/"+module.name]
+        @appInfo = pocket.appInfo;
         module.formHTML = Handlebars.VM.template(JST["modules/"+module.name]) this
     @$el.html Handlebars.VM.template(JST[@template]) this
     $('.formCondition').each (index, el) ->

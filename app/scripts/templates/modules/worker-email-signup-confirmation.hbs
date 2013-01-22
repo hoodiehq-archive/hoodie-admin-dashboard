@@ -6,26 +6,36 @@
     </div>
     <div class="form">
       <label class="checkbox">
-        <input type="checkbox" class="formCondition" data-conditions="true:.confirmationOptions,false:.inverseConfirmationOptions"> is mandatory
+        <input type="checkbox" class="formCondition" data-conditions="true:.confirmationOptions"> is mandatory
       </label>
     </div>
   </section>
+
   <section class="confirmationOptions">
     <div class="formLabel">
-      <label>This is only visible if checked</label>
+      <label>From address</label>
     </div>
     <div class="form">
       <input type="email" placeholder="please-reply@appname.com" required>
       <span class="note">From address for all of your app's emails.</span>
     </div>
   </section>
-  <section class="inverseConfirmationOptions">
+
+  <section class="confirmationOptions">
     <div class="formLabel">
-      <label>This is only visible if unchecked</label>
+      <label>Subject line</label>
     </div>
     <div class="form">
-      <input type="email" placeholder="please-reply@appname.com" required>
-      <span class="note">From address for all of your app's emails.</span>
+      <input type="text" placeholder="Please confirm your signup at {{appInfo.name}}">
+    </div>
+  </section>
+
+  <section class="confirmationOptions">
+    <div class="formLabel">
+      <label>Body</label>
+    </div>
+    <div class="form">
+      <textarea rows="4">Hello (name)! Thanks for signing up with {{appInfo.name}}</textarea>
     </div>
   </section>
 </form>

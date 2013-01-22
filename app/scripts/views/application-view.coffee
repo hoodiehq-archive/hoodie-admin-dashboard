@@ -7,6 +7,12 @@ class pocket.Views.applicationView extends pocket.Views.baseView
     super
 
     @setElement( $('html') )
+
+    window.hoodie.admin.app().then(@initViews)
+    return null
+
+  initViews: (@appInfo) =>
+    pocket.appInfo = @appInfo;
     @sidebar = new pocket.Views.sidebarView
     @dashboard = new pocket.Views.dashboardView
     @users = new pocket.Views.usersView
