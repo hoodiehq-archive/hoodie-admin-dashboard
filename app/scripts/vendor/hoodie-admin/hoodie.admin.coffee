@@ -6,28 +6,43 @@
 #
 class Hoodie.Admin
 
-  constructor: (hoodie) ->
-    @hoodie = hoodie
-
-    @users   = new Hoodie.AdminUsers this
-    @config  = new Hoodie.AdminConfig this
-    @logs    = new Hoodie.AdminLogs this
-    @modules = new Hoodie.AdminModules this
+  constructor: (@hoodie) ->
+    @users   = new Hoodie.AdminUsers   @hoodie, this
+    @config  = new Hoodie.AdminConfig  @hoodie, this
+    @logs    = new Hoodie.AdminLogs    @hoodie, this
+    @modules = new Hoodie.AdminModules @hoodie, this
 
 
-  # ## on
+  # on
+  # --------------
 
   #
   on : (event, callback) ->
 
 
-  # ## sign in
+  # authenticate
+  # --------------
+
+  # runs the standard hoodie.account.authenticate
+  # method, but also makes sure that username is
+  # "admin"
+  authenticate : (password) =>
+    unless @hoodie.account.username is 'admin'
+      return @hoodie.rejectWith("Not signed in as admin.")
+
+    @hoodie.account.authenticate()
+
+
+  # sign in
+  # --------------
 
   #
-  signIn : (password) => @hoodie.resolveWith()
+  signIn : (password) =>
+    @hoodie.resolveWith()
 
 
-  # ## app
+  # app
+  # --------------
 
   #
   app : ->
@@ -39,7 +54,8 @@ class Hoodie.Admin
     @hoodie.resolveWith(info)
 
 
-  # ## stats
+  # stats
+  # --------------
 
   #
   stats : (since) ->

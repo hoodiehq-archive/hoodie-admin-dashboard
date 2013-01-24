@@ -4,9 +4,8 @@
 #
 class Hoodie.AdminConfig
 
-  constructor: (admin) ->
-    @admin  = admin
-    @hoodie = admin.hoodie
+  constructor: (@hoodie, @admin) ->
+    #
 
   get: ->
   set: ->

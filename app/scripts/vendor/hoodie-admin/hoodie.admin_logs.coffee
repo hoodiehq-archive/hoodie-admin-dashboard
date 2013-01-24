@@ -4,9 +4,8 @@
 #
 class Hoodie.AdminLogs
 
-  constructor: (admin) ->
-    @admin  = admin
-    @hoodie = admin.hoodie
+  constructor: (@hoodie, @admin) ->
+    #
 
   findAll : ->
     @hoodie.resolveWith []

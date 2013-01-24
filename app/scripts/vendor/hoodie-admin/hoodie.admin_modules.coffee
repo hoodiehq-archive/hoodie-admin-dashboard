@@ -4,9 +4,8 @@
 #
 class Hoodie.AdminModules
 
-  constructor: (admin) ->
-    @admin  = admin
-    @hoodie = admin.hoodie
+  constructor: (@hoodie, @admin) ->
+    #
 
 
   findAll: (options) =>
