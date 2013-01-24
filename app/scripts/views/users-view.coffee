@@ -1,4 +1,4 @@
-class pocket.Views.usersView extends Backbone.View
+class pocket.Views.usersView extends pocket.Views.baseView
   template: 'users'
 
   initialize: ->

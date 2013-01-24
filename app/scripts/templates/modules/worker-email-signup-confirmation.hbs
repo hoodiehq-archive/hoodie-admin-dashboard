@@ -1,0 +1,41 @@
+<span class="description">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>
+<form action="">
+  <section>
+    <div class="formLabel">
+      <label>Signup confirmation</label>
+    </div>
+    <div class="form">
+      <label class="checkbox">
+        <input type="checkbox" class="formCondition" data-conditions="true:.confirmationOptions"> is mandatory
+      </label>
+    </div>
+  </section>
+
+  <section class="confirmationOptions">
+    <div class="formLabel">
+      <label>From address</label>
+    </div>
+    <div class="form">
+      <input type="email" placeholder="{{appInfo.defaultReplyMailAddress}}" required>
+      <span class="note">From address for all of your app's emails.</span>
+    </div>
+  </section>
+
+  <section class="confirmationOptions">
+    <div class="formLabel">
+      <label>Subject line</label>
+    </div>
+    <div class="form">
+      <input type="text" placeholder="Please confirm your signup at {{appInfo.name}}">
+    </div>
+  </section>
+
+  <section class="confirmationOptions">
+    <div class="formLabel">
+      <label>Body</label>
+    </div>
+    <div class="form">
+      <textarea rows="4">Hello (name)! Thanks for signing up with {{appInfo.name}}</textarea>
+    </div>
+  </section>
+</form>

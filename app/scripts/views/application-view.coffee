@@ -1,4 +1,4 @@
-class pocket.Views.applicationView extends Backbone.View
+class pocket.Views.applicationView extends pocket.Views.baseView
 
   events:
     "click a"       : "handleLinks"
@@ -7,8 +7,18 @@ class pocket.Views.applicationView extends Backbone.View
     super
 
     @setElement( $('html') )
+
+    window.hoodie.admin.app().then(@initViews)
+    return null
+
+  initViews: (@appInfo) =>
+    pocket.appInfo = @appInfo;
+    pocket.appInfo.defaultReplyMailAddress = @defaultReplyMail @appInfo.name
+    @sidebar = new pocket.Views.sidebarView
     @dashboard = new pocket.Views.dashboardView
     @users = new pocket.Views.usersView
+    @modules = new pocket.Views.modulesView
+    return null
 
   handleLinks: (event) ->
     path = $(this).attr 'href'

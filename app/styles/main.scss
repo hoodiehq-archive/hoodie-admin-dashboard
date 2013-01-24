@@ -178,6 +178,13 @@ a:hover {
 // Navigation
 
 nav{
+  ul.modules .name {
+    display: inline-block;
+    width: 130px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
   ul{
     border-top: 1px solid $brown;
     margin: 10px 20px 0;
@@ -189,10 +196,11 @@ nav{
         display: block;
       }
       .badge{
-        float:right;
         padding-top: 2px;
         margin-top: 6px;
         min-height: 1.5em;
+        right: 0;
+        position: absolute;
       }
       &.active{
         a{
