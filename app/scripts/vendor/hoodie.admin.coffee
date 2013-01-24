@@ -3,6 +3,9 @@ class HoodieAdminClass
   constructor: (hoodie) ->
     @hoodie = hoodie
 
+    @signIn = (password) =>
+      @hoodie.resolveWith()
+
     @app = () ->
 
       # dummy app info
