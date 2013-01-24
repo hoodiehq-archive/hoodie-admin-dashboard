@@ -12,6 +12,31 @@ class Hoodie.Admin
     @logs    = new Hoodie.AdminLogs    @hoodie, this
     @modules = new Hoodie.AdminModules @hoodie, this
 
+    # dirty hack:
+    # hoodie.account.signIn presets passed username with
+    # "user/#{username}". We don't want that for our hoodie
+    # actually, the only user we need is admin only anyway
+    @hoodie.account._userKey = -> 'admin'
+
+    hoodie = @hoodie
+    @hoodie.account._handleSignInSuccess = (response) ->
+      defer    = hoodie.defer()
+      username = 'admin'
+
+      hoodie.account._authenticated = true
+      hoodie.account._setUsername username
+
+      # special treatment for hoodie instance:
+      # admins do not have their own database, so we don't
+      # want the sync to kick in
+      hoodie.config.set('_remote.sync', false)
+
+      hoodie.account.trigger 'signin', username
+      defer.resolve(username, username)
+
+    @hoodie.remote.sync = => @hoodie.resolveWith()
+
+    @hoodie.account._handleSignInSuccess.bind( @hoodie.account )
 
   # on
   # --------------
