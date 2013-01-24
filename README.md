@@ -7,12 +7,15 @@ The hoodie admin panel
 run locally
 -----------
 
-Pocket is using yeoman to serve its assets. Its hoodie tries
-to connect to `http://api.pocket.dev` if its served by yeoman.
-So in order to test it with a real app, make sure to have the
-[pocket-app]() installed and running.
-
 ```js
 $ npm install
 $ npm start
 ```
+
+**Note**: Pocket is using yeoman to serve its assets. Its hoodie tries
+to connect to `http://api.pocket.dev` if its served by yeoman.
+So in order to test it with a real app, make sure to have the
+[pocket-app]() installed and running.
+
+If you want pocket to use a different baseUrl, set it temporarely in
+[app/scripts/main.coffee:4](https://github.com/hoodiehq/pocket/blob/master/app/scripts/main.coffee#L4)

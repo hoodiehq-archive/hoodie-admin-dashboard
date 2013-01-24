@@ -1,6 +1,6 @@
 if (location.hostname is 'localhost')
   # debug mode, started wit yeoman, connect to
-  # the pocket debug app
+  # some existing hoodie app.
   whereTheMagicHappens = "http://api.pocket.dev"
 else
   whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
