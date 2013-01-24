@@ -135,10 +135,12 @@ module.exports = function( grunt ) {
 
     // renames JS/CSS to prepend a hash of their contents for easier
     // versioning
+    // Hoodie pocket: referenced invalid image path so images don't get renamed
+    // Workaround for: https://github.com/yeoman/yeoman/issues/824
     rev: {
       js: 'scripts/**/*.js',
       css: 'styles/**/*.css',
-      img: 'images/**'
+      img: 'i/**'
     },
 
     // usemin handler should point to the file containing
