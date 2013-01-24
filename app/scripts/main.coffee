@@ -1,4 +1,10 @@
-whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
+if (location.hostname is 'localhost')
+  # debug mode, started wit yeoman, connect to
+  # the pocket debug app
+  whereTheMagicHappens = "http://api.pocket.dev"
+else
+  whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
+
 window.hoodie = new Hoodie(whereTheMagicHappens)
 ###
 hoodie.request("GET", "/").done((data) ->
