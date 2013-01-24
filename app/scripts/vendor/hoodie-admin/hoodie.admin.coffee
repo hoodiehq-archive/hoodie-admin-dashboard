@@ -26,6 +26,7 @@ class Hoodie.Admin
   # runs the standard hoodie.account.authenticate
   # method, but also makes sure that username is
   # "admin"
+  #
   authenticate : (password) ->
     unless @hoodie.account.username is 'admin'
       return @hoodie.rejectWith("Not signed in as admin.")
@@ -36,9 +37,12 @@ class Hoodie.Admin
   # sign in
   # --------------
 
+  # runs the standard hoodie.account.signIn
+  # method, but with username set to "admin"
   #
   signIn : (password) ->
-    @hoodie.resolveWith()
+    username = "admin"
+    @hoodie.account.signIn(username, password)
 
 
   # app
