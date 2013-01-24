@@ -6,7 +6,10 @@ class pocket.Views.modulesView extends pocket.Views.baseView
     @setElement( $('.main') )
 
   active: (params) ->
-    @loadModules()
+    if pocket.isAuthenticated
+      @loadModules()
+    else
+      pocket.router.navigate '/'
 
   loadModules: ->
     window.hoodie.admin.modules.findAll().then(@render)

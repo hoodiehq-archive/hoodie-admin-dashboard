@@ -6,7 +6,10 @@ class pocket.Views.usersView extends pocket.Views.baseView
     @setElement( $('.main') )
 
   active: ->
-    @loadUsers()
+    if pocket.isAuthenticated
+      @loadUsers()
+    else
+      pocket.router.navigate '/'
 
   loadUsers: ->
     window.hoodie.admin.users.store.findAll().then(@render)
