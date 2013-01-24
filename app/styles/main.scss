@@ -269,7 +269,7 @@ h3.top{
 
 // Modules
 
-.module{
+.module, .form{
   legend{
     margin-bottom: 10px;
     line-height: 40px;
@@ -285,6 +285,9 @@ h3.top{
     padding-top: 10px;
     @include clearfix();
     overflow: hidden;
+    &.noBorder{
+      border: none;
+    }
     .formLabel{
       width: 30%;
       float:left;

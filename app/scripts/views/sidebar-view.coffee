@@ -10,13 +10,19 @@ class pocket.Views.sidebarView extends pocket.Views.baseView
 
   initialize: ->
     super
-    pocket.router.bind "all", (route) =>
-      @handleNavigationStates Backbone.history.fragment
     @setElement( $('.sidebar') )
     @render()
-    @loadUserTotal()
     @loadAppName()
-    @loadModules()
+    @authenticated = false
+    if @authenticated
+      pocket.router.bind "all", (route) =>
+        @handleNavigationStates Backbone.history.fragment
+      @renderCoreFunctions()
+      @loadUserTotal()
+      @loadModules()
+
+  renderCoreFunctions: ->
+     @$el.find('nav').html Handlebars.VM.template(JST['sidebar-core']) this
 
   loadUserTotal: ->
     window.hoodie.admin.users.total().then(@renderUserTotal)

@@ -121,11 +121,18 @@ input[type="color"],
 
   // Focus state
   &:focus {
-    border-color: rgba(82,168,236,.8);
+    $brown:     rgb(105, 60, 16);
+    $orange:    rgb(233, 78, 27);
+    $yellow:    rgb(249, 178, 51);
+    $green:     rgb(11, 142, 54);
+    $red:       rgb(190, 21, 34);
+    $blue:      rgb(49, 39, 131);
+    $black:     rgb(18, 18, 18);
+    border-color: rgba(49, 39, 131,.8);
     outline: 0;
     outline: thin dotted \9; /* IE6-9 */
     //@include box-shadow(#{inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6)});
-    @include box-shadow(#{0 0 0 1px rgba(82,168,236,.6)});
+    @include box-shadow(#{0 0 0 1px rgba(49, 39, 131,.6)});
   }
 }
 
