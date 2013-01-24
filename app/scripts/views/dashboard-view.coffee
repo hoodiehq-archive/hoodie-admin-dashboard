@@ -7,8 +7,7 @@ class pocket.Views.dashboardView extends pocket.Views.baseView
     @appInfo = pocket.appInfo;
 
   active: ->
-    @authenticated = false
-    if @authenticated
+    if pocket.isAuthenticated
       @loadStats()
     else
       @renderSignin()

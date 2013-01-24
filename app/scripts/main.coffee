@@ -58,10 +58,17 @@ window.pocket =
   init: ->
     @registerHandlebarsHelpers()
     @registerListeners()
-    console.log "Hello from Backbone! Woop"
-    @router = new pocket.Routers.ApplicationRouter
-    @app = new pocket.Views.applicationView
-    Backbone.history.start()
+    hoodie.admin.authenticate().then(@onAuthenticated, @onUnauthenticated)
+    .then =>
+      @router = new pocket.Routers.ApplicationRouter
+      @app = new pocket.Views.applicationView
+      Backbone.history.start()
+
+  @onAuthenticated: () ->
+    pocket.isAuthenticated = true;
+
+  @onUnauthenticated: () ->
+    pocket.isAuthenticated = false;
 
 window.escapeExpression = Handlebars.Utils.escapeExpression
 
