@@ -70,6 +70,15 @@ class Hoodie.Admin
     @hoodie.account.signIn(username, password)
 
 
+  # sign out
+  # --------------
+
+  # just an alias
+  #
+  signOut : () ->
+    @hoodie.account.signOut()
+
+
   # app
   # --------------
 
