@@ -50,6 +50,9 @@ window.pocket =
   registerListeners: ->
     $("body").on "change", ".formCondition", (event) =>
       @handleConditionalFormElements(event.target)
+    $("body").on "click", "a.signOut", (event) =>
+      event.preventDefault()
+      hoodie.admin.signOut().done(@onSignOutSuccess).fail(@onSignOutFail)
 
   registerHandlebarsHelpers: ->
     Handlebars.registerHelper 'testHelper', (name, context) ->
@@ -66,10 +69,17 @@ window.pocket =
 
   onAuthenticated: () =>
     pocket.isAuthenticated = true;
+    $('body').addClass 'authenticated'
 
   onUnauthenticated: () =>
     pocket.isAuthenticated = false;
     return @hoodie.resolveWith()
+
+  onSignOutSuccess: () =>
+    window.location = '/'
+
+  onSignOutFail: () =>
+    console.log "I'm sorry Dave, I can't let you do that."
 
 window.escapeExpression = Handlebars.Utils.escapeExpression
 

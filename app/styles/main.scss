@@ -213,6 +213,26 @@ nav{
 
 // Main
 
+a.signOut {
+  display: none;
+}
+
+body.authenticated{
+  a.signOut {
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: tint($brown, 50);
+    &:hover{
+      font-weight: normal;
+      color: $brown;
+    }
+  }
+}
+
 h2.top{
   border-bottom: 1px solid $brown;
   padding-bottom: 5px;
@@ -276,9 +296,13 @@ h3.top{
     border-bottom: 1px solid $brown;
     color: $brown;
   }
-  .description{
+  .description, .error{
     margin-bottom: 10px;
     display: block;
+  }
+  .error{
+    margin-left: 30%;
+    color: $red;
   }
   section{
     border-top: 1px solid tint($brown, 75);

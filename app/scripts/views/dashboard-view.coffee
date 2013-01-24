@@ -13,7 +13,7 @@ class pocket.Views.dashboardView extends pocket.Views.baseView
       @renderSignin()
 
   loadStats: ->
-    window.hoodie.admin.stats(1358610679).then(@render)
+    hoodie.admin.stats(1358610679).then(@render)
 
   render: (@stats) =>
     @$el.html Handlebars.VM.template(JST[@template]) this
@@ -21,7 +21,15 @@ class pocket.Views.dashboardView extends pocket.Views.baseView
 
   renderSignin: () =>
     @$el.html Handlebars.VM.template(JST["signin"]) this
-    $('form.signIn').submit (event) ->
+    $('form.signIn').submit (event) =>
+      $('#signIn').attr('disabled', 'disabled')
       event.preventDefault()
-      hoodie.admin.signIn($('#signInPassword').val())
-      return false
+      password = $('#signInPassword').val()
+      hoodie.admin.signIn(password).done(@onSignInSuccess).fail(@onSignInFail)
+
+  onSignInSuccess: () =>
+    window.location.reload()
+
+  onSignInFail: () =>
+    $('form.signIn .error').text('Wrong password, please try again')
+    $('#signIn').attr('disabled', null)

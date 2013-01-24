@@ -1,5 +1,6 @@
 class pocket.Views.baseView extends Backbone.View
 
+  # A global view helper
   helper: ->
     console.log "HELPDERP"
 
@@ -8,6 +9,7 @@ class pocket.Views.baseView extends Backbone.View
     result = @string.replace(/-/g,' ')
     result = result.charAt(0).toUpperCase() + result.slice(1)
 
+  # Generates a default address for email placeholders
   defaultReplyMail: (@appName) ->
     if !@appName
       return "please-reply@your-app.com"

@@ -12,8 +12,10 @@ class pocket.Views.applicationView extends pocket.Views.baseView
     return null
 
   initViews: (@appInfo) =>
+    # Set some basic app vars for use in any template
     pocket.appInfo = @appInfo;
     pocket.appInfo.defaultReplyMailAddress = @defaultReplyMail @appInfo.name
+    # Get views
     @sidebar = new pocket.Views.sidebarView
     @dashboard = new pocket.Views.dashboardView
     @users = new pocket.Views.usersView
