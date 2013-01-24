@@ -21,3 +21,7 @@ class pocket.Views.dashboardView extends pocket.Views.baseView
 
   renderSignin: () =>
     @$el.html Handlebars.VM.template(JST["signin"]) this
+    $('form.signIn').submit (event) ->
+      event.preventDefault()
+      hoodie.admin.signIn($('#signInPassword').val())
+      return false
