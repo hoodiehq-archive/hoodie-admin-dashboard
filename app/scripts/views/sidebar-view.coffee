@@ -13,8 +13,7 @@ class pocket.Views.sidebarView extends pocket.Views.baseView
     @setElement( $('.sidebar') )
     @render()
     @loadAppName()
-    @authenticated = false
-    if @authenticated
+    if pocket.isAuthenticated
       pocket.router.bind "all", (route) =>
         @handleNavigationStates Backbone.history.fragment
       @renderCoreFunctions()
