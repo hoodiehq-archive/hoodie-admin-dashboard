@@ -64,10 +64,10 @@ window.pocket =
       @app = new pocket.Views.applicationView
       Backbone.history.start()
 
-  @onAuthenticated: () ->
+  onAuthenticated: () ->
     pocket.isAuthenticated = true;
 
-  @onUnauthenticated: () ->
+  onUnauthenticated: () ->
     pocket.isAuthenticated = false;
 
 window.escapeExpression = Handlebars.Utils.escapeExpression
