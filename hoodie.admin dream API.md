@@ -2,7 +2,7 @@ hoodie.admin dream API
 ========================
 
 ```js
-hoodie.admin.users.findAll()
+hoodie.admin.users.store.findAll()
 hoodie.admin.users.total()
 hoodie.admin.users.search("joe")
 hoodie.admin.users.search("joe", {limit: 10})
