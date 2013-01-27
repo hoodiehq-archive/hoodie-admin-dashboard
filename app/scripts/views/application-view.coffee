@@ -1,4 +1,4 @@
-class pocket.Views.applicationView extends pocket.Views.baseView
+class pocket.Views.ApplicationView extends pocket.Views.BaseView
 
   events:
     "click a"       : "handleLinks"
@@ -16,10 +16,10 @@ class pocket.Views.applicationView extends pocket.Views.baseView
     pocket.appInfo = @appInfo;
     pocket.appInfo.defaultReplyMailAddress = @defaultReplyMail @appInfo.name
     # Get views
-    @sidebar = new pocket.Views.sidebarView
-    @dashboard = new pocket.Views.dashboardView
-    @users = new pocket.Views.usersView
-    @modules = new pocket.Views.modulesView
+    @sidebar = new pocket.Views.SidebarView
+    @dashboard = new pocket.Views.DashboardView
+    @users = new pocket.Views.UsersView
+    @modules = new pocket.Views.ModulesView
     return null
 
   handleLinks: (event) ->
@@ -29,4 +29,3 @@ class pocket.Views.applicationView extends pocket.Views.baseView
     if /^\/[^\/]/.test(path)
        router.navigate path.substr(1), true
        return false
-

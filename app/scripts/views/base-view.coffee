@@ -1,4 +1,4 @@
-class pocket.Views.baseView extends Backbone.View
+class pocket.Views.BaseView extends Backbone.View
 
   # A global view helper
   helper: ->

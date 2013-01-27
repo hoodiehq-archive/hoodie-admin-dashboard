@@ -1,4 +1,4 @@
-class pocket.Views.usersView extends pocket.Views.baseView
+class pocket.Views.UsersView extends pocket.Views.BaseView
   template: 'users'
 
   initialize: ->

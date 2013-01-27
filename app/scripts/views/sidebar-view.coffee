@@ -1,4 +1,4 @@
-class pocket.Views.sidebarView extends pocket.Views.baseView
+class pocket.Views.SidebarView extends pocket.Views.BaseView
   template: 'sidebar'
 
   handleNavigationStates: (route) ->

@@ -1,3 +1,1 @@
-pocket.Models.ApplicationModel = Backbone.Model.extend({
-
-});
+class pocket.Models.ApplicationModel extends Backbone.Model

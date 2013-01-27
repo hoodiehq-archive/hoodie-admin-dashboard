@@ -1,4 +1,4 @@
-class pocket.Views.dashboardView extends pocket.Views.baseView
+class pocket.Views.DashboardView extends pocket.Views.BaseView
   template: 'dashboard'
 
   initialize: ->
