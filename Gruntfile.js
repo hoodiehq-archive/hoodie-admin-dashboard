@@ -151,13 +151,13 @@ module.exports = function( grunt ) {
 
     // update references in HTML/CSS to revved files
     usemin: {
-      html: ['**/*.html'],
-      css: ['**/*.css']
+      html: ['index.html'],
+      css: ['styles/**/*.css']
     },
 
     // HTML minification
     html: {
-      files: ['**/*.html']
+      files: ['index.html']
     },
 
     // Optimizes JPGs and PNGs (with jpegtran & optipng)
