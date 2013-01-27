@@ -222,7 +222,6 @@ Handlebars.VM = {
   },
   noop: function() { return ""; },
   invokePartial: function(partial, name, context, helpers, partials, data) {
-
     var options = { helpers: helpers, partials: partials, data: data };
 
     if(partial === undefined) {
