@@ -217,7 +217,7 @@ a.signOut {
   display: none;
 }
 
-body.authenticated{
+.authenticated{
   a.signOut {
     display: block;
     position: absolute;

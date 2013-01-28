@@ -1,8 +1,15 @@
-class pocket.Views.BaseView extends Backbone.View
+class Pocket.BaseView extends Backbone.Layout # Backbone.View
 
   # A global view helper
   helper: ->
     console.log "HELPDERP"
+
+  # by default, pass entire view to template
+  serialize: -> this
+
+  #
+  beforeRender: ->
+    @appInfo = pocket.appInfo
 
   # Turns "email-out" into "Email out"
   makeURLHuman: (@string) ->

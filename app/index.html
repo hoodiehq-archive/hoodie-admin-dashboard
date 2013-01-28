@@ -17,11 +17,13 @@
         <script src="components/modernizr/modernizr.js"></script>
     </head>
     <body>
+
+    <!--
     <a href="#" class="signOut">Sign out</a>
     <div class="sidebar">
     </div>
     <div class="main">
-      <!--
+
       <div class="content centered">
         <h2 class="top">Welcome to your Minutes.io Pocket, the admin panel for Hoodie</h2>
         <h3 class="top">Getting started</h3>
@@ -158,9 +160,9 @@
               </select>
             </div>
           </section>
-      -->
 
     </div>
+    -->
 
 
     <!--[if lt IE 7]>
@@ -187,8 +189,10 @@
 
     <script src="components/hoodie.js/hoodie.js"></script>
     <script src="components/handlebars/handlebars.runtime.js"></script>
-    <script src="components/lodash/lodash.js"></script>
+    <!-- <script src="components/lodash/lodash.js"></script> -->
+    <script src="components/underscore/underscore.js"></script>
     <script src="components/backbone/backbone.js"></script>
+    <script src="components/layoutmanager/backbone.layoutmanager.js"></script>
 
     <script src="scripts/lib/hoodie-admin/hoodie.admin.js"></script>
     <script src="scripts/lib/hoodie-admin/hoodie.admin_users.js"></script>
@@ -196,18 +200,18 @@
     <script src="scripts/lib/hoodie-admin/hoodie.admin_logs.js"></script>
     <script src="scripts/lib/hoodie-admin/hoodie.admin_modules.js"></script>
 
-
-
-    <script src="scripts/main.js"></script>
+    <script src="scripts/init.js"></script>
+    <script src="scripts/pocket.js"></script>
 
     <script src="scripts/views/base-view.js"></script>
-    <script src="scripts/views/application-view.js"></script>
     <script src="scripts/views/sidebar-view.js"></script>
     <script src="scripts/views/dashboard-view.js"></script>
     <script src="scripts/views/users-view.js"></script>
     <script src="scripts/views/modules-view.js"></script>
+    <script src="scripts/views/main-view.js"></script>
+    <script src="scripts/views/application-view.js"></script>
 
-    <script src="scripts/routes/application-router.js"></script>
+    <script src="scripts/router.js"></script>
 
     <script src="scripts/compiled-templates.js"></script>
 

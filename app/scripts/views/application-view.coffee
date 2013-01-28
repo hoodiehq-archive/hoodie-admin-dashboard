@@ -1,26 +1,21 @@
-class pocket.Views.ApplicationView extends pocket.Views.BaseView
+class Pocket.ApplicationView extends Pocket.BaseView
 
   events:
     "click a"       : "handleLinks"
+
+  views:
+    "body" : new Pocket.MainView
 
   initialize: ->
     super
 
     @setElement( $('html') )
+    if pocket.isAuthenticated
+      @views.body.template = 'main'
+    else
+      @views.body.template = 'signin'
+    @render()
 
-    window.hoodie.admin.app().then(@initViews)
-    return null
-
-  initViews: (@appInfo) =>
-    # Set some basic app vars for use in any template
-    pocket.appInfo = @appInfo;
-    pocket.appInfo.defaultReplyMailAddress = @defaultReplyMail @appInfo.name
-    # Get views
-    @sidebar = new pocket.Views.SidebarView
-    @dashboard = new pocket.Views.DashboardView
-    @users = new pocket.Views.UsersView
-    @modules = new pocket.Views.ModulesView
-    return null
 
   handleLinks: (event) ->
     path = $(this).attr 'href'

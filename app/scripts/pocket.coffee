@@ -1,18 +1,43 @@
-if (location.hostname is 'localhost')
-  # debug mode, started wit yeoman, connect to
-  # some existing hoodie app.
-  whereTheMagicHappens = "http://api.pocket.dev"
-else
-  whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
+class window.Pocket extends Backbone.Events
 
-window.hoodie = new Hoodie(whereTheMagicHappens)
+  # this is the entry point of your application.
+  constructor: ->
+    window.pocket = this
+    @setElement('html')
+    @registerHandlebarsHelpers()
+    @registerListeners()
+    @handleSignInAndSignOut()
 
-window.pocket =
-  Models: {}
-  Collections: {}
-  Views: {}
-  Routers: {}
+    $.when(@loadAppInfo(), @authenticate()).then =>
+      @router = new Pocket.Router
+      @app    = new Pocket.ApplicationView
 
+      Backbone.history.start()
+
+
+  #
+  setElement: (selector) ->
+    @$el = $ selector
+
+
+  #
+  authenticate: =>
+    hoodie.admin.authenticate().then(@handleAuthenticateSuccess, @handleAuthenticateError)
+
+
+  #
+  handleAuthenticateSuccess: () =>
+    @isAuthenticated = true;
+    @$el.addClass 'authenticated'
+    hoodie.resolveWith @isAuthenticated
+
+  #
+  handleAuthenticateError: () =>
+    @isAuthenticated = false;
+    hoodie.resolveWith @isAuthenticated
+
+
+  #
   handleConditionalFormElements: (el, speed = 250) ->
     conditions = $(el).data "conditions"
     conditions = conditions.split ','
@@ -39,6 +64,8 @@ window.pocket =
       else
         $(target).slideUp speed
 
+
+  #
   registerListeners: ->
     $("body").on "change", ".formCondition", (event) =>
       @handleConditionalFormElements(event.target)
@@ -46,34 +73,25 @@ window.pocket =
       event.preventDefault()
       hoodie.admin.signOut().done(@onSignOutSuccess).fail(@onSignOutFail)
 
+
+  #
   registerHandlebarsHelpers: ->
     Handlebars.registerHelper 'testHelper', (name, context) ->
       return "HANDLEBARS TESTHELPER"
 
-  init: ->
-    @registerHandlebarsHelpers()
-    @registerListeners()
-    hoodie.admin.authenticate().then(@onAuthenticated, @onUnauthenticated)
-    .then =>
-      @router = new pocket.Routers.ApplicationRouter
-      @app = new pocket.Views.ApplicationView
-      Backbone.history.start()
 
-  onAuthenticated: () =>
-    pocket.isAuthenticated = true;
-    $('body').addClass 'authenticated'
+  #
+  handleSignInAndSignOut: ->
+    hoodie.account.on 'signin', ->
+      window.location.reload()
 
-  onUnauthenticated: () =>
-    pocket.isAuthenticated = false;
-    return @hoodie.resolveWith()
+    hoodie.account.on 'signout', ->
+      console.log('cannot handle signout yet, hoodie is buggy here.
+        you need te reload manually')
 
-  onSignOutSuccess: () =>
-    window.location = '/'
+  loadAppInfo: =>
+    hoodie.admin.getAppInfo().pipe(@setAppInfo)
 
-  onSignOutFail: () =>
-    console.log "I'm sorry Dave, I can't let you do that."
-
-window.escapeExpression = Handlebars.Utils.escapeExpression
-
-$(document).ready ->
-  pocket.init()
+  setAppInfo: (info) =>
+    console.log 'info', info
+    pocket.appInfo = info

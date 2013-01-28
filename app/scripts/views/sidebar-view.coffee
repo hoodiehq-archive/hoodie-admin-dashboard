@@ -1,4 +1,4 @@
-class pocket.Views.SidebarView extends pocket.Views.BaseView
+class Pocket.SidebarView extends Pocket.BaseView
   template: 'sidebar'
 
   handleNavigationStates: (route) ->
@@ -8,17 +8,13 @@ class pocket.Views.SidebarView extends pocket.Views.BaseView
       $("nav li.active").removeClass "active"
       $el.addClass "active"
 
-  initialize: ->
-    super
-    @setElement( $('.sidebar') )
-    @render()
+  afterRender: ->
     @loadAppName()
-    if pocket.isAuthenticated
-      pocket.router.bind "all", (route) =>
-        @handleNavigationStates Backbone.history.fragment
-      @renderCoreFunctions()
-      @loadUserTotal()
-      @loadModules()
+    pocket.router.bind "all", (route) =>
+      @handleNavigationStates Backbone.history.fragment
+    @renderCoreFunctions()
+    @loadUserTotal()
+    @loadModules()
 
   renderCoreFunctions: ->
      @$el.find('nav').html Handlebars.VM.template(JST['sidebar-core']) this
@@ -30,7 +26,7 @@ class pocket.Views.SidebarView extends pocket.Views.BaseView
     @$el.find('li.users .badge').text @userTotal
 
   loadAppName: ->
-    window.hoodie.admin.app().then(@renderAppName)
+    window.hoodie.admin.getAppInfo().then(@renderAppName)
 
   renderAppName: (@appInfo) =>
     @$el.find('header h1 a').text @appInfo.name
@@ -48,7 +44,3 @@ class pocket.Views.SidebarView extends pocket.Views.BaseView
       else
         module.messageAmount = ''
     @$el.find('nav ul.modules').html Handlebars.VM.template(JST['sidebar-modules']) this
-
-  render: () =>
-    @$el.html Handlebars.VM.template(JST[@template]) this
-    super

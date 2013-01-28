@@ -79,24 +79,31 @@ class Hoodie.Admin
     @hoodie.account.signOut()
 
 
-  # app
+  # getAppInfo
   # --------------
 
   #
-  app : ->
+  getAppInfo : ->
+
+    defer = @hoodie.defer()
 
     # dummy app info
     info =
       name: "minutes.io"
 
-    @hoodie.resolveWith(info)
+    window.setTimeout ->
+      defer.resolve(info)
+
+    return defer.promise()
 
 
-  # stats
+  # getStats
   # --------------
 
   #
-  stats : (since) ->
+  getStats : (since) ->
+
+    defer = @hoodie.defer()
 
     # dummy stats
     stats =
@@ -111,6 +118,9 @@ class Hoodie.Admin
     unless since
       for key of stats
         stats[key] = stats[key] * 17
-    @hoodie.resolveWith(stats)
+
+    window.setTimeout -> defer.resolve(stats)
+
+    return defer.promise()
 
 Hoodie.extend "admin", Hoodie.Admin
