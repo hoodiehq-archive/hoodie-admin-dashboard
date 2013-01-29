@@ -9,9 +9,12 @@
 #
 class Hoodie.AdminUsers extends Hoodie.Remote
 
-  name : '_users'
+  Store  : Hoodie.AdminUsersStore
+  name   : '_users'
 
-  constructor: (@hoodie, @admin) ->
+  constructor: (hoodie, admin) ->
+    @hoodie = hoodie
+    @admin  = admin
     super
 
   total: () =>
