@@ -1,0 +1,15 @@
+{
+  "name": "hoodie pocket",
+  "description": "Admin UI for hoodie",
+  "url": "https://github.com/hoodiehq/pocket/",
+  "dependencies": {
+    "backbone": "~0.9",
+    "bootstrap": "~2.2",
+    "handlebars": "~1.0",
+    "hoodie.js": "*",
+    "jquery": "~1.8.3",
+    "layoutmanager": "~0.8",
+    "lowdash": "~1.0",
+    "modernizr": "~2.6"
+  }
+}
