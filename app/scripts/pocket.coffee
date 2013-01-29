@@ -3,6 +3,7 @@ class window.Pocket extends Backbone.Events
   # this is the entry point of your application.
   constructor: ->
     window.pocket = this
+
     @setElement('html')
     @registerHandlebarsHelpers()
     @registerListeners()
