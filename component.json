@@ -6,10 +6,10 @@
     "backbone": "~0.9",
     "bootstrap": "~2.2",
     "handlebars": "~1.0",
-    "hoodie.js": "*",
+    "hoodie.js": "git@github.com:hoodiehq/hoodie.js.git",
     "jquery": "~1.8.3",
     "layoutmanager": "~0.8",
-    "lowdash": "~1.0",
+    "layoutmanagerdash": "~1.0",
     "modernizr": "~2.6"
   }
 }
