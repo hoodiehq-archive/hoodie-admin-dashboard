@@ -16,9 +16,3 @@ class Hoodie.AdminUsers extends Hoodie.Remote
     @hoodie = hoodie
     @admin  = admin
     super
-
-  total: () =>
-    @hoodie.resolveWith(4211)
-
-  search: ->
-    @hoodie.resolveWith(4211)
