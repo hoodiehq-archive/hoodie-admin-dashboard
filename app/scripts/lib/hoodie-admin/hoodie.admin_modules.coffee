@@ -2,26 +2,16 @@
 # =====================
 
 MODULES = [
+  name: "users"
+  status: "success"
+,
+  name: "sharings"
+  status: "success"
+,
   name: "email-out"
   status: "success"
 ,
-  name: "user-databases"
-  status: "success"
-,
-  name: "email-signup-confirmation"
-  status: "error"
-  messages: [
-    "Dummy error message"
-    "Dummy error message"
-  ]
-,
-  name: "password-reset"
-  status: "success"
-,
-  name: "username-change"
-  status: "warning"
-,
-  name: "log"
+  name: "logs"
   status: "error"
   messages: [
     "Dummy error message"
