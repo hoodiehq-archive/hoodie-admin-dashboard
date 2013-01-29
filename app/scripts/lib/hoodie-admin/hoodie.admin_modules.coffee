@@ -40,3 +40,9 @@ class Hoodie.AdminModules
 
   findAll: (options) =>
     @hoodie.resolveWith(MODULES)
+
+  getConfig : (moduleName) ->
+    @hoodie.resolveWith({})
+
+  setConfig : (moduleName, config = {}) ->
+    @hoodie.resolveWith({})
