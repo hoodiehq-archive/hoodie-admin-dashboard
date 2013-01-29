@@ -42,7 +42,16 @@ class Hoodie.AdminModules
     @hoodie.resolveWith(MODULES)
 
   getConfig : (moduleName) ->
-    @hoodie.resolveWith({})
+    @hoodie.resolveWith
+      email:
+          transport:
+              host: "",
+              port: 465,
+              auth:
+                  user: "@gmail.com",
+                  pass: ""
+              secureConnection: true,
+              service: "Gmail"
 
   setConfig : (moduleName, config = {}) ->
-    @hoodie.resolveWith({})
+    @hoodie.resolveWith(config)
