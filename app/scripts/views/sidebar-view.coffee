@@ -17,6 +17,7 @@ class Pocket.SidebarView extends Pocket.BaseView
     @loadModules()
     super
 
+  # Draws core functions (users and data)
   renderCoreFunctions: ->
      @$el.find('nav').html Handlebars.VM.template(JST['sidebar-core']) this
 
@@ -36,6 +37,7 @@ class Pocket.SidebarView extends Pocket.BaseView
   loadModules: ->
     window.hoodie.admin.modules.findAll().then(@renderModules)
 
+  # Generates module menu with badges
   renderModules: (@modules) =>
     for key, module of @modules
       module.url = module.name.replace('worker-', '')
