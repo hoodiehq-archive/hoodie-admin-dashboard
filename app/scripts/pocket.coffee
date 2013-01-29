@@ -25,7 +25,6 @@ class window.Pocket extends Backbone.Events
   authenticate: =>
     hoodie.admin.authenticate().then(@handleAuthenticateSuccess, @handleAuthenticateError)
 
-
   #
   handleAuthenticateSuccess: () =>
     @isAuthenticated = true;
@@ -80,6 +79,15 @@ class window.Pocket extends Backbone.Events
     Handlebars.registerHelper 'testHelper', (name, context) ->
       return "HANDLEBARS TESTHELPER"
 
+    # We need ISO-formatted dates for timeago
+    Handlebars.registerHelper 'convertTimestampToISO', (timestamp) ->
+      return unless timestamp
+      if timestamp.toString().length is 10
+        timestamp += '000'
+      # This won't work in IE7
+      return JSON.parse(JSON.stringify(new Date(parseInt(timestamp))))
+
+    return null
 
   #
   handleSignInAndSignOut: ->
