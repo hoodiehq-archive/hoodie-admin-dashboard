@@ -86,8 +86,7 @@ class window.Pocket extends Backbone.Events
       window.location.reload()
 
     hoodie.account.on 'signout', ->
-      console.log('cannot handle signout yet, hoodie is buggy here.
-        you need te reload manually')
+      window.location.reload()
 
   loadAppInfo: =>
     hoodie.admin.getAppInfo().pipe(@setAppInfo)
