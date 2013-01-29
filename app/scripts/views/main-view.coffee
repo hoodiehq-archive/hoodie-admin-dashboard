@@ -1,5 +1,8 @@
 class Pocket.MainView extends Pocket.BaseView
 
+
+  # Template is selected dynamically by ApplicationView::initialize
+
   views:
     ".sidebar" : new Pocket.SidebarView
     ".main"    : new Pocket.DashboardView

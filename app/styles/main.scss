@@ -152,6 +152,27 @@ a:hover {
 }
 // Lists
 
+// SignIn View
+
+.signInContainer{
+  position: absolute;
+  padding: 20px;
+  width: 40em;
+  margin-top: -14em;
+  margin-left: -20em;
+  top: 50%;
+  left: 50%;
+  background: $sidebarBG;
+  border: 4px solid shade($sidebarBG, 10);
+  @include border-radius(10px);
+  .logo{
+    background: url('../images/hoodie_pocket_logo_176.png') no-repeat;
+    height: 53px;
+  }
+  form{
+    margin: 0;
+  }
+}
 
 // Sidebar
 
