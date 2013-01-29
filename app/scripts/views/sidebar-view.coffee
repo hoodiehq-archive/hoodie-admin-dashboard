@@ -30,7 +30,8 @@ class Pocket.SidebarView extends Pocket.BaseView
     window.hoodie.admin.getAppInfo().then(@renderAppName)
 
   renderAppName: (@appInfo) =>
-    @$el.find('header h1 a').text @appInfo.name
+    @$el.find('header .appName a').text @appInfo.name
+    $('.sidebar header .appName').bigtext()
 
   loadModules: ->
     window.hoodie.admin.modules.findAll().then(@renderModules)

@@ -13,7 +13,7 @@ class Pocket.BaseView extends Backbone.Layout # Backbone.View
 
   #
   afterRender: ->
-    $(".timeago").timeago()
+    $('.timeago').timeago()
 
   # Turns "email-out" into "Email out"
   makeURLHuman: (@string) ->
