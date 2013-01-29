@@ -4,6 +4,7 @@ class Pocket.ModulesView extends Pocket.BaseView
   beforeRender: () =>
     @module.url = @module.name.replace('worker-', '')
     @module.cleanName = @makeURLHuman @module.url
+    @appInfo = pocket.appInfo
     # Check if the module has its own template and load it
     if JST["modules/"+@module.name]
       @module.formHTML = Handlebars.VM.template(JST["modules/"+@module.name]) this
