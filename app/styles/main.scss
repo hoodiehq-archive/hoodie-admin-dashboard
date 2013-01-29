@@ -278,8 +278,9 @@ h3.top{
 }
 
 .main{
-  width:100%;
-  padding: 73px 20px 72px 240px;
+  overflow: hidden;
+  margin: 0 0 0 240px;
+  padding: 73px 20px 72px;
   .content{
     max-width: 52em;
     margin: 0;

@@ -20,26 +20,21 @@ MODULES = [
 ]
 
 #
-class Hoodie.AdminModules
+class Hoodie.AdminModules extends Hoodie.Remote
+
+  name   : 'modules'
 
   constructor: (@hoodie, @admin) ->
     #
+    super
 
 
   find: (moduleName) =>
-    defer = @hoodie.defer()
-
-    for module in MODULES
-      if module.name is moduleName
-        return defer.resolve(module)
-
-    defer.reject()
-
-    return defer.promise()
+    @store.find("module", moduleName)
 
 
-  findAll: (options) =>
-    @hoodie.resolveWith(MODULES)
+  findAll: =>
+    @store.findAll('module')
 
   getConfig : (moduleName) ->
     @hoodie.resolveWith

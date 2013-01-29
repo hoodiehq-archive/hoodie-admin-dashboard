@@ -125,18 +125,13 @@ class Hoodie.Admin
 
   #
   getConfig : () ->
-    @hoodie.resolveWith
-      email:
-          transport:
-              host: "",
-              port: 465,
-              auth:
-                  user: "@gmail.com",
-                  pass: ""
-              secureConnection: true,
-              service: "Gmail"
+    @modules.store.find("module", "appconfig").pipe (module) -> module.config
 
   setConfig : (config = {}) ->
-    @hoodie.resolveWith(config)
+    updateFunction = (module) ->
+      module.config = config
+      return module
+    promise = @modules.store.update("module", "appconfig", updateFunction)
+    return promise
 
 Hoodie.extend "admin", Hoodie.Admin

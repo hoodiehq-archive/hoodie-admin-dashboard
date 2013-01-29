@@ -30,11 +30,12 @@ class Pocket.SidebarView extends Pocket.BaseView
   # Generates module menu with badges
   renderModules: (@modules) =>
     for key, module of @modules
-      module.url = module.name.replace('worker-', '')
+      module.url = module.id
       module.cleanName = @makeURLHuman module.url
       module.badgeStatus = 'badge-'+module.status
       if module.messages
         module.messageAmount = module.messages.length
       else
         module.messageAmount = ''
+
     @$el.find('nav ul.modules').html Handlebars.VM.template(JST['sidebar-modules']) this

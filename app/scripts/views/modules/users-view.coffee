@@ -3,6 +3,6 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
 
   update : ->
-    window.hoodie.admin.users.store.findAll().then (users) =>
+    hoodie.admin.users.store.findAll().then (users) =>
       @users = users
       @render()

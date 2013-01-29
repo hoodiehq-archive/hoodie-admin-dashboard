@@ -2,14 +2,14 @@ class Pocket.ModulesView extends Pocket.BaseView
   template: 'module'
 
   beforeRender: () =>
-    @module.url = @module.name.replace('worker-', '')
+    @module.url = @module.id.replace('worker-', '')
     @module.cleanName = @makeURLHuman @module.url
     @appInfo = pocket.appInfo
 
     @removeView(".module-content") if @getView(".module-content")
 
-    if @moduleViewExists @module.name
-      view = @getModuleView @module.name
+    if @moduleViewExists @module.id
+      view = @getModuleView @module.id
       @setView(".module-content", view)
       view.update?()
 
@@ -19,7 +19,7 @@ class Pocket.ModulesView extends Pocket.BaseView
   _cachedViews : {}
   getModuleView : (name) ->
     unless @_cachedViews[name]
-      @_cachedViews[name] = new Pocket.ModulesView["module-#{@module.name}"]
+      @_cachedViews[name] = new Pocket.ModulesView["module-#{@module.id}"]
 
     return @_cachedViews[name]
 
