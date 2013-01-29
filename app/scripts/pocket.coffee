@@ -87,6 +87,16 @@ class window.Pocket extends Backbone.Events
       # This won't work in IE7
       return JSON.parse(JSON.stringify(new Date(parseInt(timestamp))))
 
+    # Generates a generic default reply-to address for the app
+    Handlebars.registerHelper 'defaultReplyMailAddress', () ->
+      if !pocket.appInfo.name
+        return "please-reply@your-app.com"
+      if pocket.appInfo.name.indexOf(".") is -1
+        return "please-reply@"+pocket.appInfo.name+".com"
+      else
+        return "please-reply@"+pocket.appInfo.name
+      return pocket.appInfo.defaultReplyEmailAddress
+
     return null
 
   #

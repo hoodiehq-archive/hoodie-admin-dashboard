@@ -20,6 +20,7 @@ class Pocket.BaseView extends Backbone.Layout # Backbone.View
     result = @string.replace(/-/g,' ')
     result = result.charAt(0).toUpperCase() + result.slice(1)
 
+  # TODO this is now a handlebar helper, but needs to be replaced in all templates
   # Generates a default address for email placeholders
   defaultReplyMail: (@appName) ->
     if !@appName

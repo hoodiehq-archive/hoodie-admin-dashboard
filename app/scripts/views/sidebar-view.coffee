@@ -15,6 +15,7 @@ class Pocket.SidebarView extends Pocket.BaseView
     @renderCoreFunctions()
     @loadUserTotal()
     @loadModules()
+    super
 
   renderCoreFunctions: ->
      @$el.find('nav').html Handlebars.VM.template(JST['sidebar-core']) this
