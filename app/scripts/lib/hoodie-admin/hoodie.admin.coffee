@@ -124,7 +124,7 @@ class Hoodie.Admin
     return defer.promise()
 
   #
-  getConfig : (moduleName) ->
+  getConfig : () ->
     @hoodie.resolveWith
       email:
           transport:
@@ -136,7 +136,7 @@ class Hoodie.Admin
               secureConnection: true,
               service: "Gmail"
 
-  setConfig : (moduleName, config = {}) ->
+  setConfig : (config = {}) ->
     @hoodie.resolveWith(config)
 
 Hoodie.extend "admin", Hoodie.Admin

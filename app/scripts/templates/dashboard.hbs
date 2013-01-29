@@ -45,4 +45,30 @@
       <li>Module Signup confirmation reports: New user confirmed! (about 6 hours ago)</li>
     </ul>
   </div>
+  <form class="email" action="">
+    <section class="">
+      <span class="error"></span>
+      <div class="formLabel">
+        <label>Username</label>
+      </div>
+      <div class="form">
+        <input class="userName" value="{{config.email.transport.auth.user}}">
+      </div>
+    </section>
+    <section class="noBorder">
+      <div class="formLabel">
+        <label>Password</label>
+      </div>
+      <div class="form">
+        <input class="password" value="{{config.email.transport.auth.pass}}">
+      </div>
+    </section>
+    <section class="noBorder">
+      <div class="formLabel">
+      </div>
+      <div class="form">
+        <button class="submit btn" type="submit">Submit</button>
+      </div>
+    </section>
+  </form>
 </div>
