@@ -11,6 +11,10 @@ class Pocket.BaseView extends Backbone.Layout # Backbone.View
   beforeRender: ->
     @appInfo = pocket.appInfo
 
+  #
+  afterRender: ->
+    $(".timeago").timeago()
+
   # Turns "email-out" into "Email out"
   makeURLHuman: (@string) ->
     result = @string.replace(/-/g,' ')
