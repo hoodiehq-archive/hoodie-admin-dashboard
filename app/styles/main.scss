@@ -194,10 +194,16 @@ a:hover {
     }
     .appName{
       width: 167px;
-      margin-top: 8px;
-      margin-bottom: 15px;
+      //margin-top: 15px;
+      //margin-bottom: 15px;
+      height: 46px;
       display: block;
       font-weight: 800;
+      position: relative;
+      div{
+        position: absolute;
+        bottom: 5px;
+      }
     }
   }
 }
