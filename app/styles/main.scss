@@ -363,6 +363,7 @@ h3.top{
       label.checkbox,
       label.radio{
         margin-top: 5px;
+        min-height: 30px;
       }
       input[type="radio"], input[type="checkbox"] {
         margin-top: 3px;
