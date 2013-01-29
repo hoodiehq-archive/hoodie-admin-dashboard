@@ -21,7 +21,7 @@ class Pocket.SidebarView extends Pocket.BaseView
      @$el.find('nav').html Handlebars.VM.template(JST['sidebar-core']) this
 
   loadUserTotal: ->
-    window.hoodie.admin.users.total().then(@renderUserTotal)
+    window.hoodie.admin.users.store.getTotal().then(@renderUserTotal)
 
   renderUserTotal: (@userTotal) =>
     @$el.find('li.users .badge').text @userTotal
