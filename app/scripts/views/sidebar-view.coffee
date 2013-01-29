@@ -12,20 +12,8 @@ class Pocket.SidebarView extends Pocket.BaseView
     @loadAppName()
     pocket.router.bind "all", (route) =>
       @handleNavigationStates Backbone.history.fragment
-    @renderCoreFunctions()
-    @loadUserTotal()
     @loadModules()
     super
-
-  # Draws core functions (users and data)
-  renderCoreFunctions: ->
-     @$el.find('nav').html Handlebars.VM.template(JST['sidebar-core']) this
-
-  loadUserTotal: ->
-    window.hoodie.admin.users.store.getTotal().then(@renderUserTotal)
-
-  renderUserTotal: (@userTotal) =>
-    @$el.find('li.users .badge').text @userTotal
 
   loadAppName: ->
     window.hoodie.admin.getAppInfo().then(@renderAppName)
