@@ -123,4 +123,20 @@ class Hoodie.Admin
 
     return defer.promise()
 
+  #
+  getConfig : (moduleName) ->
+    @hoodie.resolveWith
+      email:
+          transport:
+              host: "",
+              port: 465,
+              auth:
+                  user: "@gmail.com",
+                  pass: ""
+              secureConnection: true,
+              service: "Gmail"
+
+  setConfig : (moduleName, config = {}) ->
+    @hoodie.resolveWith(config)
+
 Hoodie.extend "admin", Hoodie.Admin
