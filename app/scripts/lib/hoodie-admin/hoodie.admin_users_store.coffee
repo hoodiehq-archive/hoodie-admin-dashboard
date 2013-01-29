@@ -7,10 +7,14 @@
 class Hoodie.AdminUsersStore extends Hoodie.RemoteStore
 
   getTotal : ->
-    @hoodie.resolveWith(4211)
+    @findAll().pipe (users) -> users.length
 
   search : (query) ->
-    @findAll()
+    path = "/_all_docs?include_docs=true"
+    path = "#{path}&startkey=\"org.couchdb.user:#{query}\"&endkey=\"org.couchdb.user:#{query}|\""
+
+    @remote.request("GET", path)
+    .pipe(@_mapDocsFromFindAll).pipe(@parseAllFromRemote)
 
   # filter out non-user docs
   _mapDocsFromFindAll : (response) =>
