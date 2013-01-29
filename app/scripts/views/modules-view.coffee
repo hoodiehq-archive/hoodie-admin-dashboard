@@ -7,13 +7,20 @@ class Pocket.ModulesView extends Pocket.BaseView
     @appInfo = pocket.appInfo
 
     @removeView(".module-content") if @getView(".module-content")
-    if Pocket.ModulesView["module-#{@module.name}"]
-      # @views['.module-content'] = new Pocket.ModulesView["module-#{@module.name}"]
-      view = new Pocket.ModulesView["module-#{@module.name}"]
-      @setView(".module-content", view)
-    # else
-    #   delete @views['.module-content']
 
-    # Check if the module has its own template and load it
-    # if JST["modules/"+@module.name]
-    #  @module.formHTML = Handlebars.VM.template(JST["modules/"+@module.name]) this
+    if @moduleViewExists @module.name
+      view = @getModuleView @module.name
+      @setView(".module-content", view)
+      view.update?()
+
+  moduleViewExists : (name) ->
+    Pocket.ModulesView["module-#{name}"]?
+
+  _cachedViews : {}
+  getModuleView : (name) ->
+    unless @_cachedViews[name]
+      @_cachedViews[name] = new Pocket.ModulesView["module-#{@module.name}"]
+
+    return @_cachedViews[name]
+
+

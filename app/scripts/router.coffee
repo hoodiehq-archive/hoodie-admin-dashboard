@@ -2,7 +2,6 @@ class Pocket.Router extends Backbone.Router
 
   routes:
     ""                        : "dashboard"
-    "users"                   : "users"
     "modules/:moduleName"     : "modules"
 
   dashboard: ->
@@ -11,14 +10,6 @@ class Pocket.Router extends Backbone.Router
 
     hoodie.admin.getStats(1358610679).then (stats) ->
       view.stats = stats
-      view.render()
-
-  users: ->
-    view = new Pocket.UsersView
-    pocket.app.views.body.setView(".main", view)
-
-    window.hoodie.admin.users.store.findAll().then (users) =>
-      view.users = users
       view.render()
 
   modules: (moduleName) ->
