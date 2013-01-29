@@ -9,7 +9,7 @@
     "hoodie.js": "git@github.com:hoodiehq/hoodie.js.git",
     "jquery": "~1.8.3",
     "layoutmanager": "~0.8",
-    "layoutmanagerdash": "~1.0",
+    "lodash": "~1.0",
     "modernizr": "~2.6"
   }
 }

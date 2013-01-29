@@ -11,6 +11,6 @@
   "commit": "13342da595e1cc7b91dd66fd218188b3e4ca85d0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/hoodiehq/hoodie.js.git"
+    "url": "git@github.com:hoodiehq/hoodie.js.git"
   }
 }
