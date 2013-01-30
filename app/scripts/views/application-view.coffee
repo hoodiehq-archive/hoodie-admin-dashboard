@@ -18,9 +18,9 @@ class Pocket.ApplicationView extends Pocket.BaseView
 
 
   handleLinks: (event) ->
-    path = $(this).attr 'href'
+    path = $(event.target).attr 'href'
     if /\.pdf$/.test path
       return true
     if /^\/[^\/]/.test(path)
-       router.navigate path.substr(1), true
-       return false
+      pocket.router.navigate path.substr(1), true
+      return false

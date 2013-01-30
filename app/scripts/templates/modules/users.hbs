@@ -2,7 +2,18 @@
   <legend>Settings</legend>
 
   <span class="description">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>
+
   <form class="config">
+    {{#if emailTransportNotConfigured}}
+    <section>
+      <div class="formLabel">
+        <label>Signup confirmation</label>
+      </div>
+      <div class="form">
+        <span class="note">Email needs to be configured in <a href="/modules/appconfig">Appconfig</a> before enabling signup confirmation</span>
+      </div>
+    </section>
+    {{else}}
     <section>
       <div class="formLabel">
         <label>Signup confirmation</label>
@@ -19,7 +30,7 @@
         <label>From address</label>
       </div>
       <div class="form">
-        <input type="email" name="confirmationEmailFrom" placeholder="{{defaultReplyMailAddress}}" required>
+        <input type="email" name="confirmationEmailFrom" value="{{config.confirmationEmailFrom}}" placeholder="{{defaultReplyMailAddress}}" required>
         <span class="note">From address for all of your app's emails.</span>
       </div>
     </section>
@@ -29,7 +40,7 @@
         <label>Subject line</label>
       </div>
       <div class="form">
-        <input type="text" name="confirmationEmailSubject" placeholder="Please confirm your signup at {{appInfo.name}}">
+        <input type="text" name="confirmationEmailSubject" value="{{config.confirmationEmailSubject}}" placeholder="Please confirm your signup at {{appInfo.name}}">
       </div>
     </section>
 
@@ -38,7 +49,7 @@
         <label>Body</label>
       </div>
       <div class="form">
-        <textarea rows="4" name="confirmationEmailText" >Hello {name}! Thanks for signing up with {{appInfo.name}}</textarea>
+        <textarea rows="4" name="confirmationEmailText">{{config.confirmationEmailText}}</textarea>
       </div>
     </section>
 
@@ -50,6 +61,7 @@
         <button class="btn" type="submit">update</button>
       </div>
     </section>
+    {{/if}}
   </form>
 </div>
 
