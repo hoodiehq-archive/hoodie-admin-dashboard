@@ -20,3 +20,4 @@ class Hoodie.AdminUsersStore extends Hoodie.RemoteStore
   _mapDocsFromFindAll : (response) =>
     rows = response.rows.filter (row) -> /^org\.couchdb\.user:/.test row.id
     rows.map (row) -> row.doc
+
