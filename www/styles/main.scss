@@ -91,12 +91,14 @@ a:hover {
   @include notificationsColors($bgBrown);
   @include border-radius(10px);
   padding:6px 10px;
+  position: relative;
   span{
     font-size: 12px;
+    position: absolute;
   }
   h1{
     text-align: center;
-    margin: 0 0 20px 0;
+    margin:20px 0;
   }
 }
 
@@ -152,6 +154,27 @@ a:hover {
 }
 // Lists
 
+// SignIn View
+
+.signInContainer{
+  position: absolute;
+  padding: 20px;
+  width: 40em;
+  margin-top: -14em;
+  margin-left: -20em;
+  top: 50%;
+  left: 50%;
+  background: $sidebarBG;
+  border: 4px solid shade($sidebarBG, 10);
+  @include border-radius(10px);
+  .logo{
+    background: url('../images/hoodie_pocket_logo_176_b.png') no-repeat;
+    height: 53px;
+  }
+  form{
+    margin: 0;
+  }
+}
 
 // Sidebar
 
@@ -165,12 +188,22 @@ a:hover {
   header{
     margin: 0 20px;
     .logo{
-      background: url('../images/hoodie_pocket_logo_176.png') no-repeat;
+      background: url('../images/hoodie_pocket_logo_176_b.png') no-repeat;
       height: 53px;
       margin-top: 20px;
     }
-    h1{
-      margin-top: 5px;
+    .appName{
+      width: 167px;
+      //margin-top: 15px;
+      //margin-bottom: 15px;
+      height: 46px;
+      display: block;
+      font-weight: 800;
+      position: relative;
+      div{
+        position: absolute;
+        bottom: 5px;
+      }
     }
   }
 }
@@ -199,7 +232,7 @@ nav{
         padding-top: 2px;
         margin-top: 6px;
         min-height: 1.5em;
-        right: 0;
+        right: 0.5em;
         position: absolute;
       }
       &.active{
@@ -217,7 +250,7 @@ a.signOut {
   display: none;
 }
 
-body.authenticated{
+.authenticated{
   a.signOut {
     display: block;
     position: absolute;
@@ -245,8 +278,9 @@ h3.top{
 }
 
 .main{
-  width:100%;
-  padding: 73px 20px 72px 240px;
+  overflow: hidden;
+  margin: 0 0 0 240px;
+  padding: 73px 20px 72px;
   .content{
     max-width: 52em;
     margin: 0;
@@ -263,8 +297,6 @@ h3.top{
 
 .userSearch{
   .form-search{
-    display: block;
-    float:left;
   }
   .pagination{
     height:30px;
@@ -331,6 +363,7 @@ h3.top{
       label.checkbox,
       label.radio{
         margin-top: 5px;
+        min-height: 30px;
       }
       input[type="radio"], input[type="checkbox"] {
         margin-top: 3px;

@@ -1,0 +1,112 @@
+<div class="module" id="{{module.name}}">
+  <legend>Settings</legend>
+
+  <span class="description">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>
+
+  <form class="config">
+    {{#if emailTransportNotConfigured}}
+    <section>
+      <div class="formLabel">
+        <label>Signup confirmation</label>
+      </div>
+      <div class="form">
+        <span class="note">Email needs to be configured in <a href="/modules/appconfig">Appconfig</a> before enabling signup confirmation</span>
+      </div>
+    </section>
+    {{else}}
+    <section>
+      <div class="formLabel">
+        <label>Signup confirmation</label>
+      </div>
+      <div class="form">
+        <label class="checkbox">
+          <input type="checkbox" name="confirmationMandatory" class="formCondition" data-conditions="true:.confirmationOptions"> is mandatory
+        </label>
+      </div>
+    </section>
+
+    <section class="confirmationOptions">
+      <div class="formLabel">
+        <label>From address</label>
+      </div>
+      <div class="form">
+        <input type="email" name="confirmationEmailFrom" value="{{config.confirmationEmailFrom}}" placeholder="{{defaultReplyMailAddress}}" required>
+        <span class="note">From address for all of your app's emails.</span>
+      </div>
+    </section>
+
+    <section class="confirmationOptions">
+      <div class="formLabel">
+        <label>Subject line</label>
+      </div>
+      <div class="form">
+        <input type="text" name="confirmationEmailSubject" value="{{config.confirmationEmailSubject}}" placeholder="Please confirm your signup at {{appInfo.name}}">
+      </div>
+    </section>
+
+    <section class="confirmationOptions">
+      <div class="formLabel">
+        <label>Body</label>
+      </div>
+      <div class="form">
+        <textarea rows="4" name="confirmationEmailText">{{config.confirmationEmailText}}</textarea>
+      </div>
+    </section>
+
+    <section>
+      <div class="formLabel">
+        &nbsp;
+      </div>
+      <div class="form">
+        <button class="btn" type="submit">update</button>
+      </div>
+    </section>
+    {{/if}}
+  </form>
+</div>
+
+<hr>
+
+<div class="content centered">
+  <h2 class="top">Users</h2>
+  <div class="userSearch">
+    <form class="form-search">
+      <div class="input-append">
+        <input type="text" class="span2 search-query">
+        <button type="submit" class="btn">Search</button>
+      </div>
+    </form>
+  </div>
+  <div class="tableStatus">
+    <p class="currentSearchTerm muted">Currently displaying all users</p>
+    <p class="currentSearchMetrics muted">Showing 50 of 4211 users</p>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Last seen</th>
+        <th>Signup date</th>
+        <th>State</th>
+        <th>Password</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each users}}
+      <tr>
+        <td>{{id}}</td>
+        <td>{{lastLogin}}</td>
+        <td>{{signedUpAt}}</td>
+        <td>{{state}}</td>
+        <td>resend / new</td>
+        <td>edit / delete</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div class="tableStatus">
+    <p class="currentSearchTerm muted">Currently displaying all users</p>
+    <p class="currentSearchMetrics muted">Showing 50 of 4211 users</p>
+  </div>
+</div>

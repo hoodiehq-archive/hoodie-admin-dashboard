@@ -1,6 +1,8 @@
+# XMLHttpRequest cannot load http://api.pocket.dev/_session. Origin http://localhost:3501 is not allowed by Access-Control-Allow-Origin. (undefined, #undefined)
+# info [object Object] (undefined, #undefined)
 CACHE MANIFEST
 
-# Time: Sun Jan 27 2013 23:36:57 GMT+0100 (CET)
+# Time: Wed Jan 30 2013 13:38:46 GMT+0100 (CET)
 # This manifest was created by confess.js, http://github.com/jamesgpearce/confess
 #
 # Retrieved URL: http://localhost:3501/
@@ -22,13 +24,10 @@ CACHE MANIFEST
 
 CACHE:
 components/modernizr/modernizr.js
-http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js
 http://localhost:3501/app/images/glyphicons-halflings-white.png?1358768137
 http://localhost:3501/app/images/glyphicons-halflings.png?1358768137
-http://localhost:3501/images/hoodie_pocket_logo_176.png
-scripts/9eecb7db.app.js
-scripts/e3ee538c.plugins.js
-styles/de51b9fb.main.css
+http://localhost:3501/images/hoodie_pocket_logo_176_b.png
+styles/3d1e1b8f.main.css
 
 NETWORK:
 *
