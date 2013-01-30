@@ -8,8 +8,12 @@ class Pocket.Router extends Backbone.Router
     view = new Pocket.DashboardView
     pocket.app.views.body.setView(".main", view)
 
-    hoodie.admin.getStats(1358610679).then (stats) ->
-      view.stats = stats
+    $.when(
+      hoodie.admin.getStats(1358610679),
+      hoodie.admin.getConfig()
+    ).then (stats, appConfig) ->
+      view.stats     = stats
+      view.appConfig = appConfig
       view.render()
 
   modules: (moduleName) ->
