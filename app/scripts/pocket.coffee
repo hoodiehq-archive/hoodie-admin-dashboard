@@ -97,6 +97,21 @@ class window.Pocket extends Backbone.Events
         return "please-reply@"+pocket.appInfo.name
       return pocket.appInfo.defaultReplyEmailAddress
 
+    # Style Helpers
+    # These return classnames depending on the value passed
+    # Used for dashboard panel colors
+    Handlebars.registerHelper 'positiveSuccessNegativeWarning', (value) ->
+      if value > 0
+        return 'success'
+      else
+        return 'warning'
+
+    Handlebars.registerHelper 'positiveWarningNegativeSuccess', (value) ->
+      if value > 0
+        return 'warning'
+      else
+        return 'success'
+
     return null
 
   #

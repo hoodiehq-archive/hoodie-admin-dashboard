@@ -108,7 +108,7 @@ class Hoodie.Admin
     # dummy stats
     stats =
       signups: 12
-      account_deletions: 1
+      account_deletions: 3
       users_active: 1302
       users_total: 4211
       growth: 0.04
