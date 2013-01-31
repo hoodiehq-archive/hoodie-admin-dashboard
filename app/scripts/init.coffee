@@ -12,7 +12,7 @@ Backbone.Layout.configure
   # augment Backbone Views
   manage: true
 
-  # get precompiled Handlebars templat
+  # get precompiled Handlebars template
   fetch: (path) ->
     Handlebars.VM.template(JST[path])
 
