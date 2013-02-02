@@ -26,10 +26,15 @@ class Pocket.ModulesView['module-appconfig'] extends Pocket.ModulesBaseView
     console.log "Could not save global mail config"
     console.log error
     @$el.find('.submit').attr('disabled', null)
+    @$el.find('.submit').siblings('span').text('Could not save global mail config')
 
   handleSubmitSuccess: =>
     console.log "Config saved"
     @$el.find('.submit').attr('disabled', null)
+    $message = @$el.find('.submit').siblings('span')
+    $.when($message.text('Config saved').delay(2000).fadeOut()).done(=>
+      $message.empty().show()
+    )
 
   #
   _getConfigSkeleton: ->

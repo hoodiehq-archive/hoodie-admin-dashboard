@@ -1,32 +1,39 @@
-<h2>Set GMAIL email &amp; password for sending emails</h2>
+<div class="module">
+  <legend>Email Settings</legend>
+  <span class="description">Set up all outgoing email from this Hoodie app</span>
+  <form class="email form-horizontal" action="">
+    <section>
+      <div class="control-group">
+        <label>Service</label>
+        <div class="controls">
+          <select>
+            <option>gMail</option>
+          </select>
+        </div>
+      </div>
 
-<form class="email form-horizontal" action="">
-  <span class="error"></span>
-  <div class="control-group">
-    <label class="control-label">Service</label>
-    <div class="controls">
-      <select>
-        <option>GMAIL</option>
-      </select>
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">Username</label>
-    <div class="controls">
-      <input class="username" type="text" placeholder="me@gmail.com" value="{{config.email.transport.auth.user}}">
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">Password</label>
-    <div class="controls">
-      <input class="password" type="password" value="{{config.email.transport.auth.pass}}">
-    </div>
-  </div>
+      <div class="control-group">
+        <label>Username</label>
+        <div class="controls">
+          <input class="username" type="email" placeholder="me@gmail.com" value="{{config.email.transport.auth.user}}">
+        </div>
+      </div>
 
-  <div class="control-group">
-    <div class="controls">
-      <button class="submit btn" type="submit">Submit</button>
-    </div>
-  </div>
+      <div class="control-group">
+        <label>Password</label>
+        <div class="controls">
+          <input class="password" type="password" value="{{config.email.transport.auth.pass}}">
+        </div>
+      </div>
 
-</form>
+    </section>
+    <section>
+      <label></label>
+      <div class="controls">
+        <button class="submit btn" type="submit">Submit</button>
+        <span class="submitMessage"></span>
+      </div>
+    </section>
+  </form>
+</div>
+

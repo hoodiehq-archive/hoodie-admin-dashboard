@@ -24,7 +24,6 @@ class window.Pocket extends Backbone.Events
   #
   authenticate: =>
     hoodie.admin.authenticate().then(@handleAuthenticateSuccess, @handleAuthenticateError)
-
   #
   handleAuthenticateSuccess: () =>
     @isAuthenticated = true;
@@ -96,6 +95,21 @@ class window.Pocket extends Backbone.Events
       else
         return "please-reply@"+pocket.appInfo.name
       return pocket.appInfo.defaultReplyEmailAddress
+
+    # Style Helpers
+    # These return class names depending on the value passed
+    # Used for dashboard panel colors
+    Handlebars.registerHelper 'positiveSuccessNegativeWarning', (value) ->
+      if value > 0
+        return 'success'
+      else
+        return 'warning'
+
+    Handlebars.registerHelper 'positiveWarningNegativeSuccess', (value) ->
+      if value > 0
+        return 'warning'
+      else
+        return 'success'
 
     return null
 

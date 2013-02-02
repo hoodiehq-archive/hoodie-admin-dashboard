@@ -95,6 +95,7 @@ a:hover {
   span{
     font-size: 12px;
     position: absolute;
+    margin-right: 5px;
   }
   h1{
     text-align: center;
@@ -333,7 +334,7 @@ h3.top{
     display: block;
   }
   .error{
-    margin-left: 30%;
+    margin-left: 165px;
     color: $red;
   }
   section{
@@ -344,30 +345,38 @@ h3.top{
     &.noBorder{
       border: none;
     }
-    .formLabel{
+    .control-group{
+      margin-bottom: 6px;
+    }
+    .formLabel, label{
       width: 30%;
       float:left;
       margin-top: 10px;
-      padding-right: 10px;
+      padding-right: 30px;
       padding-bottom: 10px;
     }
-    .form{
+    .form, .controls{
       width: 70%;
-      float:left;
+      //float:left;
       margin-top: 5px;
       padding-bottom: 6px;
       .note{
         font-size: 12px;
         color: tint($brown, 50);
+        margin-top: 5px;
+        display: block;
       }
       label.checkbox,
       label.radio{
-        margin-top: 5px;
+        margin-top: 0;
         min-height: 30px;
       }
       input[type="radio"], input[type="checkbox"] {
         margin-top: 3px;
       }
+    }
+    .submitMessage{
+      margin-left: 10px;
     }
   }
 
@@ -395,5 +404,13 @@ h3.top{
 
   textarea{
     height: auto;
+    margin-bottom: 4px;
+    margin-top: 6px;
+  }
+}
+
+.form-horizontal{
+  .control-group{
+    margin-bottom: 6px;
   }
 }
