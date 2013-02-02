@@ -2,7 +2,7 @@
 # info [object Object] (undefined, #undefined)
 CACHE MANIFEST
 
-# Time: Wed Jan 30 2013 13:38:46 GMT+0100 (CET)
+# Time: Sat Feb 02 2013 20:00:23 GMT+0100 (CET)
 # This manifest was created by confess.js, http://github.com/jamesgpearce/confess
 #
 # Retrieved URL: http://localhost:3501/
@@ -27,7 +27,7 @@ components/modernizr/modernizr.js
 http://localhost:3501/app/images/glyphicons-halflings-white.png?1358768137
 http://localhost:3501/app/images/glyphicons-halflings.png?1358768137
 http://localhost:3501/images/hoodie_pocket_logo_176_b.png
-styles/3d1e1b8f.main.css
+styles/main.css
 
 NETWORK:
 *

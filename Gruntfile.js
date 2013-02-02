@@ -208,4 +208,6 @@ module.exports = function( grunt ) {
   grunt.renameTask('clean', 'old-clean');
   grunt.registerTask('clean', 'old-clean handlebars');
 
+  // build /temp without minification etc
+  grunt.registerTask('builddebug', 'intro clean coffee compass mkdirs manifest copy time');
 };
