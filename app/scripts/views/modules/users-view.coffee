@@ -2,7 +2,8 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   template: 'modules/users'
 
   events :
-    'submit form.config' : 'updateConfig'
+    'submit form.config'      : 'updateConfig'
+    'submit form.form-search' : 'search'
 
   update : ->
     $.when(
@@ -10,9 +11,10 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       hoodie.admin.modules.store.find('module', 'users'),
       hoodie.admin.getConfig()
     ).then (users, object, appConfig) =>
-      @users     = users
-      @config    = $.extend @_configDefaults(), object.config
-      @appConfig = appConfig
+      @totalUsers = users.length
+      @users      = users
+      @config     = $.extend @_configDefaults(), object.config
+      @appConfig  = appConfig
 
       # config defaults
       @config.confirmationEmailText or= "Hello {name}! Thanks for signing up with #{appInfo.name}"
@@ -27,6 +29,13 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     isConfigured = @appConfig?.email?.transport?
     not isConfigured
 
+  search : (event) ->
+    searchQuery = $('input.search-query', event.currentTarget).val()
+    $.when(
+      hoodie.admin.users.store.search(searchQuery)
+    ).then (users) =>
+      @users = users
+      @render()
 
   _updateModule : (module) =>
     module.config.confirmationMandatory     = @$el.find('[name=confirmationMandatory]').is(':checked')
