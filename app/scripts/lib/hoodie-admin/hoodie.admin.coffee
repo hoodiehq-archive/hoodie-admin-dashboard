@@ -5,13 +5,6 @@
 # commont tasks needed for the pocket admin UI.
 #
 
-# As we don't need any data synchronization, we
-# simply prevent any persistant local storage.
-# That also allows us to handle multiple users
-# simultaneously for test purposes, without any
-# interference
-Hoodie.LocalStore::isPersistent = -> false
-
 #
 class Hoodie.Admin
 
@@ -46,6 +39,23 @@ class Hoodie.Admin
     @hoodie.remote.sync = => @hoodie.resolveWith()
 
     @hoodie.account._handleSignInSuccess.bind( @hoodie.account )
+
+    @patchHoodie()
+
+
+  # patchHoodie
+  # --------------
+
+  # In order to play around with users, we disable
+  # local store persistance for all new hoodie instances.
+  # That allows us things like:
+  #
+  #    newUserHoodie1 = new Hoodie 'http://user1.api.myapp.dev'
+  #    newUserHoodie2 = new Hoodie 'http://user2.api.myapp.dev'
+  #
+  patchHoodie : (event, callback) ->
+    Hoodie.LocalStore::isPersistent = -> false
+
 
   # on
   # --------------
