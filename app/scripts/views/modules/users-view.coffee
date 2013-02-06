@@ -38,7 +38,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       @users = users
       switch users.length
         when 0
-          @resultsDesc  = "No results for '#{searchQuery}'"
+          @resultsDesc  = "No users matching '#{searchQuery}'"
         when 1
           @resultsDesc  = "#{users.length} user matching '#{searchQuery}'"
         else

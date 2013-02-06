@@ -93,6 +93,7 @@
     <p class="currentSearchTerm muted">{{resultsDesc}}</p>
     <p class="currentSearchMetrics muted">Showing {{users.length}} of {{totalUsers}} users</p>
   </div>
+  {{#if users}}
   <table class="table">
     <thead>
       <tr>
@@ -117,8 +118,11 @@
       {{/each}}
     </tbody>
   </table>
+  {{/if}}
+  {{#if users}}
   <div class="tableStatus">
     <p class="currentSearchTerm muted">{{resultsDesc}}</p>
     <p class="currentSearchMetrics muted">Showing {{users.length}} of {{totalUsers}} users</p>
   </div>
+  {{/if}}
 </div>
