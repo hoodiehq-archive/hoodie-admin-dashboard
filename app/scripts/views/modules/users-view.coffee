@@ -11,10 +11,11 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       hoodie.admin.modules.store.find('module', 'users'),
       hoodie.admin.getConfig()
     ).then (users, object, appConfig) =>
-      @totalUsers = users.length
-      @users      = users
-      @config     = $.extend @_configDefaults(), object.config
-      @appConfig  = appConfig
+      @resultsDesc  = "Currently displaying all users"
+      @totalUsers   = users.length
+      @users        = users
+      @config       = $.extend @_configDefaults(), object.config
+      @appConfig    = appConfig
 
       # config defaults
       @config.confirmationEmailText or= "Hello {name}! Thanks for signing up with #{appInfo.name}"
@@ -35,6 +36,13 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       hoodie.admin.users.store.search(searchQuery)
     ).then (users) =>
       @users = users
+      switch users.length
+        when 0
+          @resultsDesc  = "No results for '#{searchQuery}'"
+        when 1
+          @resultsDesc  = "#{users.length} user matching '#{searchQuery}'"
+        else
+          @resultsDesc  = "#{users.length} users matching '#{searchQuery}'"
       @render()
 
   _updateModule : (module) =>
