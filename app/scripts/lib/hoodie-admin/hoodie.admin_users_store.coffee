@@ -11,7 +11,7 @@ class Hoodie.AdminUsersStore extends Hoodie.RemoteStore
 
   search : (query) ->
     path = "/_all_docs?include_docs=true"
-    path = "#{path}&startkey=\"org.couchdb.user:#{query}\"&endkey=\"org.couchdb.user:#{query}|\""
+    path = "#{path}&startkey=\"org.couchdb.user:user/#{query}\"&endkey=\"org.couchdb.user:user/#{query}|\""
 
     @remote.request("GET", path)
     .pipe(@_mapDocsFromFindAll).pipe(@parseAllFromRemote)
