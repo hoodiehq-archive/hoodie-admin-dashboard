@@ -4,6 +4,15 @@
 # Extends hoodie with an admin module with
 # commont tasks needed for the pocket admin UI.
 #
+
+# As we don't need any data synchronization, we
+# simply prevent any persistant local storage.
+# That also allows us to handle multiple users
+# simultaneously for test purposes, without any
+# interference
+Hoodie.LocalStore::isPersistent = -> false
+
+#
 class Hoodie.Admin
 
   constructor: (@hoodie) ->

@@ -10,12 +10,7 @@ class Pocket.ApplicationView extends Pocket.BaseView
     super
 
     @setElement( $('html') )
-    if pocket.isAuthenticated
-      @views.body.template = 'main'
-    else
-      @views.body.template = 'signin'
     @render()
-
 
   handleLinks: (event) ->
     path = $(event.target).attr 'href'
@@ -24,3 +19,12 @@ class Pocket.ApplicationView extends Pocket.BaseView
     if /^\/[^\/]/.test(path)
       pocket.router.navigate path.substr(1), true
       return false
+
+  beforeRender: ->
+    if pocket.isAuthenticated
+      @views.body.template = 'main'
+    else
+      @views.body.template = 'signin'
+
+    console.log '@views.body.template', @views.body.template
+    super

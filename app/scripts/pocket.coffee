@@ -115,11 +115,13 @@ class window.Pocket extends Backbone.Events
 
   #
   handleSignInAndSignOut: ->
-    hoodie.account.on 'signin', ->
-      window.location.reload()
+    hoodie.account.on 'signin', =>
+      @isAuthenticated = true;
+      @app.render()
 
-    hoodie.account.on 'signout', ->
-      window.location.reload()
+    hoodie.account.on 'signout', =>
+      @isAuthenticated = false;
+      @app.render()
 
   loadAppInfo: =>
     hoodie.admin.getAppInfo().pipe(@setAppInfo)

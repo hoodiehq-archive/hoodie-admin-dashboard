@@ -16,3 +16,5 @@ class Hoodie.AdminUsers extends Hoodie.Remote
     @hoodie = hoodie
     @admin  = admin
     super
+
+
