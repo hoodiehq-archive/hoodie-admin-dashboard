@@ -11,11 +11,17 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       hoodie.admin.modules.store.find('module', 'users'),
       hoodie.admin.getConfig()
     ).then (users, object, appConfig) =>
-      @resultsDesc  = "Currently displaying all users"
       @totalUsers   = users.length
       @users        = users
       @config       = $.extend @_configDefaults(), object.config
       @appConfig    = appConfig
+      switch users.length
+        when 0
+          @resultsDesc = "You have no users yet"
+        when 1
+          @resultsDesc = "You have a single user"
+        else
+          @resultsDesc = "Currently displaying all #{@totalUsers} users"
 
       # config defaults
       @config.confirmationEmailText or= "Hello {name}! Thanks for signing up with #{appInfo.name}"
