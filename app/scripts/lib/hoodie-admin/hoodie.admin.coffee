@@ -152,5 +152,3 @@ class Hoodie.Admin
       return module
     promise = @modules.store.update("module", "appconfig", updateFunction)
     return promise
-
-Hoodie.extend "admin", Hoodie.Admin

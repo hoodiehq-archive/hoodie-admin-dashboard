@@ -5,6 +5,7 @@ if (location.hostname is 'localhost')
 else
   whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
 window.hoodie = new Hoodie(whereTheMagicHappens)
+window.hoodie.extend "admin", Hoodie.Admin
 
 # configure Backbone Layoutmanager
 Backbone.Layout.configure
