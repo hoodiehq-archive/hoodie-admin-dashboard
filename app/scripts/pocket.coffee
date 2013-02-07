@@ -15,15 +15,14 @@ class window.Pocket extends Backbone.Events
 
       Backbone.history.start()
 
-
   #
   setElement: (selector) ->
     @$el = $ selector
 
-
   #
   authenticate: =>
     hoodie.admin.authenticate().then(@handleAuthenticateSuccess, @handleAuthenticateError)
+
   #
   handleAuthenticateSuccess: () =>
     @isAuthenticated = true;
@@ -34,7 +33,6 @@ class window.Pocket extends Backbone.Events
   handleAuthenticateError: () =>
     @isAuthenticated = false;
     hoodie.resolveWith @isAuthenticated
-
 
   #
   handleConditionalFormElements: (el, speed = 250) ->
@@ -63,15 +61,19 @@ class window.Pocket extends Backbone.Events
       else
         $(target).slideUp speed
 
-
   #
   registerListeners: ->
+    # generic handler for contitional form elements
     $("body").on "change", ".formCondition", (event) =>
       @handleConditionalFormElements(event.target)
+    # signout
     $("body").on "click", "a.signOut", (event) =>
       event.preventDefault()
       hoodie.admin.signOut().done(@onSignOutSuccess).fail(@onSignOutFail)
-
+    # generic toggleable fieldset
+    $("body").on "click", ".toggler", (event) ->
+      $(@).toggleClass('open')
+      $(@).siblings('.togglee').slideToggle(150)
 
   #
   registerHandlebarsHelpers: ->

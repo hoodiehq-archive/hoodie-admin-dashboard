@@ -81,6 +81,49 @@
 
 <div class="content centered">
   <h2 class="top">Users</h2>
+  <fieldset class="addTestUsers toggle">
+    <legend class="toggler">Test users</legend>
+    <div class="togglee">
+      <legend>Add test users</legend>
+      <form class="form-horizontal addTestUsers">
+        <section class="noBorder">
+          <div class="control-group">
+            <label>
+              Number of test users
+            </label>
+            <div class="controls">
+              <input type="text" name="amountOfTestUsers" class="amountOfTestUsers" value="" placeholder="1">
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="control-group">
+            <label>
+              &nbsp;
+            </label>
+            <div class="controls">
+              <button class="btn" type="submit">Add test users</button>
+              <span class="submitMessage"></span>
+            </div>
+          </div>
+        </section>
+      </form>
+      <legend>Remove test users</legend>
+      <form class="form-horizontal removeTestUsers">
+        <section class="noBorder">
+          <div class="control-group">
+            <label>
+              &nbsp;
+            </label>
+            <div class="controls">
+              <button class="btn" type="submit">Remove all test users</button>
+              <span class="submitMessage"></span>
+            </div>
+          </div>
+        </section>
+      </form>
+    </div>
+  </fieldset>
   <div class="userSearch">
     <form class="form-search">
       <div class="input-append">

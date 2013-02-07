@@ -5,6 +5,21 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     'submit form.config'      : 'updateConfig'
     'submit form.form-search' : 'search'
 
+  constructor : ->
+    @registerListeners()
+    super
+
+  registerListeners : ->
+    # Handles adding test users
+    $("body").on "click", '.addTestUsers button[type="submit"]', (event) =>
+      event.preventDefault()
+      users = parseInt($(event.currentTarget).closest('form').find('.amountOfTestUsers').val())
+      if _.isNumber(users) and users > 0
+        hoodie.admin.users.addTestUsers(users)
+        $(event.currentTarget).siblings('.submitMessage').empty()
+      else
+        $(event.currentTarget).siblings('.submitMessage').text("That's not a number")
+
   update : ->
     $.when(
       hoodie.admin.users.store.findAll(),

@@ -29,7 +29,6 @@ class Hoodie.AdminUsers extends Hoodie.Remote
 
     testHoodieUser.account.signUp( email, 'secret' )
 
-
   addTestUsers: ( nr = 1 ) ->
     timestamp = (new Date).getTime()
     promises = for i in [1..nr]
