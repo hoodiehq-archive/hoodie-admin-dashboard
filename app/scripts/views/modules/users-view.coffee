@@ -13,14 +13,14 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     # Handles adding test users
     $("body").on "click", '.addTestUsers button[type="submit"]', (event) =>
       event.preventDefault()
-      btn = $(event.currentTarget);
-      users = parseInt($(btn).closest('form').find('.amountOfTestUsers').val())
+      $btn = $(event.currentTarget);
+      users = parseInt($btn.closest('form').find('.amountOfTestUsers').val())
       if _.isNumber(users) and users > 0
-        $(btn).attr('disabled', 'disabled')
+        $btn.attr('disabled', 'disabled')
         if users is 1
-          $(btn).siblings('.submitMessage').text("Adding a test user…")
+          $btn.siblings('.submitMessage').text("Adding a test user…")
         else
-          $(btn).siblings('.submitMessage').text("Adding #{users} test users…")
+          $btn.siblings('.submitMessage').text("Adding #{users} test users…")
         $.when(hoodie.admin.users.addTestUsers(users)).then () =>
           @update()
       else
@@ -46,7 +46,6 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
       # config defaults
       @config.confirmationEmailText or= "Hello {name}! Thanks for signing up with #{appInfo.name}"
-
       @render()
 
   updateConfig : (event) ->
