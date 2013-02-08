@@ -30,11 +30,14 @@ class Hoodie.AdminModules extends Hoodie.Remote
 
 
   find: (moduleName) =>
-    @store.find("module", moduleName)
+    if moduleName is 'module'
+      debugger
+
+    super "module", moduleName
 
 
   findAll: =>
-    @store.findAll('module')
+    super 'module'
 
   getConfig : (moduleName) ->
     @hoodie.resolveWith

@@ -9,7 +9,6 @@
 #
 class Hoodie.AdminUsers extends Hoodie.Remote
 
-  Store  : Hoodie.AdminUsersStore
   name   : '_users'
 
   constructor: (hoodie, admin) ->
@@ -38,3 +37,20 @@ class Hoodie.AdminUsers extends Hoodie.Remote
 
   removeAllTestUsers: ->
     @hoodie.rejectWith(error: "not yet implemented")
+
+
+  getTotal : ->
+    @findAll().pipe (users) -> users.length
+
+  search : (query) ->
+    path = "/_all_docs?include_docs=true"
+    path = "#{path}&startkey=\"org.couchdb.user:user/#{query}\"&endkey=\"org.couchdb.user:user/#{query}|\""
+
+    @request("GET", path)
+    .pipe(@_mapDocsFromFindAll).pipe(@parseAllFromRemote)
+
+
+  # filter out non-user docs
+  _mapDocsFromFindAll : (response) =>
+    rows = response.rows.filter (row) -> /^org\.couchdb\.user:/.test row.id
+    rows.map (row) -> row.doc

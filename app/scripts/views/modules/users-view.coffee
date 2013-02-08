@@ -28,8 +28,8 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
   update : ->
     $.when(
-      hoodie.admin.users.store.findAll(),
-      hoodie.admin.modules.store.find('module', 'users'),
+      hoodie.admin.users.findAll(),
+      hoodie.admin.modules.find('users'),
       hoodie.admin.getConfig()
     ).then (users, object, appConfig) =>
       @totalUsers   = users.length
@@ -50,7 +50,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
   updateConfig : (event) ->
     event.preventDefault()
-    window.promise = hoodie.admin.modules.store.update('module', 'users', @_updateModule)
+    window.promise = hoodie.admin.modules.update('module', 'users', @_updateModule)
 
   emailTransportNotConfigured : ->
     isConfigured = @appConfig?.email?.transport?
@@ -59,7 +59,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   search : (event) ->
     searchQuery = $('input.search-query', event.currentTarget).val()
     $.when(
-      hoodie.admin.users.store.search(searchQuery)
+      hoodie.admin.users.search(searchQuery)
     ).then (users) =>
       @users = users
       switch users.length

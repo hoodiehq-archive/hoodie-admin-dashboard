@@ -144,11 +144,11 @@ class Hoodie.Admin
 
   #
   getConfig : () ->
-    @modules.store.find("module", "appconfig").pipe (module) -> module.config
+    @modules.find("appconfig").pipe (module) -> module.config
 
   setConfig : (config = {}) ->
     updateFunction = (module) ->
       module.config = config
       return module
-    promise = @modules.store.update("module", "appconfig", updateFunction)
+    promise = @modules.update("module", "appconfig", updateFunction)
     return promise
