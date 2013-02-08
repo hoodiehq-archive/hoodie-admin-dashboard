@@ -31,8 +31,10 @@ class Hoodie.AdminUsers extends Hoodie.Remote
 
   addTestUsers: ( nr = 1 ) ->
     timestamp = (new Date).getTime()
-    for i in [1..nr]
+    promises = for i in [1..nr]
       @addTestUser()
+
+    $.when promises...
 
   removeAllTestUsers: ->
     @hoodie.rejectWith(error: "not yet implemented")
