@@ -1,24 +1,6 @@
 # Hoodie.AdminModules
 # =====================
 
-MODULES = [
-  name: "users"
-  status: "success"
-,
-  name: "sharings"
-  status: "success"
-,
-  name: "email-out"
-  status: "success"
-,
-  name: "logs"
-  status: "error"
-  messages: [
-    "Dummy error message"
-    "Dummy error message"
-  ]
-]
-
 #
 class Hoodie.AdminModules extends Hoodie.Remote
 
