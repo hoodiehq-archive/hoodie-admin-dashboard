@@ -47,7 +47,8 @@ class Hoodie.AdminUsers extends Hoodie.Remote
     path = "#{path}&startkey=\"org.couchdb.user:user/#{query}\"&endkey=\"org.couchdb.user:user/#{query}|\""
 
     @request("GET", path)
-    .pipe(@_mapDocsFromFindAll).pipe(@parseAllFromRemote)
+    .pipe(@_mapDocsFromFindAll)
+    .pipe(@_parseAllFromRemote)
 
 
   # filter out non-user docs
