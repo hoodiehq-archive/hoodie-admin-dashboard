@@ -25,13 +25,19 @@ class Pocket.SidebarView extends Pocket.BaseView
     })
 
   loadModules: ->
-    window.hoodie.admin.modules.findAll().then(@renderModules)
+    $.when(
+      window.hoodie.admin.modules.findAll(),
+      window.hoodie.admin.users.getTotal()
+    ).then @renderModules
 
   # Generates module menu with badges
-  renderModules: (@modules) =>
+  renderModules: (@modules, @totalUsers) =>
     for key, module of @modules
       module.url = module.id
       module.cleanName = @makeURLHuman module.url
+      # Special treatment for the users module: show user amount
+      if module.cleanName is "Users"
+        module.cleanName = @totalUsers+" "+module.cleanName.toLowerCase()
       module.badgeStatus = 'badge-'+module.status
       if module.messages
         module.messageAmount = module.messages.length
