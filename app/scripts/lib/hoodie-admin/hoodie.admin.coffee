@@ -20,7 +20,12 @@ class Hoodie.Admin
     # actually, the only user we need is admin only anyway
     @hoodie.account._userKey = -> 'admin'
 
-    hoodie = @hoodie
+    # prevent from doing any sync. The admin has no
+    # user database anyway
+    @hoodie.remote.pull = ->
+    @hoodie.remote.push = ->
+    @hoodie.remote.sync = ->
+
     @hoodie.account._handleSignInSuccess = (response) ->
       defer    = hoodie.defer()
       username = 'admin'
@@ -28,17 +33,8 @@ class Hoodie.Admin
       hoodie.account._authenticated = true
       hoodie.account._setUsername username
 
-      # special treatment for hoodie instance:
-      # admins do not have their own database, so we don't
-      # want the sync to kick in
-      hoodie.config.set('_remote.sync', false)
-
       hoodie.account.trigger 'signin', username
       defer.resolve(username, username)
-
-    @hoodie.remote.sync = => @hoodie.resolveWith()
-
-    @hoodie.account._handleSignInSuccess.bind( @hoodie.account )
 
     @patchHoodie()
 
