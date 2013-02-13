@@ -88,6 +88,9 @@ class window.Pocket extends Backbone.Events
       # This won't work in IE7
       return JSON.parse(JSON.stringify(new Date(parseInt(timestamp))))
 
+    Handlebars.registerHelper 'convertISOToHuman', (ISODate) ->
+      return "hey "+ISODate
+
     # Generates a generic default reply-to address for the app
     Handlebars.registerHelper 'defaultReplyMailAddress', () ->
       if !pocket.appInfo.name
