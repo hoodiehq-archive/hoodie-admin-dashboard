@@ -71,6 +71,12 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
           @resultsDesc  = "#{users.length} users matching '#{searchQuery}'"
       @render()
 
+  beforeRender : ->
+    console.log "users", @users
+    super
+  ###
+  ###
+
   _updateModule : (module) =>
     module.config.confirmationMandatory     = @$el.find('[name=confirmationMandatory]').is(':checked')
     module.config.confirmationEmailFrom     = @$el.find('[name=confirmationEmailFrom]').val()
