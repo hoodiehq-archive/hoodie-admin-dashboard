@@ -75,8 +75,6 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   beforeRender : ->
     console.log "users", @users
     super
-  ###
-  ###
 
   _updateModule : (module) =>
     module.config.confirmationMandatory     = @$el.find('[name=confirmationMandatory]').is(':checked')
