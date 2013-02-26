@@ -2170,7 +2170,7 @@ table .span24 {
   *margin-right: .3em;
   line-height: 14px;
   vertical-align: text-top;
-  background-image: url('/app/images/glyphicons-halflings.png?1358768137');
+  background-image: url('/app/images/glyphicons-halflings.png?1358419073');
   background-position: 14px 14px;
   background-repeat: no-repeat;
   margin-top: 1px;
@@ -2185,7 +2185,7 @@ table .span24 {
 .dropdown-menu > li > a:hover > [class*=" icon-"],
 .dropdown-menu > .active > a > [class^="icon-"],
 .dropdown-menu > .active > a > [class*=" icon-"] {
-  background-image: url('/app/images/glyphicons-halflings-white.png?1358768137');
+  background-image: url('/app/images/glyphicons-halflings-white.png?1358419073');
 }
 
 /* line 42, ../../app/styles/compass_twitter_bootstrap/_sprites.scss */
@@ -6157,39 +6157,39 @@ a.label:hover, a.badge:hover {
 }
 
 /* apply a natural box layout model to all elements */
-/* line 4, ../../app/styles/main.scss */
+/* line 7, ../../app/styles/main.scss */
 * {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-/* line 7, ../../app/styles/main.scss */
+/* line 10, ../../app/styles/main.scss */
 .ir {
   text-indent: 100%;
   white-space: nowrap;
   overflow: hidden;
 }
 
-/* line 16, ../../app/styles/main.scss */
+/* line 19, ../../app/styles/main.scss */
 .group:after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* line 49, ../../app/styles/main.scss */
+/* line 52, ../../app/styles/main.scss */
 body {
   color: #693c10;
   background: #fcf9f3;
 }
 
-/* line 54, ../../app/styles/main.scss */
+/* line 57, ../../app/styles/main.scss */
 h2 {
   font-size: 20px;
 }
 
-/* line 58, ../../app/styles/main.scss */
+/* line 61, ../../app/styles/main.scss */
 a {
   text-decoration: none;
   color: #693c10;
@@ -6198,14 +6198,68 @@ a {
   margin: -0.5em;
 }
 
-/* line 67, ../../app/styles/main.scss */
+/* line 70, ../../app/styles/main.scss */
 a:hover {
   color: #693c10;
   font-weight: 800;
   text-decoration: none;
 }
 
-/* line 81, ../../app/styles/main.scss */
+/* line 78, ../../app/styles/main.scss */
+fieldset.toggle {
+  border-top: 1px solid #693c10;
+}
+/* line 80, ../../app/styles/main.scss */
+fieldset.toggle legend.toggler {
+  cursor: pointer;
+  margin: 0 0 1em 0;
+  display: block;
+  text-indent: 2em;
+  width: auto;
+  padding-right: 1em;
+  font-size: 1em;
+  line-height: 1.5em;
+  color: #693c10;
+  border: 0;
+}
+/* line 91, ../../app/styles/main.scss */
+fieldset.toggle legend.toggler:before {
+  content: "▶";
+  display: block;
+  position: absolute;
+  width: 12px;
+  height: 18px;
+  padding: 0 0 0 6px;
+  font-size: 8px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  color: #fcf9f3;
+  background: #693c10;
+  margin-top: 1px;
+  line-height: 18px;
+  text-indent: 0;
+}
+/* line 107, ../../app/styles/main.scss */
+fieldset.toggle legend.toggler.open:before {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+/* line 113, ../../app/styles/main.scss */
+fieldset.toggle .togglee {
+  display: none;
+  overflow: hidden;
+  border-bottom: 1px solid #693c10;
+  padding: 0 2em 1em 2em;
+  margin: 0 0 1em 0;
+}
+
+/* line 130, ../../app/styles/main.scss */
 .badge {
   letter-spacing: 1px;
   padding: 1px 8px 2px;
@@ -6215,7 +6269,7 @@ a:hover {
   border-color: #655d55;
 }
 
-/* line 88, ../../app/styles/main.scss */
+/* line 137, ../../app/styles/main.scss */
 .panel {
   letter-spacing: 1px;
   border: 4px solid #fac15b;
@@ -6224,34 +6278,39 @@ a:hover {
   border-color: #655d55;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
   border-radius: 10px;
   padding: 6px 10px;
   position: relative;
 }
-/* line 95, ../../app/styles/main.scss */
+/* line 144, ../../app/styles/main.scss */
 .panel span {
   font-size: 12px;
   position: absolute;
+  margin-right: 5px;
 }
-/* line 99, ../../app/styles/main.scss */
+/* line 149, ../../app/styles/main.scss */
 .panel h1 {
   text-align: center;
   margin: 20px 0;
 }
 
-/* line 105, ../../app/styles/main.scss */
+/* line 155, ../../app/styles/main.scss */
 .alert {
   padding: 15px 35px 8px 14px;
   border: 4px solid white;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
   border-radius: 10px;
   background: #cabaab;
   color: #655d55;
   border-color: #655d55;
 }
 
-/* line 114, ../../app/styles/main.scss */
+/* line 164, ../../app/styles/main.scss */
 .badge-success,
 .alert-success,
 .panel.success {
@@ -6260,7 +6319,7 @@ a:hover {
   border-color: #42634d;
 }
 
-/* line 119, ../../app/styles/main.scss */
+/* line 169, ../../app/styles/main.scss */
 .badge-warning,
 .alert-warning,
 .panel.warning {
@@ -6269,7 +6328,7 @@ a:hover {
   border-color: #7d6438;
 }
 
-/* line 124, ../../app/styles/main.scss */
+/* line 174, ../../app/styles/main.scss */
 .badge-error,
 .alert-error,
 .panel.error {
@@ -6278,7 +6337,7 @@ a:hover {
   border-color: #6f4548;
 }
 
-/* line 129, ../../app/styles/main.scss */
+/* line 179, ../../app/styles/main.scss */
 .badge-info,
 .alert-info,
 .panel.info {
@@ -6287,37 +6346,39 @@ a:hover {
   border-color: #6d767b;
 }
 
-/* line 134, ../../app/styles/main.scss */
+/* line 184, ../../app/styles/main.scss */
 .badge-inverse,
 .alert-inverse,
 .panel.inverse {
   background: #121212;
 }
 
-/* line 140, ../../app/styles/main.scss */
+/* line 190, ../../app/styles/main.scss */
 .form-search input {
   height: 30px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
   border-radius: 10px;
   padding-top: 5px;
 }
 
-/* line 146, ../../app/styles/main.scss */
+/* line 196, ../../app/styles/main.scss */
 .pagination a {
   margin: 0;
 }
-/* line 148, ../../app/styles/main.scss */
+/* line 198, ../../app/styles/main.scss */
 .pagination a:hover {
   font-weight: normal;
 }
 
-/* line 152, ../../app/styles/main.scss */
+/* line 202, ../../app/styles/main.scss */
 .pagination span {
   margin: 0;
 }
 
-/* line 159, ../../app/styles/main.scss */
+/* line 209, ../../app/styles/main.scss */
 .signInContainer {
   position: absolute;
   padding: 20px;
@@ -6330,19 +6391,21 @@ a:hover {
   border: 4px solid #dbd0bc;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
   border-radius: 10px;
 }
-/* line 170, ../../app/styles/main.scss */
+/* line 220, ../../app/styles/main.scss */
 .signInContainer .logo {
   background: url("../images/hoodie_pocket_logo_176_b.png") no-repeat;
   height: 53px;
 }
-/* line 174, ../../app/styles/main.scss */
+/* line 224, ../../app/styles/main.scss */
 .signInContainer form {
   margin: 0;
 }
 
-/* line 181, ../../app/styles/main.scss */
+/* line 231, ../../app/styles/main.scss */
 .sidebar {
   background: #f4e8d1;
   width: 220px;
@@ -6351,17 +6414,17 @@ a:hover {
   float: left;
   border-right: 4px solid #dbd0bc;
 }
-/* line 188, ../../app/styles/main.scss */
+/* line 238, ../../app/styles/main.scss */
 .sidebar header {
   margin: 0 20px;
 }
-/* line 190, ../../app/styles/main.scss */
+/* line 240, ../../app/styles/main.scss */
 .sidebar header .logo {
   background: url("../images/hoodie_pocket_logo_176_b.png") no-repeat;
   height: 53px;
   margin-top: 20px;
 }
-/* line 195, ../../app/styles/main.scss */
+/* line 245, ../../app/styles/main.scss */
 .sidebar header .appName {
   width: 167px;
   height: 46px;
@@ -6369,13 +6432,13 @@ a:hover {
   font-weight: 800;
   position: relative;
 }
-/* line 203, ../../app/styles/main.scss */
+/* line 253, ../../app/styles/main.scss */
 .sidebar header .appName div {
   position: absolute;
   bottom: 5px;
 }
 
-/* line 214, ../../app/styles/main.scss */
+/* line 264, ../../app/styles/main.scss */
 nav ul.modules .name {
   display: inline-block;
   width: 130px;
@@ -6383,22 +6446,22 @@ nav ul.modules .name {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-/* line 221, ../../app/styles/main.scss */
+/* line 271, ../../app/styles/main.scss */
 nav ul {
   border-top: 1px solid #693c10;
   margin: 10px 20px 0;
   padding-top: 10px;
 }
-/* line 225, ../../app/styles/main.scss */
+/* line 275, ../../app/styles/main.scss */
 nav ul li {
   line-height: 30px;
   list-style: none;
 }
-/* line 228, ../../app/styles/main.scss */
+/* line 278, ../../app/styles/main.scss */
 nav ul li a {
   display: block;
 }
-/* line 231, ../../app/styles/main.scss */
+/* line 281, ../../app/styles/main.scss */
 nav ul li .badge {
   padding-top: 2px;
   margin-top: 6px;
@@ -6406,17 +6469,17 @@ nav ul li .badge {
   right: 0.5em;
   position: absolute;
 }
-/* line 239, ../../app/styles/main.scss */
+/* line 289, ../../app/styles/main.scss */
 nav ul li.active a {
   font-weight: 800;
 }
 
-/* line 249, ../../app/styles/main.scss */
+/* line 299, ../../app/styles/main.scss */
 a.signOut {
   display: none;
 }
 
-/* line 254, ../../app/styles/main.scss */
+/* line 304, ../../app/styles/main.scss */
 .authenticated a.signOut {
   display: block;
   position: absolute;
@@ -6426,143 +6489,156 @@ a.signOut {
   text-transform: uppercase;
   color: #b49d87;
 }
-/* line 262, ../../app/styles/main.scss */
+/* line 312, ../../app/styles/main.scss */
 .authenticated a.signOut:hover {
   font-weight: normal;
   color: #693c10;
 }
 
-/* line 269, ../../app/styles/main.scss */
+/* line 319, ../../app/styles/main.scss */
 h2.top {
   border-bottom: 1px solid #693c10;
   padding-bottom: 5px;
   margin-bottom: 20px;
 }
 
-/* line 275, ../../app/styles/main.scss */
+/* line 325, ../../app/styles/main.scss */
 h3.top {
   margin-top: -16px;
   padding-top: 0;
 }
 
-/* line 280, ../../app/styles/main.scss */
+/* line 330, ../../app/styles/main.scss */
 .main {
   overflow: hidden;
   margin: 0 0 0 240px;
   padding: 73px 20px 72px;
 }
-/* line 284, ../../app/styles/main.scss */
+/* line 334, ../../app/styles/main.scss */
 .main .content {
   max-width: 52em;
   margin: 0;
 }
-/* line 287, ../../app/styles/main.scss */
+/* line 337, ../../app/styles/main.scss */
 .main .content.centered {
   margin: 0 auto;
 }
 
-/* line 293, ../../app/styles/main.scss */
+/* line 343, ../../app/styles/main.scss */
 .row-fluid.statistics {
   max-height: 98px;
   margin-bottom: 15px;
 }
 
-/* line 301, ../../app/styles/main.scss */
+/* line 351, ../../app/styles/main.scss */
 .userSearch .pagination {
   height: 30px;
 }
-/* line 303, ../../app/styles/main.scss */
+/* line 353, ../../app/styles/main.scss */
 .userSearch .pagination a, .userSearch .pagination span {
   line-height: 28px;
 }
 
-/* line 308, ../../app/styles/main.scss */
+/* line 358, ../../app/styles/main.scss */
 .tableStatus {
   display: block;
   position: relative;
   height: 20px;
 }
-/* line 312, ../../app/styles/main.scss */
+/* line 362, ../../app/styles/main.scss */
 .tableStatus .currentSearchTerm {
   display: block;
   float: left;
 }
-/* line 316, ../../app/styles/main.scss */
+/* line 366, ../../app/styles/main.scss */
 .tableStatus .currentSearchMetrics {
   display: block;
   float: right;
 }
 
-/* line 325, ../../app/styles/main.scss */
-.module legend, form legend {
+/* line 375, ../../app/styles/main.scss */
+.module legend, form legend, .toggle legend {
   margin-bottom: 10px;
   line-height: 40px;
   border-bottom: 1px solid #693c10;
   color: #693c10;
 }
-/* line 331, ../../app/styles/main.scss */
-.module .description, .module .error, form .description, form .error {
+/* line 381, ../../app/styles/main.scss */
+.module .description, .module .error, form .description, form .error, .toggle .description, .toggle .error {
   margin-bottom: 10px;
   display: block;
 }
-/* line 335, ../../app/styles/main.scss */
-.module .error, form .error {
-  margin-left: 30%;
+/* line 385, ../../app/styles/main.scss */
+.module .error, form .error, .toggle .error {
+  margin-left: 165px;
   color: #be1522;
 }
-/* line 339, ../../app/styles/main.scss */
-.module section, form section {
+/* line 389, ../../app/styles/main.scss */
+.module section, form section, .toggle section {
   border-top: 1px solid #d9cec3;
   padding-top: 10px;
   *zoom: 1;
   overflow: hidden;
 }
 /* line 15, ../../app/styles/compass_twitter_bootstrap/_mixins.scss */
-.module section:before, .module section:after, form section:before, form section:after {
+.module section:before, .module section:after, form section:before, form section:after, .toggle section:before, .toggle section:after {
   display: table;
   content: "";
   line-height: 0;
 }
 /* line 22, ../../app/styles/compass_twitter_bootstrap/_mixins.scss */
-.module section:after, form section:after {
+.module section:after, form section:after, .toggle section:after {
   clear: both;
 }
-/* line 344, ../../app/styles/main.scss */
-.module section.noBorder, form section.noBorder {
+/* line 394, ../../app/styles/main.scss */
+.module section.noBorder, form section.noBorder, .toggle section.noBorder {
   border: none;
 }
-/* line 347, ../../app/styles/main.scss */
-.module section .formLabel, form section .formLabel {
+/* line 397, ../../app/styles/main.scss */
+.module section .control-group, form section .control-group, .toggle section .control-group {
+  margin-bottom: 6px;
+}
+/* line 400, ../../app/styles/main.scss */
+.module section .formLabel, .module section label, form section .formLabel, form section label, .toggle section .formLabel, .toggle section label {
   width: 30%;
   float: left;
   margin-top: 10px;
-  padding-right: 10px;
+  padding-right: 30px;
   padding-bottom: 10px;
 }
-/* line 354, ../../app/styles/main.scss */
-.module section .form, form section .form {
+/* line 407, ../../app/styles/main.scss */
+.module section .form, .module section .controls, form section .form, form section .controls, .toggle section .form, .toggle section .controls {
   width: 70%;
-  float: left;
   margin-top: 5px;
   padding-bottom: 6px;
 }
-/* line 359, ../../app/styles/main.scss */
-.module section .form .note, form section .form .note {
+/* line 412, ../../app/styles/main.scss */
+.module section .form .note, .module section .controls .note, form section .form .note, form section .controls .note, .toggle section .form .note, .toggle section .controls .note {
   font-size: 12px;
   color: #b49d87;
-}
-/* line 364, ../../app/styles/main.scss */
-.module section .form label.checkbox,
-.module section .form label.radio, form section .form label.checkbox,
-form section .form label.radio {
   margin-top: 5px;
+  display: block;
+}
+/* line 419, ../../app/styles/main.scss */
+.module section .form label.checkbox,
+.module section .form label.radio, .module section .controls label.checkbox,
+.module section .controls label.radio, form section .form label.checkbox,
+form section .form label.radio, form section .controls label.checkbox,
+form section .controls label.radio, .toggle section .form label.checkbox,
+.toggle section .form label.radio, .toggle section .controls label.checkbox,
+.toggle section .controls label.radio {
+  margin-top: 0;
   min-height: 30px;
 }
-/* line 368, ../../app/styles/main.scss */
-.module section .form input[type="radio"], .module section .form input[type="checkbox"], form section .form input[type="radio"], form section .form input[type="checkbox"] {
+/* line 423, ../../app/styles/main.scss */
+.module section .form input[type="radio"], .module section .form input[type="checkbox"], .module section .controls input[type="radio"], .module section .controls input[type="checkbox"], form section .form input[type="radio"], form section .form input[type="checkbox"], form section .controls input[type="radio"], form section .controls input[type="checkbox"], .toggle section .form input[type="radio"], .toggle section .form input[type="checkbox"], .toggle section .controls input[type="radio"], .toggle section .controls input[type="checkbox"] {
   margin-top: 3px;
 }
-/* line 390, ../../app/styles/main.scss */
+/* line 427, ../../app/styles/main.scss */
+.module section .submitMessage, form section .submitMessage, .toggle section .submitMessage {
+  margin-left: 10px;
+}
+/* line 448, ../../app/styles/main.scss */
 .module select,
 .module textarea,
 .module input[type="text"],
@@ -6595,12 +6671,35 @@ form input[type="url"],
 form input[type="search"],
 form input[type="tel"],
 form input[type="color"],
-form .uneditable-input {
+form .uneditable-input, .toggle select,
+.toggle textarea,
+.toggle input[type="text"],
+.toggle input[type="password"],
+.toggle input[type="datetime"],
+.toggle input[type="datetime-local"],
+.toggle input[type="date"],
+.toggle input[type="month"],
+.toggle input[type="time"],
+.toggle input[type="week"],
+.toggle input[type="number"],
+.toggle input[type="email"],
+.toggle input[type="url"],
+.toggle input[type="search"],
+.toggle input[type="tel"],
+.toggle input[type="color"],
+.toggle .uneditable-input {
   height: 30px;
   display: block;
   width: 75%;
 }
-/* line 396, ../../app/styles/main.scss */
-.module textarea, form textarea {
+/* line 454, ../../app/styles/main.scss */
+.module textarea, form textarea, .toggle textarea {
   height: auto;
+  margin-bottom: 4px;
+  margin-top: 6px;
+}
+
+/* line 462, ../../app/styles/main.scss */
+.form-horizontal .control-group {
+  margin-bottom: 6px;
 }

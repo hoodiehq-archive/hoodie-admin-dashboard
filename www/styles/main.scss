@@ -1,4 +1,7 @@
 @import "compass_twitter_bootstrap";
+@import "compass/css3/transform";
+@import "compass/css3/transition";
+@import "compass/css3/border-radius";
 
 /* apply a natural box layout model to all elements */
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -70,6 +73,52 @@ a:hover {
   text-decoration: none;
 }
 
+// Toggle areas
+
+fieldset.toggle{
+  border-top: 1px solid $brown;
+  legend.toggler{
+    cursor: pointer;
+    margin: 0 0 1em 0;
+    display: block;
+    text-indent: 2em;
+    width:auto;
+    padding-right: 1em;
+    font-size: 1em;
+    line-height: 1.5em;
+    color: $brown;
+    border: 0;
+    &:before{
+      content: "▶";
+      display: block;
+      position: absolute;
+      width: 12px;
+      height: 18px;
+      padding: 0 0 0 6px;
+      font-size: 8px;
+      @include border-radius(50%);
+      color: $mainBG;
+      background: $brown;
+      margin-top: 1px;
+      line-height: 18px;
+      text-indent: 0;
+    }
+    &.open{
+      &:before{
+        @include rotate(90deg);
+      }
+    }
+  }
+
+  .togglee{
+    display: none;
+    overflow: hidden;
+    border-bottom: 1px solid $brown;
+    padding: 0 2em 1em 2em;
+    margin: 0 0 1em 0;
+  }
+}
+
 // Notification badges, panels and alerts
 
 @mixin notificationsColors($bgColor) {
@@ -95,6 +144,7 @@ a:hover {
   span{
     font-size: 12px;
     position: absolute;
+    margin-right: 5px;
   }
   h1{
     text-align: center;
@@ -321,7 +371,7 @@ h3.top{
 
 // Modules
 
-.module, form{
+.module, form, .toggle{
   legend{
     margin-bottom: 10px;
     line-height: 40px;
@@ -333,7 +383,7 @@ h3.top{
     display: block;
   }
   .error{
-    margin-left: 30%;
+    margin-left: 165px;
     color: $red;
   }
   section{
@@ -344,30 +394,38 @@ h3.top{
     &.noBorder{
       border: none;
     }
-    .formLabel{
+    .control-group{
+      margin-bottom: 6px;
+    }
+    .formLabel, label{
       width: 30%;
       float:left;
       margin-top: 10px;
-      padding-right: 10px;
+      padding-right: 30px;
       padding-bottom: 10px;
     }
-    .form{
+    .form, .controls{
       width: 70%;
-      float:left;
+      //float:left;
       margin-top: 5px;
       padding-bottom: 6px;
       .note{
         font-size: 12px;
         color: tint($brown, 50);
+        margin-top: 5px;
+        display: block;
       }
       label.checkbox,
       label.radio{
-        margin-top: 5px;
+        margin-top: 0;
         min-height: 30px;
       }
       input[type="radio"], input[type="checkbox"] {
         margin-top: 3px;
       }
+    }
+    .submitMessage{
+      margin-left: 10px;
     }
   }
 
@@ -395,5 +453,13 @@ h3.top{
 
   textarea{
     height: auto;
+    margin-bottom: 4px;
+    margin-top: 6px;
+  }
+}
+
+.form-horizontal{
+  .control-group{
+    margin-bottom: 6px;
   }
 }

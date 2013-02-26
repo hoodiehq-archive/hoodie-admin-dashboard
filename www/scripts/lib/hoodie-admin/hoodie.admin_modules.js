@@ -1,25 +1,7 @@
 (function() {
-  var MODULES,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  MODULES = [
-    {
-      name: "users",
-      status: "success"
-    }, {
-      name: "sharings",
-      status: "success"
-    }, {
-      name: "email-out",
-      status: "success"
-    }, {
-      name: "logs",
-      status: "error",
-      messages: ["Dummy error message", "Dummy error message"]
-    }
-  ];
 
   Hoodie.AdminModules = (function(_super) {
 
@@ -38,11 +20,14 @@
     }
 
     AdminModules.prototype.find = function(moduleName) {
-      return this.store.find("module", moduleName);
+      if (moduleName === 'module') {
+        debugger;
+      }
+      return AdminModules.__super__.find.call(this, "module", moduleName);
     };
 
     AdminModules.prototype.findAll = function() {
-      return this.store.findAll('module');
+      return AdminModules.__super__.findAll.call(this, 'module');
     };
 
     AdminModules.prototype.getConfig = function(moduleName) {

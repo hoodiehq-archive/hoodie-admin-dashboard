@@ -21,11 +21,6 @@
     ApplicationView.prototype.initialize = function() {
       ApplicationView.__super__.initialize.apply(this, arguments);
       this.setElement($('html'));
-      if (pocket.isAuthenticated) {
-        this.views.body.template = 'main';
-      } else {
-        this.views.body.template = 'signin';
-      }
       return this.render();
     };
 
@@ -39,6 +34,16 @@
         pocket.router.navigate(path.substr(1), true);
         return false;
       }
+    };
+
+    ApplicationView.prototype.beforeRender = function() {
+      if (pocket.isAuthenticated) {
+        this.views.body.template = 'main';
+      } else {
+        this.views.body.template = 'signin';
+      }
+      console.log('@views.body.template', this.views.body.template);
+      return ApplicationView.__super__.beforeRender.apply(this, arguments);
     };
 
     return ApplicationView;

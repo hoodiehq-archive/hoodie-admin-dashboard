@@ -88,9 +88,13 @@
       $("body").on("change", ".formCondition", function(event) {
         return _this.handleConditionalFormElements(event.target);
       });
-      return $("body").on("click", "a.signOut", function(event) {
+      $("body").on("click", "a.signOut", function(event) {
         event.preventDefault();
         return hoodie.admin.signOut().done(_this.onSignOutSuccess).fail(_this.onSignOutFail);
+      });
+      return $("body").on("click", ".toggler", function(event) {
+        $(this).toggleClass('open');
+        return $(this).siblings('.togglee').slideToggle(150);
       });
     };
 
@@ -107,6 +111,9 @@
         }
         return JSON.parse(JSON.stringify(new Date(parseInt(timestamp))));
       });
+      Handlebars.registerHelper('convertISOToHuman', function(ISODate) {
+        return "hey " + ISODate;
+      });
       Handlebars.registerHelper('defaultReplyMailAddress', function() {
         if (!pocket.appInfo.name) {
           return "please-reply@your-app.com";
@@ -118,15 +125,32 @@
         }
         return pocket.appInfo.defaultReplyEmailAddress;
       });
+      Handlebars.registerHelper('positiveSuccessNegativeWarning', function(value) {
+        if (value > 0) {
+          return 'success';
+        } else {
+          return 'warning';
+        }
+      });
+      Handlebars.registerHelper('positiveWarningNegativeSuccess', function(value) {
+        if (value > 0) {
+          return 'warning';
+        } else {
+          return 'success';
+        }
+      });
       return null;
     };
 
     Pocket.prototype.handleSignInAndSignOut = function() {
+      var _this = this;
       hoodie.account.on('signin', function() {
-        return window.location.reload();
+        _this.isAuthenticated = true;
+        return _this.app.render();
       });
       return hoodie.account.on('signout', function() {
-        return window.location.reload();
+        _this.isAuthenticated = false;
+        return _this.app.render();
       });
     };
 

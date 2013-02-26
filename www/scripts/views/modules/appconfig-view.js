@@ -43,12 +43,19 @@
     _Class.prototype.handleSubmitError = function(error) {
       console.log("Could not save global mail config");
       console.log(error);
-      return this.$el.find('.submit').attr('disabled', null);
+      this.$el.find('.submit').attr('disabled', null);
+      return this.$el.find('.submit').siblings('span').text('Could not save global mail config');
     };
 
     _Class.prototype.handleSubmitSuccess = function() {
+      var $message,
+        _this = this;
       console.log("Config saved");
-      return this.$el.find('.submit').attr('disabled', null);
+      this.$el.find('.submit').attr('disabled', null);
+      $message = this.$el.find('.submit').siblings('span');
+      return $.when($message.text('Config saved').delay(2000).fadeOut()).done(function() {
+        return $message.empty().show();
+      });
     };
 
     _Class.prototype._getConfigSkeleton = function() {
