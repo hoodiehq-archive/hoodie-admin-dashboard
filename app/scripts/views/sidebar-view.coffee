@@ -24,14 +24,39 @@ class Pocket.SidebarView extends Pocket.BaseView
       maxfontsize: 20
     })
 
+  getUserModuleLabel: (@totalUsers) ->
+    switch @totalUsers
+      when 0
+        @label = "No users"
+      when 1
+        @label = "One user"
+      else
+        @label = "#{@totalUsers} users"
+
+  updateUserCount: (eventName, userObject) =>
+    $.when(
+      window.hoodie.admin.users.getTotal()
+    ).then (@totalUsers) =>
+      $('.sidebar .modules .users .name').text(@getUserModuleLabel(@totalUsers))
+
   loadModules: ->
-    window.hoodie.admin.modules.findAll().then(@renderModules)
+    debouncedUserCount = _.debounce(@updateUserCount, 300)
+    hoodie.admin.users.on "change", (eventName, userObject) ->
+      debouncedUserCount(eventName, userObject)
+    hoodie.admin.users.connect();
+    $.when(
+      window.hoodie.admin.modules.findAll(),
+      window.hoodie.admin.users.getTotal()
+    ).then @renderModules
 
   # Generates module menu with badges
-  renderModules: (@modules) =>
+  renderModules: (@modules, @totalUsers) =>
     for key, module of @modules
       module.url = module.id
       module.cleanName = @makeURLHuman module.url
+      # Special treatment for the users module: show user amount
+      if module.cleanName is "Users"
+        module.cleanName = @getUserModuleLabel(@totalUsers)
       module.badgeStatus = 'badge-'+module.status
       if module.messages
         module.messageAmount = module.messages.length

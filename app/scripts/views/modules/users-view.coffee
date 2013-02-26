@@ -22,6 +22,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
         else
           $btn.siblings('.submitMessage').text("Adding #{users} test users…")
         $.when(hoodie.admin.users.addTestUsers(users)).then () =>
+          console.log "WTF!"
           @update()
       else
         $(btn).siblings('.submitMessage').text("That's not a number")
@@ -70,6 +71,10 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
         else
           @resultsDesc  = "#{users.length} users matching '#{searchQuery}'"
       @render()
+
+  beforeRender : ->
+    console.log "users", @users
+    super
 
   _updateModule : (module) =>
     module.config.confirmationMandatory     = @$el.find('[name=confirmationMandatory]').is(':checked')

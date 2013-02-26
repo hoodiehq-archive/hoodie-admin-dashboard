@@ -3,7 +3,6 @@
   Hoodie.Admin = (function() {
 
     function Admin(hoodie) {
-      var _this = this;
       this.hoodie = hoodie;
       this.users = new Hoodie.AdminUsers(this.hoodie, this);
       this.config = new Hoodie.AdminConfig(this.hoodie, this);
@@ -12,22 +11,26 @@
       this.hoodie.account._userKey = function() {
         return 'admin';
       };
-      hoodie = this.hoodie;
+      this.hoodie.remote.pull = function() {};
+      this.hoodie.remote.push = function() {};
+      this.hoodie.remote.sync = function() {};
       this.hoodie.account._handleSignInSuccess = function(response) {
         var defer, username;
         defer = hoodie.defer();
         username = 'admin';
         hoodie.account._authenticated = true;
         hoodie.account._setUsername(username);
-        hoodie.config.set('_remote.sync', false);
         hoodie.account.trigger('signin', username);
         return defer.resolve(username, username);
       };
-      this.hoodie.remote.sync = function() {
-        return _this.hoodie.resolveWith();
-      };
-      this.hoodie.account._handleSignInSuccess.bind(this.hoodie.account);
+      this.patchHoodie();
     }
+
+    Admin.prototype.patchHoodie = function(event, callback) {
+      return Hoodie.LocalStore.prototype.isPersistent = function() {
+        return false;
+      };
+    };
 
     Admin.prototype.on = function(event, callback) {};
 
@@ -65,7 +68,7 @@
       defer = this.hoodie.defer();
       stats = {
         signups: 12,
-        account_deletions: 1,
+        account_deletions: 3,
         users_active: 1302,
         users_total: 4211,
         growth: 0.04,
@@ -84,7 +87,7 @@
     };
 
     Admin.prototype.getConfig = function() {
-      return this.modules.store.find("module", "appconfig").pipe(function(module) {
+      return this.modules.find("appconfig").pipe(function(module) {
         return module.config;
       });
     };
@@ -98,14 +101,12 @@
         module.config = config;
         return module;
       };
-      promise = this.modules.store.update("module", "appconfig", updateFunction);
+      promise = this.modules.update("module", "appconfig", updateFunction);
       return promise;
     };
 
     return Admin;
 
   })();
-
-  Hoodie.extend("admin", Hoodie.Admin);
 
 }).call(this);

@@ -10,6 +10,8 @@
     function SidebarView() {
       this.renderModules = __bind(this.renderModules, this);
 
+      this.updateUserCount = __bind(this.updateUserCount, this);
+
       this.renderAppName = __bind(this.renderAppName, this);
       return SidebarView.__super__.constructor.apply(this, arguments);
     }
@@ -48,18 +50,48 @@
       });
     };
 
-    SidebarView.prototype.loadModules = function() {
-      return window.hoodie.admin.modules.findAll().then(this.renderModules);
+    SidebarView.prototype.getUserModuleLabel = function(totalUsers) {
+      this.totalUsers = totalUsers;
+      switch (this.totalUsers) {
+        case 0:
+          return this.label = "No users";
+        case 1:
+          return this.label = "One user";
+        default:
+          return this.label = "" + this.totalUsers + " users";
+      }
     };
 
-    SidebarView.prototype.renderModules = function(modules) {
+    SidebarView.prototype.updateUserCount = function(eventName, userObject) {
+      var _this = this;
+      return $.when(window.hoodie.admin.users.getTotal()).then(function(totalUsers) {
+        _this.totalUsers = totalUsers;
+        return $('.sidebar .modules .users .name').text(_this.getUserModuleLabel(_this.totalUsers));
+      });
+    };
+
+    SidebarView.prototype.loadModules = function() {
+      var debouncedUserCount;
+      debouncedUserCount = _.debounce(this.updateUserCount, 300);
+      hoodie.admin.users.on("change", function(eventName, userObject) {
+        return debouncedUserCount(eventName, userObject);
+      });
+      hoodie.admin.users.connect();
+      return $.when(window.hoodie.admin.modules.findAll(), window.hoodie.admin.users.getTotal()).then(this.renderModules);
+    };
+
+    SidebarView.prototype.renderModules = function(modules, totalUsers) {
       var key, module, _ref;
       this.modules = modules;
+      this.totalUsers = totalUsers;
       _ref = this.modules;
       for (key in _ref) {
         module = _ref[key];
         module.url = module.id;
         module.cleanName = this.makeURLHuman(module.url);
+        if (module.cleanName === "Users") {
+          module.cleanName = this.getUserModuleLabel(this.totalUsers);
+        }
         module.badgeStatus = 'badge-' + module.status;
         if (module.messages) {
           module.messageAmount = module.messages.length;
