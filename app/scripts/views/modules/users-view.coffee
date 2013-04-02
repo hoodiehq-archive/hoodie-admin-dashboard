@@ -22,10 +22,24 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
         else
           $btn.siblings('.submitMessage').text("Adding #{users} test users…")
         $.when(hoodie.admin.users.addTestUsers(users)).then () =>
-          console.log "WTF!"
           @update()
       else
-        $(btn).siblings('.submitMessage').text("That's not a number")
+        $btn.siblings('.submitMessage').text("That's not a number")
+
+    # Handles adding a real user
+    $("body").on "click", '.addRealUser button[type="submit"]', (event) =>
+      event.preventDefault()
+      $btn = $(event.currentTarget);
+      username = $btn.closest('form').find('.username').val()
+      password = $btn.closest('form').find('.password').val()
+      if(username and password)
+        $btn.attr('disabled', 'disabled')
+        $btn.siblings('.submitMessage').text("Adding #{username}…")
+        $.when(hoodie.admin.users.addUser(username, password)).then () =>
+          @update()
+      else
+        $btn.siblings('.submitMessage').text("Please enter a username and a password")
+
 
   update : ->
     $.when(

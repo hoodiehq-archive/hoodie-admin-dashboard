@@ -16,6 +16,15 @@ class Hoodie.AdminUsers extends Hoodie.Remote
     @admin  = admin
     super
 
+  addUser: (username, password) ->
+    baseUrl = hoodie.baseUrl
+    hash = "user-#{hoodie.uuid(5)}"
+
+    newHoodie = new Hoodie baseUrl.replace(/\bapi\./, "#{hash}.api.")
+    newHoodie.account.ownerHash = hash
+
+    newHoodie.account.signUp( username, password )
+
   addTestUser: (email) ->
     baseUrl = hoodie.baseUrl
     hash = "test-#{hoodie.uuid(5)}"
