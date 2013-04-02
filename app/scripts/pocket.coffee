@@ -129,7 +129,7 @@ class window.Pocket extends Backbone.Events
       @app.render()
 
   loadAppInfo: =>
-    hoodie.admin.getAppInfo().pipe(@setAppInfo)
+    hoodie.admin.app.getInfo().pipe(@setAppInfo)
 
   setAppInfo: (info) =>
     console.log 'info', info

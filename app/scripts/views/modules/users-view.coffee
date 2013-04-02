@@ -35,8 +35,17 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       if(username and password)
         $btn.attr('disabled', 'disabled')
         $btn.siblings('.submitMessage').text("Adding #{username}…")
-        $.when(hoodie.admin.users.addUser(username, password)).then () =>
-          @update()
+
+        ownerHash = hoodie.uuid()
+        hoodie.admin.users.add('user', {
+          id : username
+          name : "user/#{username}"
+          ownerHash : ownerHash
+          database : "user/#{ownerHash}"
+          signedUpAt : new Date()
+          roles : []
+          password : password
+        }).then @update
       else
         $btn.siblings('.submitMessage').text("Please enter a username and a password")
 
@@ -44,7 +53,8 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     $("body").on "click", 'table.users a.remove', (event) =>
       event.preventDefault()
       id = $(event.currentTarget).closest("[data-id]").data('id');
-      $.when(hoodie.admin.users.removeUser(id)).then () =>
+      type = $(event.currentTarget).closest("[data-type]").data('type');
+      hoodie.admin.users.remove(type, id).then ->
         console.log "he's dead, jim."
 
     # Handle user edit
@@ -54,11 +64,11 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       console.log "edit user", id
 
 
-  update : ->
+  update : =>
     $.when(
       hoodie.admin.users.findAll(),
       hoodie.admin.modules.find('users'),
-      hoodie.admin.getConfig()
+      hoodie.admin.config.get()
     ).then (users, object, appConfig) =>
       @totalUsers   = users.length
       @users        = users

@@ -5,7 +5,7 @@ class Pocket.ModulesView['module-appconfig'] extends Pocket.ModulesBaseView
     "submit form.email": "updateConfig"
 
   update : ->
-    hoodie.admin.getConfig().then (config) =>
+    hoodie.admin.config.get().then (config) =>
       @config = config
       @render()
 
