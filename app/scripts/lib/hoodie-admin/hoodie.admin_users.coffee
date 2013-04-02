@@ -44,6 +44,9 @@ class Hoodie.AdminUsers extends Hoodie.Remote
 
     $.when promises...
 
+  removeUser: (id) ->
+    @hoodie.rejectWith(error: "not yet implemented")
+
   removeAllTestUsers: ->
     @hoodie.rejectWith(error: "not yet implemented")
 

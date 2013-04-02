@@ -463,3 +463,12 @@ h3.top{
     margin-bottom: 6px;
   }
 }
+
+// Users module
+
+table.users a{
+  &:hover{
+    font-weight: normal;
+    text-decoration: underline;
+  }
+}

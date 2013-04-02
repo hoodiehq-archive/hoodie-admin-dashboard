@@ -176,7 +176,7 @@
     <p class="currentSearchMetrics muted">Showing {{users.length}} of {{totalUsers}} users</p>
   </div>
   {{#if users}}
-  <table class="table">
+  <table class="table users">
     <thead>
       <tr>
         <th>Username</th>
@@ -189,13 +189,13 @@
     </thead>
     <tbody>
       {{#each users}}
-      <tr>
+      <tr data-id="{{id}}">
         <td>{{id}}</td>
         <td>{{lastLogin}}</td>
         <td class="timeago" title="{{signedUpAt}}">{{signedUpAt}}</td>
         <td>{{state}}</td>
         <td>resend / new</td>
-        <td>edit / delete</td>
+        <td><a href="#" class="edit">edit</a> / <a href="#" class="remove">delete</a></td>
       </tr>
       {{/each}}
     </tbody>

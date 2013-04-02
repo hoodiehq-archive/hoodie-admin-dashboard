@@ -40,6 +40,19 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       else
         $btn.siblings('.submitMessage').text("Please enter a username and a password")
 
+    # Handle user deletion
+    $("body").on "click", 'table.users a.remove', (event) =>
+      event.preventDefault()
+      id = $(event.currentTarget).closest("[data-id]").data('id');
+      $.when(hoodie.admin.users.removeUser(id)).then () =>
+        console.log "he's dead, jim."
+
+    # Handle user edit
+    $("body").on "click", 'table.users a.edit', (event) =>
+      event.preventDefault()
+      id = $(event.currentTarget).closest("[data-id]").data('id');
+      console.log "edit user", id
+
 
   update : ->
     $.when(
@@ -61,6 +74,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
       # config defaults
       @config.confirmationEmailText or= "Hello {name}! Thanks for signing up with #{appInfo.name}"
+      console.log @users
       @render()
 
   updateConfig : (event) ->
