@@ -20,7 +20,7 @@ class Pocket.ModulesView['module-appconfig'] extends Pocket.ModulesBaseView
     @config.email.transport.auth.user = username
     @config.email.transport.auth.pass = password
 
-    promise = hoodie.admin.setConfig(@config).then(@handleSubmitSuccess, @handleSubmitError)
+    promise = hoodie.admin.config.set(@config).then(@handleSubmitSuccess, @handleSubmitError)
 
   handleSubmitError: (error) =>
     console.log "Could not save global mail config"
