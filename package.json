@@ -2,9 +2,14 @@
   "author": "hood.ie",
   "name": "hoodie-pocket",
   "version": "0.0.4",
-  "dependencies": {},
+  "dependencies": {
+    "hoodie-app": "git://github.com/hoodiehq/hoodie-app.git",
+    "worker-users": "git://github.com/hoodiehq/worker-users.git",
+    "worker-shares": "git://github.com/hoodiehq/worker-shares.git",
+    "worker-email-out": "git://github.com/hoodiehq/worker-email-out.git"
+  },
   "scripts": {
-    "start": "grunt server"
+    "start": "node node_modules/hoodie-app/lib/hoodie-app.js"
   },
   "devDependencies": {
     "grunt": "~0.4.0",

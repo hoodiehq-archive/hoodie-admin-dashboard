@@ -28,44 +28,44 @@ module.exports = function( grunt ) {
 
     // specify an alternate install location for Bower
     bower: {
-      dir: '<%= yeoman.app %>/components'
+      dir: 'app/components'
     },
 
     // bower: {
     //     all: {
-    //         rjsConfig: '<%= yeoman.app %>/scripts/main.js'
+    //         rjsConfig: 'app/scripts/main.js'
     //     }
     // }
 
     useminPrepare: {
-        html: '<%= yeoman.app %>/index.html',
+        html: 'app/index.html',
         options: {
-            dest: '<%= yeoman.dist %>'
+            dest: 'dist'
         }
     },
     usemin: {
-        html: ['<%= yeoman.dist %>/{,*/}*.html'],
-        css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+        html: ['dist/**/*.html'],
+        css: ['dist/styles/**/*.css'],
         options: {
-            dirs: ['<%= yeoman.dist %>']
+            dirs: ['dist']
         }
     },
     imagemin: {
         dist: {
             files: [{
                 expand: true,
-                cwd: '<%= yeoman.app %>/images',
-                src: '{,*/}*.{png,jpg,jpeg}',
-                dest: '<%= yeoman.dist %>/images'
+                cwd: 'app/images',
+                src: '**/*.{png,jpg,jpeg}',
+                dest: 'dist/images'
             }]
         }
     },
     cssmin: {
         dist: {
             files: {
-                '<%= yeoman.dist %>/styles/main.css': [
-                    '<%= yeoman.temp %>/styles/{,*/}*.css',
-                    '<%= yeoman.app %>/styles/{,*/}*.css'
+                'dist/styles/main.css': [
+                    '.tmp/styles/**/*.css',
+                    'app/styles/**/*.css'
                 ]
             }
         }
@@ -85,9 +85,9 @@ module.exports = function( grunt ) {
             },
             files: [{
                 expand: true,
-                cwd: '<%= yeoman.app %>',
+                cwd: 'app',
                 src: '*.html',
-                dest: '<%= yeoman.dist %>'
+                dest: 'dist'
             }]
         }
     },
@@ -96,8 +96,8 @@ module.exports = function( grunt ) {
             files: [{
                 expand: true,
                 dot: true,
-                cwd: '<%= yeoman.app %>',
-                dest: '<%= yeoman.dist %>',
+                cwd: 'app',
+                dest: 'dist',
                 src: [
                     '*.{ico,txt}',
                     '.htaccess'
@@ -113,16 +113,16 @@ module.exports = function( grunt ) {
                 // rather than compiling multiple files here you should
                 // require them into your main .coffee file
                 expand: true,
-                cwd: '<%= yeoman.app %>/scripts',
-                src: '*.coffee',
-                dest: '<%= yeoman.temp %>/scripts',
+                cwd: 'app/scripts',
+                src: '**/*.coffee',
+                dest: '.tmp/scripts',
                 ext: '.js'
             }]
         },
         test: {
             files: [{
                 expand: true,
-                cwd: '<%= yeoman.temp %>/spec',
+                cwd: '.tmp/spec',
                 src: '*.coffee',
                 dest: 'test/spec'
             }]
@@ -131,10 +131,10 @@ module.exports = function( grunt ) {
 
     compass: {
         options: {
-            sassDir: '<%= yeoman.app %>/styles',
-            cssDir: '<%= yeoman.temp %>/styles',
-            imagesDir: '<%= yeoman.app %>/images',
-            javascriptsDir: '<%= yeoman.app %>/scripts',
+            sassDir: 'app/styles',
+            cssDir: '.tmp/styles',
+            imagesDir: 'app/images',
+            javascriptsDir: 'app/scripts',
             importPath: 'app/components',
             relativeAssets: true
         },
@@ -149,31 +149,31 @@ module.exports = function( grunt ) {
     // default watch configuration
     watch: {
       coffee: {
-        files: '<%= yeoman.app %>/scripts/**/*.coffee',
+        files: 'app/scripts/**/*.coffee',
         tasks: 'coffee livereload'
       },
       coffeeTest: {
-        files: ['test/spec/{,*/}*.coffee'],
+        files: ['test/spec/**/*.coffee'],
         tasks: ['coffee:test']
       },
       compass: {
         files: [
-          '<%= yeoman.app %>/styles/**/*.{scss,sass}'
+          'app/styles/**/*.{scss,sass}'
         ],
         tasks: 'compass livereload'
       },
       livereload: {
           files: [
-              '<%= yeoman.app %>/*.html',
-              '{<%= yeoman.temp %>,<%= yeoman.app %>}/styles/{,*/}*.css',
-              '{<%= yeoman.temp %>,<%= yeoman.app %>}/scripts/{,*/}*.js',
-              '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,webp}'
+              'app/*.html',
+              '{.tmp,app}/styles/**/*.css',
+              '{.tmp,app}/scripts/**/*.js',
+              'app/images/**/*.{png,jpg,jpeg,webp}'
           ],
           tasks: ['livereload']
       },
       handlebars: {
         files: [
-          '<%= yeoman.app %>/scripts/templates/**/*.hbs'
+          'app/scripts/templates/**/*.hbs'
         ],
         tasks: 'handlebars livereload'
       }
@@ -223,8 +223,8 @@ module.exports = function( grunt ) {
         }
     },
     clean: {
-        dist: ['<%= yeoman.temp %>', '<%= yeoman.dist %>/*'],
-        server: '<%= yeoman.temp %>'
+        dist: ['.tmp', 'dist/*'],
+        server: '.tmp'
     },
 
     // not used since Uglify task does concat,
@@ -235,8 +235,8 @@ module.exports = function( grunt ) {
     uglify: {
         dist: {
             files: {
-                '<%= yeoman.dist %>/scripts/main.js': [
-                    '<%= yeoman.temp %>/scripts/{,*/}*.js'
+                'dist/scripts/main.js': [
+                    '.tmp/scripts/**/*.js'
                 ],
             }
         }
@@ -247,7 +247,7 @@ module.exports = function( grunt ) {
     lint: {
       files: [
         'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/**/*.js',
+        'app/scripts/**/*.js',
         'test/**/*.js'
       ]
     },
@@ -277,17 +277,17 @@ module.exports = function( grunt ) {
     // -------------------
 
     // the staging directory used during the process
-    staging: '<%= yeoman.temp %>',
+    staging: '.tmp',
     // final build output
-    output: '<%= yeoman.dist %>',
+    output: 'dist',
 
     mkdirs: {
-      staging: '<%= yeoman.app %>/'
+      staging: 'app/'
     },
 
     // Below, all paths are relative to the staging directory, which is a copy
-    // of the <%= yeoman.app %>/ directory. Any .gitignore, .ignore and .buildignore file
-    // that might appear in the <%= yeoman.app %>/ tree are used to ignore these values
+    // of the app/ directory. Any .gitignore, .ignore and .buildignore file
+    // that might appear in the app/ tree are used to ignore these values
     // during the copy process.
 
     // concat css/**/*.css files, inline @import, output a single minified css
@@ -302,7 +302,7 @@ module.exports = function( grunt ) {
     rev: {
       js: 'scripts/**/*.js',
       css: 'styles/**/*.css',
-      img: 'i/**'
+      img: 'images/**'
     },
 
     // HTML minification
@@ -332,8 +332,8 @@ module.exports = function( grunt ) {
     handlebars: {
       compile: {
         files: {
-            "<%= yeoman.temp %>/scripts/compiled-templates.js": [
-            "<%= yeoman.app %>/scripts/templates/**/*.hbs"
+            ".tmp/scripts/compiled-templates.js": [
+            "app/scripts/templates/**/*.hbs"
           ]
         },
         options: {
