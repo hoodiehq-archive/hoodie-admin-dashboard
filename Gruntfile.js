@@ -190,8 +190,8 @@ module.exports = function( grunt ) {
                 middleware: function (connect) {
                     return [
                         lrSnippet,
-                        mountFolder(connect, '<%= yeoman.temp %>'),
-                        mountFolder(connect, '<%= yeoman.app %>')
+                        mountFolder(connect, '.tmp'),
+                        mountFolder(connect, 'app')
                     ];
                 }
             }
@@ -200,8 +200,8 @@ module.exports = function( grunt ) {
             options: {
                 middleware: function (connect) {
                     return [
-                        mountFolder(connect, '<%= yeoman.temp %>'),
-                        mountFolder(connect, '<%= yeoman.app %>')
+                        mountFolder(connect, '.tmp'),
+                        mountFolder(connect, 'test')
                     ];
                 }
             }
@@ -210,7 +210,7 @@ module.exports = function( grunt ) {
             options: {
                 middleware: function (connect) {
                     return [
-                        mountFolder(connect, '<%= yeoman.dist %>')
+                        mountFolder(connect, 'dist')
                     ];
                 }
             }
