@@ -13,7 +13,7 @@ module.exports = function( grunt ) {
 
   // configurable paths
   var yeomanConfig = {
-      app: 'app',
+      app:  'app',
       temp: '.tmp',
       dist: 'dist'
   };
@@ -64,7 +64,7 @@ module.exports = function( grunt ) {
         dist: {
             files: {
                 '<%= yeoman.dist %>/styles/main.css': [
-                    '.tmp/styles/{,*/}*.css',
+                    '<%= yeoman.temp %>/styles/{,*/}*.css',
                     '<%= yeoman.app %>/styles/{,*/}*.css'
                 ]
             }
@@ -165,8 +165,8 @@ module.exports = function( grunt ) {
       livereload: {
           files: [
               '<%= yeoman.app %>/*.html',
-              '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-              '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
+              '{<%= yeoman.temp %>,<%= yeoman.app %>}/styles/{,*/}*.css',
+              '{<%= yeoman.temp %>,<%= yeoman.app %>}/scripts/{,*/}*.js',
               '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,webp}'
           ],
           tasks: ['livereload']
@@ -236,7 +236,7 @@ module.exports = function( grunt ) {
         dist: {
             files: {
                 '<%= yeoman.dist %>/scripts/main.js': [
-                    '<%= yeoman.app %>/scripts/{,*/}*.js'
+                    '<%= yeoman.temp %>/scripts/{,*/}*.js'
                 ],
             }
         }
