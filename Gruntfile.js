@@ -150,7 +150,7 @@ module.exports = function( grunt ) {
     watch: {
       coffee: {
         files: 'app/scripts/**/*.coffee',
-        tasks: 'coffee livereload'
+        tasks: ['coffee', 'livereload']
       },
       coffeeTest: {
         files: ['test/spec/**/*.coffee'],
@@ -160,7 +160,7 @@ module.exports = function( grunt ) {
         files: [
           'app/styles/**/*.{scss,sass}'
         ],
-        tasks: 'compass livereload'
+        tasks: ['compass', 'livereload']
       },
       livereload: {
           files: [
@@ -175,7 +175,7 @@ module.exports = function( grunt ) {
         files: [
           'app/scripts/templates/**/*.hbs'
         ],
-        tasks: 'handlebars livereload'
+        tasks: ['handlebars', 'livereload']
       }
     },
 

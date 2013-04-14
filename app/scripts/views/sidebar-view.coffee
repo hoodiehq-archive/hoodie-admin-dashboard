@@ -63,4 +63,4 @@ class Pocket.SidebarView extends Pocket.BaseView
       else
         module.messageAmount = ''
 
-    @$el.find('nav ul.modules').html Handlebars.VM.template(JST['sidebar-modules']) this
+    @$el.find('nav ul.modules').html JST['sidebar-modules'](this)
