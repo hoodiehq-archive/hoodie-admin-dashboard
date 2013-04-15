@@ -1,8 +1,7 @@
 if (location.hostname is 'localhost')
   # debug mode, connect to
   # some existing hoodie app.
-  whereTheMagicHappens = "http://admin.api.pocket.dev"
-  #whereTheMagicHappens = "http://admin.api.hoodie-mapchat.dev"
+  whereTheMagicHappens = "http://api.pocket.dev"
 else
   whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "admin.api")
 window.hoodie = new Hoodie(whereTheMagicHappens)
