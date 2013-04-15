@@ -9,6 +9,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     'click .addRealUser button[type="submit"]'    : 'addRealUser'
     'click .user a.remove'                        : 'removeUser'
     'click .user a.edit'                          : 'editUser'
+    'click .clearSearch'                          : 'clearSearch'
 
   constructor : ->
     super
@@ -102,19 +103,26 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     console.log "edit user", id
 
   search : (event) ->
-    searchQuery = $('input.search-query', event.currentTarget).val()
+    event.preventDefault()
+    @searchQuery = $('input.search-query', event.currentTarget).val()
     $.when(
-      hoodie.admin.users.search(searchQuery)
+      hoodie.admin.users.search(@searchQuery)
     ).then (users) =>
       @users = users
       switch users.length
         when 0
-          @resultsDesc  = "No users matching '#{searchQuery}'"
+          @resultsDesc  = "No users matching '#{@searchQuery}'"
         when 1
-          @resultsDesc  = "#{users.length} user matching '#{searchQuery}'"
+          @resultsDesc  = "#{users.length} user matching '#{@searchQuery}'"
         else
-          @resultsDesc  = "#{users.length} users matching '#{searchQuery}'"
+          @resultsDesc  = "#{users.length} users matching '#{@searchQuery}'"
       @render()
+
+  clearSearch : (event) ->
+    event.preventDefault()
+    @searchQuery = null
+    @update()
+
 
   beforeRender : ->
     console.log "users", @users

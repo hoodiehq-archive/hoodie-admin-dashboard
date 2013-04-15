@@ -347,6 +347,10 @@ h3.top{
 
 .userSearch{
   .form-search{
+    float:left;
+  }
+  .clearSearch{
+    margin-left: 30px;
   }
   .pagination{
     height:30px;

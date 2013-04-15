@@ -163,16 +163,19 @@
       </form>
     </div>
   </fieldset>
-  <div class="userSearch">
+  <div class="userSearch group">
     <form class="form-search">
       <div class="input-append">
-        <input type="text" class="span2 search-query" placeholder="Username">
+        <input type="text" class="span2 search-query" placeholder="Username"{{#if searchQuery}} value="{{searchQuery}}"{{/if}}>
         <button type="submit" class="btn">Search</button>
       </div>
     </form>
+    {{#if searchQuery}}
+    <button class="btn clearSearch">Clear search</button>
+    {{/if}}
   </div>
   <div class="tableStatus">
-    <p class="currentSearchTerm muted">{{resultsDesc}}</p>
+    <p class="currentSearchTerm muted">{{{resultsDesc}}}</p>
     <p class="currentSearchMetrics muted">Showing {{users.length}} of {{totalUsers}} users</p>
   </div>
   {{#if users}}
@@ -203,7 +206,7 @@
   {{/if}}
   {{#if users}}
   <div class="tableStatus">
-    <p class="currentSearchTerm muted">{{resultsDesc}}</p>
+    <p class="currentSearchTerm muted">{{{resultsDesc}}}</p>
     <p class="currentSearchMetrics muted">Showing {{users.length}} of {{totalUsers}} users</p>
   </div>
   {{/if}}
