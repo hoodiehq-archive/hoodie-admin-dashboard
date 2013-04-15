@@ -5,6 +5,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     'submit form.config'                          : 'updateConfig'
     'submit form.form-search'                     : 'search'
     'click .addTestUsers button[type="submit"]'   : 'addTestUsers'
+    'click .removeTestUsers button[type="submit"]': 'removeTestUsers'
     'click .addRealUser button[type="submit"]'    : 'addRealUser'
     'click .user a.remove'                        : 'removeUser'
     'click .user a.edit'                          : 'editUser'
@@ -57,6 +58,14 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
         @update()
     else
       $btn.siblings('.submitMessage').text("That's not a number")
+
+  removeTestUsers : (event) ->
+    event.preventDefault()
+    users = $( ".user[data-id^='test-']" )
+    users.each (index, user) ->
+      id = $(user).data('id');
+      hoodie.admin.users.remove('user', id).then ->
+        $('[data-id="'+id+'"]').remove()
 
   addRealUser : (event) ->
     event.preventDefault()
