@@ -15,7 +15,7 @@ module.exports = function( grunt ) {
   var yeomanConfig = {
       app:  'app',
       temp: '.tmp',
-      dist: 'dist'
+      dist: 'www'
   };
 
   //
@@ -40,14 +40,14 @@ module.exports = function( grunt ) {
     useminPrepare: {
         html: 'app/index.html',
         options: {
-            dest: 'dist'
+            dest: 'www'
         }
     },
     usemin: {
-        html: ['dist/**/*.html'],
-        css: ['dist/styles/**/*.css'],
+        html: ['www/index.html'],
+        css: ['www/styles/**/*.css'],
         options: {
-            dirs: ['dist']
+            dirs: ['www']
         }
     },
     imagemin: {
@@ -56,14 +56,14 @@ module.exports = function( grunt ) {
                 expand: true,
                 cwd: 'app/images',
                 src: '**/*.{png,jpg,jpeg}',
-                dest: 'dist/images'
+                dest: 'www/images'
             }]
         }
     },
     cssmin: {
         dist: {
             files: {
-                'dist/styles/main.css': [
+                'www/styles/app.css': [
                     '.tmp/styles/**/*.css',
                     'app/styles/**/*.css'
                 ]
@@ -87,7 +87,7 @@ module.exports = function( grunt ) {
                 expand: true,
                 cwd: 'app',
                 src: '*.html',
-                dest: 'dist'
+                dest: 'www'
             }]
         }
     },
@@ -97,7 +97,7 @@ module.exports = function( grunt ) {
                 expand: true,
                 dot: true,
                 cwd: 'app',
-                dest: 'dist',
+                dest: 'www',
                 src: [
                     '*.{ico,txt}',
                     '.htaccess'
@@ -210,7 +210,7 @@ module.exports = function( grunt ) {
             options: {
                 middleware: function (connect) {
                     return [
-                        mountFolder(connect, 'dist')
+                        mountFolder(connect, 'www')
                     ];
                 }
             }
@@ -223,19 +223,19 @@ module.exports = function( grunt ) {
         }
     },
     clean: {
-        dist: ['.tmp', 'dist/*'],
+        dist: ['.tmp', 'www/*'],
         server: '.tmp'
     },
 
     // not used since Uglify task does concat,
     // but still available if needed
-    /*concat: {
+    concat: {
         dist: {}
-    },*/
+    },
     uglify: {
         dist: {
             files: {
-                'dist/scripts/main.js': [
+                'www/scripts/app.js': [
                     '.tmp/scripts/**/*.js'
                 ],
             }
@@ -279,7 +279,7 @@ module.exports = function( grunt ) {
     // the staging directory used during the process
     staging: '.tmp',
     // final build output
-    output: 'dist',
+    output: 'www',
 
     mkdirs: {
       staging: 'app/'
@@ -391,8 +391,8 @@ module.exports = function( grunt ) {
       'imagemin',
       'htmlmin',
       'concat',
-      'cssmin',
-      'uglify',
+      // 'cssmin',
+      // 'uglify',
       'copy',
       'usemin'
   ]);
