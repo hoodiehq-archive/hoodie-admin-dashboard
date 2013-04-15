@@ -2,67 +2,15 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   template: 'modules/users'
 
   events :
-    'submit form.config'      : 'updateConfig'
-    'submit form.form-search' : 'search'
+    'submit form.config'                          : 'updateConfig'
+    'submit form.form-search'                     : 'search'
+    'click .addTestUsers button[type="submit"]'   : 'addTestUsers'
+    'click .addRealUser button[type="submit"]'    : 'addRealUser'
+    'click .user a.remove'                        : 'removeUser'
+    'click .user a.edit'                          : 'editUser'
 
   constructor : ->
-    @registerListeners()
     super
-
-  registerListeners : ->
-    # Handles adding test users
-    $("body").on "click", '.addTestUsers button[type="submit"]', (event) =>
-      event.preventDefault()
-      $btn = $(event.currentTarget);
-      users = parseInt($btn.closest('form').find('.amountOfTestUsers').val())
-      if _.isNumber(users) and users > 0
-        $btn.attr('disabled', 'disabled')
-        if users is 1
-          $btn.siblings('.submitMessage').text("Adding a test user…")
-        else
-          $btn.siblings('.submitMessage').text("Adding #{users} test users…")
-        $.when(hoodie.admin.users.addTestUsers(users)).then () =>
-          @update()
-      else
-        $btn.siblings('.submitMessage').text("That's not a number")
-
-    # Handles adding a real user
-    $("body").on "click", '.addRealUser button[type="submit"]', (event) =>
-      event.preventDefault()
-      $btn = $(event.currentTarget);
-      username = $btn.closest('form').find('.username').val()
-      password = $btn.closest('form').find('.password').val()
-      if(username and password)
-        $btn.attr('disabled', 'disabled')
-        $btn.siblings('.submitMessage').text("Adding #{username}…")
-
-        ownerHash = hoodie.uuid()
-        hoodie.admin.users.add('user', {
-          id : username
-          name : "user/#{username}"
-          ownerHash : ownerHash
-          database : "user/#{ownerHash}"
-          signedUpAt : new Date()
-          roles : []
-          password : password
-        }).then @update
-      else
-        $btn.siblings('.submitMessage').text("Please enter a username and a password")
-
-    # Handle user deletion
-    $("body").on "click", 'table.users a.remove', (event) =>
-      event.preventDefault()
-      id = $(event.currentTarget).closest("[data-id]").data('id');
-      type = $(event.currentTarget).closest("[data-type]").data('type');
-      hoodie.admin.users.remove(type, id).then ->
-        console.log "he's dead, jim."
-
-    # Handle user edit
-    $("body").on "click", 'table.users a.edit', (event) =>
-      event.preventDefault()
-      id = $(event.currentTarget).closest("[data-id]").data('id');
-      console.log "edit user", id
-
 
   update : =>
     $.when(
@@ -94,6 +42,55 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   emailTransportNotConfigured : ->
     isConfigured = @appConfig?.email?.transport?
     not isConfigured
+
+  addTestUsers : (event) ->
+    event.preventDefault()
+    $btn = $(event.currentTarget);
+    users = parseInt($btn.closest('form').find('.amountOfTestUsers').val())
+    if _.isNumber(users) and users > 0
+      $btn.attr('disabled', 'disabled')
+      if users is 1
+        $btn.siblings('.submitMessage').text("Adding a test user…")
+      else
+        $btn.siblings('.submitMessage').text("Adding #{users} test users…")
+      $.when(hoodie.admin.users.addTestUsers(users)).then () =>
+        @update()
+    else
+      $btn.siblings('.submitMessage').text("That's not a number")
+
+  addRealUser : (event) ->
+    event.preventDefault()
+    $btn = $(event.currentTarget);
+    username = $btn.closest('form').find('.username').val()
+    password = $btn.closest('form').find('.password').val()
+    if(username and password)
+      $btn.attr('disabled', 'disabled')
+      $btn.siblings('.submitMessage').text("Adding #{username}…")
+
+      ownerHash = hoodie.uuid()
+      hoodie.admin.users.add('user', {
+        id : username
+        name : "user/#{username}"
+        ownerHash : ownerHash
+        database : "user/#{ownerHash}"
+        signedUpAt : new Date()
+        roles : []
+        password : password
+      }).then @update
+    else
+      $btn.siblings('.submitMessage').text("Please enter a username and a password")
+
+  removeUser : (event) ->
+    event.preventDefault()
+    id = $(event.currentTarget).closest("[data-id]").data('id');
+    type = $(event.currentTarget).closest("[data-type]").data('type');
+    hoodie.admin.users.remove(type, id).then ->
+      $('[data-id="'+id+'"]').remove()
+
+  editUser : (event) ->
+    event.preventDefault()
+    id = $(event.currentTarget).closest("[data-id]").data('id');
+    console.log "edit user", id
 
   search : (event) ->
     searchQuery = $('input.search-query', event.currentTarget).val()
