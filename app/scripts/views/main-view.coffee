@@ -14,8 +14,11 @@ class Pocket.MainView extends Pocket.BaseView
     @$el.find('#signIn').attr('disabled', 'disabled')
     event.preventDefault()
     password = @$el.find('#signInPassword').val()
-    hoodie.admin.signIn(password).fail(@handleSignInError)
+    hoodie.admin.signIn(password).done(@onSignInSuccess).fail(@onSignInFail)
 
-  handleSignInError: () =>
+  onSignInFail: () =>
     $('form.signIn .error').text('Wrong password, please try again')
     $('#signIn').attr('disabled', null)
+
+  onSignInSuccess: () =>
+    window.location.reload()

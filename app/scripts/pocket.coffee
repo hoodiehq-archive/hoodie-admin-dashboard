@@ -118,6 +118,12 @@ class window.Pocket extends Backbone.Events
 
     return null
 
+  onSignOutFail: () =>
+    console.log "Could not sign you out."
+
+  onSignOutSuccess: () =>
+    window.location.reload()
+
   #
   handleSignInAndSignOut: ->
     hoodie.account.on 'signin', =>
