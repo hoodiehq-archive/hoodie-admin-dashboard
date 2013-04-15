@@ -1,6 +1,6 @@
 {
   "name": "hoodie.admin",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "main": [
     "./hoodie.admin.js"
   ],
@@ -16,10 +16,10 @@
     "Cakefile",
     "TODO.md"
   ],
-  "gitHead": "6c7bf16125beb57248031dd764da7cb7aa28fd83",
+  "gitHead": "db4d22b655d6230bae60e68a1ce4b0dbcc254dd3",
   "readme": "Hoodie Admin Module\n=====================\n\nExtends hoodie module in browser with an admin api.\n\nWork in progress. ",
   "readmeFilename": "README.md",
-  "_id": "hoodie.admin@0.1.6",
+  "_id": "hoodie.admin@0.1.8",
   "description": "Hoodie Admin Module =====================",
   "repository": {
     "type": "git",

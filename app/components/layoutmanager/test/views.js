@@ -1,4 +1,5 @@
-/*jshint QUnit:true, asyncTest:true */
+(function(window) {
+"use strict";
 
 QUnit.module("views", {
   setup: function() {
@@ -13,7 +14,9 @@ QUnit.module("views", {
     Backbone.Layout.configure({
       fetch: function(name) {
         return _.template(testUtil.templates[name]);
-      }
+      },
+
+      suppressWarnings: true
     });
 
     // Custom View
@@ -92,10 +95,15 @@ QUnit.module("views", {
       }
     });
   },
+
   teardown: function() {
     Backbone.Layout.configure({
       fetch: this.origFetch
     });
+
+    // Remove `supressWarnings: true`.
+    delete Backbone.Layout.prototype.options.suppressWarnings;
+    delete Backbone.View.prototype.suppressWarnings;
   }
 });
 
@@ -135,6 +143,39 @@ asyncTest("render inside defined partial", function() {
     ok(testUtil.isDomNode(this.el), "Contents is a DOM Node");
     equal(trimmed, "Right", "Correct render");
 
+    start();
+  });
+});
+
+asyncTest("Subclassed view uses correct template when rendered.", function() {
+  expect(1);
+
+  var layout = new Backbone.Layout();
+  var BaseView = Backbone.View.extend({
+    template: function() {
+      return "Base view template";
+    },
+    manage: true
+  });
+
+  var templateFunction = function() {
+    return 'Extended view template';
+  };
+
+  var ExtendedBaseView = BaseView.extend({
+    constructor: function() {
+      this.template = templateFunction;
+      BaseView.prototype.constructor.apply(this, arguments); 
+    }
+  });
+
+  layout.setView("", new ExtendedBaseView());
+
+  layout.render().then(function() {
+    var view = layout.getView("");
+    var contents = testUtil.trim(this.$el.text());
+      
+    equal(contents, "Extended view template", "Correct template is used");
     start();
   });
 });
@@ -1351,17 +1392,21 @@ test("getView should accept a selector name too", 3, function() {
   equal(view.getViews("c").value().length, 2, "Two Views returned from getViews");
 });
 
-test("getView should accept a `_.where` object too", 3, function() {
+// https://github.com/tbranyen/backbone.layoutmanager/issues/302
+test("getView should accept a `_.where` object too", 4, function() {
   var view = new Backbone.Layout();
 
   var model = new Backbone.Model();
+  var model2 = new Backbone.Model();
 
   var a = view.setView("a", new Backbone.Layout({ model: model }));
   var b = view.setView("b", new Backbone.Layout({ id: 4 }));
+  var d = view.setView("d", new Backbone.Layout({ model: model2 }));
   view.insertView("c", new Backbone.Layout({ model: model }));
   view.insertView("c", new Backbone.Layout({ id: 4 }));
 
   equal(view.getView({ model: model }), a, "Single getView returns single view");
+  equal(view.getView({ model: model2 }), d, "Single getView returns single view");
   equal(view.getViews({ id: 4 }).first().value(), b, "Using getViews will return the single view in an array");
   equal(view.getViews({ id: 4 }).value().length, 2, "Two Views returned from getViews");
 });
@@ -1759,3 +1804,159 @@ test("re-rendering a template works correctly", 1, function() {
     notEqual(newText, text, "different contents");
   });
 });
+
+// https://github.com/tbranyen/backbone.layoutmanager/issues/271
+test("`el: false` with deeply nested views", 1, function() {
+  var Lvl2 = Backbone.Layout.extend({
+    el: false,
+    template: _.template('<div class="lvl2">foo</div>')
+  });
+  var Lvl1 = Backbone.Layout.extend({
+    el: false,
+    template: _.template('<div class="lvl1"><div class="lvl2container"></div></div>')
+  });
+  var Lvl0 = Backbone.Layout.extend({
+    el: false,
+    template: _.template('<div class="lvl0"><div class="lvl1container"></div></div>')
+  });
+
+  var view = new Lvl0({
+    views: {
+      '.lvl1container': new Lvl1({
+        views: {
+          '.lvl2container': new Lvl2()
+        }
+      })
+    }
+  });
+
+  view.render();
+
+  var expected = [
+    '<div class="lvl1container">',
+      '<div class="lvl1">',
+        '<div class="lvl2container">',
+          '<div class="lvl2">foo</div>',
+        '</div>',
+      '</div>',
+    '</div>'
+  ];
+
+  equal(view.$el.html(), expected.join(''), "the same HTML");
+});
+
+// https://github.com/tbranyen/backbone.layoutmanager/issues/286
+test("`el: false` with rerendering inserted child views doesn't replicate views", 1, function() {
+  var app = _.extend({}, Backbone.Events);
+
+  var Item = Backbone.Layout.extend({
+    el: false,
+    template: _.template('<div class="item"><span class="title <%= model.theClass %>">Item <%= model.index %></span></div>'),
+    initialize: function(options){
+      this.model = options.model;
+      this.listenTo(app, 'event', this.addHighlight);
+    },
+    addHighlight: function(){
+      this.model.set('theClass', 'highlight');
+      this.render();
+    },
+    serialize: function(){
+      return {model: this.model.toJSON()};
+    }
+  });
+  var List = Backbone.Layout.extend({
+    template: _.template('<div class="listContainer">List Container<div class="list"></div></div>'),
+    initialize: function(){
+      this.models = new Backbone.Collection([
+        new Backbone.Model({index: 1}),
+        new Backbone.Model({index: 2})
+      ]);
+    },
+    beforeRender: function(){
+      this.models.each(function(model){
+        this.insertView('.list', new Item({
+          model: model
+        }));
+      }, this);
+    }
+  });
+
+  var view = new List();
+
+  view.render();
+
+  // Add highlight to elements to cause them to rerender. Should not replicate views.
+  app.trigger('event');
+
+  var expected = [
+    '<div class="listContainer">',
+      'List Container',
+      '<div class="list">',
+        '<div class="item">',
+          '<span class="title highlight">Item 1</span>',
+        '</div>',
+        '<div class="item">',
+          '<span class="title highlight">Item 2</span>',
+        '</div>',
+      '</div>',
+    '</div>'
+  ];
+
+  equal(view.$el.html(), expected.join(''), "the same HTML");
+});
+
+test("`el: false` with non-container element will not be duplicated", 2, function() {
+  var expected = "<p>Paragraph 1</p><p>Paragraph 2</p>",
+    layout = new Backbone.Layout({
+      template: _.template('<div class="layout"><div class="content"></div></div>')
+    }),
+    view = new Backbone.Layout({
+      el: false,
+      template: _.template(expected)
+    });
+
+  layout.setViews({
+    ".content": view
+  }).render().done(function() {
+    equal(layout.$(".content").html(), expected);
+    view.render().done(function() {
+        equal(layout.$(".content").html(), expected);
+    });
+  });
+});
+
+test("trigger callback on a view with `keep: true`", 1, function() {
+  var myView = new Backbone.Layout({
+    keep: true, cleanup: function() { ok(true, "Cleanup triggered"); }
+  });
+
+  var layout = new Backbone.Layout();
+  layout.insertView(myView);
+
+  // Render.
+  layout.render();
+
+  // Cleanup.
+  layout.removeView();
+});
+
+// https://github.com/tbranyen/backbone.layoutmanager/issues/323
+test("templates should be trimmed before insertion", 1, function() {
+  var layout = new Backbone.Layout({
+    template: "tpl",
+    el: false,
+    fetch: function() {
+      return "\n <div>Hey</div>\n ";
+    },
+    render: function( tpl ) {
+      return tpl;
+    }
+  });
+
+  layout.render();
+
+  equal(layout.$el.text(), "Hey");
+
+});
+
+})(typeof global !== "undefined" ? global : this);

@@ -1,7 +1,7 @@
 Backbone.LayoutManager
 ======================
 
-**v0.8.2** [![Build
+**v0.8.7** [![Build
 Status](https://travis-ci.org/tbranyen/backbone.layoutmanager.png?branch=wip)](https://travis-ci.org/tbranyen/backbone.layoutmanager)
 
 Maintained by Tim Branyen [@tbranyen](http://twitter.com/tbranyen) and Mike
@@ -25,9 +25,9 @@ http://layoutmanager.org/From-0.7-to-0.8
 
 ## Release notes ##
 
-* Fixed parts of the Node build.
-* Changed from parallel rendering to serial loading which will make the render
-  process significantly more stable.
+* Upgraded Cheerio dependency.
+* Trim templates in `el: false` Views to fix an issue with passing contents
+  into `$()`.
 
 [Full Release
 Log](https://github.com/tbranyen/backbone.layoutmanager/blob/master/changelog.md)

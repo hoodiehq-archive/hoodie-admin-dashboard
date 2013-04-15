@@ -14,6 +14,9 @@ var $ = require("cheerio");
 // `Backbone.View#setElement`.
 $.prototype.unbind = $.prototype.off = function() { return this; };
 
+// Set a basic trim function to allow trimming whitespace from a template
+$.trim = function(str) { return str.trim(); };
+
 // Since jQuery is not being used and LayoutManager depends on a Promise
 // implementation close to jQuery, we use `underscore.deferred` here which
 // matches jQuery's Deferred API exactly.
@@ -22,11 +25,12 @@ var def = require("underscore.deferred");
 // Get Backbone and _ into the global scope.
 _.defaults(global, { Backbone: Backbone, _: _ });
 
+// Set the Backbone DOM library to be Cheerio.
+Backbone.$ = $;
+
 // Include the LayoutManager source, without eval.
 require("../backbone.layoutmanager");
 
-// Set the Backbone DOM library to be Cheerio.
-Backbone.$ = $;
 
 // Configure LayoutManager with some very useful defaults for Node.js
 // environments.  This allows the end user to simply consume instead of
@@ -56,7 +60,12 @@ Backbone.Layout.configure({
   partial: function($root, $el, rentManager, manager) {
     // If selector is specified, attempt to find it.
     if (manager.selector) {
-      $root = $root[rentManager.noel ? "filter" : "find"](manager.selector);
+      if (rentManager.noel) {
+        var $filtered = $root.filter(manager.selector);
+        $root = $filtered.length ? $filtered : $root.find(manager.selector);
+      } else {
+        $root = $root.find(manager.selector);
+      }
     }
 
     // If no root found, return false.
@@ -79,26 +88,8 @@ Backbone.Layout.configure({
     return def.when.apply(null, promises);
   },
 
-  contains: function(parent, child) {
-    var $child = $(child);
+  contains: $.contains
 
-    // According to the jQuery API, an element does not "contain" itself.
-    if (child === parent) {
-      return false;
-    }
-
-    // Step up the descendents, stopping when the root element is reached
-    // (signaled by `.parent()` returning a reference to the same object).
-    while ($child !== $child.parent()) {
-      $child = $child.parent();
-
-      if ($child[0] === parent) {
-        return true;
-      }
-    }
-
-    return false;
-  }
 });
 
 module.exports = Backbone.Layout;

@@ -1,4 +1,42 @@
+## 0.8.6 ##
+
+* We now log a warning if you use mutliple top level elements inside a View's
+  template with `el: false`.  This will not affect most developers.  If you
+  wish to suppress the warnings you can run `Backbone.Layout.configure({
+  suppressWarnings: true });`.  This is documented in the Wiki:
+  https://github.com/tbranyen/backbone.layoutmanager/wiki/Configuration#el
+* Fixed minor bug with `cleanup` being defined on `options` instead of the instance.
+* Changed behavior so that __all__ views are removed when you call `remove`.
+* Upgraded to Backbone 1.0.
+* Upgraded to Node 0.10.
+
+## 0.8.5 ##
+
+* Fixed View duplication bug with multiple top level elements (`el: false`).
+* Fixed the deletion of the template property in initialize that would cause
+  bugs with View inheritance.
+* Fixed issue with `getView` and `_.where` object.
+
+## 0.8.4 ##
+
+* Fixed package dependency issues with jQuery.
+* Updated Cheerio version, which includes fixes to `filter`.
+* Several fixes to the `el: false` implementation.
+* Removed custom `$.contains` Node.js implementation.
+
+## 0.8.3 ##
+
+* Fix for deep nested `el: false` elements.
+
 ## 0.8.2 ##
+
+* Fixed parts of the Node build.
+* Changed from parallel rendering to serial loading which will make the render
+  process significantly more stable.
+* Changed signature to `options.partial` and greatly fixed the way `noel` is
+  handled.
+
+## 0.8.1 ##
 
 * Updated JamJS configuration settings.
 * Fixed event delegation when self managing the View element.
