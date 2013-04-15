@@ -8,8 +8,23 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     'click .removeTestUsers button[type="submit"]': 'removeTestUsers'
     'click .addRealUser button[type="submit"]'    : 'addRealUser'
     'click .user a.remove'                        : 'removeUser'
-    'click .user a.edit'                          : 'editUser'
     'click .clearSearch'                          : 'clearSearch'
+
+  Pocket.UsersView.Router = Backbone.SubRoute.extend(
+    routes:
+      ""              : "default"
+      "user/:id"      : "editUser"
+
+    default: ->
+      # this needs to be here, otherwise: infinite loop
+
+    editUser: (id) ->
+      # GREGOR: This bit works, but I really want to call the editUser in the Class, on line 115, instead
+      # docs: https://github.com/ModelN/backbone.subroute
+      #       http://www.geekdave.com/2012/04/05/module-specific-subroutes-in-backbone/
+      console.log("router editUser: ",id)
+
+  )
 
   constructor : ->
     super
@@ -97,10 +112,15 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     hoodie.admin.users.remove(type, id).then ->
       $('[data-id="'+id+'"]').remove()
 
-  editUser : (event) ->
+  editUser : (id) ->
+    console.log("editUser: ",id);
+    ###
     event.preventDefault()
     id = $(event.currentTarget).closest("[data-id]").data('id');
-    console.log "edit user", id
+    $.when(hoodie.admin.users.find('user', id)).then (user) =>
+      @editUser = user
+      @render()
+    ###
 
   search : (event) ->
     event.preventDefault()
@@ -123,9 +143,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     @searchQuery = null
     @update()
 
-
   beforeRender : ->
-    console.log "users", @users
     super
 
   _updateModule : (module) =>
