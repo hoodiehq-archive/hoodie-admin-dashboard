@@ -88,6 +88,10 @@ class window.Pocket extends Backbone.Events
       # This won't work in IE7
       return JSON.parse(JSON.stringify(new Date(parseInt(timestamp))))
 
+    Handlebars.registerHelper 'convertISOToTimestamp', (ISODate) ->
+      return unless ISODate
+      return new Date(ISODate).getTime()
+
     Handlebars.registerHelper 'convertISOToHuman', (ISODate) ->
       return "hey "+ISODate
 
