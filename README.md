@@ -19,3 +19,10 @@ So in order to test it with a real app, make sure to have the
 
 If you want pocket to use a different baseUrl, set it temporarely in
 [app/scripts/main.coffee:4](https://github.com/hoodiehq/pocket/blob/master/app/scripts/main.coffee#L4)
+
+
+building and deployment
+-----------------------
+
+Build pocket into the www directory and push back to master, future Hoodie instances will pull from there:
+`$ rm www & build & cp -r dist www`
