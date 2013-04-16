@@ -88,7 +88,15 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
         signedUpAt : new Date()
         roles : []
         password : password
-      }).then @update
+      })
+      .done(@update)
+      .fail (data) ->
+        console.log "could not add user: ", data
+        $btn.attr('disabled', null)
+        if data.statusText is "Conflict"
+          $btn.siblings('.submitMessage').text("Sorry, '#{username}' already exists")
+        else
+          $btn.siblings('.submitMessage').text("Error: "+data.status+" - "+data.responseText)
     else
       $btn.siblings('.submitMessage').text("Please enter a username and a password")
 
