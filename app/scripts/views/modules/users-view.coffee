@@ -77,7 +77,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
   removeTestUsers : (event) ->
     event.preventDefault()
-    users = $( ".user[data-id^='test-']" )
+    users = $( ".user[data-id^='test']" )
     users.each (index, user) ->
       id = $(user).data('id');
       hoodie.admin.users.remove('user', id).then ->
