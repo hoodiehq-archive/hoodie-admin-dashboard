@@ -1,6 +1,8 @@
 class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   template: 'modules/users'
   sort: undefined
+  sortBy: undefined
+  sortDirection: undefined
 
   events :
     'submit form.config'                          : 'updateConfig'
@@ -35,11 +37,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
       # config defaults
       @config.confirmationEmailText or= "Hello {name}! Thanks for signing up with #{appInfo.name}"
-      console.log @users
       @render()
-      sort = new Tablesort(document.getElementById('userList'));
-      # sort by signup date. Bit hacky
-      $('#userList .signupDate').click().click()
 
   updateConfig : (event) ->
     event.preventDefault()
@@ -94,17 +92,22 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     else
       $btn.siblings('.submitMessage').text("Please enter a username and a password")
 
-  removeUser : (event) ->
+  removeUser : (event) =>
     event.preventDefault()
     id = $(event.currentTarget).closest("[data-id]").data('id');
     type = $(event.currentTarget).closest("[data-type]").data('type');
-    hoodie.admin.users.remove(type, id).then ->
+    hoodie.admin.users.remove(type, id).then =>
       $('[data-id="'+id+'"]').remove()
+      @update()
 
   editUser : (event) ->
     event.preventDefault()
     id = $(event.currentTarget).closest("[data-id]").data('id');
     console.log "edit user", id
+
+  updateUserCounts : ->
+
+
 
   search : (event) ->
     event.preventDefault()
@@ -128,8 +131,28 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     @update()
 
 
-  beforeRender : ->
-    console.log "users", @users
+  beforeRender : =>
+    @sortBy = $('#userList .sort-up, #userList .sort-down').data('sort-by')
+    # get previous sorting parameters…
+    if @sortBy
+      @sortDirection = 'sort-down'
+      if $('#userList .sort-up').length isnt 0
+        @sortDirection = 'sort-up'
+    else
+      # …or set defaults
+      @sortBy = "signupDate"
+      @sortDirection = "sort-up"
+    super
+
+  afterRender : =>
+    userList = document.getElementById('userList')
+    if userList
+      @sort = new Tablesort(userList);
+      # sort by previous sorting parameters. Bit hacky, because tablesort has no api for this
+      sortHeader = $('#userList [data-sort-by="'+@sortBy+'"]')
+      sortHeader.click()
+      if @sortDirection is 'sort-up'
+        sortHeader.click()
     super
 
   _updateModule : (module) =>
