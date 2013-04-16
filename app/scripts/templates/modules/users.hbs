@@ -179,15 +179,15 @@
     <p class="currentSearchMetrics muted">Showing {{users.length}} of {{totalUsers}} users</p>
   </div>
   {{#if users}}
-  <table class="table users">
+  <table id="userList" class="table users">
     <thead>
       <tr>
         <th>Username</th>
         <th>Last seen</th>
-        <th>Signup date</th>
-        <th>State</th>
-        <th>Password</th>
-        <th></th>
+        <th class="signupDate">Signup date</th>
+        <th class="no-sort">State</th>
+        <th class="no-sort">Password</th>
+        <th class="no-sort"></th>
       </tr>
     </thead>
     <tbody>
@@ -195,10 +195,10 @@
       <tr data-id="{{id}}" data-type="{{type}}" class="user">
         <td>{{id}}</td>
         <td>{{lastLogin}}</td>
-        <td class="timeago" title="{{signedUpAt}}">{{signedUpAt}}</td>
-        <td>{{state}}</td>
-        <td>resend / new</td>
-        <td><a href="#" class="edit">edit</a> / <a href="#" class="remove">delete</a></td>
+        <td data-sort="{{convertISOToTimestamp signedUpAt}}" class="timeago" title="{{signedUpAt}}">{{signedUpAt}}</td>
+        <td class="no-sort">{{state}}</td>
+        <td class="no-sort">resend / new</td>
+        <td class="no-sort"><a href="#" class="edit">edit</a> / <a href="#" class="remove">delete</a></td>
       </tr>
       {{/each}}
     </tbody>

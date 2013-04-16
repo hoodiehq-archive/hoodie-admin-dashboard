@@ -1,5 +1,6 @@
 class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   template: 'modules/users'
+  sort: undefined
 
   events :
     'submit form.config'                          : 'updateConfig'
@@ -36,6 +37,9 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       @config.confirmationEmailText or= "Hello {name}! Thanks for signing up with #{appInfo.name}"
       console.log @users
       @render()
+      sort = new Tablesort(document.getElementById('userList'));
+      # sort by signup date. Bit hacky
+      $('#userList .signupDate').click().click()
 
   updateConfig : (event) ->
     event.preventDefault()
@@ -62,7 +66,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
   removeTestUsers : (event) ->
     event.preventDefault()
-    users = $( ".user[data-id^='test-']" )
+    users = $( ".user[data-id^='test']" )
     users.each (index, user) ->
       id = $(user).data('id');
       hoodie.admin.users.remove('user', id).then ->
