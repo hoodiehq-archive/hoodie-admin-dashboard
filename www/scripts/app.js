@@ -2,15 +2,12 @@
   var whereTheMagicHappens;
 
   if (location.hostname === 'localhost') {
-    whereTheMagicHappens = "http://admin.api.pocket.dev";
-    whereTheMagicHappens = "http://admin.api.hoodie-mapchat.dev";
+    whereTheMagicHappens = "http://api.pocket.dev";
   } else {
     whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "admin.api");
   }
 
   window.hoodie = new Hoodie(whereTheMagicHappens);
-
-  window.hoodie.extend("admin", Hoodie.Admin);
 
   Backbone.Layout.configure({
     manage: true,
@@ -38,6 +35,10 @@
       this.setAppInfo = __bind(this.setAppInfo, this);
 
       this.loadAppInfo = __bind(this.loadAppInfo, this);
+
+      this.onSignOutSuccess = __bind(this.onSignOutSuccess, this);
+
+      this.onSignOutFail = __bind(this.onSignOutFail, this);
 
       this.handleAuthenticateError = __bind(this.handleAuthenticateError, this);
 
@@ -167,6 +168,14 @@
         }
       });
       return null;
+    };
+
+    Pocket.prototype.onSignOutFail = function() {
+      return console.log("Could not sign you out.");
+    };
+
+    Pocket.prototype.onSignOutSuccess = function() {
+      return window.location.reload();
     };
 
     Pocket.prototype.handleSignInAndSignOut = function() {
@@ -541,77 +550,21 @@
 
     _Class.prototype.events = {
       'submit form.config': 'updateConfig',
-      'submit form.form-search': 'search'
+      'submit form.form-search': 'search',
+      'click .addTestUsers button[type="submit"]': 'addTestUsers',
+      'click .removeTestUsers button[type="submit"]': 'removeTestUsers',
+      'click .addRealUser button[type="submit"]': 'addRealUser',
+      'click .user a.remove': 'removeUser',
+      'click .user a.edit': 'editUser',
+      'click .clearSearch': 'clearSearch'
     };
 
     function _Class() {
       this._updateModule = __bind(this._updateModule, this);
 
       this.update = __bind(this.update, this);
-      this.registerListeners();
       _Class.__super__.constructor.apply(this, arguments);
     }
-
-    _Class.prototype.registerListeners = function() {
-      var _this = this;
-      $("body").on("click", '.addTestUsers button[type="submit"]', function(event) {
-        var $btn, users;
-        event.preventDefault();
-        $btn = $(event.currentTarget);
-        users = parseInt($btn.closest('form').find('.amountOfTestUsers').val());
-        if (_.isNumber(users) && users > 0) {
-          $btn.attr('disabled', 'disabled');
-          if (users === 1) {
-            $btn.siblings('.submitMessage').text("Adding a test user…");
-          } else {
-            $btn.siblings('.submitMessage').text("Adding " + users + " test users…");
-          }
-          return $.when(hoodie.admin.users.addTestUsers(users)).then(function() {
-            return _this.update();
-          });
-        } else {
-          return $btn.siblings('.submitMessage').text("That's not a number");
-        }
-      });
-      $("body").on("click", '.addRealUser button[type="submit"]', function(event) {
-        var $btn, ownerHash, password, username;
-        event.preventDefault();
-        $btn = $(event.currentTarget);
-        username = $btn.closest('form').find('.username').val();
-        password = $btn.closest('form').find('.password').val();
-        if (username && password) {
-          $btn.attr('disabled', 'disabled');
-          $btn.siblings('.submitMessage').text("Adding " + username + "…");
-          ownerHash = hoodie.uuid();
-          return hoodie.admin.users.add('user', {
-            id: username,
-            name: "user/" + username,
-            ownerHash: ownerHash,
-            database: "user/" + ownerHash,
-            signedUpAt: new Date(),
-            roles: [],
-            password: password
-          }).then(_this.update);
-        } else {
-          return $btn.siblings('.submitMessage').text("Please enter a username and a password");
-        }
-      });
-      $("body").on("click", 'table.users a.remove', function(event) {
-        var id, type;
-        event.preventDefault();
-        id = $(event.currentTarget).closest("[data-id]").data('id');
-        type = $(event.currentTarget).closest("[data-type]").data('type');
-        return hoodie.admin.users.remove(type, id).then(function() {
-          return console.log("he's dead, jim.");
-        });
-      });
-      return $("body").on("click", 'table.users a.edit', function(event) {
-        var id;
-        event.preventDefault();
-        id = $(event.currentTarget).closest("[data-id]").data('id');
-        return console.log("edit user", id);
-      });
-    };
 
     _Class.prototype.update = function() {
       var _this = this;
@@ -648,24 +601,105 @@
       return !isConfigured;
     };
 
-    _Class.prototype.search = function(event) {
-      var searchQuery,
+    _Class.prototype.addTestUsers = function(event) {
+      var $btn, users,
         _this = this;
-      searchQuery = $('input.search-query', event.currentTarget).val();
-      return $.when(hoodie.admin.users.search(searchQuery)).then(function(users) {
+      event.preventDefault();
+      $btn = $(event.currentTarget);
+      users = parseInt($btn.closest('form').find('.amountOfTestUsers').val());
+      if (_.isNumber(users) && users > 0) {
+        $btn.attr('disabled', 'disabled');
+        if (users === 1) {
+          $btn.siblings('.submitMessage').text("Adding a test user…");
+        } else {
+          $btn.siblings('.submitMessage').text("Adding " + users + " test users…");
+        }
+        return $.when(hoodie.admin.users.addTestUsers(users)).then(function() {
+          return _this.update();
+        });
+      } else {
+        return $btn.siblings('.submitMessage').text("That's not a number");
+      }
+    };
+
+    _Class.prototype.removeTestUsers = function(event) {
+      var users;
+      event.preventDefault();
+      users = $(".user[data-id^='test-']");
+      return users.each(function(index, user) {
+        var id;
+        id = $(user).data('id');
+        return hoodie.admin.users.remove('user', id).then(function() {
+          return $('[data-id="' + id + '"]').remove();
+        });
+      });
+    };
+
+    _Class.prototype.addRealUser = function(event) {
+      var $btn, ownerHash, password, username;
+      event.preventDefault();
+      $btn = $(event.currentTarget);
+      username = $btn.closest('form').find('.username').val();
+      password = $btn.closest('form').find('.password').val();
+      if (username && password) {
+        $btn.attr('disabled', 'disabled');
+        $btn.siblings('.submitMessage').text("Adding " + username + "…");
+        ownerHash = hoodie.uuid();
+        return hoodie.admin.users.add('user', {
+          id: username,
+          name: "user/" + username,
+          ownerHash: ownerHash,
+          database: "user/" + ownerHash,
+          signedUpAt: new Date(),
+          roles: [],
+          password: password
+        }).then(this.update);
+      } else {
+        return $btn.siblings('.submitMessage').text("Please enter a username and a password");
+      }
+    };
+
+    _Class.prototype.removeUser = function(event) {
+      var id, type;
+      event.preventDefault();
+      id = $(event.currentTarget).closest("[data-id]").data('id');
+      type = $(event.currentTarget).closest("[data-type]").data('type');
+      return hoodie.admin.users.remove(type, id).then(function() {
+        return $('[data-id="' + id + '"]').remove();
+      });
+    };
+
+    _Class.prototype.editUser = function(event) {
+      var id;
+      event.preventDefault();
+      id = $(event.currentTarget).closest("[data-id]").data('id');
+      return console.log("edit user", id);
+    };
+
+    _Class.prototype.search = function(event) {
+      var _this = this;
+      event.preventDefault();
+      this.searchQuery = $('input.search-query', event.currentTarget).val();
+      return $.when(hoodie.admin.users.search(this.searchQuery)).then(function(users) {
         _this.users = users;
         switch (users.length) {
           case 0:
-            _this.resultsDesc = "No users matching '" + searchQuery + "'";
+            _this.resultsDesc = "No users matching '" + _this.searchQuery + "'";
             break;
           case 1:
-            _this.resultsDesc = "" + users.length + " user matching '" + searchQuery + "'";
+            _this.resultsDesc = "" + users.length + " user matching '" + _this.searchQuery + "'";
             break;
           default:
-            _this.resultsDesc = "" + users.length + " users matching '" + searchQuery + "'";
+            _this.resultsDesc = "" + users.length + " users matching '" + _this.searchQuery + "'";
         }
         return _this.render();
       });
+    };
+
+    _Class.prototype.clearSearch = function(event) {
+      event.preventDefault();
+      this.searchQuery = null;
+      return this.update();
     };
 
     _Class.prototype.beforeRender = function() {
@@ -783,7 +817,9 @@
     __extends(MainView, _super);
 
     function MainView() {
-      this.handleSignInError = __bind(this.handleSignInError, this);
+      this.onSignInSuccess = __bind(this.onSignInSuccess, this);
+
+      this.onSignInFail = __bind(this.onSignInFail, this);
       return MainView.__super__.constructor.apply(this, arguments);
     }
 
@@ -801,12 +837,16 @@
       this.$el.find('#signIn').attr('disabled', 'disabled');
       event.preventDefault();
       password = this.$el.find('#signInPassword').val();
-      return hoodie.admin.signIn(password).fail(this.handleSignInError);
+      return hoodie.admin.signIn(password).done(this.onSignInSuccess).fail(this.onSignInFail);
     };
 
-    MainView.prototype.handleSignInError = function() {
+    MainView.prototype.onSignInFail = function() {
       $('form.signIn .error').text('Wrong password, please try again');
       return $('#signIn').attr('disabled', null);
+    };
+
+    MainView.prototype.onSignInSuccess = function() {
+      return window.location.reload();
     };
 
     return MainView;
@@ -1076,13 +1116,30 @@ function program3(depth0,data) {
 function program5(depth0,data) {
   
   var buffer = "", stack1;
+  buffer += " value=\"";
+  if (stack1 = helpers.searchQuery) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.searchQuery; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\"";
+  return buffer;
+  }
+
+function program7(depth0,data) {
+  
+  
+  return "\n    <button class=\"btn clearSearch\">Clear search</button>\n    ";
+  }
+
+function program9(depth0,data) {
+  
+  var buffer = "", stack1;
   buffer += "\n  <table class=\"table users\">\n    <thead>\n      <tr>\n        <th>Username</th>\n        <th>Last seen</th>\n        <th>Signup date</th>\n        <th>State</th>\n        <th>Password</th>\n        <th></th>\n      </tr>\n    </thead>\n    <tbody>\n      ";
-  stack1 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
+  stack1 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </tbody>\n  </table>\n  ";
   return buffer;
   }
-function program6(depth0,data) {
+function program10(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\n      <tr data-id=\"";
@@ -1093,7 +1150,7 @@ function program6(depth0,data) {
   if (stack1 = helpers.type) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\">\n        <td>";
+    + "\" class=\"user\">\n        <td>";
   if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -1117,14 +1174,14 @@ function program6(depth0,data) {
   return buffer;
   }
 
-function program8(depth0,data) {
+function program12(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
   if (stack1 = helpers.resultsDesc) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.resultsDesc; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</p>\n    <p class=\"currentSearchMetrics muted\">Showing "
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</p>\n    <p class=\"currentSearchMetrics muted\">Showing "
     + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + " of ";
   if (stack2 = helpers.totalUsers) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -1139,21 +1196,27 @@ function program8(depth0,data) {
     + "\">\n  <legend>Settings</legend>\n\n  <span class=\"description\">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>\n\n  <form class=\"config form-horizontal\">\n    ";
   stack2 = helpers['if'].call(depth0, depth0.emailTransportNotConfigured, {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  </form>\n</div>\n\n<hr>\n\n<div class=\"content centered\">\n  <h2 class=\"top\">Users</h2>\n  <fieldset class=\"toggle\">\n    <legend class=\"toggler\">Add and remove test users</legend>\n    <div class=\"togglee\">\n      <legend>Add test users</legend>\n      <form class=\"form-horizontal addTestUsers\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Number of test users\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"amountOfTestUsers\" class=\"amountOfTestUsers\" value=\"\" placeholder=\"1\">\n            </div>\n          </div>\n        </section>\n        <section>\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Add test users</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n      <legend>Remove test users</legend>\n      <form class=\"form-horizontal removeTestUsers\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Remove all test users</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n    </div>\n  </fieldset>\n  <fieldset class=\"toggle\">\n    <legend class=\"toggler\">Add real user</legend>\n    <div class=\"togglee\">\n      <legend>Add real user</legend>\n      <form class=\"form-horizontal addRealUser\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Username\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"username\" class=\"username\" value=\"\" placeholder=\"username\">\n            </div>\n          </div>\n        </section>\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Password\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"password\" class=\"password\" value=\"\" placeholder=\"\">\n            </div>\n          </div>\n        </section>\n        <section>\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Add user</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n    </div>\n  </fieldset>\n  <div class=\"userSearch\">\n    <form class=\"form-search\">\n      <div class=\"input-append\">\n        <input type=\"text\" class=\"span2 search-query\" placeholder=\"Username\">\n        <button type=\"submit\" class=\"btn\">Search</button>\n      </div>\n    </form>\n  </div>\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
+  buffer += "\n  </form>\n</div>\n\n<hr>\n\n<div class=\"content centered\">\n  <h2 class=\"top\">Users</h2>\n  <fieldset class=\"toggle\">\n    <legend class=\"toggler\">Add and remove test users</legend>\n    <div class=\"togglee\">\n      <legend>Add test users</legend>\n      <form class=\"form-horizontal addTestUsers\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Number of test users\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"amountOfTestUsers\" class=\"amountOfTestUsers\" value=\"\" placeholder=\"1\">\n            </div>\n          </div>\n        </section>\n        <section>\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Add test users</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n      <legend>Remove test users</legend>\n      <form class=\"form-horizontal removeTestUsers\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Remove all test users</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n    </div>\n  </fieldset>\n  <fieldset class=\"toggle\">\n    <legend class=\"toggler\">Add real user</legend>\n    <div class=\"togglee\">\n      <legend>Add real user</legend>\n      <form class=\"form-horizontal addRealUser\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Username\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"username\" class=\"username\" value=\"\" placeholder=\"username\">\n            </div>\n          </div>\n        </section>\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Password\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"password\" class=\"password\" value=\"\" placeholder=\"\">\n            </div>\n          </div>\n        </section>\n        <section>\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Add user</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n    </div>\n  </fieldset>\n  <div class=\"userSearch group\">\n    <form class=\"form-search\">\n      <div class=\"input-append\">\n        <input type=\"text\" class=\"span2 search-query\" placeholder=\"Username\"";
+  stack2 = helpers['if'].call(depth0, depth0.searchQuery, {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += ">\n        <button type=\"submit\" class=\"btn\">Search</button>\n      </div>\n    </form>\n    ";
+  stack2 = helpers['if'].call(depth0, depth0.searchQuery, {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n  </div>\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
   if (stack2 = helpers.resultsDesc) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.resultsDesc; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "</p>\n    <p class=\"currentSearchMetrics muted\">Showing "
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "</p>\n    <p class=\"currentSearchMetrics muted\">Showing "
     + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + " of ";
   if (stack2 = helpers.totalUsers) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.totalUsers; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + " users</p>\n  </div>\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
+  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n</div>\n";
   return buffer;

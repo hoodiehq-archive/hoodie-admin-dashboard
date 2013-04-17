@@ -14778,12 +14778,12 @@ Hoodie.AdminAccount = (function(_super) {
 
   __extends(AdminAccount, _super);
 
-  function AdminAccount(hoodie, admin) {
+  function AdminAccount(admin) {
     var method, _i, _len, _ref;
-    this.hoodie = hoodie;
     this.admin = admin;
     this._handleSignInSuccess = __bind(this._handleSignInSuccess, this);
     this._handleAuthenticateRequestSuccess = __bind(this._handleAuthenticateRequestSuccess, this);
+    this.hoodie = this.admin.hoodie;
     this.username = 'admin';
     this._requests = {};
     _ref = ['signUp', 'destroy', 'anonymousSignUp', 'hasAnonymousAccount', 'setAnonymousPassword', 'getAnonymousPassword', 'removeAnonymousPassword'];
@@ -14859,16 +14859,16 @@ Hoodie.AdminAccount = (function(_super) {
 
 Hoodie.AdminApp = (function() {
 
-  function AdminApp(hoodie, admin) {
-    this.hoodie = hoodie;
+  function AdminApp(admin) {
     this.admin = admin;
+    this.hoodie = this.admin.hoodie;
   }
 
   AdminApp.prototype.getInfo = function() {
     var defer, info;
     defer = this.hoodie.defer();
     info = {
-      name: "appName here"
+      name: "appName (not implemented yet)"
     };
     window.setTimeout(function() {
       return defer.resolve(info);
@@ -14905,9 +14905,9 @@ Hoodie.AdminApp = (function() {
 
 Hoodie.AdminConfig = (function() {
 
-  function AdminConfig(hoodie, admin) {
-    this.hoodie = hoodie;
+  function AdminConfig(admin) {
     this.admin = admin;
+    this.hoodie = this.admin.hoodie;
   }
 
   AdminConfig.prototype.get = function() {
@@ -14931,9 +14931,9 @@ Hoodie.AdminConfig = (function() {
 
 Hoodie.AdminLogs = (function() {
 
-  function AdminLogs(hoodie, admin) {
-    this.hoodie = hoodie;
+  function AdminLogs(admin) {
     this.admin = admin;
+    this.hoodie = this.admin.hoodie;
   }
 
   AdminLogs.prototype.findAll = function() {
@@ -14950,12 +14950,12 @@ Hoodie.AdminModules = (function(_super) {
 
   AdminModules.prototype.name = 'modules';
 
-  function AdminModules(hoodie, admin) {
-    this.hoodie = hoodie;
+  function AdminModules(admin) {
     this.admin = admin;
     this.findAll = __bind(this.findAll, this);
     this.find = __bind(this.find, this);
-    AdminModules.__super__.constructor.apply(this, arguments);
+    this.hoodie = this.admin.hoodie;
+    AdminModules.__super__.constructor.call(this, this.hoodie);
   }
 
   AdminModules.prototype.find = function(type, moduleName) {
@@ -14997,6 +14997,22 @@ Hoodie.AdminModules = (function(_super) {
     return this.hoodie.resolveWith(config);
   };
 
+  AdminModules.prototype.request = function(type, path, options) {
+    if (options == null) {
+      options = {};
+    }
+    if (this.name) {
+      path = "/" + (encodeURIComponent(this.name)) + path;
+    }
+    options.contentType || (options.contentType = 'application/json');
+    if (type === 'POST' || type === 'PUT') {
+      options.dataType || (options.dataType = 'json');
+      options.processData || (options.processData = false);
+      options.data = JSON.stringify(options.data);
+    }
+    return this.admin.request(type, path, options);
+  };
+
   return AdminModules;
 
 })(Hoodie.Remote);
@@ -15009,10 +15025,11 @@ Hoodie.AdminUsers = (function(_super) {
 
   AdminUsers.prototype.prefix = 'org.couchdb.user:';
 
-  function AdminUsers(hoodie, admin) {
-    this._mapDocsFromFindAll = __bind(this._mapDocsFromFindAll, this);    this.hoodie = hoodie;
+  function AdminUsers(admin) {
     this.admin = admin;
-    AdminUsers.__super__.constructor.apply(this, arguments);
+    this._mapDocsFromFindAll = __bind(this._mapDocsFromFindAll, this);
+    this.hoodie = this.admin.hoodie;
+    AdminUsers.__super__.constructor.call(this, this.hoodie);
   }
 
   AdminUsers.prototype.addTestUser = function(options) {
@@ -15085,7 +15102,7 @@ Hoodie.AdminUsers = (function(_super) {
     var path;
     path = "/_all_docs?include_docs=true";
     path = "" + path + "&startkey=\"org.couchdb.user:user/" + query + "\"&endkey=\"org.couchdb.user:user/" + query + "|\"";
-    return this.request("GET", path).pipe(this._mapDocsFromFindAll).pipe(this.parseAllFromRemote);
+    return this.request("GET", path).pipe(this._mapDocsFromFindAll).pipe(this._parseAllFromRemote);
   };
 
   AdminUsers.prototype.request = function(type, path, options) {
@@ -15155,12 +15172,12 @@ Hoodie.Admin = (function() {
   function Admin(hoodie) {
     this.hoodie = hoodie;
     this.baseUrl = this.hoodie.baseUrl.replace(/\bapi\./, 'admin.api.');
-    this.account = new Hoodie.AdminAccount(this.hoodie, this);
-    this.app = new Hoodie.AdminApp(this.hoodie, this);
-    this.users = new Hoodie.AdminUsers(this.hoodie, this);
-    this.config = new Hoodie.AdminConfig(this.hoodie, this);
-    this.logs = new Hoodie.AdminLogs(this.hoodie, this);
-    this.modules = new Hoodie.AdminModules(this.hoodie, this);
+    this.account = new Hoodie.AdminAccount(this);
+    this.app = new Hoodie.AdminApp(this);
+    this.users = new Hoodie.AdminUsers(this);
+    this.config = new Hoodie.AdminConfig(this);
+    this.logs = new Hoodie.AdminLogs(this);
+    this.modules = new Hoodie.AdminModules(this);
   }
 
   Admin.prototype.trigger = function() {
