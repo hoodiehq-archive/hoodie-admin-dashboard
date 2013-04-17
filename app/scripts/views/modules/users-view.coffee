@@ -113,10 +113,6 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     id = $(event.currentTarget).closest("[data-id]").data('id');
     console.log "edit user", id
 
-  updateUserCounts : ->
-
-
-
   search : (event) ->
     event.preventDefault()
     @searchQuery = $('input.search-query', event.currentTarget).val()
