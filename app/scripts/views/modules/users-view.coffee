@@ -1,3 +1,19 @@
+class Pocket.UsersView.Router extends Backbone.SubRoute
+  routes:
+    ""              : "default"
+    "user/:id"      : "editUser"
+
+  constructor: ->
+    @view = new Pocket.ModulesView['module-users']
+    super
+
+  default: ->
+    # this needs to be here, otherwise: infinite loop
+
+  editUser: (id) ->
+    @view.editUser(id)
+
+
 class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   template: 'modules/users'
 
@@ -9,22 +25,6 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     'click .addRealUser button[type="submit"]'    : 'addRealUser'
     'click .user a.remove'                        : 'removeUser'
     'click .clearSearch'                          : 'clearSearch'
-
-  Pocket.UsersView.Router = Backbone.SubRoute.extend(
-    routes:
-      ""              : "default"
-      "user/:id"      : "editUser"
-
-    default: ->
-      # this needs to be here, otherwise: infinite loop
-
-    editUser: (id) ->
-      # GREGOR: This bit works, but I really want to call the editUser in the Class, on line 115, instead
-      # docs: https://github.com/ModelN/backbone.subroute
-      #       http://www.geekdave.com/2012/04/05/module-specific-subroutes-in-backbone/
-      console.log("router editUser: ",id)
-
-  )
 
   constructor : ->
     super
@@ -113,7 +113,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       $('[data-id="'+id+'"]').remove()
 
   editUser : (id) ->
-    console.log("editUser: ",id);
+    console.log("in view: editUser: ",id);
     ###
     event.preventDefault()
     id = $(event.currentTarget).closest("[data-id]").data('id');
