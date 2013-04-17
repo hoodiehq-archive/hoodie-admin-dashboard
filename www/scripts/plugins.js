@@ -14868,7 +14868,7 @@ Hoodie.AdminApp = (function() {
     var defer, info;
     defer = this.hoodie.defer();
     info = {
-      name: "appName (not implemented yet)"
+      name: "appName here"
     };
     window.setTimeout(function() {
       return defer.resolve(info);
@@ -21367,6 +21367,113 @@ Handlebars.template = Handlebars.VM.template;
   };
 
 }).call(this);
+
+/*!
+ * tablesort v1.6.1 (2013-02-14)
+ * http://tristen.ca/tablesort/demo
+ * Copyright (c) 2013 ; Licensed MIT
+*/
+(function(){function e(e,t){if(e.tagName!=="TABLE")throw new Error("Element must be a table");this.init(e,t||{})}e.prototype={init:function(e,t){var n=this,r;this.thead=!1,this.options=t,this.options.d=t.descending||!1,e.rows&&e.rows.length>0&&(e.tHead&&e.tHead.rows.length>0?(r=e.tHead.rows[e.tHead.rows.length-1],n.thead=!0):r=e.rows[0]);if(!r)return;var i=function(e){var t=o(u,"tr").getElementsByTagName("th");for(var r=0;r<t.length;r++)(c(t[r],"sort-up")||c(t[r],"sort-down"))&&t[r]!==this&&(t[r].className=t[r].className.replace(" sort-down","").replace(" sort-up",""));n.current=this,n.sortTable(this)};for(var s=0;s<r.cells.length;s++){var u=r.cells[s];c(u,"no-sort")||(u.className+=" sort-header",h(u,"click",i))}},sortTable:function(e,t){var n=this,r=e.cellIndex,h,p=o(e,"table"),d="",v=0;if(p.rows.length<=1)return;while(d===""&&v<p.tBodies[0].rows.length){d=u(p.tBodies[0].rows[v].cells[r]),d=f(d);if(d.substr(0,4)==="<!--"||d.length===0)d="";v++}if(d==="")return;var m=function(e,t){var r=u(e.cells[n.col]).toLowerCase(),i=u(t.cells[n.col]).toLowerCase();return r===i?0:r<i?1:-1},g=function(e,t){var r=u(e.cells[n.col]),i=u(t.cells[n.col]);return r=l(r),i=l(i),a(i,r)},y=function(e,t){var r=u(e.cells[n.col]).toLowerCase(),i=u(t.cells[n.col]).toLowerCase();return s(i)-s(r)};d.match(/^-?[£\x24Û¢´]\d/)||d.match(/^-?(\d+[,\.]?)+(E[\-+][\d]+)?%?$/)?h=g:i(d)?h=y:h=m,this.col=r;var b=[],w=0;for(v=0;v<p.tBodies.length;v++)if(!n.thead)for(w=1;w<p.tBodies[v].rows.length;w++)b[w-1]=p.tBodies[v].rows[w];else for(w=0;w<p.tBodies[v].rows.length;w++)b[w]=p.tBodies[v].rows[w];b.sort(h),t||(n.options.d?c(e,"sort-up")?(e.className=e.className.replace(/ sort-up/,""),e.className+=" sort-down"):(e.className=e.className.replace(/ sort-down/,""),e.className+=" sort-up"):c(e,"sort-down")?(e.className=e.className.replace(/ sort-down/,""),e.className+=" sort-up"):(e.className=e.className.replace(/ sort-up/,""),e.className+=" sort-down")),c(e,"sort-down")&&b.reverse();for(v=0;v<b.length;v++)c(b[v],"no-sort")||p.tBodies[0].appendChild(b[v])},refresh:function(){this.current!==undefined&&this.sortTable(this.current,!0)}};var t=/(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\.?\,?\s*/i,n=/\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/,r=/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/i,i=function(e){return(e.search(t)!==-1||e.search(n)!==-1||e.search(r!==-1))!==-1},s=function(e){return e=e.replace(/\-/g,"/"),e=e.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})/,"$1/$2/$3"),(new Date(e)).getTime()},o=function(e,t){return e===null?null:e.nodeType===1&&e.tagName.toLowerCase()===t.toLowerCase()?e:o(e.parentNode,t)},u=function(e){var t=this;if(typeof e=="string"||typeof e=="undefined")return e;var n=e.getAttribute("data-sort")||"";if(n)return n;if(e.textContent)return e.textContent;if(e.innerText)return e.innerText;var r=e.childNodes,i=r.length;for(var s=0;s<i;s++)switch(r[s].nodeType){case 1:n+=t.getInnerText(r[s]);break;case 3:n+=r[s].nodeValue}return n},a=function(e,t){var n=parseFloat(e),r=parseFloat(t);return e=isNaN(n)?0:n,t=isNaN(r)?0:r,e-t},f=function(e){return e.replace(/^\s+|\s+$/g,"")},l=function(e){return e.replace(/[^\-?0-9.]/g,"")},c=function(e,t){return(" "+e.className+" ").indexOf(" "+t+" ")>-1},h=function(e,t,n){e.attachEvent?(e["e"+t+n]=n,e[t+n]=function(){e["e"+t+n](window.event)},e.attachEvent("on"+t,e[t+n])):e.addEventListener(t,n,!1)};window.Tablesort=e})();
+// backbone-subroute.js v0.3.2
+//
+// Copyright (C) 2012 Dave Cadwallader, Model N, Inc.  
+// Distributed under the MIT License
+//
+// Documentation and full license available at:
+// https://github.com/ModelN/backbone.subroute
+
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // Register as an AMD module if available...
+        define(['underscore', 'backbone'], factory);
+    } else {
+        // Browser globals for the unenlightened...
+        factory(_, Backbone);
+    }
+}(function(_, Backbone){
+
+    Backbone.SubRoute = Backbone.Router.extend( {
+        constructor:function ( prefix, options ) {
+            var routes = {};
+
+            // Prefix is optional, set to empty string if not passed
+            this.prefix = prefix = prefix || "";
+
+            // SubRoute instances may be instantiated using a prefix with or without a trailing slash.
+            // If the prefix does *not* have a trailing slash, we need to insert a slash as a separator
+            // between the prefix and the sub-route path for each route that we register with Backbone.        
+            this.separator =
+                    ( prefix.slice( -1 ) === "/" )
+                            ? ""
+                            : "/";
+
+            // if you want to match "books" and "books/" without creating separate routes, set this
+            // option to "true" and the sub-router will automatically create those routes for you.
+            var createTrailingSlashRoutes = options && options.createTrailingSlashRoutes;
+
+            // Register each sub-route with Backbone by combining the prefix and the sub-route path 
+            _.each( this.routes, function ( callback, path ) {
+                if ( path ) {
+
+                    // strip off any leading slashes in the sub-route path, 
+                    // since we already handle inserting them when needed.
+                    if (path.substr(0) === "/") {
+                        path = path.substr(1, path.length);
+                    }
+
+                    routes[prefix + this.separator + path] = callback;
+
+                    if (createTrailingSlashRoutes) {
+                        routes[prefix + this.separator + path + "/"] = callback;
+                    }
+
+                } else {
+                    // default routes (those with a path equal to the empty string) 
+                    // are simply registered using the prefix as the route path.
+                    routes[prefix] = callback;
+
+                    if (createTrailingSlashRoutes) {
+                        routes[prefix + "/"] = callback;
+                    }
+                }
+            }, this );
+
+            // Override the local sub-routes with the fully-qualified routes that we just set up.
+            this.routes = routes;
+
+            // Required to have Backbone set up routes
+            Backbone.Router.prototype.constructor.call( this, options );
+
+            // grab the full URL
+            var hash;
+            if (Backbone.history.fragment) {
+                hash = Backbone.history.getFragment();
+            } else {
+                hash = Backbone.history.getHash();
+            }
+
+            // Trigger the subroute immediately.  this supports the case where 
+            // a user directly navigates to a URL with a subroute on the first page load.
+            if (hash.indexOf(prefix) === 0) {
+                Backbone.history.loadUrl( hash );
+            }
+
+            if (this.postInitialize) {
+                this.postInitialize(options);
+            }
+        },
+        navigate:function ( route, options ) {
+            if ( route.substr( 0, 1 ) != '/' && route.indexOf( this.prefix.substr( 0,
+                    this.prefix.length - 1 ) ) != 0 ) {
+                
+                route = this.prefix + 
+                        ( route ? this.separator : "") + 
+                        route;
+            }
+            Backbone.Router.prototype.navigate.call( this, route, options );
+        }
+    } );
+}));
 
 /*!
  * backbone.layoutmanager.js v0.8.7

@@ -4,7 +4,7 @@
   if (location.hostname === 'localhost') {
     whereTheMagicHappens = "http://api.pocket.dev";
   } else {
-    whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "admin.api");
+    whereTheMagicHappens = location.protocol + "//" + location.hostname;
   }
 
   window.hoodie = new Hoodie(whereTheMagicHappens);
@@ -138,6 +138,12 @@
           timestamp += '000';
         }
         return JSON.parse(JSON.stringify(new Date(parseInt(timestamp))));
+      });
+      Handlebars.registerHelper('convertISOToTimestamp', function(ISODate) {
+        if (!ISODate) {
+          return;
+        }
+        return new Date(ISODate).getTime();
       });
       Handlebars.registerHelper('convertISOToHuman', function(ISODate) {
         return "hey " + ISODate;
@@ -538,15 +544,45 @@
 }).call(this);
 
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  Pocket.UsersView.Router = (function(_super) {
+
+    __extends(Router, _super);
+
+    Router.prototype.routes = {
+      "": "default",
+      "user/:id": "editUser"
+    };
+
+    function Router() {
+      this.view = new Pocket.ModulesView['module-users'];
+      Router.__super__.constructor.apply(this, arguments);
+    }
+
+    Router.prototype["default"] = function() {};
+
+    Router.prototype.editUser = function(id) {
+      return this.view.editUser(id);
+    };
+
+    return Router;
+
+  })(Backbone.SubRoute);
 
   Pocket.ModulesView['module-users'] = (function(_super) {
 
     __extends(_Class, _super);
 
     _Class.prototype.template = 'modules/users';
+
+    _Class.prototype.sort = void 0;
+
+    _Class.prototype.sortBy = void 0;
+
+    _Class.prototype.sortDirection = void 0;
 
     _Class.prototype.events = {
       'submit form.config': 'updateConfig',
@@ -555,12 +591,17 @@
       'click .removeTestUsers button[type="submit"]': 'removeTestUsers',
       'click .addRealUser button[type="submit"]': 'addRealUser',
       'click .user a.remove': 'removeUser',
-      'click .user a.edit': 'editUser',
       'click .clearSearch': 'clearSearch'
     };
 
     function _Class() {
       this._updateModule = __bind(this._updateModule, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+
+      this.beforeRender = __bind(this.beforeRender, this);
+
+      this.removeUser = __bind(this.removeUser, this);
 
       this.update = __bind(this.update, this);
       _Class.__super__.constructor.apply(this, arguments);
@@ -585,7 +626,6 @@
             _this.resultsDesc = "Currently displaying all " + _this.totalUsers + " users";
         }
         (_base = _this.config).confirmationEmailText || (_base.confirmationEmailText = "Hello {name}! Thanks for signing up with " + appInfo.name);
-        console.log(_this.users);
         return _this.render();
       });
     };
@@ -625,7 +665,7 @@
     _Class.prototype.removeTestUsers = function(event) {
       var users;
       event.preventDefault();
-      users = $(".user[data-id^='test-']");
+      users = $(".user[data-id^='test']");
       return users.each(function(index, user) {
         var id;
         id = $(user).data('id');
@@ -653,27 +693,42 @@
           signedUpAt: new Date(),
           roles: [],
           password: password
-        }).then(this.update);
+        }).done(this.update).fail(function(data) {
+          console.log("could not add user: ", data);
+          $btn.attr('disabled', null);
+          if (data.statusText === "Conflict") {
+            return $btn.siblings('.submitMessage').text("Sorry, '" + username + "' already exists");
+          } else {
+            return $btn.siblings('.submitMessage').text("Error: " + data.status + " - " + data.responseText);
+          }
+        });
       } else {
         return $btn.siblings('.submitMessage').text("Please enter a username and a password");
       }
     };
 
     _Class.prototype.removeUser = function(event) {
-      var id, type;
+      var id, type,
+        _this = this;
       event.preventDefault();
       id = $(event.currentTarget).closest("[data-id]").data('id');
       type = $(event.currentTarget).closest("[data-type]").data('type');
       return hoodie.admin.users.remove(type, id).then(function() {
-        return $('[data-id="' + id + '"]').remove();
+        $('[data-id="' + id + '"]').remove();
+        return _this.update();
       });
     };
 
-    _Class.prototype.editUser = function(event) {
-      var id;
-      event.preventDefault();
-      id = $(event.currentTarget).closest("[data-id]").data('id');
-      return console.log("edit user", id);
+    _Class.prototype.editUser = function(id) {
+      return console.log("in view: editUser: ", id);
+      /*
+          event.preventDefault()
+          id = $(event.currentTarget).closest("[data-id]").data('id');
+          $.when(hoodie.admin.users.find('user', id)).then (user) =>
+            @editUser = user
+            @render()
+      */
+
     };
 
     _Class.prototype.search = function(event) {
@@ -703,8 +758,31 @@
     };
 
     _Class.prototype.beforeRender = function() {
-      console.log("users", this.users);
+      this.sortBy = $('#userList .sort-up, #userList .sort-down').data('sort-by');
+      if (this.sortBy) {
+        this.sortDirection = 'sort-down';
+        if ($('#userList .sort-up').length !== 0) {
+          this.sortDirection = 'sort-up';
+        }
+      } else {
+        this.sortBy = "signupDate";
+        this.sortDirection = "sort-up";
+      }
       return _Class.__super__.beforeRender.apply(this, arguments);
+    };
+
+    _Class.prototype.afterRender = function() {
+      var sortHeader, userList;
+      userList = document.getElementById('userList');
+      if (userList) {
+        this.sort = new Tablesort(userList);
+        sortHeader = $('#userList [data-sort-by="' + this.sortBy + '"]');
+        sortHeader.click();
+        if (this.sortDirection === 'sort-up') {
+          sortHeader.click();
+        }
+      }
+      return _Class.__super__.afterRender.apply(this, arguments);
     };
 
     _Class.prototype._updateModule = function(module) {
@@ -923,7 +1001,8 @@
 
     Router.prototype.routes = {
       "": "dashboard",
-      "modules/:moduleName": "modules"
+      "modules/:moduleName": "modules",
+      "modules/:moduleName/*subroute": "modules"
     };
 
     Router.prototype.dashboard = function() {
@@ -937,15 +1016,30 @@
       });
     };
 
-    Router.prototype.modules = function(moduleName) {
-      var view;
-      console.log(moduleName);
+    Router.prototype.modules = function(moduleName, subroute) {
+      var view,
+        _this = this;
+      console.log(moduleName, subroute);
       view = new Pocket.ModulesView;
       pocket.app.views.body.setView(".main", view);
+      if (!Pocket.Routers) {
+        Pocket.Routers = {};
+      }
       return window.hoodie.admin.modules.find(moduleName).then(function(module) {
+        var moduleViewName;
+        moduleViewName = _this.capitaliseFirstLetter(moduleName) + "View";
         view.module = module;
+        if (Pocket.Routers[moduleViewName] == null) {
+          Pocket.Routers[moduleViewName] = new Pocket[moduleViewName].Router('modules/' + moduleName, {
+            createTrailingSlashRoutes: true
+          });
+        }
         return view.render();
       });
+    };
+
+    Router.prototype.capitaliseFirstLetter = function(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
     return Router;
@@ -1086,7 +1180,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 this["JST"]["modules/users"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
 
 function program1(depth0,data) {
   
@@ -1133,7 +1227,7 @@ function program7(depth0,data) {
 function program9(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n  <table class=\"table users\">\n    <thead>\n      <tr>\n        <th>Username</th>\n        <th>Last seen</th>\n        <th>Signup date</th>\n        <th>State</th>\n        <th>Password</th>\n        <th></th>\n      </tr>\n    </thead>\n    <tbody>\n      ";
+  buffer += "\n  <table id=\"userList\" class=\"table users\">\n    <thead>\n      <tr>\n        <th data-sort-by=\"username\">Username</th>\n        <th data-sort-by=\"lastSeen\">Last seen</th>\n        <th data-sort-by=\"signupDate\">Signup date</th>\n        <th class=\"no-sort\">State</th>\n        <th class=\"no-sort\">Password</th>\n        <th class=\"no-sort\"></th>\n      </tr>\n    </thead>\n    <tbody>\n      ";
   stack1 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </tbody>\n  </table>\n  ";
@@ -1141,7 +1235,7 @@ function program9(depth0,data) {
   }
 function program10(depth0,data) {
   
-  var buffer = "", stack1;
+  var buffer = "", stack1, stack2, options;
   buffer += "\n      <tr data-id=\"";
   if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
@@ -1158,19 +1252,26 @@ function program10(depth0,data) {
   if (stack1 = helpers.lastLogin) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.lastLogin; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</td>\n        <td class=\"timeago\" title=\"";
-  if (stack1 = helpers.signedUpAt) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.signedUpAt; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
+    + "</td>\n        <td data-sort=\"";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.convertISOToTimestamp),stack1 ? stack1.call(depth0, depth0.signedUpAt, options) : helperMissing.call(depth0, "convertISOToTimestamp", depth0.signedUpAt, options)))
+    + "\" class=\"timeago\" title=\"";
+  if (stack2 = helpers.signedUpAt) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.signedUpAt; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
     + "\">";
-  if (stack1 = helpers.signedUpAt) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.signedUpAt; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</td>\n        <td>";
-  if (stack1 = helpers.state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</td>\n        <td>resend / new</td>\n        <td><a href=\"#\" class=\"edit\">edit</a> / <a href=\"#\" class=\"remove\">delete</a></td>\n      </tr>\n      ";
+  if (stack2 = helpers.signedUpAt) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.signedUpAt; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "</td>\n        <td class=\"no-sort\">";
+  if (stack2 = helpers.state) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.state; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "</td>\n        <td class=\"no-sort\">resend / new</td>\n        <td class=\"no-sort\"><a href=\"#modules/users/user/";
+  if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\" class=\"edit\">edit</a> / <a href=\"#\" class=\"remove\">delete</a></td>\n      </tr>\n      ";
   return buffer;
   }
 
