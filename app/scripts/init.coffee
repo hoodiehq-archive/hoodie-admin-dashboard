@@ -3,7 +3,7 @@ if (location.hostname is 'localhost')
   # some existing hoodie app.
   whereTheMagicHappens = "http://api.pocket.dev"
 else
-  whereTheMagicHappens = location.protocol + "//" + location.hostname
+  whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
 window.hoodie = new Hoodie(whereTheMagicHappens)
 
 # configure Backbone Layoutmanager
