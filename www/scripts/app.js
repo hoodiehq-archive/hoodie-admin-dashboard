@@ -1026,10 +1026,10 @@
         Pocket.Routers = {};
       }
       return window.hoodie.admin.modules.find(moduleName).then(function(module) {
-        var moduleViewName;
+        var moduleViewName, _ref;
         moduleViewName = _this.capitaliseFirstLetter(moduleName) + "View";
         view.module = module;
-        if (Pocket.Routers[moduleViewName] == null) {
+        if (!Pocket.Routers[moduleViewName] && ((_ref = Pocket[moduleViewName]) != null ? _ref.Router : void 0)) {
           Pocket.Routers[moduleViewName] = new Pocket[moduleViewName].Router('modules/' + moduleName, {
             createTrailingSlashRoutes: true
           });

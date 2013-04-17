@@ -28,7 +28,7 @@ class Pocket.Router extends Backbone.Router
     window.hoodie.admin.modules.find(moduleName).then (module) =>
       moduleViewName = @capitaliseFirstLetter(moduleName)+"View"
       view.module = module
-      unless Pocket.Routers[moduleViewName]?
+      if !Pocket.Routers[moduleViewName] and Pocket[moduleViewName]?.Router
         Pocket.Routers[moduleViewName] = new Pocket[moduleViewName].Router('modules/'+moduleName, {createTrailingSlashRoutes: true});
       view.render()
 
