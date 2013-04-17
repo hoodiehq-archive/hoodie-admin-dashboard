@@ -176,6 +176,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       sortHeader.click()
       if @sortDirection is 'sort-up'
         sortHeader.click()
+    super
 
   _updateModule : (module) =>
     module.config.confirmationMandatory     = @$el.find('[name=confirmationMandatory]').is(':checked')
