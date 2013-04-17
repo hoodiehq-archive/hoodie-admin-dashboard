@@ -1,3 +1,19 @@
+class Pocket.UsersView.Router extends Backbone.SubRoute
+  routes:
+    ""              : "default"
+    "user/:id"      : "editUser"
+
+  constructor: ->
+    @view = new Pocket.ModulesView['module-users']
+    super
+
+  default: ->
+    # this needs to be here, otherwise: infinite loop
+
+  editUser: (id) ->
+    @view.editUser(id)
+
+
 class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   template: 'modules/users'
   sort: undefined
@@ -11,7 +27,6 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     'click .removeTestUsers button[type="submit"]': 'removeTestUsers'
     'click .addRealUser button[type="submit"]'    : 'addRealUser'
     'click .user a.remove'                        : 'removeUser'
-    'click .user a.edit'                          : 'editUser'
     'click .clearSearch'                          : 'clearSearch'
 
   constructor : ->
@@ -108,10 +123,15 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       $('[data-id="'+id+'"]').remove()
       @update()
 
-  editUser : (event) ->
+  editUser : (id) ->
+    console.log("in view: editUser: ",id);
+    ###
     event.preventDefault()
     id = $(event.currentTarget).closest("[data-id]").data('id');
-    console.log "edit user", id
+    $.when(hoodie.admin.users.find('user', id)).then (user) =>
+      @editUser = user
+      @render()
+    ###
 
   search : (event) ->
     event.preventDefault()
@@ -133,7 +153,6 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     event.preventDefault()
     @searchQuery = null
     @update()
-
 
   beforeRender : =>
     @sortBy = $('#userList .sort-up, #userList .sort-down').data('sort-by')
@@ -157,7 +176,6 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       sortHeader.click()
       if @sortDirection is 'sort-up'
         sortHeader.click()
-    super
 
   _updateModule : (module) =>
     module.config.confirmationMandatory     = @$el.find('[name=confirmationMandatory]').is(':checked')
