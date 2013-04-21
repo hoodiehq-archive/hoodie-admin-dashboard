@@ -2,12 +2,12 @@
   var whereTheMagicHappens;
 
   if (location.hostname === 'localhost') {
-    whereTheMagicHappens = "http://api.pocket.dev";
+    whereTheMagicHappens = "http://pocket.dev/_api";
   } else {
-    whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api");
+    whereTheMagicHappens = "/_api";
   }
 
-  window.hoodie = new Hoodie(whereTheMagicHappens);
+  window.hoodie = new Hoodie;
 
   Backbone.Layout.configure({
     manage: true,
