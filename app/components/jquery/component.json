@@ -1,19 +1,12 @@
 {
   "name": "jquery",
-  "version": "1.8.3",
-  "description": "jQuery component",
-  "keywords": [
-    "jquery",
-    "component"
-  ],
-  "scripts": [
-    "jquery.js"
-  ],
-  "license": "MIT",
-  "gitHead": "a94bf4baa9955613937d4f4c083c9d95ad0564fb",
-  "readme": "jQuery Component\n================\n\nShim repository for jQuery.\n",
-  "readmeFilename": "README.md",
-  "_id": "jquery@1.8.3",
+  "version": "1.8.2",
+  "main": "./jquery.js",
+  "dependencies": {},
+  "gitHead": "4f101d6e569c2eadc8d59d07cba1bba0b212a0f1",
+  "_id": "jquery@1.8.2",
+  "readme": "ERROR: No README.md file found!",
+  "description": "ERROR: No README.md file found!",
   "repository": {
     "type": "git",
     "url": "git://github.com/components/jquery.git"
