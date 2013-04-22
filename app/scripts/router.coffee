@@ -18,7 +18,6 @@ class Pocket.Router extends Backbone.Router
       view.render()
 
   modules: (moduleName, subroute) ->
-    console.log(moduleName, subroute)
     view = new Pocket.ModulesView
     pocket.app.views.body.setView(".main", view)
 

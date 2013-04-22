@@ -1,14 +1,10 @@
 class Pocket.UsersView.Router extends Backbone.SubRoute
   routes:
-    ""              : "default"
     "user/:id"      : "editUser"
 
   constructor: ->
     @view = new Pocket.ModulesView['module-users']
     super
-
-  default: ->
-    # this needs to be here, otherwise: infinite loop
 
   editUser: (id) ->
     @view.editUser(id)
