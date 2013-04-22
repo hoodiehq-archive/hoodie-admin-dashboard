@@ -1,11 +1,12 @@
 if (location.hostname is 'localhost')
   # debug mode, connect to
   # some existing hoodie app.
-  whereTheMagicHappens = "http://pocket.dev/_api"
+  whereTheMagicHappens = "http://api.pocket.dev"
 else
-  whereTheMagicHappens = "/_api"
+  whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
 
-window.hoodie = new Hoodie
+
+window.hoodie = new Hoodie(whereTheMagicHappens)
 
 # configure Backbone Layoutmanager
 Backbone.Layout.configure
