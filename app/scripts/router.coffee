@@ -6,6 +6,7 @@ class Pocket.Router extends Backbone.Router
     "modules/:moduleName/*subroute"     : "modules"
 
   dashboard: ->
+    console.log("dashboard: ");
     view = new Pocket.DashboardView
     pocket.app.views.body.setView(".main", view)
 
@@ -18,18 +19,22 @@ class Pocket.Router extends Backbone.Router
       view.render()
 
   modules: (moduleName, subroute) ->
-    view = new Pocket.ModulesView
-    pocket.app.views.body.setView(".main", view)
+    console.log("modules: ",moduleName, subroute);
 
     unless Pocket.Routers
       Pocket.Routers = {}
 
     window.hoodie.admin.modules.find(moduleName).then (module) =>
       moduleViewName = @capitaliseFirstLetter(moduleName)+"View"
-      view.module = module
+      # If module has a Router to handle its own subroutes
       if !Pocket.Routers[moduleViewName] and Pocket[moduleViewName]?.Router
         Pocket.Routers[moduleViewName] = new Pocket[moduleViewName].Router('modules/'+moduleName, {createTrailingSlashRoutes: true});
-      view.render()
+      else
+        # Module has no routes of its own
+        view = new Pocket.ModulesView
+        pocket.app.views.body.setView(".main", view)
+        view.module = module
+        view.render()
 
   capitaliseFirstLetter : (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)

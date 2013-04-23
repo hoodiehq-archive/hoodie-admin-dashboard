@@ -1,14 +1,18 @@
 class Pocket.UsersView.Router extends Backbone.SubRoute
   routes:
+    ""              : "default"
     "user/:id"      : "editUser"
 
   constructor: ->
     @view = new Pocket.ModulesView['module-users']
+    pocket.app.views.body.setView(".main", @view)
     super
+
+  default: ->
+    @view.update()
 
   editUser: (id) ->
     @view.editUser(id)
-
 
 class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   template: 'modules/users'
@@ -19,6 +23,8 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
   events :
     'submit form.config'                          : 'updateConfig'
     'submit form.form-search'                     : 'search'
+    'submit form.updatePassword'                  : 'updatePassword'
+    'submit form.updateUsername'                  : 'updateUsername'
     'click .addTestUsers button[type="submit"]'   : 'addTestUsers'
     'click .removeTestUsers button[type="submit"]': 'removeTestUsers'
     'click .addRealUser button[type="submit"]'    : 'addRealUser'
@@ -38,6 +44,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       @users        = users
       @config       = $.extend @_configDefaults(), object.config
       @appConfig    = appConfig
+      @editableUser = null
       switch users.length
         when 0
           @resultsDesc = "You have no users yet"
@@ -120,14 +127,37 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       @update()
 
   editUser : (id) ->
-    console.log("in view: editUser: ",id);
-    ###
-    event.preventDefault()
-    id = $(event.currentTarget).closest("[data-id]").data('id');
     $.when(hoodie.admin.users.find('user', id)).then (user) =>
-      @editUser = user
+      @editableUser = user
       @render()
-    ###
+      return
+
+  updateUsername : (event) ->
+    event.preventDefault()
+    id = $(event.currentTarget).closest('form').data('id');
+    $form = $(event.currentTarget);
+    $btn = $form.find('[type="submit"]');
+    #oldUsername = $form.find('[name="username"]').data('oldusername')
+    #username = $form.find('[name="username"]').val()
+
+  updatePassword : (event) ->
+    event.preventDefault()
+    id = $(event.currentTarget).closest('form').data('id');
+    $form = $(event.currentTarget);
+    $btn = $form.find('[type="submit"]');
+    password = $form.find('[name="password"]').val()
+    if password
+      $btn.attr('disabled', 'disabled')
+      $form.find('.submitMessage').text("Updating password")
+      hoodie.admin.users.update('user', id, {password: password})
+      .done (data) ->
+        $btn.attr('disabled', null)
+        $form.find('.submitMessage').text("Password updated")
+      .fail (data) ->
+        $btn.attr('disabled', null)
+        $form.find('.submitMessage').text("Error: could not update password")
+    else
+      $form.find('.submitMessage').text("You didn't change anything.")
 
   search : (event) ->
     event.preventDefault()
@@ -182,4 +212,4 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     return module
 
   _configDefaults : ->
-    confirmationEmailText : "Hello {name}! Thanks for signing up with #{@appInfo.name}"
+    #confirmationEmailText : "Hello {name}! Thanks for signing up with #{@appInfo.name}"

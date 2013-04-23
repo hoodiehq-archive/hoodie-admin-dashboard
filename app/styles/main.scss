@@ -298,6 +298,7 @@ nav{
 
 a.signOut {
   display: none;
+  z-index: 1000;
 }
 
 .authenticated{
@@ -330,7 +331,7 @@ h3.top{
 .main{
   overflow: hidden;
   margin: 0 0 0 240px;
-  padding: 73px 20px 72px;
+  padding: 89px 20px 72px;
   .content{
     max-width: 52em;
     margin: 0;
@@ -423,6 +424,7 @@ h3.top{
       label.radio{
         margin-top: 0;
         min-height: 30px;
+        width: 80%;
       }
       input[type="radio"], input[type="checkbox"] {
         margin-top: 3px;
@@ -508,3 +510,5 @@ table th.sort-up:after {
   border-bottom:none;
   border-width:4px 4px 0;
 }
+
+

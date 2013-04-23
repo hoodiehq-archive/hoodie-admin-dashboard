@@ -105,6 +105,16 @@ class window.Pocket extends Backbone.Events
         return "please-reply@"+pocket.appInfo.name
       return pocket.appInfo.defaultReplyEmailAddress
 
+    Handlebars.registerHelper "debug", (optionalValue) ->
+      console.log("\nCurrent Context");
+      console.log("====================");
+      console.log(this);
+
+      if (arguments.length > 1)
+        console.log("Value");
+        console.log("====================");
+        console.log(optionalValue);
+
     # Style Helpers
     # These return class names depending on the value passed
     # Used for dashboard panel colors

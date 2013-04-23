@@ -1,4 +1,56 @@
 <div class="module" id="{{module.name}}">
+  {{#if editableUser}}
+    {{#with editableUser}}
+    <legend>Edit user '{{id}}'</legend>
+    <form class="updateUsername form-horizontal" data-id="{{id}}">
+      <section class="username noBorder">
+        <div class="control-group">
+          <label>
+            New username
+          </label>
+          <div class="controls">
+            <input type="text" name="username" value="{{id}}" data-oldusername="{{id}}" placeholder="Username cannot be empty" disabled>
+            <span class="note">Changing the username isn't implemented yet, sorry.</span>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="control-group">
+          <label>
+            &nbsp;
+          </label>
+          <div class="controls">
+            <button class="btn" type="submit" disabled>Update username</button>
+            <span class="submitMessage"></span>
+          </div>
+        </div>
+      </section>
+    </form>
+    <form class="updatePassword form-horizontal" data-id="{{id}}">
+      <section class="password">
+        <div class="control-group">
+          <label>
+            New password
+          </label>
+          <div class="controls">
+            <input type="text" name="password" value="" placeholder="Password cannot be empty">
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="control-group">
+          <label>
+            &nbsp;
+          </label>
+          <div class="controls">
+            <button class="btn" type="submit">Update password</button>
+            <span class="submitMessage"></span>
+          </div>
+        </div>
+      </section>
+    </form>
+    {{/with}}
+  {{else}}
   <legend>Settings</legend>
 
   <span class="description">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>
@@ -186,7 +238,6 @@
         <th data-sort-by="lastSeen">Last seen</th>
         <th data-sort-by="signupDate">Signup date</th>
         <th class="no-sort">State</th>
-        <th class="no-sort">Password</th>
         <th class="no-sort"></th>
       </tr>
     </thead>
@@ -196,8 +247,7 @@
         <td>{{id}}</td>
         <td>{{lastLogin}}</td>
         <td data-sort="{{convertISOToTimestamp signedUpAt}}" class="timeago" title="{{signedUpAt}}">{{signedUpAt}}</td>
-        <td class="no-sort">{{state}}</td>
-        <td class="no-sort">resend / new</td>
+        <td class="no-sort">{{$state}}</td>
         <td class="no-sort"><a href="#modules/users/user/{{id}}" class="edit">edit</a> / <a href="#" class="remove">delete</a></td>
       </tr>
       {{/each}}
@@ -210,4 +260,5 @@
     <p class="currentSearchMetrics muted">Showing {{users.length}} of {{totalUsers}} users</p>
   </div>
   {{/if}}
+{{/if}}
 </div>
