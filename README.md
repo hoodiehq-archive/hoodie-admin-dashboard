@@ -25,4 +25,4 @@ building and deployment
 -----------------------
 
 Build pocket into the www directory and push back to master, future Hoodie instances will pull from there:
-`$ rm www & build & cp -r dist www`
+`$ rm www & grunt & cp -r dist www`
