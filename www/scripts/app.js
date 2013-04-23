@@ -159,6 +159,16 @@
         }
         return pocket.appInfo.defaultReplyEmailAddress;
       });
+      Handlebars.registerHelper("debug", function(optionalValue) {
+        console.log("\nCurrent Context");
+        console.log("====================");
+        console.log(this);
+        if (arguments.length > 1) {
+          console.log("Value");
+          console.log("====================");
+          return console.log(optionalValue);
+        }
+      });
       Handlebars.registerHelper('positiveSuccessNegativeWarning', function(value) {
         if (value > 0) {
           return 'success';
@@ -559,10 +569,13 @@
 
     function Router() {
       this.view = new Pocket.ModulesView['module-users'];
+      pocket.app.views.body.setView(".main", this.view);
       Router.__super__.constructor.apply(this, arguments);
     }
 
-    Router.prototype["default"] = function() {};
+    Router.prototype["default"] = function() {
+      return this.view.update();
+    };
 
     Router.prototype.editUser = function(id) {
       return this.view.editUser(id);
@@ -587,9 +600,9 @@
     _Class.prototype.events = {
       'submit form.config': 'updateConfig',
       'submit form.form-search': 'search',
-      'click .addTestUsers button[type="submit"]': 'addTestUsers',
-      'click .removeTestUsers button[type="submit"]': 'removeTestUsers',
-      'click .addRealUser button[type="submit"]': 'addRealUser',
+      'submit form.updatePassword': 'updatePassword',
+      'submit form.updateUsername': 'updateUsername',
+      'click .addUser button[type="submit"]': 'addUser',
       'click .user a.remove': 'removeUser',
       'click .clearSearch': 'clearSearch'
     };
@@ -615,6 +628,7 @@
         _this.users = users;
         _this.config = $.extend(_this._configDefaults(), object.config);
         _this.appConfig = appConfig;
+        _this.editableUser = null;
         switch (users.length) {
           case 0:
             _this.resultsDesc = "You have no users yet";
@@ -641,41 +655,7 @@
       return !isConfigured;
     };
 
-    _Class.prototype.addTestUsers = function(event) {
-      var $btn, users,
-        _this = this;
-      event.preventDefault();
-      $btn = $(event.currentTarget);
-      users = parseInt($btn.closest('form').find('.amountOfTestUsers').val());
-      if (_.isNumber(users) && users > 0) {
-        $btn.attr('disabled', 'disabled');
-        if (users === 1) {
-          $btn.siblings('.submitMessage').text("Adding a test user…");
-        } else {
-          $btn.siblings('.submitMessage').text("Adding " + users + " test users…");
-        }
-        return $.when(hoodie.admin.users.addTestUsers(users)).then(function() {
-          return _this.update();
-        });
-      } else {
-        return $btn.siblings('.submitMessage').text("That's not a number");
-      }
-    };
-
-    _Class.prototype.removeTestUsers = function(event) {
-      var users;
-      event.preventDefault();
-      users = $(".user[data-id^='test']");
-      return users.each(function(index, user) {
-        var id;
-        id = $(user).data('id');
-        return hoodie.admin.users.remove('user', id).then(function() {
-          return $('[data-id="' + id + '"]').remove();
-        });
-      });
-    };
-
-    _Class.prototype.addRealUser = function(event) {
+    _Class.prototype.addUser = function(event) {
       var $btn, ownerHash, password, username;
       event.preventDefault();
       $btn = $(event.currentTarget);
@@ -720,15 +700,43 @@
     };
 
     _Class.prototype.editUser = function(id) {
-      return console.log("in view: editUser: ", id);
-      /*
-          event.preventDefault()
-          id = $(event.currentTarget).closest("[data-id]").data('id');
-          $.when(hoodie.admin.users.find('user', id)).then (user) =>
-            @editUser = user
-            @render()
-      */
+      var _this = this;
+      return $.when(hoodie.admin.users.find('user', id)).then(function(user) {
+        _this.editableUser = user;
+        _this.render();
+      });
+    };
 
+    _Class.prototype.updateUsername = function(event) {
+      var $btn, $form, id;
+      event.preventDefault();
+      id = $(event.currentTarget).closest('form').data('id');
+      $form = $(event.currentTarget);
+      return $btn = $form.find('[type="submit"]');
+    };
+
+    _Class.prototype.updatePassword = function(event) {
+      var $btn, $form, id, password;
+      event.preventDefault();
+      id = $(event.currentTarget).closest('form').data('id');
+      $form = $(event.currentTarget);
+      $btn = $form.find('[type="submit"]');
+      password = $form.find('[name="password"]').val();
+      if (password) {
+        $btn.attr('disabled', 'disabled');
+        $form.find('.submitMessage').text("Updating password");
+        return hoodie.admin.users.update('user', id, {
+          password: password
+        }).done(function(data) {
+          $btn.attr('disabled', null);
+          return $form.find('.submitMessage').text("Password updated");
+        }).fail(function(data) {
+          $btn.attr('disabled', null);
+          return $form.find('.submitMessage').text("Error: could not update password");
+        });
+      } else {
+        return $form.find('.submitMessage').text("You didn't change anything.");
+      }
     };
 
     _Class.prototype.search = function(event) {
@@ -793,11 +801,7 @@
       return module;
     };
 
-    _Class.prototype._configDefaults = function() {
-      return {
-        confirmationEmailText: "Hello {name}! Thanks for signing up with " + this.appInfo.name
-      };
-    };
+    _Class.prototype._configDefaults = function() {};
 
     return _Class;
 
@@ -1007,6 +1011,7 @@
 
     Router.prototype.dashboard = function() {
       var view;
+      console.log("dashboard: ");
       view = new Pocket.DashboardView;
       pocket.app.views.body.setView(".main", view);
       return $.when(hoodie.admin.app.getStats(1358610679), hoodie.admin.config.get()).then(function(stats, appConfig) {
@@ -1017,24 +1022,24 @@
     };
 
     Router.prototype.modules = function(moduleName, subroute) {
-      var view,
-        _this = this;
-      console.log(moduleName, subroute);
-      view = new Pocket.ModulesView;
-      pocket.app.views.body.setView(".main", view);
+      var _this = this;
+      console.log("modules: ", moduleName, subroute);
       if (!Pocket.Routers) {
         Pocket.Routers = {};
       }
       return window.hoodie.admin.modules.find(moduleName).then(function(module) {
-        var moduleViewName, _ref;
+        var moduleViewName, view, _ref;
         moduleViewName = _this.capitaliseFirstLetter(moduleName) + "View";
-        view.module = module;
         if (!Pocket.Routers[moduleViewName] && ((_ref = Pocket[moduleViewName]) != null ? _ref.Router : void 0)) {
-          Pocket.Routers[moduleViewName] = new Pocket[moduleViewName].Router('modules/' + moduleName, {
+          return Pocket.Routers[moduleViewName] = new Pocket[moduleViewName].Router('modules/' + moduleName, {
             createTrailingSlashRoutes: true
           });
+        } else {
+          view = new Pocket.ModulesView;
+          pocket.app.views.body.setView(".main", view);
+          view.module = module;
+          return view.render();
         }
-        return view.render();
       });
     };
 
@@ -1180,15 +1185,82 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 this["JST"]["modules/users"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n    ";
+  stack1 = helpers['with'].call(depth0, depth0.editableUser, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n  ";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n    <legend>Edit user '";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "'</legend>\n    <form class=\"updateUsername form-horizontal\" data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\n      <section class=\"username noBorder\">\n        <div class=\"control-group\">\n          <label>\n            New username\n          </label>\n          <div class=\"controls\">\n            <input type=\"text\" name=\"username\" value=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-oldusername=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" placeholder=\"Username cannot be empty\" disabled>\n            <span class=\"note\">Changing the username isn't implemented yet, sorry.</span>\n          </div>\n        </div>\n      </section>\n      <section>\n        <div class=\"control-group\">\n          <label>\n            &nbsp;\n          </label>\n          <div class=\"controls\">\n            <button class=\"btn\" type=\"submit\" disabled>Update username</button>\n            <span class=\"submitMessage\"></span>\n          </div>\n        </div>\n      </section>\n    </form>\n    <form class=\"updatePassword form-horizontal\" data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\n      <section class=\"password\">\n        <div class=\"control-group\">\n          <label>\n            New password\n          </label>\n          <div class=\"controls\">\n            <input type=\"text\" name=\"password\" value=\"\" placeholder=\"Password cannot be empty\">\n          </div>\n        </div>\n      </section>\n      <section>\n        <div class=\"control-group\">\n          <label>\n            &nbsp;\n          </label>\n          <div class=\"controls\">\n            <button class=\"btn\" type=\"submit\">Update password</button>\n            <span class=\"submitMessage\"></span>\n          </div>\n        </div>\n      </section>\n    </form>\n    ";
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = "", stack1, stack2;
+  buffer += "\n  <legend>Settings</legend>\n\n  <span class=\"description\">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>\n\n  <form class=\"config form-horizontal\">\n    ";
+  stack1 = helpers['if'].call(depth0, depth0.emailTransportNotConfigured, {hash:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n  </form>\n</div>\n\n<hr>\n\n<div class=\"content centered\">\n  <h2 class=\"top\">Users</h2>\n  <fieldset class=\"toggle\">\n    <legend class=\"toggler\">Add user</legend>\n    <div class=\"togglee\">\n      <legend>Add user</legend>\n      <form class=\"form-horizontal addUser\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Username\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"username\" class=\"username\" value=\"\" placeholder=\"username\">\n            </div>\n          </div>\n        </section>\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Password\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"password\" class=\"password\" value=\"\" placeholder=\"\">\n            </div>\n          </div>\n        </section>\n        <section>\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Add user</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n    </div>\n  </fieldset>\n  <div class=\"userSearch group\">\n    <form class=\"form-search\">\n      <div class=\"input-append\">\n        <input type=\"text\" class=\"span2 search-query\" placeholder=\"Username\"";
+  stack1 = helpers['if'].call(depth0, depth0.searchQuery, {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += ">\n        <button type=\"submit\" class=\"btn\">Search</button>\n      </div>\n    </form>\n    ";
+  stack1 = helpers['if'].call(depth0, depth0.searchQuery, {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n  </div>\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
+  if (stack1 = helpers.resultsDesc) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.resultsDesc; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</p>\n    <p class=\"currentSearchMetrics muted\">Showing "
+    + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + " of ";
+  if (stack2 = helpers.totalUsers) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.totalUsers; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + " users</p>\n  </div>\n  ";
+  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(13, program13, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n  ";
+  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n";
+  return buffer;
+  }
+function program5(depth0,data) {
   
   
   return "\n    <section>\n      <div class=\"control-group\">\n        <label>\n          Signup confirmation\n        </label>\n        <div class=\"controls\">\n          <span class=\"note\">Email needs to be configured in <a href=\"/modules/appconfig\">Appconfig</a> before enabling signup confirmation</span>\n        </div>\n      </div>\n    </section>\n    ";
   }
 
-function program3(depth0,data) {
+function program7(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\n    <section>\n      <div class=\"control-group\">\n        <label>\n          Signup confirmation\n        </label>\n        <div class=\"controls\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" name=\"confirmationMandatory\" class=\"formCondition\" data-conditions=\"true:.confirmationOptions\"> is mandatory\n          </label>\n        </div>\n      </div>\n    </section>\n\n    <section class=\"confirmationOptions\">\n      <div class=\"control-group\">\n        <label>\n          From address\n        </label>\n        <div class=\"controls\">\n          <input type=\"email\" name=\"confirmationEmailFrom\" value=\""
@@ -1207,7 +1279,7 @@ function program3(depth0,data) {
   return buffer;
   }
 
-function program5(depth0,data) {
+function program9(depth0,data) {
   
   var buffer = "", stack1;
   buffer += " value=\"";
@@ -1218,22 +1290,22 @@ function program5(depth0,data) {
   return buffer;
   }
 
-function program7(depth0,data) {
+function program11(depth0,data) {
   
   
   return "\n    <button class=\"btn clearSearch\">Clear search</button>\n    ";
   }
 
-function program9(depth0,data) {
+function program13(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n  <table id=\"userList\" class=\"table users\">\n    <thead>\n      <tr>\n        <th data-sort-by=\"username\">Username</th>\n        <th data-sort-by=\"lastSeen\">Last seen</th>\n        <th data-sort-by=\"signupDate\">Signup date</th>\n        <th class=\"no-sort\">State</th>\n        <th class=\"no-sort\">Password</th>\n        <th class=\"no-sort\"></th>\n      </tr>\n    </thead>\n    <tbody>\n      ";
-  stack1 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
+  buffer += "\n  <table id=\"userList\" class=\"table users\">\n    <thead>\n      <tr>\n        <th data-sort-by=\"username\">Username</th>\n        <th data-sort-by=\"lastSeen\">Last seen</th>\n        <th data-sort-by=\"signupDate\">Signup date</th>\n        <th class=\"no-sort\">State</th>\n        <th class=\"no-sort\"></th>\n      </tr>\n    </thead>\n    <tbody>\n      ";
+  stack1 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </tbody>\n  </table>\n  ";
   return buffer;
   }
-function program10(depth0,data) {
+function program14(depth0,data) {
   
   var buffer = "", stack1, stack2, options;
   buffer += "\n      <tr data-id=\"";
@@ -1264,10 +1336,10 @@ function program10(depth0,data) {
   else { stack2 = depth0.signedUpAt; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "</td>\n        <td class=\"no-sort\">";
-  if (stack2 = helpers.state) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.state; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  if (stack2 = helpers.$state) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.$state; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "</td>\n        <td class=\"no-sort\">resend / new</td>\n        <td class=\"no-sort\"><a href=\"#modules/users/user/";
+    + "</td>\n        <td class=\"no-sort\"><a href=\"#modules/users/user/";
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -1275,7 +1347,7 @@ function program10(depth0,data) {
   return buffer;
   }
 
-function program12(depth0,data) {
+function program16(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
@@ -1292,32 +1364,10 @@ function program12(depth0,data) {
   return buffer;
   }
 
-  buffer += "<div class=\"module\" id=\""
+  buffer += "<div class=\"module content centered\" id=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.module),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n  <legend>Settings</legend>\n\n  <span class=\"description\">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>\n\n  <form class=\"config form-horizontal\">\n    ";
-  stack2 = helpers['if'].call(depth0, depth0.emailTransportNotConfigured, {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  </form>\n</div>\n\n<hr>\n\n<div class=\"content centered\">\n  <h2 class=\"top\">Users</h2>\n  <fieldset class=\"toggle\">\n    <legend class=\"toggler\">Add and remove test users</legend>\n    <div class=\"togglee\">\n      <legend>Add test users</legend>\n      <form class=\"form-horizontal addTestUsers\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Number of test users\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"amountOfTestUsers\" class=\"amountOfTestUsers\" value=\"\" placeholder=\"1\">\n            </div>\n          </div>\n        </section>\n        <section>\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Add test users</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n      <legend>Remove test users</legend>\n      <form class=\"form-horizontal removeTestUsers\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Remove all test users</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n    </div>\n  </fieldset>\n  <fieldset class=\"toggle\">\n    <legend class=\"toggler\">Add real user</legend>\n    <div class=\"togglee\">\n      <legend>Add real user</legend>\n      <form class=\"form-horizontal addRealUser\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Username\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"username\" class=\"username\" value=\"\" placeholder=\"username\">\n            </div>\n          </div>\n        </section>\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Password\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"password\" class=\"password\" value=\"\" placeholder=\"\">\n            </div>\n          </div>\n        </section>\n        <section>\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Add user</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n    </div>\n  </fieldset>\n  <div class=\"userSearch group\">\n    <form class=\"form-search\">\n      <div class=\"input-append\">\n        <input type=\"text\" class=\"span2 search-query\" placeholder=\"Username\"";
-  stack2 = helpers['if'].call(depth0, depth0.searchQuery, {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += ">\n        <button type=\"submit\" class=\"btn\">Search</button>\n      </div>\n    </form>\n    ";
-  stack2 = helpers['if'].call(depth0, depth0.searchQuery, {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  </div>\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
-  if (stack2 = helpers.resultsDesc) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.resultsDesc; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "</p>\n    <p class=\"currentSearchMetrics muted\">Showing "
-    + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + " of ";
-  if (stack2 = helpers.totalUsers) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.totalUsers; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + " users</p>\n  </div>\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data});
+    + "\">\n  ";
+  stack2 = helpers['if'].call(depth0, depth0.editableUser, {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n</div>\n";
   return buffer;

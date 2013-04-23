@@ -25,9 +25,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     'submit form.form-search'                     : 'search'
     'submit form.updatePassword'                  : 'updatePassword'
     'submit form.updateUsername'                  : 'updateUsername'
-    'click .addTestUsers button[type="submit"]'   : 'addTestUsers'
-    'click .removeTestUsers button[type="submit"]': 'removeTestUsers'
-    'click .addRealUser button[type="submit"]'    : 'addRealUser'
+    'click .addUser button[type="submit"]'    : 'addUser'
     'click .user a.remove'                        : 'removeUser'
     'click .clearSearch'                          : 'clearSearch'
 
@@ -65,30 +63,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     isConfigured = @appConfig?.email?.transport?
     not isConfigured
 
-  addTestUsers : (event) ->
-    event.preventDefault()
-    $btn = $(event.currentTarget);
-    users = parseInt($btn.closest('form').find('.amountOfTestUsers').val())
-    if _.isNumber(users) and users > 0
-      $btn.attr('disabled', 'disabled')
-      if users is 1
-        $btn.siblings('.submitMessage').text("Adding a test user…")
-      else
-        $btn.siblings('.submitMessage').text("Adding #{users} test users…")
-      $.when(hoodie.admin.users.addTestUsers(users)).then () =>
-        @update()
-    else
-      $btn.siblings('.submitMessage').text("That's not a number")
-
-  removeTestUsers : (event) ->
-    event.preventDefault()
-    users = $( ".user[data-id^='test']" )
-    users.each (index, user) ->
-      id = $(user).data('id');
-      hoodie.admin.users.remove('user', id).then ->
-        $('[data-id="'+id+'"]').remove()
-
-  addRealUser : (event) ->
+  addUser : (event) ->
     event.preventDefault()
     $btn = $(event.currentTarget);
     username = $btn.closest('form').find('.username').val()

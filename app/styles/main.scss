@@ -419,6 +419,8 @@ h3.top{
         color: tint($brown, 50);
         margin-top: 11px;
         display: block;
+        margin-left: 7px;
+        width: 72%;
       }
       label.checkbox,
       label.radio{
@@ -467,6 +469,9 @@ h3.top{
 .form-horizontal{
   .control-group{
     margin-bottom: 6px;
+  }
+  .controls {
+    margin-left: 218px;
   }
 }
 

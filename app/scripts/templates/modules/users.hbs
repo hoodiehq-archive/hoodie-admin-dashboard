@@ -1,4 +1,4 @@
-<div class="module" id="{{module.name}}">
+<div class="module content centered" id="{{module.name}}">
   {{#if editableUser}}
     {{#with editableUser}}
     <legend>Edit user '{{id}}'</legend>
@@ -134,53 +134,10 @@
 <div class="content centered">
   <h2 class="top">Users</h2>
   <fieldset class="toggle">
-    <legend class="toggler">Add and remove test users</legend>
+    <legend class="toggler">Add user</legend>
     <div class="togglee">
-      <legend>Add test users</legend>
-      <form class="form-horizontal addTestUsers">
-        <section class="noBorder">
-          <div class="control-group">
-            <label>
-              Number of test users
-            </label>
-            <div class="controls">
-              <input type="text" name="amountOfTestUsers" class="amountOfTestUsers" value="" placeholder="1">
-            </div>
-          </div>
-        </section>
-        <section>
-          <div class="control-group">
-            <label>
-              &nbsp;
-            </label>
-            <div class="controls">
-              <button class="btn" type="submit">Add test users</button>
-              <span class="submitMessage"></span>
-            </div>
-          </div>
-        </section>
-      </form>
-      <legend>Remove test users</legend>
-      <form class="form-horizontal removeTestUsers">
-        <section class="noBorder">
-          <div class="control-group">
-            <label>
-              &nbsp;
-            </label>
-            <div class="controls">
-              <button class="btn" type="submit">Remove all test users</button>
-              <span class="submitMessage"></span>
-            </div>
-          </div>
-        </section>
-      </form>
-    </div>
-  </fieldset>
-  <fieldset class="toggle">
-    <legend class="toggler">Add real user</legend>
-    <div class="togglee">
-      <legend>Add real user</legend>
-      <form class="form-horizontal addRealUser">
+      <legend>Add user</legend>
+      <form class="form-horizontal addUser">
         <section class="noBorder">
           <div class="control-group">
             <label>
