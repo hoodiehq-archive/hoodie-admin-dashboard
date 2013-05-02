@@ -52,7 +52,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
           @resultsDesc = "Currently displaying all #{@totalUsers} users"
 
       # config defaults
-      @config.confirmationEmailText or= "Hello {name}! Thanks for signing up with #{appInfo.name}"
+      @config.confirmationEmailText or= "Hello {name}, Thanks for signing up!"
       @render()
 
   updateConfig : (event) ->

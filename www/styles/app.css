@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*
  * Bootstrap v2.1.0
  *
@@ -2170,7 +2171,7 @@ table .span24 {
   *margin-right: .3em;
   line-height: 14px;
   vertical-align: text-top;
-  background-image: url('../../app/images/glyphicons-halflings.png?1358419073');
+  background-image: url('../../app/images/glyphicons-halflings.png?1358768137');
   background-position: 14px 14px;
   background-repeat: no-repeat;
   margin-top: 1px;
@@ -2185,12 +2186,12 @@ table .span24 {
 .dropdown-menu > li > a:hover > [class*=" icon-"],
 .dropdown-menu > .active > a > [class^="icon-"],
 .dropdown-menu > .active > a > [class*=" icon-"] {
-  background-image: url('../../app/images/glyphicons-halflings-white.png?1358419073');
+  background-image: url('../../app/images/glyphicons-halflings-white.png?1358768137');
 }
 
 /* line 42, ../../app/styles/compass_twitter_bootstrap/_sprites.scss */
 .icon-glass {
-  background-position: 0      0;
+  background-position: 0 0;
 }
 
 /* line 43, ../../app/styles/compass_twitter_bootstrap/_sprites.scss */
@@ -6195,7 +6196,7 @@ a {
   color: #693c10;
   position: relative;
   padding: .5em;
-  margin: -0.5em;
+  margin: -.5em;
 }
 
 /* line 71, ../../app/styles/main.scss */

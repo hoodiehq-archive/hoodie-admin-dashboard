@@ -639,7 +639,7 @@
           default:
             _this.resultsDesc = "Currently displaying all " + _this.totalUsers + " users";
         }
-        (_base = _this.config).confirmationEmailText || (_base.confirmationEmailText = "Hello {name}! Thanks for signing up with " + appInfo.name);
+        (_base = _this.config).confirmationEmailText || (_base.confirmationEmailText = "Hello {name}, Thanks for signing up!");
         return _this.render();
       });
     };
