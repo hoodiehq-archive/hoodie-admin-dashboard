@@ -3,7 +3,7 @@ if (location.hostname is 'localhost')
   # some existing hoodie app.
   whereTheMagicHappens = "http://pocket.dev/_api"
 else
-  whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
+  whereTheMagicHappens = undefined # falls back to default, which is good
 
 
 window.hoodieAdmin = new HoodieAdmin(whereTheMagicHappens)

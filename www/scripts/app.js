@@ -4,7 +4,7 @@
   if (location.hostname === 'localhost') {
     whereTheMagicHappens = "http://pocket.dev/_api";
   } else {
-    whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api");
+    whereTheMagicHappens = void 0;
   }
 
   window.hoodieAdmin = new HoodieAdmin(whereTheMagicHappens);
