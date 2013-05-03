@@ -5,7 +5,7 @@ class Pocket.ModulesView['module-appconfig'] extends Pocket.ModulesBaseView
     "submit form.email": "updateConfig"
 
   update : ->
-    hoodie.admin.config.get().then (config) =>
+    hoodieAdmin.config.get().then (config) =>
       @config = config
       @render()
 
@@ -20,7 +20,7 @@ class Pocket.ModulesView['module-appconfig'] extends Pocket.ModulesBaseView
     @config.email.transport.auth.user = username
     @config.email.transport.auth.pass = password
 
-    promise = hoodie.admin.config.set(@config).then(@handleSubmitSuccess, @handleSubmitError)
+    promise = hoodieAdmin.config.set(@config).then(@handleSubmitSuccess, @handleSubmitError)
 
   handleSubmitError: (error) =>
     console.log "Could not save global mail config"

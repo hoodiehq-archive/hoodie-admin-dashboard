@@ -16,7 +16,7 @@ class Pocket.SidebarView extends Pocket.BaseView
     super
 
   loadAppName: ->
-    window.hoodie.admin.app.getInfo().then(@renderAppName)
+    window.hoodieAdmin.app.getInfo().then(@renderAppName)
 
   renderAppName: (@appInfo) =>
     @$el.find('header .appName a').text @appInfo.name
@@ -35,18 +35,18 @@ class Pocket.SidebarView extends Pocket.BaseView
 
   updateUserCount: (eventName, userObject) =>
     $.when(
-      window.hoodie.admin.users.getTotal()
+      window.hoodieAdmin.users.getTotal()
     ).then (@totalUsers) =>
       $('.sidebar .modules .users .name').text(@getUserModuleLabel(@totalUsers))
 
   loadModules: ->
     debouncedUserCount = _.debounce(@updateUserCount, 300)
-    hoodie.admin.users.on "change", (eventName, userObject) ->
+    hoodieAdmin.users.on "change", (eventName, userObject) ->
       debouncedUserCount(eventName, userObject)
-    hoodie.admin.users.connect();
+    hoodieAdmin.users.connect();
     $.when(
-      window.hoodie.admin.modules.findAll(),
-      window.hoodie.admin.users.getTotal()
+      window.hoodieAdmin.modules.findAll(),
+      window.hoodieAdmin.users.getTotal()
     ).then @renderModules
 
   # Generates module menu with badges

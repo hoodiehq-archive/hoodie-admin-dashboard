@@ -11,8 +11,8 @@ class Pocket.Router extends Backbone.Router
     pocket.app.views.body.setView(".main", view)
 
     $.when(
-      hoodie.admin.app.getStats(1358610679),
-      hoodie.admin.config.get()
+      hoodieAdmin.app.getStats(1358610679),
+      hoodieAdmin.config.get()
     ).then (stats, appConfig) ->
       view.stats     = stats
       view.appConfig = appConfig
@@ -24,7 +24,7 @@ class Pocket.Router extends Backbone.Router
     unless Pocket.Routers
       Pocket.Routers = {}
 
-    window.hoodie.admin.modules.find(moduleName).then (module) =>
+    window.hoodieAdmin.modules.find(moduleName).then (module) =>
       moduleViewName = @capitaliseFirstLetter(moduleName)+"View"
       # If module has a Router to handle its own subroutes
       if !Pocket.Routers[moduleViewName] and Pocket[moduleViewName]?.Router

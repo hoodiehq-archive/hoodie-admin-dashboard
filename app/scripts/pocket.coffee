@@ -21,18 +21,18 @@ class window.Pocket extends Backbone.Events
 
   #
   authenticate: =>
-    hoodie.admin.authenticate().then(@handleAuthenticateSuccess, @handleAuthenticateError)
+    hoodieAdmin.authenticate().then(@handleAuthenticateSuccess, @handleAuthenticateError)
 
   #
   handleAuthenticateSuccess: () =>
     @isAuthenticated = true;
     @$el.addClass 'authenticated'
-    hoodie.resolveWith @isAuthenticated
+    hoodieAdmin.resolveWith @isAuthenticated
 
   #
   handleAuthenticateError: () =>
     @isAuthenticated = false;
-    hoodie.resolveWith @isAuthenticated
+    hoodieAdmin.resolveWith @isAuthenticated
 
   #
   handleConditionalFormElements: (el, speed = 250) ->
@@ -69,7 +69,7 @@ class window.Pocket extends Backbone.Events
     # signout
     $("body").on "click", "a.signOut", (event) =>
       event.preventDefault()
-      hoodie.admin.signOut().done(@onSignOutSuccess).fail(@onSignOutFail)
+      hoodieAdmin.signOut().done(@onSignOutSuccess).fail(@onSignOutFail)
     # generic toggleable fieldset
     $("body").on "click", ".toggler", (event) ->
       $(@).toggleClass('open')
@@ -140,16 +140,16 @@ class window.Pocket extends Backbone.Events
 
   #
   handleSignInAndSignOut: ->
-    hoodie.account.on 'signin', =>
+    hoodieAdmin.account.on 'signin', =>
       @isAuthenticated = true;
       @app.render()
 
-    hoodie.account.on 'signout', =>
+    hoodieAdmin.account.on 'signout', =>
       @isAuthenticated = false;
       @app.render()
 
   loadAppInfo: =>
-    hoodie.admin.app.getInfo().pipe(@setAppInfo)
+    hoodieAdmin.app.getInfo().pipe(@setAppInfo)
 
   setAppInfo: (info) =>
     console.log 'info', info

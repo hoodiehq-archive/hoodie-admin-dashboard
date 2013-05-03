@@ -34,9 +34,9 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
   update : =>
     $.when(
-      hoodie.admin.users.findAll(),
-      hoodie.admin.modules.find('users'),
-      hoodie.admin.config.get()
+      hoodieAdmin.users.findAll(),
+      hoodieAdmin.modules.find('users'),
+      hoodieAdmin.config.get()
     ).then (users, object, appConfig) =>
       @totalUsers   = users.length
       @users        = users
@@ -57,7 +57,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
 
   updateConfig : (event) ->
     event.preventDefault()
-    window.promise = hoodie.admin.modules.update('module', 'users', @_updateModule)
+    window.promise = hoodieAdmin.modules.update('module', 'users', @_updateModule)
 
   emailTransportNotConfigured : ->
     isConfigured = @appConfig?.email?.transport?
@@ -72,8 +72,8 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
       $btn.attr('disabled', 'disabled')
       $btn.siblings('.submitMessage').text("Adding #{username}…")
 
-      ownerHash = hoodie.uuid()
-      hoodie.admin.users.add('user', {
+      ownerHash = hoodieAdmin.uuid()
+      hoodieAdmin.users.add('user', {
         id : username
         name : "user/#{username}"
         ownerHash : ownerHash
@@ -97,12 +97,12 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     event.preventDefault()
     id = $(event.currentTarget).closest("[data-id]").data('id');
     type = $(event.currentTarget).closest("[data-type]").data('type');
-    hoodie.admin.users.remove(type, id).then =>
+    hoodieAdmin.users.remove(type, id).then =>
       $('[data-id="'+id+'"]').remove()
       @update()
 
   editUser : (id) ->
-    $.when(hoodie.admin.users.find('user', id)).then (user) =>
+    $.when(hoodieAdmin.users.find('user', id)).then (user) =>
       @editableUser = user
       @render()
       return
@@ -124,7 +124,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     if password
       $btn.attr('disabled', 'disabled')
       $form.find('.submitMessage').text("Updating password")
-      hoodie.admin.users.update('user', id, {password: password})
+      hoodieAdmin.users.update('user', id, {password: password})
       .done (data) ->
         $btn.attr('disabled', null)
         $form.find('.submitMessage').text("Password updated")
@@ -138,7 +138,7 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     event.preventDefault()
     @searchQuery = $('input.search-query', event.currentTarget).val()
     $.when(
-      hoodie.admin.users.search(@searchQuery)
+      hoodieAdmin.users.search(@searchQuery)
     ).then (users) =>
       @users = users
       switch users.length

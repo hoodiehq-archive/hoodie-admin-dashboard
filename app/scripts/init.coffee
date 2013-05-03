@@ -6,7 +6,7 @@ else
   whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api")
 
 
-window.hoodie = new Hoodie(whereTheMagicHappens)
+window.hoodieAdmin = new HoodieAdmin(whereTheMagicHappens)
 
 # configure Backbone Layoutmanager
 Backbone.Layout.configure

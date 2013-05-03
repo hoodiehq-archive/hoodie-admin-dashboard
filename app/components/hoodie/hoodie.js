@@ -97,7 +97,7 @@ Hoodie = (function(_super) {
     if (this.baseUrl) {
       this.baseUrl = this.baseUrl.replace(/\/+$/, '');
     } else {
-      this.baseUrl = location.protocol + "//" + location.host + "/_api";
+      this.baseUrl = "/_api";
     }
     this.store = new this.constructor.LocalStore(this);
     this.config = new this.constructor.Config(this);
@@ -293,7 +293,7 @@ Hoodie.Account = (function() {
     }
     return this._withSingleRequest('authenticate', function() {
       return _this.request('GET', "/_session");
-    }).pipe(this._handleAuthenticateRequestSuccess, this._handleRequestError);
+    }).pipe(this._handleAuthenticateRequestSuccess, this._handleRequestError.bind(this));
   };
 
   Account.prototype.signUp = function(username, password) {
