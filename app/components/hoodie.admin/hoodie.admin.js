@@ -95,7 +95,7 @@ HoodieAdmin.Account = (function(_super) {
     this.username = 'admin';
     this._requests = {};
     noop = function() {};
-    _ref = ['signUp', 'destroy', 'anonymousSignUp', 'hasAnonymousAccount', 'setAnonymousPassword', 'getAnonymousPassword', 'removeAnonymousPassword', 'resetPassword', '_checkPasswordResetStatus'];
+    _ref = ['init', 'signUp', 'destroy', 'anonymousSignUp', 'hasAnonymousAccount', 'setAnonymousPassword', 'getAnonymousPassword', 'removeAnonymousPassword', 'resetPassword', '_checkPasswordResetStatus'];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       method = _ref[_i];
       this[method] = noop;

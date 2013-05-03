@@ -1,7 +1,7 @@
 {
   "name": "tablesort",
   "version": "0.0.0",
-  "commit": "931a9243db76f1705e8d4005bebe4c98a31031f1",
+  "commit": "cc43d60ed19afb6a80a9ec0e0adafd130d8dcf1e",
   "repository": {
     "type": "git",
     "url": "git://github.com/tristen/tablesort.git"

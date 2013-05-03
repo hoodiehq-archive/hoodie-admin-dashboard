@@ -21,7 +21,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Hoodie.Admin",
+            "title": "HoodieAdmin",
             "slug": "hoodieadmin",
             "isFileHeader": true
           },
@@ -31,8 +31,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "patchHoodie",
-                "slug": "patchhoodie"
+                "title": "trigger",
+                "slug": "trigger"
               },
               "depth": 2
             }, {
@@ -41,6 +41,22 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "level": 2,
                 "title": "on",
                 "slug": "on"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "request",
+                "slug": "request"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Open store",
+                "slug": "open-store"
               },
               "depth": 2
             }, {
@@ -67,26 +83,10 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "slug": "sign-out"
               },
               "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "getAppInfo",
-                "slug": "getappinfo"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "getStats",
-                "slug": "getstats"
-              },
-              "depth": 2
             }
           ]
         },
-        "title": "Hoodie.Admin"
+        "title": "HoodieAdmin"
       },
       "depth": 1,
       "outline": [
@@ -94,8 +94,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "type": "heading",
           "data": {
             "level": 2,
-            "title": "patchHoodie",
-            "slug": "patchhoodie"
+            "title": "trigger",
+            "slug": "trigger"
           },
           "depth": 2
         }, {
@@ -104,6 +104,22 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "level": 2,
             "title": "on",
             "slug": "on"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "request",
+            "slug": "request"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Open store",
+            "slug": "open-store"
           },
           "depth": 2
         }, {
@@ -130,7 +146,133 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "slug": "sign-out"
           },
           "depth": 2
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".coffee", "Cakefile"],
+          "pygmentsLexer": "coffee-script",
+          "singleLineComment": ["#"],
+          "name": "CoffeeScript"
+        },
+        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie_admin.account.coffee",
+        "projectPath": "src/hoodie_admin.account.coffee",
+        "targetPath": "hoodie_admin.account",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "HoodieAdmin.Account",
+            "slug": "hoodieadminaccount",
+            "isFileHeader": true
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "On",
+                "slug": "on"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Trigger",
+                "slug": "trigger"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Request",
+                "slug": "request"
+              },
+              "depth": 2
+            }
+          ]
+        },
+        "title": "HoodieAdmin.Account"
+      },
+      "depth": 1,
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "On",
+            "slug": "on"
+          },
+          "depth": 2
         }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Trigger",
+            "slug": "trigger"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Request",
+            "slug": "request"
+          },
+          "depth": 2
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".coffee", "Cakefile"],
+          "pygmentsLexer": "coffee-script",
+          "singleLineComment": ["#"],
+          "name": "CoffeeScript"
+        },
+        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie_admin.app.coffee",
+        "projectPath": "src/hoodie_admin.app.coffee",
+        "targetPath": "hoodie_admin.app",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "HoodieAdmin.App",
+            "slug": "hoodieadminapp",
+            "isFileHeader": true
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "getAppInfo",
+                "slug": "getappinfo"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "getStats",
+                "slug": "getstats"
+              },
+              "depth": 2
+            }
+          ]
+        },
+        "title": "HoodieAdmin.App"
+      },
+      "depth": 1,
+      "outline": [
+        {
           "type": "heading",
           "data": {
             "level": 2,
@@ -157,20 +299,20 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "singleLineComment": ["#"],
           "name": "CoffeeScript"
         },
-        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie.admin_config.coffee",
-        "projectPath": "src/hoodie.admin_config.coffee",
-        "targetPath": "hoodie.admin_config",
+        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie_admin.config.coffee",
+        "projectPath": "src/hoodie_admin.config.coffee",
+        "targetPath": "hoodie_admin.config",
         "firstHeader": {
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Hoodie.AdminConfig",
+            "title": "HoodieAdmin.Config",
             "slug": "hoodieadminconfig",
             "isFileHeader": true
           },
           "depth": 1
         },
-        "title": "Hoodie.AdminConfig"
+        "title": "HoodieAdmin.Config"
       },
       "depth": 1,
       "outline": []
@@ -183,20 +325,20 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "singleLineComment": ["#"],
           "name": "CoffeeScript"
         },
-        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie.admin_logs.coffee",
-        "projectPath": "src/hoodie.admin_logs.coffee",
-        "targetPath": "hoodie.admin_logs",
+        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie_admin.logs.coffee",
+        "projectPath": "src/hoodie_admin.logs.coffee",
+        "targetPath": "hoodie_admin.logs",
         "firstHeader": {
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Hoodie.AdminLogs",
+            "title": "HoodieAdmin.Logs",
             "slug": "hoodieadminlogs",
             "isFileHeader": true
           },
           "depth": 1
         },
-        "title": "Hoodie.AdminLogs"
+        "title": "HoodieAdmin.Logs"
       },
       "depth": 1,
       "outline": []
@@ -209,20 +351,20 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "singleLineComment": ["#"],
           "name": "CoffeeScript"
         },
-        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie.admin_modules.coffee",
-        "projectPath": "src/hoodie.admin_modules.coffee",
-        "targetPath": "hoodie.admin_modules",
+        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie_admin.modules.coffee",
+        "projectPath": "src/hoodie_admin.modules.coffee",
+        "targetPath": "hoodie_admin.modules",
         "firstHeader": {
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Hoodie.AdminModules",
+            "title": "HoodieAdmin.Modules",
             "slug": "hoodieadminmodules",
             "isFileHeader": true
           },
           "depth": 1
         },
-        "title": "Hoodie.AdminModules"
+        "title": "HoodieAdmin.Modules"
       },
       "depth": 1,
       "outline": []
@@ -235,20 +377,20 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "singleLineComment": ["#"],
           "name": "CoffeeScript"
         },
-        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie.admin_users.coffee",
-        "projectPath": "src/hoodie.admin_users.coffee",
-        "targetPath": "hoodie.admin_users",
+        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie_admin.users.coffee",
+        "projectPath": "src/hoodie_admin.users.coffee",
+        "targetPath": "hoodie_admin.users",
         "firstHeader": {
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Hoodie.AdminUsers",
+            "title": "HoodieAdmin.Users",
             "slug": "hoodieadminusers",
             "isFileHeader": true
           },
           "depth": 1
         },
-        "title": "Hoodie.AdminUsers"
+        "title": "HoodieAdmin.Users"
       },
       "depth": 1,
       "outline": []
