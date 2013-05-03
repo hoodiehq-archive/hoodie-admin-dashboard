@@ -1,5 +1,13 @@
 (function() {
-  window.hoodie = new Hoodie('/_api');
+  var whereTheMagicHappens;
+
+  if (location.hostname === 'localhost') {
+    whereTheMagicHappens = "http://pocket.dev/_api";
+  } else {
+    whereTheMagicHappens = location.protocol + "//" + location.hostname.replace(/^admin/, "api");
+  }
+
+  window.hoodieAdmin = new HoodieAdmin(whereTheMagicHappens);
 
   Backbone.Layout.configure({
     manage: true,
@@ -56,18 +64,18 @@
     };
 
     Pocket.prototype.authenticate = function() {
-      return hoodie.admin.authenticate().then(this.handleAuthenticateSuccess, this.handleAuthenticateError);
+      return hoodieAdmin.authenticate().then(this.handleAuthenticateSuccess, this.handleAuthenticateError);
     };
 
     Pocket.prototype.handleAuthenticateSuccess = function() {
       this.isAuthenticated = true;
       this.$el.addClass('authenticated');
-      return hoodie.resolveWith(this.isAuthenticated);
+      return hoodieAdmin.resolveWith(this.isAuthenticated);
     };
 
     Pocket.prototype.handleAuthenticateError = function() {
       this.isAuthenticated = false;
-      return hoodie.resolveWith(this.isAuthenticated);
+      return hoodieAdmin.resolveWith(this.isAuthenticated);
     };
 
     Pocket.prototype.handleConditionalFormElements = function(el, speed) {
@@ -110,7 +118,7 @@
       });
       $("body").on("click", "a.signOut", function(event) {
         event.preventDefault();
-        return hoodie.admin.signOut().done(_this.onSignOutSuccess).fail(_this.onSignOutFail);
+        return hoodieAdmin.signOut().done(_this.onSignOutSuccess).fail(_this.onSignOutFail);
       });
       return $("body").on("click", ".toggler", function(event) {
         $(this).toggleClass('open');
@@ -188,18 +196,18 @@
 
     Pocket.prototype.handleSignInAndSignOut = function() {
       var _this = this;
-      hoodie.account.on('signin', function() {
+      hoodieAdmin.account.on('signin', function() {
         _this.isAuthenticated = true;
         return _this.app.render();
       });
-      return hoodie.account.on('signout', function() {
+      return hoodieAdmin.account.on('signout', function() {
         _this.isAuthenticated = false;
         return _this.app.render();
       });
     };
 
     Pocket.prototype.loadAppInfo = function() {
-      return hoodie.admin.app.getInfo().pipe(this.setAppInfo);
+      return hoodieAdmin.app.getInfo().pipe(this.setAppInfo);
     };
 
     Pocket.prototype.setAppInfo = function(info) {
@@ -295,7 +303,7 @@
     };
 
     SidebarView.prototype.loadAppName = function() {
-      return window.hoodie.admin.app.getInfo().then(this.renderAppName);
+      return window.hoodieAdmin.app.getInfo().then(this.renderAppName);
     };
 
     SidebarView.prototype.renderAppName = function(appInfo) {
@@ -320,7 +328,7 @@
 
     SidebarView.prototype.updateUserCount = function(eventName, userObject) {
       var _this = this;
-      return $.when(window.hoodie.admin.users.getTotal()).then(function(totalUsers) {
+      return $.when(window.hoodieAdmin.users.getTotal()).then(function(totalUsers) {
         _this.totalUsers = totalUsers;
         return $('.sidebar .modules .users .name').text(_this.getUserModuleLabel(_this.totalUsers));
       });
@@ -329,11 +337,11 @@
     SidebarView.prototype.loadModules = function() {
       var debouncedUserCount;
       debouncedUserCount = _.debounce(this.updateUserCount, 300);
-      hoodie.admin.users.on("change", function(eventName, userObject) {
+      hoodieAdmin.users.on("change", function(eventName, userObject) {
         return debouncedUserCount(eventName, userObject);
       });
-      hoodie.admin.users.connect();
-      return $.when(window.hoodie.admin.modules.findAll(), window.hoodie.admin.users.getTotal()).then(this.renderModules);
+      hoodieAdmin.users.connect();
+      return $.when(window.hoodieAdmin.modules.findAll(), window.hoodieAdmin.users.getTotal()).then(this.renderModules);
     };
 
     SidebarView.prototype.renderModules = function(modules, totalUsers) {
@@ -614,7 +622,7 @@
 
     _Class.prototype.update = function() {
       var _this = this;
-      return $.when(hoodie.admin.users.findAll(), hoodie.admin.modules.find('users'), hoodie.admin.config.get()).then(function(users, object, appConfig) {
+      return $.when(hoodieAdmin.users.findAll(), hoodieAdmin.modules.find('users'), hoodieAdmin.config.get()).then(function(users, object, appConfig) {
         var _base;
         _this.totalUsers = users.length;
         _this.users = users;
@@ -638,7 +646,7 @@
 
     _Class.prototype.updateConfig = function(event) {
       event.preventDefault();
-      return window.promise = hoodie.admin.modules.update('module', 'users', this._updateModule);
+      return window.promise = hoodieAdmin.modules.update('module', 'users', this._updateModule);
     };
 
     _Class.prototype.emailTransportNotConfigured = function() {
@@ -656,8 +664,8 @@
       if (username && password) {
         $btn.attr('disabled', 'disabled');
         $btn.siblings('.submitMessage').text("Adding " + username + "…");
-        ownerHash = hoodie.uuid();
-        return hoodie.admin.users.add('user', {
+        ownerHash = hoodieAdmin.uuid();
+        return hoodieAdmin.users.add('user', {
           id: username,
           name: "user/" + username,
           ownerHash: ownerHash,
@@ -685,7 +693,7 @@
       event.preventDefault();
       id = $(event.currentTarget).closest("[data-id]").data('id');
       type = $(event.currentTarget).closest("[data-type]").data('type');
-      return hoodie.admin.users.remove(type, id).then(function() {
+      return hoodieAdmin.users.remove(type, id).then(function() {
         $('[data-id="' + id + '"]').remove();
         return _this.update();
       });
@@ -693,7 +701,7 @@
 
     _Class.prototype.editUser = function(id) {
       var _this = this;
-      return $.when(hoodie.admin.users.find('user', id)).then(function(user) {
+      return $.when(hoodieAdmin.users.find('user', id)).then(function(user) {
         _this.editableUser = user;
         _this.render();
       });
@@ -717,7 +725,7 @@
       if (password) {
         $btn.attr('disabled', 'disabled');
         $form.find('.submitMessage').text("Updating password");
-        return hoodie.admin.users.update('user', id, {
+        return hoodieAdmin.users.update('user', id, {
           password: password
         }).done(function(data) {
           $btn.attr('disabled', null);
@@ -735,7 +743,7 @@
       var _this = this;
       event.preventDefault();
       this.searchQuery = $('input.search-query', event.currentTarget).val();
-      return $.when(hoodie.admin.users.search(this.searchQuery)).then(function(users) {
+      return $.when(hoodieAdmin.users.search(this.searchQuery)).then(function(users) {
         _this.users = users;
         switch (users.length) {
           case 0:
@@ -825,7 +833,7 @@
 
     _Class.prototype.update = function() {
       var _this = this;
-      return hoodie.admin.config.get().then(function(config) {
+      return hoodieAdmin.config.get().then(function(config) {
         _this.config = config;
         return _this.render();
       });
@@ -840,7 +848,7 @@
       this.config = this._getConfigSkeleton();
       this.config.email.transport.auth.user = username;
       this.config.email.transport.auth.pass = password;
-      return promise = hoodie.admin.config.set(this.config).then(this.handleSubmitSuccess, this.handleSubmitError);
+      return promise = hoodieAdmin.config.set(this.config).then(this.handleSubmitSuccess, this.handleSubmitError);
     };
 
     _Class.prototype.handleSubmitError = function(error) {
@@ -911,7 +919,7 @@
       this.$el.find('#signIn').attr('disabled', 'disabled');
       event.preventDefault();
       password = this.$el.find('#signInPassword').val();
-      return hoodie.admin.signIn(password).done(this.onSignInSuccess).fail(this.onSignInFail);
+      return hoodieAdmin.signIn(password).done(this.onSignInSuccess).fail(this.onSignInFail);
     };
 
     MainView.prototype.onSignInFail = function() {
@@ -1006,7 +1014,7 @@
       console.log("dashboard: ");
       view = new Pocket.DashboardView;
       pocket.app.views.body.setView(".main", view);
-      return $.when(hoodie.admin.app.getStats(1358610679), hoodie.admin.config.get()).then(function(stats, appConfig) {
+      return $.when(hoodieAdmin.app.getStats(1358610679), hoodieAdmin.config.get()).then(function(stats, appConfig) {
         view.stats = stats;
         view.appConfig = appConfig;
         return view.render();
@@ -1019,7 +1027,7 @@
       if (!Pocket.Routers) {
         Pocket.Routers = {};
       }
-      return window.hoodie.admin.modules.find(moduleName).then(function(module) {
+      return window.hoodieAdmin.modules.find(moduleName).then(function(module) {
         var moduleViewName, view, _ref;
         moduleViewName = _this.capitaliseFirstLetter(moduleName) + "View";
         if (!Pocket.Routers[moduleViewName] && ((_ref = Pocket[moduleViewName]) != null ? _ref.Router : void 0)) {
