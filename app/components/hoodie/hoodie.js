@@ -261,14 +261,18 @@ Hoodie.Account = (function() {
     this.authenticate = __bind(this.authenticate, this);
     this._doc = {};
     this._requests = {};
+    this.init();
+  }
+
+  Account.prototype.init = function() {
     this.username = this.hoodie.config.get('_account.username');
     this.ownerHash = this.hoodie.config.get('_account.ownerHash');
     if (!this.ownerHash) {
       this._setOwner(this.hoodie.uuid());
     }
     window.setTimeout(this.authenticate);
-    this._checkPasswordResetStatus();
-  }
+    return this._checkPasswordResetStatus();
+  };
 
   Account.prototype.authenticate = function() {
     var _ref, _ref1,
@@ -293,7 +297,7 @@ Hoodie.Account = (function() {
     }
     return this._withSingleRequest('authenticate', function() {
       return _this.request('GET', "/_session");
-    }).pipe(this._handleAuthenticateRequestSuccess, this._handleRequestError.bind(this));
+    }).pipe(this._handleAuthenticateRequestSuccess, this._handleRequestError);
   };
 
   Account.prototype.signUp = function(username, password) {
