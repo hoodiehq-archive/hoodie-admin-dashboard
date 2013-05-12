@@ -15093,6 +15093,7 @@ HoodieAdmin.Users = (function(_super) {
 
   function Users(hoodie) {
     this.hoodie = hoodie;
+    this._handlePullResults = __bind(this._handlePullResults, this);
     this._mapDocsFromFindAll = __bind(this._mapDocsFromFindAll, this);
     Users.__super__.constructor.call(this, this.hoodie);
   }
@@ -15181,6 +15182,13 @@ HoodieAdmin.Users = (function(_super) {
     return rows.map(function(row) {
       return row.doc;
     });
+  };
+
+  Users.prototype._handlePullResults = function(changes) {
+    changes = changes.filter(function(change) {
+      return /^org\.couchdb\.user:user(_anonymous)?\/[^\/]+$/.test(change.id);
+    });
+    return Users.__super__._handlePullResults.call(this, changes);
   };
 
   Users.prototype._signUpUser = function(ownerHash, username, password) {
