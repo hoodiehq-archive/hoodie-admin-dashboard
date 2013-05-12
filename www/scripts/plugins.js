@@ -15176,7 +15176,7 @@ HoodieAdmin.Users = (function(_super) {
   Users.prototype._mapDocsFromFindAll = function(response) {
     var rows;
     rows = response.rows.filter(function(row) {
-      return /^org\.couchdb\.user:/.test(row.id);
+      return /^org\.couchdb\.user:user(_anonymous)?\/[^\/]+$/.test(row.id);
     });
     return rows.map(function(row) {
       return row.doc;
