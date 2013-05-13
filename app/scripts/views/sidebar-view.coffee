@@ -10,7 +10,7 @@ class Pocket.SidebarView extends Pocket.BaseView
 
   afterRender: ->
     @loadAppName()
-    pocket.router.bind "all", (route) =>
+    Backbone.history.bind "all", (route) =>
       @handleNavigationStates Backbone.history.fragment
     @loadModules()
     super
