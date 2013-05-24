@@ -105,6 +105,10 @@ class window.Pocket extends Backbone.Events
         return "please-reply@"+pocket.appInfo.name
       return pocket.appInfo.defaultReplyEmailAddress
 
+    Handlebars.registerHelper 'linkToFutonUser', (userName) ->
+      couchUrl = hoodieAdmin.baseUrl.replace('http://', 'http://couch.').replace('_api', '_utils')
+      return couchUrl + '/document.html?_users/org.couchdb.user:' + userName
+
     Handlebars.registerHelper "debug", (optionalValue) ->
       console.log("\nCurrent Context");
       console.log("====================");

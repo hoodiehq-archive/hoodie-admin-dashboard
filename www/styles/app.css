@@ -2171,7 +2171,7 @@ table .span24 {
   *margin-right: .3em;
   line-height: 14px;
   vertical-align: text-top;
-  background-image: url('../../app/images/glyphicons-halflings.png?1358768137');
+  background-image: url('../../app/images/../../images/glyphicons-halflings.png');
   background-position: 14px 14px;
   background-repeat: no-repeat;
   margin-top: 1px;
@@ -2186,12 +2186,12 @@ table .span24 {
 .dropdown-menu > li > a:hover > [class*=" icon-"],
 .dropdown-menu > .active > a > [class^="icon-"],
 .dropdown-menu > .active > a > [class*=" icon-"] {
-  background-image: url('../../app/images/glyphicons-halflings-white.png?1358768137');
+  background-image: url('../../app/images/../../images/glyphicons-halflings-white.png');
 }
 
 /* line 42, ../../app/styles/compass_twitter_bootstrap/_sprites.scss */
 .icon-glass {
-  background-position: 0 0;
+  background-position: 0      0;
 }
 
 /* line 43, ../../app/styles/compass_twitter_bootstrap/_sprites.scss */
@@ -6196,7 +6196,7 @@ a {
   color: #693c10;
   position: relative;
   padding: .5em;
-  margin: -.5em;
+  margin: -0.5em;
 }
 
 /* line 71, ../../app/styles/main.scss */
@@ -6726,18 +6726,55 @@ table.users a:hover {
   text-decoration: underline;
 }
 
+/* line 487, ../../app/styles/main.scss */
+.inTableError {
+  cursor: pointer;
+}
 /* line 489, ../../app/styles/main.scss */
+.inTableError:hover > .errorTooltip {
+  display: block;
+}
+
+/* line 494, ../../app/styles/main.scss */
+table.users .error {
+  color: #be1522;
+  margin-right: 8px;
+}
+
+/* line 499, ../../app/styles/main.scss */
+.errorTooltip {
+  display: none;
+  position: absolute;
+  width: 250px;
+  background: #FFF;
+  padding: 1em;
+  border: 3px solid #EEE;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  margin-left: -180px;
+  margin-top: -2.55em;
+}
+/* line 509, ../../app/styles/main.scss */
+.errorTooltip strong {
+  margin-left: 8px;
+  text-transform: capitalize;
+}
+
+/* line 517, ../../app/styles/main.scss */
 th.sort-header {
   cursor: pointer;
 }
 
-/* line 493, ../../app/styles/main.scss */
+/* line 521, ../../app/styles/main.scss */
 th.sort-header::-moz-selection,
 th.sort-header::selection {
   background: transparent;
 }
 
-/* line 496, ../../app/styles/main.scss */
+/* line 524, ../../app/styles/main.scss */
 table th.sort-header:after {
   content: '';
   float: right;
@@ -6748,12 +6785,12 @@ table th.sort-header:after {
   visibility: hidden;
 }
 
-/* line 505, ../../app/styles/main.scss */
+/* line 533, ../../app/styles/main.scss */
 table th.sort-header:hover:after {
   visibility: visible;
 }
 
-/* line 510, ../../app/styles/main.scss */
+/* line 538, ../../app/styles/main.scss */
 table th.sort-up:after,
 table th.sort-down:after,
 table th.sort-down:hover:after {
@@ -6761,7 +6798,7 @@ table th.sort-down:hover:after {
   opacity: 0.4;
 }
 
-/* line 514, ../../app/styles/main.scss */
+/* line 542, ../../app/styles/main.scss */
 table th.sort-up:after {
   border-bottom: none;
   border-width: 4px 4px 0;

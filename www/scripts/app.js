@@ -159,6 +159,11 @@
         }
         return pocket.appInfo.defaultReplyEmailAddress;
       });
+      Handlebars.registerHelper('linkToFutonUser', function(userName) {
+        var couchUrl;
+        couchUrl = hoodieAdmin.baseUrl.replace('http://', 'http://couch.').replace('_api', '_utils');
+        return couchUrl + '/document.html?_users/org.couchdb.user:' + userName;
+      });
       Handlebars.registerHelper("debug", function(optionalValue) {
         console.log("\nCurrent Context");
         console.log("====================");
@@ -295,7 +300,7 @@
     SidebarView.prototype.afterRender = function() {
       var _this = this;
       this.loadAppName();
-      pocket.router.bind("all", function(route) {
+      Backbone.history.bind("all", function(route) {
         return _this.handleNavigationStates(Backbone.history.fragment);
       });
       this.loadModules();
@@ -1249,7 +1254,7 @@ function program4(depth0,data) {
   stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(13, program13, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data});
+  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(19, program19, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n";
   return buffer;
@@ -1335,19 +1340,50 @@ function program14(depth0,data) {
   if (stack2 = helpers.signedUpAt) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.signedUpAt; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "</td>\n        <td class=\"no-sort\">";
-  if (stack2 = helpers.$state) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.$state; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "</td>\n        <td class=\"no-sort\"><a href=\"#modules/users/user/";
+    + "</td>\n        <td class=\"no-sort\">\n          ";
+  stack2 = helpers['if'].call(depth0, depth0.$error, {hash:{},inverse:self.program(17, program17, data),fn:self.program(15, program15, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n        </td>\n        <td class=\"no-sort\"><a href=\"#modules/users/user/";
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "\" class=\"edit\">edit</a> / <a href=\"#\" class=\"remove\">delete</a></td>\n      </tr>\n      ";
   return buffer;
   }
+function program15(depth0,data) {
+  
+  var buffer = "", stack1, stack2, options;
+  buffer += "\n            <div class=\"inTableError\">\n              <span class=\"error\">";
+  if (stack1 = helpers.$state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.$state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</span><i class=\"icon-warning-sign\"></i>\n              <div class=\"errorTooltip\">\n                <i class=\"icon-warning-sign\"></i><strong>"
+    + escapeExpression(((stack1 = ((stack1 = depth0.$error),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</strong>\n                <p>"
+    + escapeExpression(((stack1 = ((stack1 = depth0.$error),stack1 == null || stack1 === false ? stack1 : stack1.message)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</p>\n                <p><a href=\"";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.linkToFutonUser),stack1 ? stack1.call(depth0, depth0.name, options) : helperMissing.call(depth0, "linkToFutonUser", depth0.name, options)))
+    + "\">";
+  if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "'s user page in Futon</a></p>\n              </div>\n            </div>\n          ";
+  return buffer;
+  }
 
-function program16(depth0,data) {
+function program17(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n            ";
+  if (stack1 = helpers.$state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.$state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\n          ";
+  return buffer;
+  }
+
+function program19(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";

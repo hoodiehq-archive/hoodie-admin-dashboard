@@ -204,7 +204,20 @@
         <td>{{id}}</td>
         <td>{{lastLogin}}</td>
         <td data-sort="{{convertISOToTimestamp signedUpAt}}" class="timeago" title="{{signedUpAt}}">{{signedUpAt}}</td>
-        <td class="no-sort">{{$state}}</td>
+        <td class="no-sort">
+          {{#if $error}}
+            <div class="inTableError">
+              <span class="error">{{$state}}</span><i class="icon-warning-sign"></i>
+              <div class="errorTooltip">
+                <i class="icon-warning-sign"></i><strong>{{$error.name}}</strong>
+                <p>{{$error.message}}</p>
+                <p><a href="{{linkToFutonUser name}}">{{id}}'s user page in Futon</a></p>
+              </div>
+            </div>
+          {{else}}
+            {{$state}}
+          {{/if}}
+        </td>
         <td class="no-sort"><a href="#modules/users/user/{{id}}" class="edit">edit</a> / <a href="#" class="remove">delete</a></td>
       </tr>
       {{/each}}

@@ -133,8 +133,11 @@ $zindexModal:             1050 !default;
 
 // Sprite icons path
 // -------------------------
-$iconSpritePath:          "glyphicons-halflings.png" !default;
-$iconWhiteSpritePath:     "glyphicons-halflings-white.png" !default;
+//
+// These paths throw a compass error, but actually work.
+// When they don't throw an error, they don't work. Progress!
+$iconSpritePath:          "../../images/glyphicons-halflings.png" !default;
+$iconWhiteSpritePath:     "../../images/glyphicons-halflings-white.png" !default;
 
 
 // Input placeholder text color

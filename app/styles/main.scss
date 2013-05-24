@@ -484,6 +484,34 @@ table.users a{
   }
 }
 
+.inTableError{
+  cursor: pointer;
+  &:hover > .errorTooltip{
+    display: block;
+  }
+}
+
+table.users .error{
+  color: $red;
+  margin-right: 8px;
+}
+
+.errorTooltip{
+  display: none;
+  position: absolute;
+  width: 250px;
+  background: #FFF;
+  padding: 1em;
+  border: 3px solid #EEE;
+  @include border-radius(5px);
+  margin-left: -180px;
+  margin-top: -2.55em;
+  strong{
+    margin-left: 8px;
+    text-transform: capitalize;
+  }
+}
+
 // tablesort styles
 
 th.sort-header {
