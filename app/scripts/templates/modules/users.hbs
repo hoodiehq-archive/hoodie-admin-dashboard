@@ -194,7 +194,7 @@
         <th data-sort-by="username">Username</th>
         <th data-sort-by="lastSeen">Last seen</th>
         <th data-sort-by="signupDate">Signup date</th>
-        <th class="no-sort">State</th>
+        <th data-sort-by="state">State</th>
         <th class="no-sort"></th>
       </tr>
     </thead>
@@ -204,7 +204,7 @@
         <td>{{id}}</td>
         <td>{{lastLogin}}</td>
         <td data-sort="{{convertISOToTimestamp signedUpAt}}" class="timeago" title="{{signedUpAt}}">{{signedUpAt}}</td>
-        <td class="no-sort">
+        <td>
           {{#if $error}}
             <div class="inTableError">
               <span class="error">{{$state}}</span><i class="icon-warning-sign"></i>
