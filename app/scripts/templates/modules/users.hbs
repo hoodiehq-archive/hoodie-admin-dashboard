@@ -215,10 +215,14 @@
               </div>
             </div>
           {{else}}
-            {{$state}}
+            {{#if $state}}
+              {{$state}}
+            {{else}}
+              <span class="warn">unconfirmed</span><i class="icon-question-sign"></i>
+            {{/if}}
           {{/if}}
         </td>
-        <td class="no-sort"><a href="#modules/users/user/{{id}}" class="edit">edit</a> / <a href="#" class="remove">delete</a></td>
+        <td class="no-sort"><a href="#modules/users/user/{{id}}" class="edit">edit</a> / <a href="#" class="remove">delete</a> / <a href="{{linkToFutonUser name}}">futon</a></td>
       </tr>
       {{/each}}
     </tbody>

@@ -496,6 +496,11 @@ table.users .error{
   margin-right: 8px;
 }
 
+table.users .warn{
+  color: $yellow;
+  margin-right: 8px;
+}
+
 .errorTooltip{
   display: none;
   position: absolute;

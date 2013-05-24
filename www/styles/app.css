@@ -6742,6 +6742,12 @@ table.users .error {
 }
 
 /* line 499, ../../app/styles/main.scss */
+table.users .warn {
+  color: #f9b233;
+  margin-right: 8px;
+}
+
+/* line 504, ../../app/styles/main.scss */
 .errorTooltip {
   display: none;
   position: absolute;
@@ -6757,24 +6763,24 @@ table.users .error {
   margin-left: -180px;
   margin-top: -2.55em;
 }
-/* line 509, ../../app/styles/main.scss */
+/* line 514, ../../app/styles/main.scss */
 .errorTooltip strong {
   margin-left: 8px;
   text-transform: capitalize;
 }
 
-/* line 517, ../../app/styles/main.scss */
+/* line 522, ../../app/styles/main.scss */
 th.sort-header {
   cursor: pointer;
 }
 
-/* line 521, ../../app/styles/main.scss */
+/* line 526, ../../app/styles/main.scss */
 th.sort-header::-moz-selection,
 th.sort-header::selection {
   background: transparent;
 }
 
-/* line 524, ../../app/styles/main.scss */
+/* line 529, ../../app/styles/main.scss */
 table th.sort-header:after {
   content: '';
   float: right;
@@ -6785,12 +6791,12 @@ table th.sort-header:after {
   visibility: hidden;
 }
 
-/* line 533, ../../app/styles/main.scss */
+/* line 538, ../../app/styles/main.scss */
 table th.sort-header:hover:after {
   visibility: visible;
 }
 
-/* line 538, ../../app/styles/main.scss */
+/* line 543, ../../app/styles/main.scss */
 table th.sort-up:after,
 table th.sort-down:after,
 table th.sort-down:hover:after {
@@ -6798,7 +6804,7 @@ table th.sort-down:hover:after {
   opacity: 0.4;
 }
 
-/* line 542, ../../app/styles/main.scss */
+/* line 547, ../../app/styles/main.scss */
 table th.sort-up:after {
   border-bottom: none;
   border-width: 4px 4px 0;

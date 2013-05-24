@@ -1254,7 +1254,7 @@ function program4(depth0,data) {
   stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(13, program13, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(19, program19, data),data:data});
+  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(22, program22, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n";
   return buffer;
@@ -1347,7 +1347,10 @@ function program14(depth0,data) {
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "\" class=\"edit\">edit</a> / <a href=\"#\" class=\"remove\">delete</a></td>\n      </tr>\n      ";
+    + "\" class=\"edit\">edit</a> / <a href=\"#\" class=\"remove\">delete</a> / <a href=\"";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.linkToFutonUser),stack1 ? stack1.call(depth0, depth0.name, options) : helperMissing.call(depth0, "linkToFutonUser", depth0.name, options)))
+    + "\">futon</a></td>\n      </tr>\n      ";
   return buffer;
   }
 function program15(depth0,data) {
@@ -1376,14 +1379,29 @@ function program17(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\n            ";
+  stack1 = helpers['if'].call(depth0, depth0.$state, {hash:{},inverse:self.program(20, program20, data),fn:self.program(18, program18, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n          ";
+  return buffer;
+  }
+function program18(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n              ";
   if (stack1 = helpers.$state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.$state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\n          ";
+    + "\n            ";
   return buffer;
   }
 
-function program19(depth0,data) {
+function program20(depth0,data) {
+  
+  
+  return "\n              <span class=\"warn\">unconfirmed</span><i class=\"icon-question-sign\"></i>\n            ";
+  }
+
+function program22(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
