@@ -549,4 +549,18 @@ table th.sort-up:after {
   border-width:4px 4px 0;
 }
 
+// Modal changes
+//
+
+.modal{
+  outline: none;
+}
+
+.modal-backdrop{
+  background-color: $sidebarBG;
+}
+
+.modal-footer{
+  background-color: $sidebarBG;
+}
 

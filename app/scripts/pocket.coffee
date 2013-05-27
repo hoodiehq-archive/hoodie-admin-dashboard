@@ -105,6 +105,7 @@ class window.Pocket extends Backbone.Events
         return "please-reply@"+pocket.appInfo.name
       return pocket.appInfo.defaultReplyEmailAddress
 
+    # Generates the Futon URL for a given username
     Handlebars.registerHelper 'linkToFutonUser', (userName) ->
       couchUrl = hoodieAdmin.baseUrl.replace('http://', 'http://couch.').replace('_api', '_utils')
       return couchUrl + '/document.html?_users/org.couchdb.user:' + userName

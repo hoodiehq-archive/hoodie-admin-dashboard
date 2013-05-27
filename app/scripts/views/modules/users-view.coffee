@@ -25,8 +25,9 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     'submit form.form-search'                     : 'search'
     'submit form.updatePassword'                  : 'updatePassword'
     'submit form.updateUsername'                  : 'updateUsername'
-    'click .addUser button[type="submit"]'    : 'addUser'
-    'click .user a.remove'                        : 'removeUser'
+    'click .addUser button[type="submit"]'        : 'addUser'
+    'click .user a.removeUserPrompt'              : 'removeUserPrompt'
+    'click #confirmUserRemoveModal .removeUser'   : 'removeUser'
     'click .clearSearch'                          : 'clearSearch'
 
   constructor : ->
@@ -93,12 +94,26 @@ class Pocket.ModulesView['module-users'] extends Pocket.ModulesBaseView
     else
       $btn.siblings('.submitMessage').text("Please enter a username and a password")
 
-  removeUser : (event) =>
+  removeUserPrompt : (event) =>
     event.preventDefault()
     id = $(event.currentTarget).closest("[data-id]").data('id');
     type = $(event.currentTarget).closest("[data-type]").data('type');
+    $('#confirmUserRemoveModal')
+      .modal('show')
+      .data
+        id: id
+        type: type
+      .find('.modal-body').text('Really remove the user '+id+'? This cannot be undone!').end()
+      .find('.modal-title').text('Remove user '+id).end()
+    #removeUser(event)
+
+  removeUser : (event) =>
+    event.preventDefault()
+    id = $('#confirmUserRemoveModal').data('id');
+    type = $('#confirmUserRemoveModal').data('type');
     hoodieAdmin.users.remove(type, id).then =>
       $('[data-id="'+id+'"]').remove()
+      $('#confirmUserRemoveModal').modal('hide')
       @update()
 
   editUser : (id) ->

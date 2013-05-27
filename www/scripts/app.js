@@ -608,7 +608,8 @@
       'submit form.updatePassword': 'updatePassword',
       'submit form.updateUsername': 'updateUsername',
       'click .addUser button[type="submit"]': 'addUser',
-      'click .user a.remove': 'removeUser',
+      'click .user a.removeUserPrompt': 'removeUserPrompt',
+      'click #confirmUserRemoveModal .removeUser': 'removeUser',
       'click .clearSearch': 'clearSearch'
     };
 
@@ -620,6 +621,8 @@
       this.beforeRender = __bind(this.beforeRender, this);
 
       this.removeUser = __bind(this.removeUser, this);
+
+      this.removeUserPrompt = __bind(this.removeUserPrompt, this);
 
       this.update = __bind(this.update, this);
       _Class.__super__.constructor.apply(this, arguments);
@@ -692,14 +695,26 @@
       }
     };
 
+    _Class.prototype.removeUserPrompt = function(event) {
+      var id, type;
+      event.preventDefault();
+      id = $(event.currentTarget).closest("[data-id]").data('id');
+      type = $(event.currentTarget).closest("[data-type]").data('type');
+      return $('#confirmUserRemoveModal').modal('show').data({
+        id: id,
+        type: type
+      }).find('.modal-body').text('Really remove the user ' + id + '? This cannot be undone!').end().find('.modal-title').text('Remove user ' + id).end();
+    };
+
     _Class.prototype.removeUser = function(event) {
       var id, type,
         _this = this;
       event.preventDefault();
-      id = $(event.currentTarget).closest("[data-id]").data('id');
-      type = $(event.currentTarget).closest("[data-type]").data('type');
+      id = $('#confirmUserRemoveModal').data('id');
+      type = $('#confirmUserRemoveModal').data('type');
       return hoodieAdmin.users.remove(type, id).then(function() {
         $('[data-id="' + id + '"]').remove();
+        $('#confirmUserRemoveModal').modal('hide');
         return _this.update();
       });
     };
@@ -1124,7 +1139,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<a href=\"#\" class=\"signOut\">Sign out</a>\n\n<div class=\"sidebar\">\n\n</div>\n<div class=\"main\">\n\n</div>\n";
+  return "<a href=\"#\" class=\"signOut\">Sign out</a>\n\n<div class=\"sidebar\">\n\n</div>\n<div class=\"main\">\n\n</div>";
   });
 
 this["JST"]["module"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -1343,14 +1358,14 @@ function program14(depth0,data) {
     + "</td>\n        <td>\n          ";
   stack2 = helpers['if'].call(depth0, depth0.$error, {hash:{},inverse:self.program(17, program17, data),fn:self.program(15, program15, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n        </td>\n        <td class=\"no-sort\"><a href=\"#modules/users/user/";
+  buffer += "\n        </td>\n        <td class=\"no-sort\">\n          <a href=\"#modules/users/user/";
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "\" class=\"edit\">edit</a> / <a href=\"#\" class=\"remove\">delete</a> / <a href=\"";
+    + "\" class=\"edit\">edit</a> /\n          <a href=\"#\" class=\"removeUserPrompt\">delete</a> /\n          <a href=\"";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers.linkToFutonUser),stack1 ? stack1.call(depth0, depth0.name, options) : helperMissing.call(depth0, "linkToFutonUser", depth0.name, options)))
-    + "\">futon</a></td>\n      </tr>\n      ";
+    + "\">futon</a>\n        </td>\n      </tr>\n      ";
   return buffer;
   }
 function program15(depth0,data) {
@@ -1423,7 +1438,7 @@ function program22(depth0,data) {
     + "\">\n  ";
   stack2 = helpers['if'].call(depth0, depth0.editableUser, {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n</div>\n";
+  buffer += "\n</div>\n\n<div id=\"confirmUserRemoveModal\" class=\"modal hide fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n  <div class=\"modal-header\">\n    <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">×</button>\n    <h3 class=\"modal-title\"></h3>\n  </div>\n  <div class=\"modal-body\">\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"closeModal btn\" data-dismiss=\"modal\" aria-hidden=\"true\">Cancel</button>\n    <button class=\"removeUser btn btn-danger\">Remove user</button>\n  </div>\n</div>\n";
   return buffer;
   });
 

@@ -222,7 +222,11 @@
             {{/if}}
           {{/if}}
         </td>
-        <td class="no-sort"><a href="#modules/users/user/{{id}}" class="edit">edit</a> / <a href="#" class="remove">delete</a> / <a href="{{linkToFutonUser name}}">futon</a></td>
+        <td class="no-sort">
+          <a href="#modules/users/user/{{id}}" class="edit">edit</a> /
+          <a href="#" class="removeUserPrompt">delete</a> /
+          <a href="{{linkToFutonUser name}}">futon</a>
+        </td>
       </tr>
       {{/each}}
     </tbody>
@@ -235,4 +239,17 @@
   </div>
   {{/if}}
 {{/if}}
+</div>
+
+<div id="confirmUserRemoveModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 class="modal-title"></h3>
+  </div>
+  <div class="modal-body">
+  </div>
+  <div class="modal-footer">
+    <button class="closeModal btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <button class="removeUser btn btn-danger">Remove user</button>
+  </div>
 </div>

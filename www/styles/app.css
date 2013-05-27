@@ -6809,3 +6809,18 @@ table th.sort-up:after {
   border-bottom: none;
   border-width: 4px 4px 0;
 }
+
+/* line 555, ../../app/styles/main.scss */
+.modal {
+  outline: none;
+}
+
+/* line 559, ../../app/styles/main.scss */
+.modal-backdrop {
+  background-color: #f7f2ec;
+}
+
+/* line 563, ../../app/styles/main.scss */
+.modal-footer {
+  background-color: #f7f2ec;
+}
