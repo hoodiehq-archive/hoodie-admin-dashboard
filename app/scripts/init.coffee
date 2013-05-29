@@ -1,4 +1,4 @@
-if (location.hostname is 'localhost')
+if (location.hostname is 'localhost' and location.port is "9000")
   # debug mode, connect to
   # some existing hoodie app.
   whereTheMagicHappens = "http://pocket.dev/_api"

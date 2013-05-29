@@ -1,7 +1,7 @@
 (function() {
   var whereTheMagicHappens;
 
-  if (location.hostname === 'localhost') {
+  if (location.hostname === 'localhost' && location.port === "9000") {
     whereTheMagicHappens = "http://pocket.dev/_api";
   } else {
     whereTheMagicHappens = void 0;
