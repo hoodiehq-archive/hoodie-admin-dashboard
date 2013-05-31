@@ -2,6 +2,10 @@
   "author": "hood.ie",
   "name": "hoodie-pocket",
   "version": "0.0.10",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoodiehq/pocket.git"
+  },
   "dependencies": {
     "hoodie-app": "git://github.com/hoodiehq/hoodie-app.git",
     "worker-users": "git://github.com/hoodiehq/worker-users.git",
