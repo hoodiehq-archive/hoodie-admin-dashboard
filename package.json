@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "hoodie-app": "git://github.com/hoodiehq/hoodie-app.git",
-    "worker-users": "git://github.com/hoodiehq/worker-users.git",
-    "worker-shares": "git://github.com/hoodiehq/worker-shares.git",
-    "worker-email-out": "git://github.com/hoodiehq/worker-email-out.git"
+    "hoodie-worker-users": "git://github.com/hoodiehq/worker-users.git",
+    "hoodie-worker-shares": "git://github.com/hoodiehq/worker-shares.git",
+    "hoodie-worker-email-out": "git://github.com/hoodiehq/worker-email-out.git"
   },
   "scripts": {
     "start": "node node_modules/hoodie-app/lib/hoodie-app.js"
