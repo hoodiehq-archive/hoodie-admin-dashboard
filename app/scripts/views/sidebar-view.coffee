@@ -12,11 +12,11 @@ class Pocket.SidebarView extends Pocket.BaseView
     @loadAppName()
     Backbone.history.bind "all", (route) =>
       @handleNavigationStates Backbone.history.fragment
-    @loadModules()
+    @loadPlugins()
     super
 
   loadAppName: ->
-    window.hoodieAdmin.app.getInfo().then(@renderAppName)
+    hoodieAdmin.app.getInfo().then(@renderAppName)
 
   renderAppName: (@appInfo) =>
     @$el.find('header .appName a').text @appInfo.name
@@ -24,7 +24,7 @@ class Pocket.SidebarView extends Pocket.BaseView
       maxfontsize: 20
     })
 
-  getUserModuleLabel: (@totalUsers) ->
+  getUserPluginLabel: (@totalUsers) ->
     switch @totalUsers
       when 0
         @label = "No users"
@@ -35,32 +35,32 @@ class Pocket.SidebarView extends Pocket.BaseView
 
   updateUserCount: (eventName, userObject) =>
     $.when(
-      window.hoodieAdmin.users.getTotal()
+      hoodieAdmin.users.getTotal()
     ).then (@totalUsers) =>
-      $('.sidebar .modules .users .name').text(@getUserModuleLabel(@totalUsers))
+      $('.sidebar .plugins .users .name').text(@getUserPluginLabel(@totalUsers))
 
-  loadModules: ->
+  loadPlugins: ->
     debouncedUserCount = _.debounce(@updateUserCount, 300)
     hoodieAdmin.users.on "change", (eventName, userObject) ->
       debouncedUserCount(eventName, userObject)
     hoodieAdmin.users.connect();
     $.when(
-      window.hoodieAdmin.modules.findAll(),
-      window.hoodieAdmin.users.getTotal()
-    ).then @renderModules
+      hoodieAdmin.plugins.findAll(),
+      hoodieAdmin.users.getTotal()
+    ).then @renderPlugins
 
-  # Generates module menu with badges
-  renderModules: (@modules, @totalUsers) =>
-    for key, module of @modules
-      module.url = module.id
-      module.cleanName = @makeURLHuman module.url
-      # Special treatment for the users module: show user amount
-      if module.cleanName is "Users"
-        module.cleanName = @getUserModuleLabel(@totalUsers)
-      module.badgeStatus = 'badge-'+module.status
-      if module.messages
-        module.messageAmount = module.messages.length
+  # Generates plugin menu with badges
+  renderPlugins: (@plugins, @totalUsers) =>
+    for key, plugin of @plugins
+      plugin.url = plugin.name
+      plugin.cleanName = plugin.title
+      # Special treatment for the users plugin: show user amount
+      if plugin.cleanName is "Users"
+        plugin.cleanName = @getUserPluginLabel(@totalUsers)
+      plugin.badgeStatus = 'badge-'+plugin.status
+      if plugin.messages
+        plugin.messageAmount = plugin.messages.length
       else
-        module.messageAmount = ''
+        plugin.messageAmount = ''
 
-    @$el.find('nav ul.modules').html JST['sidebar-modules'](this)
+    @$el.find('nav ul.plugins').html JST['sidebar-plugins'](this)

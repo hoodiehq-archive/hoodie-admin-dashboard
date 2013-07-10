@@ -2,8 +2,8 @@ class Pocket.Router extends Backbone.Router
 
   routes:
     ""                                  : "dashboard"
-    "modules/:moduleName"               : "modules"
-    "modules/:moduleName/*subroute"     : "modules"
+    "plugins/:pluginName"               : "plugins"
+    "plugins/:pluginName/*subroute"     : "plugins"
 
   dashboard: ->
     console.log("dashboard: ");
@@ -18,25 +18,23 @@ class Pocket.Router extends Backbone.Router
       view.appConfig = appConfig
       view.render()
 
-  modules: (moduleName, subroute) ->
-    console.log("modules: ",moduleName, subroute);
+  plugins: (pluginName, subroute) ->
+    console.log("plugins: ",pluginName, subroute);
 
     unless Pocket.Routers
       Pocket.Routers = {}
 
-    window.hoodieAdmin.modules.find(moduleName).then (module) =>
-      moduleViewName = @capitaliseFirstLetter(moduleName)+"View"
-      # If module has a Router to handle its own subroutes
-      if !Pocket.Routers[moduleViewName] and Pocket[moduleViewName]?.Router
-        Pocket.Routers[moduleViewName] = new Pocket[moduleViewName].Router('modules/'+moduleName, {createTrailingSlashRoutes: true});
-      else
-        # Module has no routes of its own
-        view = new Pocket.ModulesView
-        pocket.app.views.body.setView(".main", view)
-        view.module = module
-        view.render()
+
+    hoodieAdmin.plugins.getConfig(pluginName).then (config) =>
+      pluginViewName = @capitaliseFirstLetter(pluginName)+"View"
+
+      view = new Pocket.PluginsView
+      pocket.app.views.body.setView(".main", view)
+      view.plugin = {
+        name: pluginName,
+        config: config
+      }
+      view.render()
 
   capitaliseFirstLetter : (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)
-
-

@@ -9,7 +9,7 @@ class window.Pocket extends Backbone.Events
     @registerListeners()
     @handleSignInAndSignOut()
 
-    $.when(@loadAppInfo(), @authenticate()).then =>
+    $.when(@loadAppInfo(), @loadAppConfig(), @authenticate()).then =>
       @router = new Pocket.Router
       @app    = new Pocket.ApplicationView
 
@@ -155,6 +155,9 @@ class window.Pocket extends Backbone.Events
 
   loadAppInfo: =>
     hoodieAdmin.app.getInfo().pipe(@setAppInfo)
+
+  loadAppConfig: =>
+    hoodieAdmin.config.reload()
 
   setAppInfo: (info) =>
     console.log 'info', info
