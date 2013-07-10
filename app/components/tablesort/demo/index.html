@@ -8,18 +8,19 @@
 </head>
 <body onload='prettyPrint()'>
 
- <div id='masthead'>
-  <div class='limiter clearfix'>
-    <div class='col col1'>
+<div id='masthead'>
+  <div class='limiter col12 clearfix'>
+    <div class='col3'>
       <div class='inner'>
         <h2>Tristen Brown</h2>
         <p>A Coder/Designer at <a href='http://mapbox.com'>MapBox.</a></p>
         <a href='http://tristen.ca' class='icon home' title='Homepage'>Home</a>
+        <a href='http://tristen.ca/blog' class='icon blog' title='Blog'>Blog</a>
         <a href='http://twitter.com/fallsemo' class='icon twitter' title='Twitter'>Twitter</a>
         <a href='http://github.com/tristen' class='icon github' title='GitHub'>Github</a>
       </div>
     </div>
-    <div class='col col3'>
+    <div class='col col9'>
       <div class='inner'>
         <h3>Projects</h3>
         <ul id='tristen-projects'></ul>
@@ -326,18 +327,11 @@ addEvent(remove, 'click', function(e) {
   r.deleteRow(rowCount - 1);
 });
 </script>
+
 <script>
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-15498769-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+var analytics=analytics||[];(function(){var e=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group"],t=function(e){return function(){analytics.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var n=0;n<e.length;n++)analytics[e[n]]=t(e[n])})(),analytics.load=function(e){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+e+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)};
+analytics.load("ppyh4q5xb3");
 </script>
+
 </body>
 </html>

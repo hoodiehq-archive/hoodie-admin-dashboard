@@ -6,7 +6,7 @@
     "backbone": "~0.9",
     "bootstrap": "~2.2",
     "handlebars": "~1.0",
-    "hoodie": "~0.1",
+    "hoodie": "~0.2",
     "hoodie.admin": "~0.1",
     "jquery": "~1.9",
     "layoutmanager": "~0.8",
