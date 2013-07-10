@@ -10,7 +10,6 @@
     "hoodie.admin": "~0.1",
     "jquery": "~1.9",
     "layoutmanager": "~0.8",
-    "lodash": "~1.0",
     "modernizr": "~2.6",
     "tablesort": "git://github.com/tristen/tablesort.git",
     "backbone.subroute": "git://github.com/ModelN/backbone.subroute.git"
