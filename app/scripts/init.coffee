@@ -3,6 +3,7 @@ if (location.hostname is 'localhost' and location.port is "9000")
   # some existing hoodie app.
   whereTheMagicHappens = "http://pocket.dev/_api"
   whereTheMagicHappens = "http://127.0.0.1:6022/_api"
+  whereTheMagicHappens = "http://127.0.0.1:6014/_api";
 else
   whereTheMagicHappens = undefined # falls back to default, which is good
 
