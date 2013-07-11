@@ -331,9 +331,14 @@ h3.top{
 }
 
 .main{
-  overflow: hidden;
+  overflow: scroll;
   margin: 0 0 0 240px;
   padding: 89px 20px 72px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   .content{
     max-width: 52em;
     margin: 0;
@@ -385,7 +390,7 @@ h3.top{
 
 .plugin-content {
   position: absolute;
-  left: 220px;
+  left: 0;
   right: 0;
   top: 0;
   bottom: 0;
