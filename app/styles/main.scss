@@ -229,10 +229,12 @@ fieldset.toggle{
 // Sidebar
 
 .sidebar{
+  position: absolute;
+  bottom: 0;
+  top: 0;
   background: $sidebarBG;
   width: 220px;
-  overflow: hidden;
-  height:4000px;
+  overflow: scroll;
   float:left;
   border-right: 4px solid shade($sidebarBG, 10);
   header{
@@ -341,7 +343,7 @@ h3.top{
     iframe {
       border: 0;
       width: 100%;
-      min-height: 800px;
+      height: 100%;
     }
   }
 }
@@ -380,6 +382,15 @@ h3.top{
 }
 
 // Modules
+
+.plugin-content {
+  position: absolute;
+  left: 220px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+}
 
 .plugin, form, .toggle{
   legend{
