@@ -7,7 +7,7 @@
     "bootstrap": "~2.2",
     "handlebars": "~1.0",
     "hoodie": "~0.2",
-    "hoodie.admin": "~0.1",
+    "hoodie.admin": "git@github.com:hoodiehq/hoodie.admin.js.git#new_plugin_architecture",
     "jquery": "~1.9",
     "layoutmanager": "~0.8",
     "modernizr": "~2.6",
