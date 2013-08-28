@@ -3,6 +3,8 @@
 
   if (location.hostname === 'localhost' && location.port === "9000") {
     whereTheMagicHappens = "http://pocket.dev/_api";
+    whereTheMagicHappens = "http://127.0.0.1:6022/_api";
+    whereTheMagicHappens = "http://127.0.0.1:6014/_api";
   } else {
     whereTheMagicHappens = void 0;
   }
@@ -34,6 +36,8 @@
     function Pocket() {
       this.setAppInfo = __bind(this.setAppInfo, this);
 
+      this.loadAppConfig = __bind(this.loadAppConfig, this);
+
       this.loadAppInfo = __bind(this.loadAppInfo, this);
 
       this.onSignOutSuccess = __bind(this.onSignOutSuccess, this);
@@ -52,7 +56,7 @@
       this.registerHandlebarsHelpers();
       this.registerListeners();
       this.handleSignInAndSignOut();
-      $.when(this.loadAppInfo(), this.authenticate()).then(function() {
+      $.when(this.loadAppInfo(), this.loadAppConfig(), this.authenticate()).then(function() {
         _this.router = new Pocket.Router;
         _this.app = new Pocket.ApplicationView;
         return Backbone.history.start();
@@ -215,6 +219,10 @@
       return hoodieAdmin.app.getInfo().pipe(this.setAppInfo);
     };
 
+    Pocket.prototype.loadAppConfig = function() {
+      return hoodieAdmin.config.reload();
+    };
+
     Pocket.prototype.setAppInfo = function(info) {
       console.log('info', info);
       return pocket.appInfo = info;
@@ -277,7 +285,7 @@
     __extends(SidebarView, _super);
 
     function SidebarView() {
-      this.renderModules = __bind(this.renderModules, this);
+      this.renderPlugins = __bind(this.renderPlugins, this);
 
       this.updateUserCount = __bind(this.updateUserCount, this);
 
@@ -303,12 +311,12 @@
       Backbone.history.bind("all", function(route) {
         return _this.handleNavigationStates(Backbone.history.fragment);
       });
-      this.loadModules();
+      this.loadPlugins();
       return SidebarView.__super__.afterRender.apply(this, arguments);
     };
 
     SidebarView.prototype.loadAppName = function() {
-      return window.hoodieAdmin.app.getInfo().then(this.renderAppName);
+      return hoodieAdmin.app.getInfo().then(this.renderAppName);
     };
 
     SidebarView.prototype.renderAppName = function(appInfo) {
@@ -319,7 +327,7 @@
       });
     };
 
-    SidebarView.prototype.getUserModuleLabel = function(totalUsers) {
+    SidebarView.prototype.getUserPluginLabel = function(totalUsers) {
       this.totalUsers = totalUsers;
       switch (this.totalUsers) {
         case 0:
@@ -333,42 +341,42 @@
 
     SidebarView.prototype.updateUserCount = function(eventName, userObject) {
       var _this = this;
-      return $.when(window.hoodieAdmin.users.getTotal()).then(function(totalUsers) {
+      return $.when(hoodieAdmin.users.getTotal()).then(function(totalUsers) {
         _this.totalUsers = totalUsers;
-        return $('.sidebar .modules .users .name').text(_this.getUserModuleLabel(_this.totalUsers));
+        return $('.sidebar .plugins .users .name').text(_this.getUserPluginLabel(_this.totalUsers));
       });
     };
 
-    SidebarView.prototype.loadModules = function() {
+    SidebarView.prototype.loadPlugins = function() {
       var debouncedUserCount;
       debouncedUserCount = _.debounce(this.updateUserCount, 300);
       hoodieAdmin.users.on("change", function(eventName, userObject) {
         return debouncedUserCount(eventName, userObject);
       });
       hoodieAdmin.users.connect();
-      return $.when(window.hoodieAdmin.modules.findAll(), window.hoodieAdmin.users.getTotal()).then(this.renderModules);
+      return $.when(hoodieAdmin.plugins.findAll(), hoodieAdmin.users.getTotal()).then(this.renderPlugins);
     };
 
-    SidebarView.prototype.renderModules = function(modules, totalUsers) {
-      var key, module, _ref;
-      this.modules = modules;
+    SidebarView.prototype.renderPlugins = function(plugins, totalUsers) {
+      var key, plugin, _ref;
+      this.plugins = plugins;
       this.totalUsers = totalUsers;
-      _ref = this.modules;
+      _ref = this.plugins;
       for (key in _ref) {
-        module = _ref[key];
-        module.url = module.id;
-        module.cleanName = this.makeURLHuman(module.url);
-        if (module.cleanName === "Users") {
-          module.cleanName = this.getUserModuleLabel(this.totalUsers);
+        plugin = _ref[key];
+        plugin.url = plugin.name;
+        plugin.cleanName = plugin.title;
+        if (plugin.cleanName === "Users") {
+          plugin.cleanName = this.getUserPluginLabel(this.totalUsers);
         }
-        module.badgeStatus = 'badge-' + module.status;
-        if (module.messages) {
-          module.messageAmount = module.messages.length;
+        plugin.badgeStatus = 'badge-' + plugin.status;
+        if (plugin.messages) {
+          plugin.messageAmount = plugin.messages.length;
         } else {
-          module.messageAmount = '';
+          plugin.messageAmount = '';
         }
       }
-      return this.$el.find('nav ul.modules').html(JST['sidebar-modules'](this));
+      return this.$el.find('nav ul.plugins').html(JST['sidebar-plugins'](this));
     };
 
     return SidebarView;
@@ -428,484 +436,39 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Pocket.ModulesView = (function(_super) {
+  Pocket.PluginsView = (function(_super) {
 
-    __extends(ModulesView, _super);
+    __extends(PluginsView, _super);
 
-    function ModulesView() {
+    function PluginsView() {
       this.beforeRender = __bind(this.beforeRender, this);
-      return ModulesView.__super__.constructor.apply(this, arguments);
+      return PluginsView.__super__.constructor.apply(this, arguments);
     }
 
-    ModulesView.prototype.template = 'module';
+    PluginsView.prototype.template = 'plugin';
 
-    ModulesView.prototype.beforeRender = function() {
-      var view;
-      this.module.url = this.module.id.replace('worker-', '');
-      this.module.cleanName = this.makeURLHuman(this.module.url);
+    PluginsView.prototype.beforeRender = function() {
+      this.plugin.url = this.plugin.name.replace('worker-', '');
+      this.plugin.cleanName = this.makeURLHuman(this.plugin.url);
       this.appInfo = pocket.appInfo;
-      if (this.getView(".module-content")) {
-        this.removeView(".module-content");
-      }
-      if (this.moduleViewExists(this.module.id)) {
-        view = this.getModuleView(this.module.id);
-        this.setView(".module-content", view);
-        return typeof view.update === "function" ? view.update() : void 0;
+      this.baseUrl = hoodieAdmin.baseUrl;
+      if (this.getView(".plugin-content")) {
+        return this.removeView(".plugin-content");
       }
     };
 
-    ModulesView.prototype.moduleViewExists = function(name) {
-      return Pocket.ModulesView["module-" + name] != null;
-    };
+    PluginsView.prototype._cachedViews = {};
 
-    ModulesView.prototype._cachedViews = {};
-
-    ModulesView.prototype.getModuleView = function(name) {
+    PluginsView.prototype.getPluginView = function(name) {
       if (!this._cachedViews[name]) {
-        this._cachedViews[name] = new Pocket.ModulesView["module-" + this.module.id];
+        this._cachedViews[name] = new Pocket.PluginsView["plugin-" + this.plugin.name];
       }
       return this._cachedViews[name];
     };
 
-    return ModulesView;
+    return PluginsView;
 
   })(Pocket.BaseView);
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Pocket.ModulesBaseView = (function(_super) {
-
-    __extends(ModulesBaseView, _super);
-
-    function ModulesBaseView() {
-      return ModulesBaseView.__super__.constructor.apply(this, arguments);
-    }
-
-    ModulesBaseView.prototype.afterRender = function() {
-      this.$el.find('.formCondition').each(function(index, el) {
-        return pocket.handleConditionalFormElements(el, 0);
-      });
-      return ModulesBaseView.__super__.afterRender.apply(this, arguments);
-    };
-
-    return ModulesBaseView;
-
-  })(Pocket.BaseView);
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Pocket.ModulesView['module-email-out'] = (function(_super) {
-
-    __extends(_Class, _super);
-
-    function _Class() {
-      return _Class.__super__.constructor.apply(this, arguments);
-    }
-
-    _Class.prototype.template = 'modules/email-out';
-
-    return _Class;
-
-  })(Pocket.ModulesBaseView);
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Pocket.ModulesView['module-logs'] = (function(_super) {
-
-    __extends(_Class, _super);
-
-    function _Class() {
-      return _Class.__super__.constructor.apply(this, arguments);
-    }
-
-    _Class.prototype.template = 'modules/logs';
-
-    return _Class;
-
-  })(Pocket.ModulesBaseView);
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Pocket.ModulesView['module-sharings'] = (function(_super) {
-
-    __extends(_Class, _super);
-
-    function _Class() {
-      return _Class.__super__.constructor.apply(this, arguments);
-    }
-
-    _Class.prototype.template = 'modules/sharings';
-
-    return _Class;
-
-  })(Pocket.ModulesBaseView);
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  Pocket.UsersView.Router = (function(_super) {
-
-    __extends(Router, _super);
-
-    Router.prototype.routes = {
-      "": "default",
-      "user/:id": "editUser"
-    };
-
-    function Router() {
-      this.view = new Pocket.ModulesView['module-users'];
-      pocket.app.views.body.setView(".main", this.view);
-      Router.__super__.constructor.apply(this, arguments);
-    }
-
-    Router.prototype["default"] = function() {
-      return this.view.update();
-    };
-
-    Router.prototype.editUser = function(id) {
-      return this.view.editUser(id);
-    };
-
-    return Router;
-
-  })(Backbone.SubRoute);
-
-  Pocket.ModulesView['module-users'] = (function(_super) {
-
-    __extends(_Class, _super);
-
-    _Class.prototype.template = 'modules/users';
-
-    _Class.prototype.sort = void 0;
-
-    _Class.prototype.sortBy = void 0;
-
-    _Class.prototype.sortDirection = void 0;
-
-    _Class.prototype.events = {
-      'submit form.config': 'updateConfig',
-      'submit form.form-search': 'search',
-      'submit form.updatePassword': 'updatePassword',
-      'submit form.updateUsername': 'updateUsername',
-      'click .addUser button[type="submit"]': 'addUser',
-      'click .user a.removeUserPrompt': 'removeUserPrompt',
-      'click #confirmUserRemoveModal .removeUser': 'removeUser',
-      'click .clearSearch': 'clearSearch'
-    };
-
-    function _Class() {
-      this._updateModule = __bind(this._updateModule, this);
-
-      this.afterRender = __bind(this.afterRender, this);
-
-      this.beforeRender = __bind(this.beforeRender, this);
-
-      this.removeUser = __bind(this.removeUser, this);
-
-      this.removeUserPrompt = __bind(this.removeUserPrompt, this);
-
-      this.update = __bind(this.update, this);
-      _Class.__super__.constructor.apply(this, arguments);
-    }
-
-    _Class.prototype.update = function() {
-      var _this = this;
-      return $.when(hoodieAdmin.users.findAll(), hoodieAdmin.modules.find('users'), hoodieAdmin.config.get()).then(function(users, object, appConfig) {
-        var _base;
-        _this.totalUsers = users.length;
-        _this.users = users;
-        _this.config = $.extend(_this._configDefaults(), object.config);
-        _this.appConfig = appConfig;
-        _this.editableUser = null;
-        switch (users.length) {
-          case 0:
-            _this.resultsDesc = "You have no users yet";
-            break;
-          case 1:
-            _this.resultsDesc = "You have a single user";
-            break;
-          default:
-            _this.resultsDesc = "Currently displaying all " + _this.totalUsers + " users";
-        }
-        (_base = _this.config).confirmationEmailText || (_base.confirmationEmailText = "Hello {name}, Thanks for signing up!");
-        return _this.render();
-      });
-    };
-
-    _Class.prototype.updateConfig = function(event) {
-      event.preventDefault();
-      return window.promise = hoodieAdmin.modules.update('module', 'users', this._updateModule);
-    };
-
-    _Class.prototype.emailTransportNotConfigured = function() {
-      var isConfigured, _ref, _ref1;
-      isConfigured = ((_ref = this.appConfig) != null ? (_ref1 = _ref.email) != null ? _ref1.transport : void 0 : void 0) != null;
-      return !isConfigured;
-    };
-
-    _Class.prototype.addUser = function(event) {
-      var $btn, ownerHash, password, username;
-      event.preventDefault();
-      $btn = $(event.currentTarget);
-      username = $btn.closest('form').find('.username').val();
-      password = $btn.closest('form').find('.password').val();
-      if (username && password) {
-        $btn.attr('disabled', 'disabled');
-        $btn.siblings('.submitMessage').text("Adding " + username + "…");
-        ownerHash = hoodieAdmin.uuid();
-        return hoodieAdmin.users.add('user', {
-          id: username,
-          name: "user/" + username,
-          ownerHash: ownerHash,
-          database: "user/" + ownerHash,
-          signedUpAt: new Date(),
-          roles: [],
-          password: password
-        }).done(this.update).fail(function(data) {
-          console.log("could not add user: ", data);
-          $btn.attr('disabled', null);
-          if (data.statusText === "Conflict") {
-            return $btn.siblings('.submitMessage').text("Sorry, '" + username + "' already exists");
-          } else {
-            return $btn.siblings('.submitMessage').text("Error: " + data.status + " - " + data.responseText);
-          }
-        });
-      } else {
-        return $btn.siblings('.submitMessage').text("Please enter a username and a password");
-      }
-    };
-
-    _Class.prototype.removeUserPrompt = function(event) {
-      var id, type;
-      event.preventDefault();
-      id = $(event.currentTarget).closest("[data-id]").data('id');
-      type = $(event.currentTarget).closest("[data-type]").data('type');
-      return $('#confirmUserRemoveModal').modal('show').data({
-        id: id,
-        type: type
-      }).find('.modal-body').text('Really remove the user ' + id + '? This cannot be undone!').end().find('.modal-title').text('Remove user ' + id).end();
-    };
-
-    _Class.prototype.removeUser = function(event) {
-      var id, type,
-        _this = this;
-      event.preventDefault();
-      id = $('#confirmUserRemoveModal').data('id');
-      type = $('#confirmUserRemoveModal').data('type');
-      return hoodieAdmin.users.remove(type, id).then(function() {
-        $('[data-id="' + id + '"]').remove();
-        $('#confirmUserRemoveModal').modal('hide');
-        return _this.update();
-      });
-    };
-
-    _Class.prototype.editUser = function(id) {
-      var _this = this;
-      return $.when(hoodieAdmin.users.find('user', id)).then(function(user) {
-        _this.editableUser = user;
-        _this.render();
-      });
-    };
-
-    _Class.prototype.updateUsername = function(event) {
-      var $btn, $form, id;
-      event.preventDefault();
-      id = $(event.currentTarget).closest('form').data('id');
-      $form = $(event.currentTarget);
-      return $btn = $form.find('[type="submit"]');
-    };
-
-    _Class.prototype.updatePassword = function(event) {
-      var $btn, $form, id, password;
-      event.preventDefault();
-      id = $(event.currentTarget).closest('form').data('id');
-      $form = $(event.currentTarget);
-      $btn = $form.find('[type="submit"]');
-      password = $form.find('[name="password"]').val();
-      if (password) {
-        $btn.attr('disabled', 'disabled');
-        $form.find('.submitMessage').text("Updating password");
-        return hoodieAdmin.users.update('user', id, {
-          password: password
-        }).done(function(data) {
-          $btn.attr('disabled', null);
-          return $form.find('.submitMessage').text("Password updated");
-        }).fail(function(data) {
-          $btn.attr('disabled', null);
-          return $form.find('.submitMessage').text("Error: could not update password");
-        });
-      } else {
-        return $form.find('.submitMessage').text("You didn't change anything.");
-      }
-    };
-
-    _Class.prototype.search = function(event) {
-      var _this = this;
-      event.preventDefault();
-      this.searchQuery = $('input.search-query', event.currentTarget).val();
-      return $.when(hoodieAdmin.users.search(this.searchQuery)).then(function(users) {
-        _this.users = users;
-        switch (users.length) {
-          case 0:
-            _this.resultsDesc = "No users matching '" + _this.searchQuery + "'";
-            break;
-          case 1:
-            _this.resultsDesc = "" + users.length + " user matching '" + _this.searchQuery + "'";
-            break;
-          default:
-            _this.resultsDesc = "" + users.length + " users matching '" + _this.searchQuery + "'";
-        }
-        return _this.render();
-      });
-    };
-
-    _Class.prototype.clearSearch = function(event) {
-      event.preventDefault();
-      this.searchQuery = null;
-      return this.update();
-    };
-
-    _Class.prototype.beforeRender = function() {
-      this.sortBy = $('#userList .sort-up, #userList .sort-down').data('sort-by');
-      if (this.sortBy) {
-        this.sortDirection = 'sort-down';
-        if ($('#userList .sort-up').length !== 0) {
-          this.sortDirection = 'sort-up';
-        }
-      } else {
-        this.sortBy = "signupDate";
-        this.sortDirection = "sort-up";
-      }
-      return _Class.__super__.beforeRender.apply(this, arguments);
-    };
-
-    _Class.prototype.afterRender = function() {
-      var sortHeader, userList;
-      userList = document.getElementById('userList');
-      if (userList) {
-        this.sort = new Tablesort(userList);
-        sortHeader = $('#userList [data-sort-by="' + this.sortBy + '"]');
-        sortHeader.click();
-        if (this.sortDirection === 'sort-up') {
-          sortHeader.click();
-        }
-      }
-      return _Class.__super__.afterRender.apply(this, arguments);
-    };
-
-    _Class.prototype._updateModule = function(module) {
-      module.config.confirmationMandatory = this.$el.find('[name=confirmationMandatory]').is(':checked');
-      module.config.confirmationEmailFrom = this.$el.find('[name=confirmationEmailFrom]').val();
-      module.config.confirmationEmailSubject = this.$el.find('[name=confirmationEmailSubject]').val();
-      module.config.confirmationEmailText = this.$el.find('[name=confirmationEmailText]').val();
-      return module;
-    };
-
-    _Class.prototype._configDefaults = function() {};
-
-    return _Class;
-
-  })(Pocket.ModulesBaseView);
-
-}).call(this);
-
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Pocket.ModulesView['module-appconfig'] = (function(_super) {
-
-    __extends(_Class, _super);
-
-    function _Class() {
-      this.handleSubmitSuccess = __bind(this.handleSubmitSuccess, this);
-
-      this.handleSubmitError = __bind(this.handleSubmitError, this);
-      return _Class.__super__.constructor.apply(this, arguments);
-    }
-
-    _Class.prototype.template = 'modules/appconfig';
-
-    _Class.prototype.events = {
-      "submit form.email": "updateConfig"
-    };
-
-    _Class.prototype.update = function() {
-      var _this = this;
-      return hoodieAdmin.config.get().then(function(config) {
-        _this.config = config;
-        return _this.render();
-      });
-    };
-
-    _Class.prototype.updateConfig = function(event) {
-      var password, promise, username;
-      this.$el.find('.submit').attr('disabled', 'disabled');
-      event.preventDefault();
-      username = this.$el.find('.username').val();
-      password = this.$el.find('.password').val();
-      this.config = this._getConfigSkeleton();
-      this.config.email.transport.auth.user = username;
-      this.config.email.transport.auth.pass = password;
-      return promise = hoodieAdmin.config.set(this.config).then(this.handleSubmitSuccess, this.handleSubmitError);
-    };
-
-    _Class.prototype.handleSubmitError = function(error) {
-      console.log("Could not save global mail config");
-      console.log(error);
-      this.$el.find('.submit').attr('disabled', null);
-      return this.$el.find('.submit').siblings('span').text('Could not save global mail config');
-    };
-
-    _Class.prototype.handleSubmitSuccess = function() {
-      var $message,
-        _this = this;
-      console.log("Config saved");
-      this.$el.find('.submit').attr('disabled', null);
-      $message = this.$el.find('.submit').siblings('span');
-      return $.when($message.text('Config saved').delay(2000).fadeOut()).done(function() {
-        return $message.empty().show();
-      });
-    };
-
-    _Class.prototype._getConfigSkeleton = function() {
-      return {
-        email: {
-          transport: {
-            service: 'GMAIL',
-            auth: {
-              user: '',
-              pass: ''
-            }
-          }
-        }
-      };
-    };
-
-    return _Class;
-
-  })(Pocket.ModulesBaseView);
 
 }).call(this);
 
@@ -1025,8 +588,8 @@
 
     Router.prototype.routes = {
       "": "dashboard",
-      "modules/:moduleName": "modules",
-      "modules/:moduleName/*subroute": "modules"
+      "plugins/:pluginName": "plugins",
+      "plugins/:pluginName/*subroute": "plugins"
     };
 
     Router.prototype.dashboard = function() {
@@ -1041,25 +604,22 @@
       });
     };
 
-    Router.prototype.modules = function(moduleName, subroute) {
+    Router.prototype.plugins = function(pluginName, subroute) {
       var _this = this;
-      console.log("modules: ", moduleName, subroute);
+      console.log("plugins: ", pluginName, subroute);
       if (!Pocket.Routers) {
         Pocket.Routers = {};
       }
-      return window.hoodieAdmin.modules.find(moduleName).then(function(module) {
-        var moduleViewName, view, _ref;
-        moduleViewName = _this.capitaliseFirstLetter(moduleName) + "View";
-        if (!Pocket.Routers[moduleViewName] && ((_ref = Pocket[moduleViewName]) != null ? _ref.Router : void 0)) {
-          return Pocket.Routers[moduleViewName] = new Pocket[moduleViewName].Router('modules/' + moduleName, {
-            createTrailingSlashRoutes: true
-          });
-        } else {
-          view = new Pocket.ModulesView;
-          pocket.app.views.body.setView(".main", view);
-          view.module = module;
-          return view.render();
-        }
+      return hoodieAdmin.plugins.getConfig(pluginName).then(function(config) {
+        var pluginViewName, view;
+        pluginViewName = _this.capitaliseFirstLetter(pluginName) + "View";
+        view = new Pocket.PluginsView;
+        pocket.app.views.body.setView(".main", view);
+        view.plugin = {
+          name: pluginName,
+          config: config
+        };
+        return view.render();
       });
     };
 
@@ -1076,39 +636,39 @@
 this["JST"] = this["JST"] || {};
 
 this["JST"]["dashboard"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
 
 function program1(depth0,data) {
   
   
-  return "\n  <div class=\"alert alert-error\">\n    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n    <ul>\n      <li>\n        <a href=\"/modules/appconfig\"><strong>Appconfig:</strong><br>\n        Emails cannot be sent, please configure email transport.</a>\n      </li>\n    </ul>\n  </div>\n  ";
+  return "\n  <div class=\"alert alert-error\">\n    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n    <ul>\n      <li>\n        <a href=\"/plugins/appconfig\"><strong>Appconfig:</strong><br>\n        Emails cannot be sent, please configure email transport.</a>\n      </li>\n    </ul>\n  </div>\n  ";
   }
 
   buffer += "<div class=\"content centered\">\n  <h2 class=\"top\">New events for "
     + escapeExpression(((stack1 = ((stack1 = depth0.appInfo),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + " since your last visit <span class=\"timeago\" title=\"";
   options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers.convertTimestampToISO),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.since), options) : helperMissing.call(depth0, "convertTimestampToISO", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.since), options)))
+  buffer += escapeExpression(((stack1 = helpers.convertTimestampToISO || depth0.convertTimestampToISO),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.since), options) : helperMissing.call(depth0, "convertTimestampToISO", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.since), options)))
     + "\">"
     + escapeExpression(((stack1 = ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.since)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span></h2>\n\n  ";
   stack2 = helpers['if'].call(depth0, depth0.emailTransportNotConfigured, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  <div class=\"alert alert-info\">\n    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n    <ul>\n      <li>Module Signup confirmation reports: New user confirmed! (about 6 hours ago)</li>\n    </ul>\n  </div>\n\n  <div class=\"row-fluid statistics\">\n    <div class=\"panel span4 ";
+  buffer += "\n  <div class=\"alert alert-info\">\n    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n    <ul>\n      <li>Plugin Signup confirmation reports: New user confirmed! (about 6 hours ago)</li>\n    </ul>\n  </div>\n\n  <div class=\"row-fluid statistics\">\n    <div class=\"panel span4 ";
   options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers.positiveSuccessNegativeWarning),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.signups), options) : helperMissing.call(depth0, "positiveSuccessNegativeWarning", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.signups), options)))
+  buffer += escapeExpression(((stack1 = helpers.positiveSuccessNegativeWarning || depth0.positiveSuccessNegativeWarning),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.signups), options) : helperMissing.call(depth0, "positiveSuccessNegativeWarning", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.signups), options)))
     + "\">\n      <span>New signups/past 30 days</span>\n      <h1>"
     + escapeExpression(((stack1 = ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.signups)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</h1>\n    </div>\n    <div class=\"panel span4 ";
   options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers.positiveWarningNegativeSuccess),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.account_deletions), options) : helperMissing.call(depth0, "positiveWarningNegativeSuccess", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.account_deletions), options)))
+  buffer += escapeExpression(((stack1 = helpers.positiveWarningNegativeSuccess || depth0.positiveWarningNegativeSuccess),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.account_deletions), options) : helperMissing.call(depth0, "positiveWarningNegativeSuccess", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.account_deletions), options)))
     + "\">\n      <span>Account deletions/past 30 days</span>\n      <h1>"
     + escapeExpression(((stack1 = ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.account_deletions)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</h1>\n    </div>\n    <div class=\"panel span4 ";
   options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers.positiveSuccessNegativeWarning),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.growth), options) : helperMissing.call(depth0, "positiveSuccessNegativeWarning", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.growth), options)))
+  buffer += escapeExpression(((stack1 = helpers.positiveSuccessNegativeWarning || depth0.positiveSuccessNegativeWarning),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.growth), options) : helperMissing.call(depth0, "positiveSuccessNegativeWarning", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.growth), options)))
     + "\">\n      <span>Growth/past 30 days</span>\n      <h1>"
     + escapeExpression(((stack1 = ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.growth)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "%</h1>\n    </div>\n  </div>\n  <div class=\"row-fluid statistics\">\n    <div class=\"panel info span4\">\n      <span>Total Users</span>\n      <h1>"
@@ -1117,7 +677,7 @@ function program1(depth0,data) {
     + escapeExpression(((stack1 = ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.users_active)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</h1>\n    </div>\n    <div class=\"panel span4 ";
   options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers.positiveSuccessNegativeWarning),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.active), options) : helperMissing.call(depth0, "positiveSuccessNegativeWarning", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.active), options)))
+  buffer += escapeExpression(((stack1 = helpers.positiveSuccessNegativeWarning || depth0.positiveSuccessNegativeWarning),stack1 ? stack1.call(depth0, ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.active), options) : helperMissing.call(depth0, "positiveSuccessNegativeWarning", ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.active), options)))
     + "\">\n      <span>Activity / past 30 days</span>\n      <h1>"
     + escapeExpression(((stack1 = ((stack1 = depth0.stats),stack1 == null || stack1 === false ? stack1 : stack1.active)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "%</h1>\n    </div>\n  </div>\n</div>\n";
@@ -1125,8 +685,8 @@ function program1(depth0,data) {
   });
 
 this["JST"]["layouts/application"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
@@ -1134,323 +694,43 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   });
 
 this["JST"]["main"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
   return "<a href=\"#\" class=\"signOut\">Sign out</a>\n\n<div class=\"sidebar\">\n\n</div>\n<div class=\"main\">\n\n</div>";
   });
 
-this["JST"]["module"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
-
-
-  buffer += "<div class=\"content centered\">\n  <h2 class=\"top\">"
-    + escapeExpression(((stack1 = ((stack1 = depth0.module),stack1 == null || stack1 === false ? stack1 : stack1.cleanName)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h2>\n\n  <div class=\"module-content\"></div>\n</div>\n";
-  return buffer;
-  });
-
-this["JST"]["modules/appconfig"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
-
-
-  buffer += "<div class=\"module\">\n  <legend>Email Settings</legend>\n  <span class=\"description\">Set up all outgoing email from this Hoodie app</span>\n  <form class=\"email form-horizontal\" action=\"\">\n    <section>\n      <div class=\"control-group\">\n        <label>Service</label>\n        <div class=\"controls\">\n          <select>\n            <option>gMail</option>\n          </select>\n        </div>\n      </div>\n\n      <div class=\"control-group\">\n        <label>Username</label>\n        <div class=\"controls\">\n          <input class=\"username\" type=\"email\" placeholder=\"me@gmail.com\" value=\""
-    + escapeExpression(((stack1 = ((stack1 = ((stack1 = ((stack1 = ((stack1 = depth0.config),stack1 == null || stack1 === false ? stack1 : stack1.email)),stack1 == null || stack1 === false ? stack1 : stack1.transport)),stack1 == null || stack1 === false ? stack1 : stack1.auth)),stack1 == null || stack1 === false ? stack1 : stack1.user)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n        </div>\n      </div>\n\n      <div class=\"control-group\">\n        <label>Password</label>\n        <div class=\"controls\">\n          <input class=\"password\" type=\"password\" value=\""
-    + escapeExpression(((stack1 = ((stack1 = ((stack1 = ((stack1 = ((stack1 = depth0.config),stack1 == null || stack1 === false ? stack1 : stack1.email)),stack1 == null || stack1 === false ? stack1 : stack1.transport)),stack1 == null || stack1 === false ? stack1 : stack1.auth)),stack1 == null || stack1 === false ? stack1 : stack1.pass)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n        </div>\n      </div>\n\n    </section>\n    <section>\n      <label></label>\n      <div class=\"controls\">\n        <button class=\"submit btn\" type=\"submit\">Submit</button>\n        <span class=\"submitMessage\"></span>\n      </div>\n    </section>\n  </form>\n</div>\n\n";
-  return buffer;
-  });
-
-this["JST"]["modules/email-out"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+this["JST"]["plugin"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"module\" id=\""
-    + escapeExpression(((stack1 = ((stack1 = depth0.module),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n  <legend>Settings</legend>\n\n  <span class=\"description\">E-Mail out is in charge of all outgoing mail from this Hoodie instance</span>\n  <form action=\"\">\n    <section>\n      <div class=\"formLabel\">\n        <label>From address</label>\n      </div>\n      <div class=\"form\">\n        <input type=\"email\" placeholder=\"";
-  if (stack2 = helpers.defaultReplyMailAddress) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.defaultReplyMailAddress; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += "<div class=\"content centered\">\n  <div class=\"plugin-content\">\n    <iframe name=\"plugin\" src=\"";
+  if (stack1 = helpers.baseUrl) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.baseUrl; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "/_plugins/"
+    + escapeExpression(((stack1 = ((stack1 = depth0.plugin),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "/pocket/index.html";
+  if (stack2 = helpers.urlParams) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.urlParams; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "\" required>\n        <span class=\"note\">From address for all of your app's emails.</span>\n      </div>\n    </section>\n  </form>\n</div>\n";
+    + "\"></iframe>\n  </div>\n</div>\n";
   return buffer;
   });
 
-this["JST"]["modules/logs"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
-  
-
-
-  return "hello from /app/scrits/templates/modules/logs.hbs\n";
-  });
-
-this["JST"]["modules/sharings"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
-  
-
-
-  return "hello from /app/scrits/templates/modules/sharings.hbs\n";
-  });
-
-this["JST"]["modules/users"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
-
-function program1(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n    ";
-  stack1 = helpers['with'].call(depth0, depth0.editableUser, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  ";
-  return buffer;
-  }
-function program2(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n    <legend>Edit user '";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "'</legend>\n    <form class=\"updateUsername form-horizontal\" data-id=\"";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\">\n      <section class=\"username noBorder\">\n        <div class=\"control-group\">\n          <label>\n            New username\n          </label>\n          <div class=\"controls\">\n            <input type=\"text\" name=\"username\" value=\"";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\" data-oldusername=\"";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\" placeholder=\"Username cannot be empty\" disabled>\n            <span class=\"note\">Changing the username isn't implemented yet, sorry.</span>\n          </div>\n        </div>\n      </section>\n      <section>\n        <div class=\"control-group\">\n          <label>\n            &nbsp;\n          </label>\n          <div class=\"controls\">\n            <button class=\"btn\" type=\"submit\" disabled>Update username</button>\n            <span class=\"submitMessage\"></span>\n          </div>\n        </div>\n      </section>\n    </form>\n    <form class=\"updatePassword form-horizontal\" data-id=\"";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\">\n      <section class=\"password\">\n        <div class=\"control-group\">\n          <label>\n            New password\n          </label>\n          <div class=\"controls\">\n            <input type=\"text\" name=\"password\" value=\"\" placeholder=\"Password cannot be empty\">\n          </div>\n        </div>\n      </section>\n      <section>\n        <div class=\"control-group\">\n          <label>\n            &nbsp;\n          </label>\n          <div class=\"controls\">\n            <button class=\"btn\" type=\"submit\">Update password</button>\n            <span class=\"submitMessage\"></span>\n          </div>\n        </div>\n      </section>\n    </form>\n    ";
-  return buffer;
-  }
-
-function program4(depth0,data) {
-  
-  var buffer = "", stack1, stack2;
-  buffer += "\n  <legend>Settings</legend>\n\n  <span class=\"description\">Configure whether users must confirm their signup and if yes, set up the email they will receive for this purpose.</span>\n\n  <form class=\"config form-horizontal\">\n    ";
-  stack1 = helpers['if'].call(depth0, depth0.emailTransportNotConfigured, {hash:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  </form>\n</div>\n\n<hr>\n\n<div class=\"content centered\">\n  <h2 class=\"top\">Users</h2>\n  <fieldset class=\"toggle\">\n    <legend class=\"toggler\">Add user</legend>\n    <div class=\"togglee\">\n      <legend>Add user</legend>\n      <form class=\"form-horizontal addUser\">\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Username\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"username\" class=\"username\" value=\"\" placeholder=\"username\">\n            </div>\n          </div>\n        </section>\n        <section class=\"noBorder\">\n          <div class=\"control-group\">\n            <label>\n              Password\n            </label>\n            <div class=\"controls\">\n              <input type=\"text\" name=\"password\" class=\"password\" value=\"\" placeholder=\"\">\n            </div>\n          </div>\n        </section>\n        <section>\n          <div class=\"control-group\">\n            <label>\n              &nbsp;\n            </label>\n            <div class=\"controls\">\n              <button class=\"btn\" type=\"submit\">Add user</button>\n              <span class=\"submitMessage\"></span>\n            </div>\n          </div>\n        </section>\n      </form>\n    </div>\n  </fieldset>\n  <div class=\"userSearch group\">\n    <form class=\"form-search\">\n      <div class=\"input-append\">\n        <input type=\"text\" class=\"span2 search-query\" placeholder=\"Username\"";
-  stack1 = helpers['if'].call(depth0, depth0.searchQuery, {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += ">\n        <button type=\"submit\" class=\"btn\">Search</button>\n      </div>\n    </form>\n    ";
-  stack1 = helpers['if'].call(depth0, depth0.searchQuery, {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  </div>\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
-  if (stack1 = helpers.resultsDesc) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.resultsDesc; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "</p>\n    <p class=\"currentSearchMetrics muted\">Showing "
-    + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + " of ";
-  if (stack2 = helpers.totalUsers) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.totalUsers; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + " users</p>\n  </div>\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(13, program13, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(22, program22, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n";
-  return buffer;
-  }
-function program5(depth0,data) {
-  
-  
-  return "\n    <section>\n      <div class=\"control-group\">\n        <label>\n          Signup confirmation\n        </label>\n        <div class=\"controls\">\n          <span class=\"note\">Email needs to be configured in <a href=\"/modules/appconfig\">Appconfig</a> before enabling signup confirmation</span>\n        </div>\n      </div>\n    </section>\n    ";
-  }
-
-function program7(depth0,data) {
-  
-  var buffer = "", stack1, stack2;
-  buffer += "\n    <section>\n      <div class=\"control-group\">\n        <label>\n          Signup confirmation\n        </label>\n        <div class=\"controls\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" name=\"confirmationMandatory\" class=\"formCondition\" data-conditions=\"true:.confirmationOptions\"> is mandatory\n          </label>\n        </div>\n      </div>\n    </section>\n\n    <section class=\"confirmationOptions\">\n      <div class=\"control-group\">\n        <label>\n          From address\n        </label>\n        <div class=\"controls\">\n          <input type=\"email\" name=\"confirmationEmailFrom\" value=\""
-    + escapeExpression(((stack1 = ((stack1 = depth0.config),stack1 == null || stack1 === false ? stack1 : stack1.confirmationEmailFrom)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" placeholder=\"";
-  if (stack2 = helpers.defaultReplyMailAddress) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.defaultReplyMailAddress; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "\" required>\n          <span class=\"note\">From address for all of your app's emails.</span>\n        </div>\n      </div>\n    </section>\n\n    <section class=\"confirmationOptions\">\n      <div class=\"control-group\">\n        <label>\n          Subject line\n        </label>\n        <div class=\"controls\">\n          <input type=\"text\" name=\"confirmationEmailSubject\" value=\""
-    + escapeExpression(((stack1 = ((stack1 = depth0.config),stack1 == null || stack1 === false ? stack1 : stack1.confirmationEmailSubject)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" placeholder=\"Please confirm your signup at "
-    + escapeExpression(((stack1 = ((stack1 = depth0.appInfo),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n        </div>\n      </div>\n    </section>\n\n    <section class=\"confirmationOptions\">\n      <div class=\"control-group\">\n        <label>\n          Body\n        </label>\n        <div class=\"controls\">\n          <textarea rows=\"4\" name=\"confirmationEmailText\">"
-    + escapeExpression(((stack1 = ((stack1 = depth0.config),stack1 == null || stack1 === false ? stack1 : stack1.confirmationEmailText)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</textarea>\n        </div>\n      </div>\n    </section>\n\n    <section>\n      <div class=\"control-group\">\n        <label>\n          &nbsp;\n        </label>\n        <div class=\"controls\">\n          <button class=\"btn\" type=\"submit\">Update</button>\n        </div>\n      </div>\n    </section>\n    ";
-  return buffer;
-  }
-
-function program9(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += " value=\"";
-  if (stack1 = helpers.searchQuery) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.searchQuery; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\"";
-  return buffer;
-  }
-
-function program11(depth0,data) {
-  
-  
-  return "\n    <button class=\"btn clearSearch\">Clear search</button>\n    ";
-  }
-
-function program13(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n  <table id=\"userList\" class=\"table users\">\n    <thead>\n      <tr>\n        <th data-sort-by=\"username\">Username</th>\n        <th data-sort-by=\"lastSeen\">Last seen</th>\n        <th data-sort-by=\"signupDate\">Signup date</th>\n        <th data-sort-by=\"state\">State</th>\n        <th class=\"no-sort\"></th>\n      </tr>\n    </thead>\n    <tbody>\n      ";
-  stack1 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n    </tbody>\n  </table>\n  ";
-  return buffer;
-  }
-function program14(depth0,data) {
-  
-  var buffer = "", stack1, stack2, options;
-  buffer += "\n      <tr data-id=\"";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\" data-type=\"";
-  if (stack1 = helpers.type) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\" class=\"user\">\n        <td>";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</td>\n        <td>";
-  if (stack1 = helpers.lastLogin) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.lastLogin; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</td>\n        <td data-sort=\"";
-  options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers.convertISOToTimestamp),stack1 ? stack1.call(depth0, depth0.signedUpAt, options) : helperMissing.call(depth0, "convertISOToTimestamp", depth0.signedUpAt, options)))
-    + "\" class=\"timeago\" title=\"";
-  if (stack2 = helpers.signedUpAt) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.signedUpAt; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "\">";
-  if (stack2 = helpers.signedUpAt) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.signedUpAt; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "</td>\n        <td>\n          ";
-  stack2 = helpers['if'].call(depth0, depth0.$error, {hash:{},inverse:self.program(17, program17, data),fn:self.program(15, program15, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n        </td>\n        <td class=\"no-sort\">\n          <a href=\"#modules/users/user/";
-  if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "\" class=\"edit\">edit</a> /\n          <a href=\"#\" class=\"removeUserPrompt\">delete</a> /\n          <a href=\"";
-  options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers.linkToFutonUser),stack1 ? stack1.call(depth0, depth0.name, options) : helperMissing.call(depth0, "linkToFutonUser", depth0.name, options)))
-    + "\">futon</a>\n        </td>\n      </tr>\n      ";
-  return buffer;
-  }
-function program15(depth0,data) {
-  
-  var buffer = "", stack1, stack2, options;
-  buffer += "\n            <div class=\"inTableError\">\n              <span class=\"error\">";
-  if (stack1 = helpers.$state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.$state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</span><i class=\"icon-warning-sign\"></i>\n              <div class=\"errorTooltip\">\n                <i class=\"icon-warning-sign\"></i><strong>"
-    + escapeExpression(((stack1 = ((stack1 = depth0.$error),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</strong>\n                <p>"
-    + escapeExpression(((stack1 = ((stack1 = depth0.$error),stack1 == null || stack1 === false ? stack1 : stack1.message)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</p>\n                <p><a href=\"";
-  options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers.linkToFutonUser),stack1 ? stack1.call(depth0, depth0.name, options) : helperMissing.call(depth0, "linkToFutonUser", depth0.name, options)))
-    + "\">";
-  if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "'s user page in Futon</a></p>\n              </div>\n            </div>\n          ";
-  return buffer;
-  }
-
-function program17(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n            ";
-  stack1 = helpers['if'].call(depth0, depth0.$state, {hash:{},inverse:self.program(20, program20, data),fn:self.program(18, program18, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n          ";
-  return buffer;
-  }
-function program18(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n              ";
-  if (stack1 = helpers.$state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.$state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\n            ";
-  return buffer;
-  }
-
-function program20(depth0,data) {
-  
-  
-  return "\n              <span class=\"warn\">unconfirmed</span><i class=\"icon-question-sign\"></i>\n            ";
-  }
-
-function program22(depth0,data) {
-  
-  var buffer = "", stack1, stack2;
-  buffer += "\n  <div class=\"tableStatus\">\n    <p class=\"currentSearchTerm muted\">";
-  if (stack1 = helpers.resultsDesc) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.resultsDesc; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "</p>\n    <p class=\"currentSearchMetrics muted\">Showing "
-    + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + " of ";
-  if (stack2 = helpers.totalUsers) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.totalUsers; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + " users</p>\n  </div>\n  ";
-  return buffer;
-  }
-
-  buffer += "<div class=\"module content centered\" id=\""
-    + escapeExpression(((stack1 = ((stack1 = depth0.module),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.editableUser, {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n</div>\n\n<div id=\"confirmUserRemoveModal\" class=\"modal hide fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n  <div class=\"modal-header\">\n    <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">×</button>\n    <h3 class=\"modal-title\"></h3>\n  </div>\n  <div class=\"modal-body\">\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"closeModal btn\" data-dismiss=\"modal\" aria-hidden=\"true\">Cancel</button>\n    <button class=\"removeUser btn btn-danger\">Remove user</button>\n  </div>\n</div>\n";
-  return buffer;
-  });
-
-this["JST"]["sidebar-modules"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+this["JST"]["sidebar-plugins"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n<li>\n  <a href=\"/#modules/";
+  buffer += "\n<li>\n  <a href=\"/#plugins/";
   if (stack1 = helpers.url) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.url; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -1478,24 +758,24 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  stack1 = helpers.each.call(depth0, depth0.modules, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  stack1 = helpers.each.call(depth0, depth0.plugins, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n";
   return buffer;
   });
 
 this["JST"]["sidebar"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<header>\n  <div class=\"logo ir\">Hoodie Pocket</div>\n  <div class=\"appName\"><div><a href=\"/#\"></a></div></div>\n</header>\n<nav>\n  <ul class=\"modules\"></ul>\n</nav>\n";
+  return "<header>\n  <div class=\"logo ir\">Hoodie Pocket</div>\n  <div class=\"appName\"><div><a href=\"/#\"></a></div></div>\n</header>\n<nav>\n  <ul class=\"plugins\"></ul>\n</nav>\n";
   });
 
 this["JST"]["signin"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
@@ -1510,8 +790,8 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   });
 
 this["JST"]["users"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {

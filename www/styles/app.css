@@ -6406,24 +6406,26 @@ fieldset.toggle .togglee {
 
 /* line 231, ../../app/styles/main.scss */
 .sidebar {
+  position: absolute;
+  bottom: 0;
+  top: 0;
   background: #f7f2ec;
   width: 220px;
-  overflow: hidden;
-  height: 4000px;
+  overflow: scroll;
   float: left;
   border-right: 4px solid #ded9d4;
 }
-/* line 238, ../../app/styles/main.scss */
+/* line 240, ../../app/styles/main.scss */
 .sidebar header {
   margin: 0 20px;
 }
-/* line 240, ../../app/styles/main.scss */
+/* line 242, ../../app/styles/main.scss */
 .sidebar header .logo {
   background: url("../images/hoodie_pocket_logo_176_b.png") no-repeat;
   height: 53px;
   margin-top: 20px;
 }
-/* line 245, ../../app/styles/main.scss */
+/* line 247, ../../app/styles/main.scss */
 .sidebar header .appName {
   width: 167px;
   height: 46px;
@@ -6431,36 +6433,36 @@ fieldset.toggle .togglee {
   font-weight: 800;
   position: relative;
 }
-/* line 253, ../../app/styles/main.scss */
+/* line 255, ../../app/styles/main.scss */
 .sidebar header .appName div {
   position: absolute;
   bottom: 5px;
 }
 
-/* line 264, ../../app/styles/main.scss */
-nav ul.modules .name {
+/* line 266, ../../app/styles/main.scss */
+nav ul.plugins .name {
   display: inline-block;
   width: 130px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-/* line 271, ../../app/styles/main.scss */
+/* line 273, ../../app/styles/main.scss */
 nav ul {
   border-top: 1px solid #693c10;
   margin: 10px 20px 0;
   padding-top: 10px;
 }
-/* line 275, ../../app/styles/main.scss */
+/* line 277, ../../app/styles/main.scss */
 nav ul li {
   line-height: 30px;
   list-style: none;
 }
-/* line 278, ../../app/styles/main.scss */
+/* line 280, ../../app/styles/main.scss */
 nav ul li a {
   display: block;
 }
-/* line 281, ../../app/styles/main.scss */
+/* line 283, ../../app/styles/main.scss */
 nav ul li .badge {
   padding-top: 2px;
   margin-top: 6px;
@@ -6468,18 +6470,18 @@ nav ul li .badge {
   right: 0.5em;
   position: absolute;
 }
-/* line 289, ../../app/styles/main.scss */
+/* line 291, ../../app/styles/main.scss */
 nav ul li.active a {
   font-weight: 800;
 }
 
-/* line 299, ../../app/styles/main.scss */
+/* line 301, ../../app/styles/main.scss */
 a.signOut {
   display: none;
   z-index: 1000;
 }
 
-/* line 305, ../../app/styles/main.scss */
+/* line 307, ../../app/styles/main.scss */
 .authenticated a.signOut {
   display: block;
   position: absolute;
@@ -6489,139 +6491,160 @@ a.signOut {
   text-transform: uppercase;
   color: #b49d87;
 }
-/* line 313, ../../app/styles/main.scss */
+/* line 315, ../../app/styles/main.scss */
 .authenticated a.signOut:hover {
   font-weight: normal;
   color: #693c10;
 }
 
-/* line 320, ../../app/styles/main.scss */
+/* line 322, ../../app/styles/main.scss */
 h2.top {
   border-bottom: 1px solid #693c10;
   padding-bottom: 5px;
   margin-bottom: 20px;
 }
 
-/* line 326, ../../app/styles/main.scss */
+/* line 328, ../../app/styles/main.scss */
 h3.top {
   margin-top: -16px;
   padding-top: 0;
 }
 
-/* line 331, ../../app/styles/main.scss */
+/* line 333, ../../app/styles/main.scss */
 .main {
-  overflow: hidden;
+  overflow: scroll;
   margin: 0 0 0 240px;
   padding: 89px 20px 72px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
-/* line 335, ../../app/styles/main.scss */
+/* line 342, ../../app/styles/main.scss */
 .main .content {
   max-width: 52em;
   margin: 0;
 }
-/* line 338, ../../app/styles/main.scss */
+/* line 345, ../../app/styles/main.scss */
 .main .content.centered {
   margin: 0 auto;
 }
+/* line 348, ../../app/styles/main.scss */
+.main .content iframe {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
 
-/* line 344, ../../app/styles/main.scss */
+/* line 356, ../../app/styles/main.scss */
 .row-fluid.statistics {
   max-height: 98px;
   margin-bottom: 15px;
 }
 
-/* line 350, ../../app/styles/main.scss */
+/* line 362, ../../app/styles/main.scss */
 .userSearch .form-search {
   float: left;
 }
-/* line 353, ../../app/styles/main.scss */
+/* line 365, ../../app/styles/main.scss */
 .userSearch .clearSearch {
   margin-left: 30px;
 }
-/* line 356, ../../app/styles/main.scss */
+/* line 368, ../../app/styles/main.scss */
 .userSearch .pagination {
   height: 30px;
 }
-/* line 358, ../../app/styles/main.scss */
+/* line 370, ../../app/styles/main.scss */
 .userSearch .pagination a, .userSearch .pagination span {
   line-height: 28px;
 }
 
-/* line 363, ../../app/styles/main.scss */
+/* line 375, ../../app/styles/main.scss */
 .tableStatus {
   display: block;
   position: relative;
   height: 20px;
 }
-/* line 367, ../../app/styles/main.scss */
+/* line 379, ../../app/styles/main.scss */
 .tableStatus .currentSearchTerm {
   display: block;
   float: left;
 }
-/* line 371, ../../app/styles/main.scss */
+/* line 383, ../../app/styles/main.scss */
 .tableStatus .currentSearchMetrics {
   display: block;
   float: right;
 }
 
-/* line 380, ../../app/styles/main.scss */
-.module legend, form legend, .toggle legend {
+/* line 391, ../../app/styles/main.scss */
+.plugin-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+/* line 401, ../../app/styles/main.scss */
+.plugin legend, form legend, .toggle legend {
   margin-bottom: 10px;
   line-height: 40px;
   border-bottom: 1px solid #693c10;
   color: #693c10;
 }
-/* line 386, ../../app/styles/main.scss */
-.module .description, .module .error, form .description, form .error, .toggle .description, .toggle .error {
+/* line 407, ../../app/styles/main.scss */
+.plugin .description, .plugin .error, form .description, form .error, .toggle .description, .toggle .error {
   margin-bottom: 10px;
   display: block;
 }
-/* line 390, ../../app/styles/main.scss */
-.module .error, form .error, .toggle .error {
+/* line 411, ../../app/styles/main.scss */
+.plugin .error, form .error, .toggle .error {
   margin-left: 165px;
   color: #be1522;
 }
-/* line 394, ../../app/styles/main.scss */
-.module section, form section, .toggle section {
+/* line 415, ../../app/styles/main.scss */
+.plugin section, form section, .toggle section {
   border-top: 1px solid #d9cec3;
   padding-top: 10px;
   *zoom: 1;
   overflow: hidden;
 }
 /* line 15, ../../app/styles/compass_twitter_bootstrap/_mixins.scss */
-.module section:before, .module section:after, form section:before, form section:after, .toggle section:before, .toggle section:after {
+.plugin section:before, .plugin section:after, form section:before, form section:after, .toggle section:before, .toggle section:after {
   display: table;
   content: "";
   line-height: 0;
 }
 /* line 22, ../../app/styles/compass_twitter_bootstrap/_mixins.scss */
-.module section:after, form section:after, .toggle section:after {
+.plugin section:after, form section:after, .toggle section:after {
   clear: both;
 }
-/* line 399, ../../app/styles/main.scss */
-.module section.noBorder, form section.noBorder, .toggle section.noBorder {
+/* line 420, ../../app/styles/main.scss */
+.plugin section.noBorder, form section.noBorder, .toggle section.noBorder {
   border: none;
 }
-/* line 402, ../../app/styles/main.scss */
-.module section .control-group, form section .control-group, .toggle section .control-group {
+/* line 423, ../../app/styles/main.scss */
+.plugin section .control-group, form section .control-group, .toggle section .control-group {
   margin-bottom: 6px;
 }
-/* line 405, ../../app/styles/main.scss */
-.module section .formLabel, .module section label, form section .formLabel, form section label, .toggle section .formLabel, .toggle section label {
+/* line 426, ../../app/styles/main.scss */
+.plugin section .formLabel, .plugin section label, form section .formLabel, form section label, .toggle section .formLabel, .toggle section label {
   width: 30%;
   float: left;
   margin-top: 10px;
   padding-right: 30px;
   padding-bottom: 10px;
 }
-/* line 412, ../../app/styles/main.scss */
-.module section .form, .module section .controls, form section .form, form section .controls, .toggle section .form, .toggle section .controls {
+/* line 433, ../../app/styles/main.scss */
+.plugin section .form, .plugin section .controls, form section .form, form section .controls, .toggle section .form, .toggle section .controls {
   width: 70%;
   margin-top: 5px;
   padding-bottom: 6px;
 }
-/* line 417, ../../app/styles/main.scss */
-.module section .form .note, .module section .controls .note, form section .form .note, form section .controls .note, .toggle section .form .note, .toggle section .controls .note {
+/* line 438, ../../app/styles/main.scss */
+.plugin section .form .note, .plugin section .controls .note, form section .form .note, form section .controls .note, .toggle section .form .note, .toggle section .controls .note {
   font-size: 12px;
   color: #b49d87;
   margin-top: 11px;
@@ -6629,10 +6652,10 @@ h3.top {
   margin-left: 7px;
   width: 72%;
 }
-/* line 426, ../../app/styles/main.scss */
-.module section .form label.checkbox,
-.module section .form label.radio, .module section .controls label.checkbox,
-.module section .controls label.radio, form section .form label.checkbox,
+/* line 447, ../../app/styles/main.scss */
+.plugin section .form label.checkbox,
+.plugin section .form label.radio, .plugin section .controls label.checkbox,
+.plugin section .controls label.radio, form section .form label.checkbox,
 form section .form label.radio, form section .controls label.checkbox,
 form section .controls label.radio, .toggle section .form label.checkbox,
 .toggle section .form label.radio, .toggle section .controls label.checkbox,
@@ -6641,32 +6664,32 @@ form section .controls label.radio, .toggle section .form label.checkbox,
   min-height: 30px;
   width: 80%;
 }
-/* line 431, ../../app/styles/main.scss */
-.module section .form input[type="radio"], .module section .form input[type="checkbox"], .module section .controls input[type="radio"], .module section .controls input[type="checkbox"], form section .form input[type="radio"], form section .form input[type="checkbox"], form section .controls input[type="radio"], form section .controls input[type="checkbox"], .toggle section .form input[type="radio"], .toggle section .form input[type="checkbox"], .toggle section .controls input[type="radio"], .toggle section .controls input[type="checkbox"] {
+/* line 452, ../../app/styles/main.scss */
+.plugin section .form input[type="radio"], .plugin section .form input[type="checkbox"], .plugin section .controls input[type="radio"], .plugin section .controls input[type="checkbox"], form section .form input[type="radio"], form section .form input[type="checkbox"], form section .controls input[type="radio"], form section .controls input[type="checkbox"], .toggle section .form input[type="radio"], .toggle section .form input[type="checkbox"], .toggle section .controls input[type="radio"], .toggle section .controls input[type="checkbox"] {
   margin-top: 3px;
 }
-/* line 435, ../../app/styles/main.scss */
-.module section .submitMessage, form section .submitMessage, .toggle section .submitMessage {
+/* line 456, ../../app/styles/main.scss */
+.plugin section .submitMessage, form section .submitMessage, .toggle section .submitMessage {
   margin-left: 10px;
 }
-/* line 456, ../../app/styles/main.scss */
-.module select,
-.module textarea,
-.module input[type="text"],
-.module input[type="password"],
-.module input[type="datetime"],
-.module input[type="datetime-local"],
-.module input[type="date"],
-.module input[type="month"],
-.module input[type="time"],
-.module input[type="week"],
-.module input[type="number"],
-.module input[type="email"],
-.module input[type="url"],
-.module input[type="search"],
-.module input[type="tel"],
-.module input[type="color"],
-.module .uneditable-input, form select,
+/* line 477, ../../app/styles/main.scss */
+.plugin select,
+.plugin textarea,
+.plugin input[type="text"],
+.plugin input[type="password"],
+.plugin input[type="datetime"],
+.plugin input[type="datetime-local"],
+.plugin input[type="date"],
+.plugin input[type="month"],
+.plugin input[type="time"],
+.plugin input[type="week"],
+.plugin input[type="number"],
+.plugin input[type="email"],
+.plugin input[type="url"],
+.plugin input[type="search"],
+.plugin input[type="tel"],
+.plugin input[type="color"],
+.plugin .uneditable-input, form select,
 form textarea,
 form input[type="text"],
 form input[type="password"],
@@ -6703,50 +6726,50 @@ form .uneditable-input, .toggle select,
   display: block;
   width: 75%;
 }
-/* line 462, ../../app/styles/main.scss */
-.module textarea, form textarea, .toggle textarea {
+/* line 483, ../../app/styles/main.scss */
+.plugin textarea, form textarea, .toggle textarea {
   height: auto;
   margin-bottom: 4px;
   margin-top: 6px;
 }
 
-/* line 470, ../../app/styles/main.scss */
+/* line 491, ../../app/styles/main.scss */
 .form-horizontal .control-group {
   margin-bottom: 6px;
 }
-/* line 473, ../../app/styles/main.scss */
+/* line 494, ../../app/styles/main.scss */
 .form-horizontal .controls {
   margin-left: 218px;
 }
 
-/* line 481, ../../app/styles/main.scss */
+/* line 502, ../../app/styles/main.scss */
 table.users a:hover {
   font-weight: normal;
   text-decoration: underline;
 }
 
-/* line 487, ../../app/styles/main.scss */
+/* line 508, ../../app/styles/main.scss */
 .inTableError {
   cursor: pointer;
 }
-/* line 489, ../../app/styles/main.scss */
+/* line 510, ../../app/styles/main.scss */
 .inTableError:hover > .errorTooltip {
   display: block;
 }
 
-/* line 494, ../../app/styles/main.scss */
+/* line 515, ../../app/styles/main.scss */
 table.users .error {
   color: #be1522;
   margin-right: 8px;
 }
 
-/* line 499, ../../app/styles/main.scss */
+/* line 520, ../../app/styles/main.scss */
 table.users .warn {
   color: #f9b233;
   margin-right: 8px;
 }
 
-/* line 504, ../../app/styles/main.scss */
+/* line 525, ../../app/styles/main.scss */
 .errorTooltip {
   display: none;
   position: absolute;
@@ -6762,24 +6785,24 @@ table.users .warn {
   margin-left: -180px;
   margin-top: -2.55em;
 }
-/* line 514, ../../app/styles/main.scss */
+/* line 535, ../../app/styles/main.scss */
 .errorTooltip strong {
   margin-left: 8px;
   text-transform: capitalize;
 }
 
-/* line 522, ../../app/styles/main.scss */
+/* line 543, ../../app/styles/main.scss */
 th.sort-header {
   cursor: pointer;
 }
 
-/* line 526, ../../app/styles/main.scss */
+/* line 547, ../../app/styles/main.scss */
 th.sort-header::-moz-selection,
 th.sort-header::selection {
   background: transparent;
 }
 
-/* line 529, ../../app/styles/main.scss */
+/* line 550, ../../app/styles/main.scss */
 table th.sort-header:after {
   content: '';
   float: right;
@@ -6790,12 +6813,12 @@ table th.sort-header:after {
   visibility: hidden;
 }
 
-/* line 538, ../../app/styles/main.scss */
+/* line 559, ../../app/styles/main.scss */
 table th.sort-header:hover:after {
   visibility: visible;
 }
 
-/* line 543, ../../app/styles/main.scss */
+/* line 564, ../../app/styles/main.scss */
 table th.sort-up:after,
 table th.sort-down:after,
 table th.sort-down:hover:after {
@@ -6803,23 +6826,23 @@ table th.sort-down:hover:after {
   opacity: 0.4;
 }
 
-/* line 547, ../../app/styles/main.scss */
+/* line 568, ../../app/styles/main.scss */
 table th.sort-up:after {
   border-bottom: none;
   border-width: 4px 4px 0;
 }
 
-/* line 555, ../../app/styles/main.scss */
+/* line 576, ../../app/styles/main.scss */
 .modal {
   outline: none;
 }
 
-/* line 559, ../../app/styles/main.scss */
+/* line 580, ../../app/styles/main.scss */
 .modal-backdrop {
   background-color: #f7f2ec;
 }
 
-/* line 563, ../../app/styles/main.scss */
+/* line 584, ../../app/styles/main.scss */
 .modal-footer {
   background-color: #f7f2ec;
 }
