@@ -351,20 +351,20 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "singleLineComment": ["#"],
           "name": "CoffeeScript"
         },
-        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie_admin.modules.coffee",
-        "projectPath": "src/hoodie_admin.modules.coffee",
-        "targetPath": "hoodie_admin.modules",
+        "sourcePath": "/Users/gregor/JavaScripts/hood.ie/hoodie.admin.js/src/hoodie_admin.plugins.coffee",
+        "projectPath": "src/hoodie_admin.plugins.coffee",
+        "targetPath": "hoodie_admin.plugins",
         "firstHeader": {
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "HoodieAdmin.Modules",
+            "title": "HoodieAdmin.Plugins",
             "slug": "hoodieadminmodules",
             "isFileHeader": true
           },
           "depth": 1
         },
-        "title": "HoodieAdmin.Modules"
+        "title": "HoodieAdmin.Plugins"
       },
       "depth": 1,
       "outline": []
