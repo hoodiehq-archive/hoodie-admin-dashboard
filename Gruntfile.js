@@ -100,7 +100,8 @@ module.exports = function( grunt ) {
                 dest: 'dist',
                 src: [
                     '*.{ico,txt}',
-                    '.htaccess'
+                    '.htaccess',
+                    'components/**'
                 ]
             }]
         }
