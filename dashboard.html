@@ -80,13 +80,13 @@
 <script src="scripts/libs/draggabilly.pkgd.min.js"></script>
 <script>
 $( function() {
-  var pckry;
+  window.pckry;
   var $content = $('.packery');
 
   pckry = new Packery($content[0], {
     itemSelector: ".item",
     gutter: 0,
-    columnWidth: 265,
+    columnWidth: '.item',
     rowHeight: 230
   });
 
@@ -100,6 +100,11 @@ $( function() {
 
   $content.packery();
   pckry.layout();
+
+  $(window).resize(function(event) {
+    // @TODO:  this doesn't always work
+    pckry.layout()
+  });
 });
 </script>
 </body>
