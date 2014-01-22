@@ -1,0 +1,110 @@
+@import "compass/reset";
+@import "compass/css3/transition";
+
+$white: #FFF;
+$beige: #F3F3F0;
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background: $beige;
+}
+
+header{
+  background: #555;
+
+  height: 45px;
+  h1{
+    color: $white;
+    font-size: 1.5em;
+    line-height: 45px;
+    margin: 0 0 0 1rem;
+  }
+  .placeMeta{
+    position: absolute;
+    right: 1rem;
+    top: 0;
+  }
+}
+
+.packery {
+  background: $beige;
+  width: 98%;
+  margin: 1%;
+}
+
+/* clearfix */
+.packery:after {
+  content: ' ';
+  display: block;
+  clear: both;
+}
+
+$itemUnitWidth: 265px;
+$itemUnitHeight: 230px;
+
+$borderColor:       rgba(0,0,0,0.1);
+$borderColorHover:  rgba(0,0,0,0.2);
+
+.item {
+  width: $itemUnitWidth;
+  height: $itemUnitHeight;
+  float: left;
+  border: 4px solid transparent;
+  .itemContent{
+    position: relative;
+    background: #FFF;
+    height: 100%;
+    border: 1px solid $borderColor;
+    @include single-transition(border-color, 0.25s)
+  }
+}
+
+.item:hover {
+  .itemContent{
+    border-color: $borderColorHover;
+    .handle{
+      cursor: move;
+      background: rgba(245,245,245,1);
+      @include transition(0.25s);
+      border-color: $borderColorHover;
+    }
+  }
+}
+
+.item.w { width: 100%; }
+.item.w2 { width: $itemUnitWidth * 2; }
+.item.w4 { width: $itemUnitWidth * 4; }
+
+.item.h2 { height: $itemUnitHeight * 2; }
+.item.h4 { height: $itemUnitHeight * 4; }
+
+.item.is-dragging,
+.item.is-positioning-post-drag {
+  .itemContent{
+    border-color: white;
+    background: #09F;
+    z-index: 2;
+  }
+}
+
+.item .handle{
+  width: 100%;
+  height: 30px;
+  background: #FFF;
+  bottom: 0;
+  position: absolute;
+  color: rgba(10, 10, 10, 0.3);
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 0 10px;
+  line-height: 30px;
+  border-top: 1px solid $borderColor;
+}
