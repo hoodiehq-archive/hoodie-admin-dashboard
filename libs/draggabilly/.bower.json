@@ -1,0 +1,14 @@
+{
+  "name": "draggabilly",
+  "_cacheHeaders": {
+    "ETag": "\"d40e86f965f77e393897b4174ceacbd3\"",
+    "Content-Length": "14217",
+    "Content-Type": "text/plain; charset=utf-8",
+    "Content-Disposition": "inline"
+  },
+  "_release": "e-tag:d40e86f96",
+  "main": "index.js",
+  "_source": "https://raw.github.com/desandro/draggabilly/master/draggabilly.js",
+  "_target": "*",
+  "_originalSource": "https://raw.github.com/desandro/draggabilly/master/draggabilly.js"
+}

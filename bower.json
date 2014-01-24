@@ -1,0 +1,10 @@
+{
+  "name": "hoodie-pocket",
+  "version": "0.0.0",
+  "main": "./app/index.html",
+  "dependencies": {
+    "draggabilly": "https://raw.github.com/desandro/draggabilly/master/draggabilly.js",
+    "jquery": "~2.0.3",
+    "packery": "~1.2.1"
+  }
+}
