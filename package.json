@@ -25,9 +25,5 @@
   "bugs": {
     "url": "https://github.com/hoodiehq/pocket/issues"
   },
-  "homepage": "https://github.com/hoodiehq/pocket",
-  "browser": {
-    "jquery": "./libs/jquery/jquery.js"
-  },
-  "browserify-shim": {}
+  "homepage": "https://github.com/hoodiehq/pocket"
 }

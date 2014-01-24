@@ -59,13 +59,12 @@ module.exports = function (grunt) {
               path: 'libs/jquery/jquery.js',
               exports: '$'
             },
-            draggabilly: {
-              path: 'libs/draggabilly/index.js',
-              exports: 'Draggabilly'
-            },
-            packery: {
-              path: 'libs/packery/js/packery.js',
-              exports: 'Packery'
+            gridster: {
+              path: 'libs/gridster/src/jquery.gridster.js',
+              exports: '$.fn.gridster',
+              depends: {
+                jquery: '$'
+              }
             }
           }
         }
