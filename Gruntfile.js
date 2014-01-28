@@ -8,10 +8,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
 
   // Project configuration.
   grunt.initConfig({
+
+    pkg: require('./package.json'),
 
     jshint: {
       files: [
@@ -51,7 +54,7 @@ module.exports = function (grunt) {
     browserify: {
       build: {
         src: ['app/js/app.js'],
-        dest: 'app/dist/bundle.js',
+        dest: 'app/dist/pocket.js',
         options: {
           debug: true,
           shim: {
@@ -60,7 +63,7 @@ module.exports = function (grunt) {
               exports: '$'
             },
             gridster: {
-              path: 'libs/gridster/src/jquery.gridster.js',
+              path: 'libs/gridster.js/src/jquery.gridster.extras.js',
               exports: '$.fn.gridster',
               depends: {
                 jquery: '$'
@@ -69,7 +72,16 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+
+    uglify: {
+      dist: {
+        files: {
+          'app/dist/<%= pkg.name %>.min.js': 'app/dist/bundle.js'
+        }
+      }
     }
+
 
   });
 
