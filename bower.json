@@ -4,6 +4,6 @@
   "main": "./app/index.html",
   "dependencies": {
     "jquery": "~2.0.3",
-    "gridster.js": "git@github.com:espy/gridster.js.git#~0.2.1"
+    "jquery.gridster.with-extras.js": "https://raw2.github.com/espy/gridster.js/master/dist/jquery.gridster.with-extras.js"
   }
 }

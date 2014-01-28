@@ -24,7 +24,7 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      files: ['<%= jshint.files %>'],
+      files: ['<%= jshint.files %>', 'app/scss/*.scss'],
       tasks: ['jshint', 'compass', 'browserify'],
       options: {
         livereload: true
@@ -60,7 +60,7 @@ module.exports = function (grunt) {
               exports: '$'
             },
             gridster: {
-              path: 'libs/gridster/src/jquery.gridster.js',
+              path: 'libs/jquery.gridster.with-extras.js/index.js',
               exports: '$.fn.gridster',
               depends: {
                 jquery: '$'
@@ -75,5 +75,6 @@ module.exports = function (grunt) {
 
   // Default task.
   grunt.registerTask('default', ['jshint']);
+  grunt.registerTask('build', ['jshint', 'compass', 'browserify']);
 
 };
