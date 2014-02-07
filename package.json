@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/hoodiehq/pocket/issues"
   },
-  "homepage": "https://github.com/hoodiehq/pocket"
+  "homepage": "https://github.com/hoodiehq/pocket",
+  "dependencies": {
+    "brfs": "0.0.9"
+  }
 }

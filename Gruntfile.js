@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     jshint: {
       files: [
         'Gruntfile.js',
-        'app/js/**/*.js'
+        'app/js/**/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -56,14 +56,60 @@ module.exports = function (grunt) {
 
     browserify: {
       build: {
-        src: ['app/js/app.js'],
+        src: ['app/js/main.js'],
         dest: 'app/dist/pocket.js',
         options: {
-          debug: true,
+          standalone: 'app',
+          //debug: true,
+          transform: [
+            'brfs'
+          ],
           shim: {
             jquery: {
               path: 'libs/jquery/jquery.js',
               exports: '$'
+            },
+            lodash: {
+              path: 'libs/lodash/dist/lodash.js',
+              exports: '_'
+            },
+            underscore: {
+              path: 'libs/underscore/underscore.js',
+              exports: '_'
+            },
+            handlebars: {
+              path: 'libs/handlebars/handlebars.js',
+              exports: 'Handlebars'
+            },
+            backbone: {
+              path: 'libs/backbone/backbone.js',
+              exports: 'Backbone',
+              depends: {
+                underscore: 'underscore'
+              }
+            },
+            'backbone.babysitter': {
+              path: 'libs/backbone.babysitter/lib/backbone.babysitter.js',
+              exports: 'Backbone.Babysitter',
+              depends: {
+                backbone: 'Backbone'
+              }
+            },
+            'backbone.wreqr': {
+              path: 'libs/backbone.wreqr/lib/backbone.wreqr.js',
+              exports: 'Backbone.Wreqr',
+              depends: {
+                backbone: 'Backbone'
+              }
+            },
+            'backbone.marionette': {
+              path: 'libs/backbone.marionette/lib/backbone.marionette.js',
+              exports: 'Marionette',
+              depends: {
+                jquery: '$',
+                backbone: 'Backbone',
+                underscore: '_'
+              }
             },
             gridster: {
               path: 'libs/jquery.gridster.with-extras.js/index.js',
@@ -100,7 +146,7 @@ module.exports = function (grunt) {
 
   // Default task.
   grunt.registerTask('default', ['jshint']);
-  grunt.registerTask('build', ['jshint', 'compass', 'browserify']);
+  grunt.registerTask('build', ['jshint', 'compass', 'browserify', 'uglify']);
 
   grunt.registerTask('server', ['hapi', 'watch']);
 

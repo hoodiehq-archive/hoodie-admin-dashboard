@@ -4,6 +4,11 @@
   "main": "./app/index.html",
   "dependencies": {
     "jquery": "~2.0.3",
-    "jquery.gridster.with-extras.js": "https://raw2.github.com/espy/gridster.js/master/dist/jquery.gridster.with-extras.js"
+    "jquery.gridster.with-extras.js": "https://raw2.github.com/espy/gridster.js/master/dist/jquery.gridster.with-extras.js",
+    "lodash": "~2.4.1",
+    "handlebars": "1.0.0",
+    "backbone": "~1.1.0",
+    "backbone.marionette": "~1.6.1",
+    "underscore": "~1.5.2"
   }
 }
