@@ -31,7 +31,7 @@ module.exports = function (grunt) {
 
     watch: {
       files: ['<%= jshint.files %>', 'app/scss/*.scss'],
-      tasks: ['jshint', 'compass', 'browserify', 'hapi'],
+      tasks: ['jshint', 'compass', 'browserify:app', 'hapi'],
       options: {
         livereload: true
       }
@@ -55,15 +55,8 @@ module.exports = function (grunt) {
     },
 
     browserify: {
-      build: {
-        src: ['app/js/main.js'],
-        dest: 'app/dist/pocket.js',
+      libs: {
         options: {
-          standalone: 'app',
-          //debug: true,
-          transform: [
-            'brfs'
-          ],
           shim: {
             jquery: {
               path: 'libs/jquery/jquery.js',
@@ -119,7 +112,42 @@ module.exports = function (grunt) {
               }
             }
           }
-        }
+        },
+        src: ['./libs/*.js'],
+        dest: 'app/dist/libs.js'
+      },
+      app: {
+        options: {
+          standalone: 'app',
+          //debug: true,
+          transform: [
+            'brfs'
+          ],
+          alias: [
+            './libs/jquery/jquery.js:jquery',
+            './libs/lodash/dist/lodash.js:lodash',
+            './libs/underscore/underscore.js:underscore',
+            './libs/handlebars/handlebars.js:handlebars',
+            './libs/backbone/backbone.js:backbone',
+            './libs/backbone.babysitter/lib/backbone.babysitter.js:backbone.babysitter',
+            './libs/backbone.wreqr/lib/backbone.wreqr.js:backbone.wreqr',
+            './libs/backbone.marionette/lib/backbone.marionette.js:backbone.marionette',
+            './libs/jquery.gridster.with-extras.js/index.js:gridster'
+          ],
+          external: [
+            './libs/jquery/jquery.js',
+            './libs/lodash/dist/lodash.js',
+            './libs/underscore/underscore.js',
+            './libs/handlebars/handlebars.js',
+            './libs/backbone/backbone.js',
+            './libs/backbone.babysitter/lib/backbone.babysitter.js',
+            './libs/backbone.wreqr/lib/backbone.wreqr.js',
+            './libs/backbone.marionette/lib/backbone.marionette.js',
+            './libs/jquery.gridster.with-extras.js/index.js'
+          ]
+        },
+        src: ['app/js/main.js'],
+        dest: 'app/dist/pocket.js',
       }
     },
 
