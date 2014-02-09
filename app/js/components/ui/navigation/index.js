@@ -3,7 +3,7 @@
 var app = require('../../../helpers/namespace');
 var Controller = require('./controllers/index');
 
-app.module('snug.plugin_list', function () {
+app.module('plugin_list', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);
@@ -12,7 +12,7 @@ app.module('snug.plugin_list', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('plugin_list:show', function (options) {
+    app.vent.on('nav:show', function (options) {
       self._controller.show(options);
     });
 

@@ -17,7 +17,7 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
-    app.regions.sidebar_plugin_list.show(view);
+    app.regions.sidebar_nav.show(view);
   }
 
 });

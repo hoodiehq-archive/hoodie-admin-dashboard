@@ -9,10 +9,8 @@ var Controller = Marionette.Controller.extend({
   initialize: function (options) {
     this.options = options || {};
 
-    // TODO: needs to come from the pocket components model
-    //
     this.options.model = new Backbone.Model({
-      name: 'minutes.io'
+      name: options.app.name
     });
 
     this.show(this.options);

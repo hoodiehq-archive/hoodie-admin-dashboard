@@ -2,22 +2,21 @@
 
 var Marionette = require('backbone.marionette');
 
-var Tiles = require('./tiles');
+var Plugins = require('./plugins');
 
 require('../../ui/logo/index');
-require('../../ui/plugin_list/index');
+require('../../ui/navigation/index');
 
 var Controller = Marionette.Controller.extend({
-
 
   initialize: function (options) {
     this.options = options || {};
     app.vent.trigger('logo:show', options);
   },
 
-  tiles: function (id, action) {
-    new Tiles({
-      id: id,
+  plugins: function (name, action) {
+    new Plugins({
+      name: name,
       action: action,
       ns: 'tiles'
     });

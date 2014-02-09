@@ -1,20 +1,19 @@
 /*jshint -W079 */
-var app = require('../../helpers/namespace');
+var Controller = require('./controllers/index');
+var fs = require('fs');
+var app = require('../../../helpers/namespace');
 
-app.module('vertebrae', function () {
+
+app.module('pocket.content', function () {
 
   'use strict';
 
-  this.addInitializer(function () {
+  this.addInitializer(function (options) {
+    options.app.components.sidebar.template = fs.readFileSync(__dirname + '/templates/index.html');
 
-    //app.regions = app.rm.addRegions({
-      //header: 'header',
-      //section: 'section'
-    //});
-
-    //app.vent.on('route:index', function (id, action) {
-      //console.log(id, action);
-    //});
+    this._controller = new Controller(
+      options.app.components.sidebar
+    );
 
   });
 

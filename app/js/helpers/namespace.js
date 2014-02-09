@@ -4,7 +4,6 @@ var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
 
 var Router = require('../router');
-
 var Config = require('../models/config');
 
 var app = new Marionette.Application();
@@ -24,7 +23,6 @@ app.on('initialize:before', function (options) {
   // create layout manager
   app.rm = new Marionette.RegionManager();
 
-  //
   // log to console in debug mode
   if (options.debug) {
     global.app = app;

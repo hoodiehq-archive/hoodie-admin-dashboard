@@ -7,6 +7,8 @@ require('./helpers/handlebars');
 
 require('./components/structural/layout/index');
 require('./components/structural/sidebar/index');
+require('./components/structural/content/index');
+
 require('./components/pocket/index');
 
 app.start(new Config().toJSON());

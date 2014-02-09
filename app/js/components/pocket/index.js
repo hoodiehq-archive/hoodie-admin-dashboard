@@ -12,8 +12,9 @@ app.module('pocket', function () {
     app.regions = app.rm.addRegions({
       sidebar: 'aside',
       sidebar_logo: 'aside header',
-      sidebar_plugin_list: 'aside #plugin-list',
-      content: 'section'
+      sidebar_nav: 'aside nav',
+      content: 'section',
+      content_footer: 'section footer'
     });
 
   });
@@ -21,8 +22,8 @@ app.module('pocket', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('tiles', function (filter, id) {
-      self._controller.tiles(filter, id);
+    app.vent.on('plugins', function (name, action) {
+      self._controller.plugins(name, action);
     });
 
   });

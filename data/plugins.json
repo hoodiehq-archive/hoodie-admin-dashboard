@@ -1,1 +1,21 @@
-[{"name":"appconfig","title":"appconfig","description":"Hoodie plugin for editing global app config","version":"0.1.1"},{"name":"email","title":"email","description":"Hoodie plugin that sends multipart emails","version":"0.1.4"},{"name":"users","title":"users","description":"[![Build Status](https://travis-ci.org/hoodiehq/worker-users.png?branch=master)](https://travis-ci.org/hoodiehq/worker-users)","version":"0.0.12"}]
+[
+    {
+        "name": "appconfig",
+        "title": "appconfig",
+        "description": "Hoodie plugin for editing global app config",
+        "version": "0.1.1"
+    },
+    {
+        "name": "email",
+        "title": "email",
+        "description": "Hoodie plugin that sends multipart emails",
+        "version": "0.1.4"
+    },
+    {
+        "name": "users",
+        "title": "users",
+        "description": "[![Build Status](https://travis-ci.org/hoodiehq/worker-users.png?branch=master)](https://travis-ci.org/hoodiehq/worker-users)",
+        "version": "0.0.12"
+    }
+]
+

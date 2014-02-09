@@ -2,9 +2,10 @@ var BaseModel = require('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
 
+  // TODO: the below should be extended by appconfig
   defaults: {
     app: {
-      name: 'pocket',
+      name: 'appname',
       components: {
         'layout': {
           config: {
@@ -16,18 +17,14 @@ var Model = BaseModel.extend({
             template: null
           }
         },
-        'index': {
+        'content': {
           config: { }
         }
       }
     },
 
     api: {
-      token: null,
-      url: 'http://localhost:4444/_api/',
-      headers: {
-        'x-api-version' : '2.1'
-      }
+      url: 'http://localhost:4444/_api/'
     },
 
     ajax: {

@@ -2,8 +2,8 @@
 
 var Marionette = require('backbone.marionette');
 
-var Collection = require('../collections/tiles');
-var Model = require('../models/tile');
+var Collection = require('../collections/plugins');
+var Model = require('../models/plugin');
 
 var controller = Marionette.Controller.extend({
 
@@ -18,7 +18,7 @@ var controller = Marionette.Controller.extend({
 
     this.listenTo(this.collection, 'reset', function () {
 
-      app.vent.trigger('plugin_list:show', {
+      app.vent.trigger('nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
       });

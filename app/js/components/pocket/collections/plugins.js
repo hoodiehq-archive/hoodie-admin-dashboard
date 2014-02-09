@@ -3,7 +3,7 @@
 var app = require('../../../helpers/namespace');
 
 var BaseCollection = require('../../../helpers/mvc/collection');
-var Model = require('../models/tile');
+var Model = require('../models/plugin');
 
 var Collection = BaseCollection.extend({
   url: app.request('config').api.url + '_plugins',

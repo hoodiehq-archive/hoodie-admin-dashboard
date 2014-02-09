@@ -4,7 +4,7 @@
 var app = _dereq_('../../../helpers/namespace');
 
 var BaseCollection = _dereq_('../../../helpers/mvc/collection');
-var Model = _dereq_('../models/tile');
+var Model = _dereq_('../models/plugin');
 
 var Collection = BaseCollection.extend({
   url: app.request('config').api.url + '_plugins',
@@ -14,27 +14,26 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":17,"../../../helpers/namespace":19,"../models/tile":5}],2:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":19,"../../../helpers/namespace":21,"../models/plugin":5}],2:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
 
-var Tiles = _dereq_('./tiles');
+var Plugins = _dereq_('./plugins');
 
 _dereq_('../../ui/logo/index');
-_dereq_('../../ui/plugin_list/index');
+_dereq_('../../ui/navigation/index');
 
 var Controller = Marionette.Controller.extend({
-
 
   initialize: function (options) {
     this.options = options || {};
     app.vent.trigger('logo:show', options);
   },
 
-  tiles: function (id, action) {
-    new Tiles({
-      id: id,
+  plugins: function (name, action) {
+    new Plugins({
+      name: name,
       action: action,
       ns: 'tiles'
     });
@@ -44,13 +43,13 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../ui/logo/index":11,"../../ui/plugin_list/index":14,"./tiles":3,"backbone.marionette":"Tt+p2S"}],3:[function(_dereq_,module,exports){
+},{"../../ui/logo/index":13,"../../ui/navigation/index":16,"./plugins":3,"backbone.marionette":"Tt+p2S"}],3:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
 
-var Collection = _dereq_('../collections/tiles');
-var Model = _dereq_('../models/tile');
+var Collection = _dereq_('../collections/plugins');
+var Model = _dereq_('../models/plugin');
 
 var controller = Marionette.Controller.extend({
 
@@ -65,7 +64,7 @@ var controller = Marionette.Controller.extend({
 
     this.listenTo(this.collection, 'reset', function () {
 
-      app.vent.trigger('plugin_list:show', {
+      app.vent.trigger('nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
       });
@@ -79,7 +78,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../collections/tiles":1,"../models/tile":5,"backbone.marionette":"Tt+p2S"}],4:[function(_dereq_,module,exports){
+},{"../collections/plugins":1,"../models/plugin":5,"backbone.marionette":"Tt+p2S"}],4:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -94,8 +93,9 @@ app.module('pocket', function () {
     app.regions = app.rm.addRegions({
       sidebar: 'aside',
       sidebar_logo: 'aside header',
-      sidebar_plugin_list: 'aside #plugin-list',
-      content: 'section'
+      sidebar_nav: 'aside nav',
+      content: 'section',
+      content_footer: 'section footer'
     });
 
   });
@@ -103,8 +103,8 @@ app.module('pocket', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('tiles', function (filter, id) {
-      self._controller.tiles(filter, id);
+    app.vent.on('plugins', function (name, action) {
+      self._controller.plugins(name, action);
     });
 
   });
@@ -113,7 +113,7 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":19,"./controllers/index":2}],5:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":21,"./controllers/index":2}],5:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -133,7 +133,57 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":18}],6:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":20}],6:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var Controller = Marionette.Controller.extend({
+
+  initialize: function (options) {
+    this.options = options || {};
+
+    // create layout object passing in a template string
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return options.template;
+      }
+    });
+
+    this.container = new Marionette.Region({
+      el: 'section',
+    });
+
+    this.container.show(new Layout);
+  }
+});
+
+module.exports = Controller;
+
+},{"backbone.marionette":"Tt+p2S"}],7:[function(_dereq_,module,exports){
+/*jshint -W079 */
+var Controller = _dereq_('./controllers/index');
+var fs = _dereq_('fs');
+var app = _dereq_('../../../helpers/namespace');
+
+
+app.module('pocket.content', function () {
+
+  'use strict';
+
+  this.addInitializer(function (options) {
+    options.app.components.sidebar.template = "<section></section>\n<footer></footer>\n\n";
+
+    this._controller = new Controller(
+      options.app.components.sidebar
+    );
+
+  });
+
+});
+
+module.exports = app;
+
+},{"../../../helpers/namespace":21,"./controllers/index":6,"fs":33}],8:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
@@ -165,7 +215,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Tt+p2S"}],7:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Tt+p2S"}],9:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var fs = _dereq_('fs');
@@ -177,7 +227,7 @@ app.module('layout', function () {
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components.layout.template = "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
+    options.app.components.layout.template = "<aside class=\"sidebar\"> </aside>\n<section class=\"content dashboard\"> </section>\n";
 
     this._controller = new Controller(
       options.app.components.layout
@@ -189,7 +239,7 @@ app.module('layout', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":19,"./controllers/index":6,"fs":31}],8:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":21,"./controllers/index":8,"fs":33}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -215,7 +265,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Tt+p2S"}],9:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Tt+p2S"}],11:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var fs = _dereq_('fs');
@@ -227,7 +277,7 @@ app.module('pocket.sidebar', function () {
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components.sidebar.template = "<header></header>\n<section id=\"plugin-list\"></div>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
+    options.app.components.sidebar.template = "<header></header>\n<nav></nav>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
 
     this._controller = new Controller(
       options.app.components.sidebar
@@ -239,7 +289,7 @@ app.module('pocket.sidebar', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":19,"./controllers/index":8,"fs":31}],10:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":21,"./controllers/index":10,"fs":33}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -251,10 +301,8 @@ var Controller = Marionette.Controller.extend({
   initialize: function (options) {
     this.options = options || {};
 
-    // TODO: needs to come from the pocket components model
-    //
     this.options.model = new Backbone.Model({
-      name: 'minutes.io'
+      name: options.app.name
     });
 
     this.show(this.options);
@@ -272,13 +320,13 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":19,"../views/index":12,"backbone.marionette":"Tt+p2S"}],11:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":21,"../views/index":14,"backbone.marionette":"Tt+p2S"}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
 
-app.module('snug.logo', function () {
+app.module('logo', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);
@@ -297,7 +345,7 @@ app.module('snug.logo', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":19,"./controllers/index":10}],12:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":21,"./controllers/index":12}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -317,7 +365,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":16,"backbone.marionette":"Tt+p2S","fs":31,"handlebars":"S8Vyg4"}],13:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":18,"backbone.marionette":"Tt+p2S","fs":33,"handlebars":"S8Vyg4"}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -337,20 +385,20 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
-    app.regions.sidebar_plugin_list.show(view);
+    app.regions.sidebar_nav.show(view);
   }
 
 });
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":19,"../views/index":15,"backbone.marionette":"Tt+p2S"}],14:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":21,"../views/index":17,"backbone.marionette":"Tt+p2S"}],16:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
 
-app.module('snug.plugin_list', function () {
+app.module('plugin_list', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);
@@ -359,7 +407,7 @@ app.module('snug.plugin_list', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('plugin_list:show', function (options) {
+    app.vent.on('nav:show', function (options) {
       self._controller.show(options);
     });
 
@@ -369,14 +417,14 @@ app.module('snug.plugin_list', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":19,"./controllers/index":13}],15:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":21,"./controllers/index":15}],17:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
 var Handlebars = _dereq_('handlebars');
 var fs = _dereq_('fs');
 
-var tmpl = "<a href=\"#plugins/show/{{name}}\">{{name}}</a>\n";
+var tmpl = "<a href=\"#plugins/{{name}}/show\">{{name}}</a>\n";
 
 _dereq_('../../../../helpers/handlebars');
 
@@ -403,7 +451,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":16,"backbone.marionette":"Tt+p2S","fs":31,"handlebars":"S8Vyg4"}],16:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":18,"backbone.marionette":"Tt+p2S","fs":33,"handlebars":"S8Vyg4"}],18:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('handlebars');
@@ -429,7 +477,7 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 
 module.exports = Handlebars;
 
-},{"handlebars":"S8Vyg4"}],17:[function(_dereq_,module,exports){
+},{"handlebars":"S8Vyg4"}],19:[function(_dereq_,module,exports){
 
 'use strict';
 
@@ -451,7 +499,7 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 
 module.exports = SuperCollection;
 
-},{"backbone":"m8WWUB","underscore":"EJRrov"}],18:[function(_dereq_,module,exports){
+},{"backbone":"m8WWUB","underscore":"EJRrov"}],20:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -462,14 +510,13 @@ var SuperModel = Backbone.Model.extend({
 
 module.exports = SuperModel;
 
-},{"backbone":"m8WWUB","jquery":"ZJsYNm"}],19:[function(_dereq_,module,exports){
+},{"backbone":"m8WWUB","jquery":"ZJsYNm"}],21:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
 var Backbone = _dereq_('backbone');
 
 var Router = _dereq_('../router');
-
 var Config = _dereq_('../models/config');
 
 var app = new Marionette.Application();
@@ -489,7 +536,6 @@ app.on('initialize:before', function (options) {
   // create layout manager
   app.rm = new Marionette.RegionManager();
 
-  //
   // log to console in debug mode
   if (options.debug) {
     global.app = app;
@@ -513,7 +559,7 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../models/config":24,"../router":25,"backbone":"m8WWUB","backbone.marionette":"Tt+p2S"}],20:[function(_dereq_,module,exports){
+},{"../models/config":26,"../router":27,"backbone":"m8WWUB","backbone.marionette":"Tt+p2S"}],22:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
@@ -524,8 +570,11 @@ app.addInitializer(function (config) {
   'use strict';
 
   $.ajaxSetup({
-    cache : config.ajaxCache,
-    timeout: config.ajaxTimeout
+    cache : config.ajax.cache,
+    timeout: config.ajax.timeout,
+    contentType: config.ajax.contentType,
+    dataType: config.ajax.dataType,
+    async: config.ajax.contentType
   });
 
   $(global).ajaxStart(function () {
@@ -543,7 +592,7 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":19,"./storeError":21,"./storeSuccess":22,"jquery":"ZJsYNm"}],21:[function(_dereq_,module,exports){
+},{"../namespace":21,"./storeError":23,"./storeSuccess":24,"jquery":"ZJsYNm"}],23:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -567,7 +616,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"ZJsYNm"}],22:[function(_dereq_,module,exports){
+},{"jquery":"ZJsYNm"}],24:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
@@ -586,7 +635,7 @@ var success = function (e, jqXHR, opts, res) {
 
 module.exports = success;
 
-},{}],23:[function(_dereq_,module,exports){
+},{}],25:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Config = _dereq_('./models/config');
 var app = _dereq_('./helpers/namespace');
@@ -596,6 +645,8 @@ _dereq_('./helpers/handlebars');
 
 _dereq_('./components/structural/layout/index');
 _dereq_('./components/structural/sidebar/index');
+_dereq_('./components/structural/content/index');
+
 _dereq_('./components/pocket/index');
 
 app.start(new Config().toJSON());
@@ -603,14 +654,15 @@ app.start(new Config().toJSON());
 module.exports = app;
 
 
-},{"./components/pocket/index":4,"./components/structural/layout/index":7,"./components/structural/sidebar/index":9,"./helpers/handlebars":16,"./helpers/namespace":19,"./helpers/storage/store":20,"./models/config":24}],24:[function(_dereq_,module,exports){
+},{"./components/pocket/index":4,"./components/structural/content/index":7,"./components/structural/layout/index":9,"./components/structural/sidebar/index":11,"./helpers/handlebars":18,"./helpers/namespace":21,"./helpers/storage/store":22,"./models/config":26}],26:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
 
+  // TODO: the below should be extended by appconfig
   defaults: {
     app: {
-      name: 'pocket',
+      name: 'appname',
       components: {
         'layout': {
           config: {
@@ -622,18 +674,14 @@ var Model = BaseModel.extend({
             template: null
           }
         },
-        'index': {
+        'content': {
           config: { }
         }
       }
     },
 
     api: {
-      token: null,
-      url: 'http://localhost:4444/_api/',
-      headers: {
-        'x-api-version' : '2.1'
-      }
+      url: 'http://localhost:4444/_api/'
     },
 
     ajax: {
@@ -651,19 +699,19 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../helpers/mvc/model":18}],25:[function(_dereq_,module,exports){
+},{"../helpers/mvc/model":20}],27:[function(_dereq_,module,exports){
 'use strict';
 
 var Router = Backbone.Router.extend({
 
   routes: {
-    ''                      : 'tiles',
-    'plugins/:id'           : 'tiles',
-    '*defaults'             : 'tiles'
+    ''                      : 'plugins',
+    'plugins/:name'         : 'plugins',
+    '*defaults'             : 'plugins'
   },
 
-  tiles: function (id, action) {
-    app.vent.trigger('tiles', id, action);
+  plugins: function (name, action) {
+    app.vent.trigger('plugins', name, action);
   }
 
 });
@@ -680,8 +728,8 @@ module.exports=_dereq_('S8Vyg4');
 module.exports=_dereq_('ZJsYNm');
 },{}],"underscore":[function(_dereq_,module,exports){
 module.exports=_dereq_('EJRrov');
-},{}],31:[function(_dereq_,module,exports){
+},{}],33:[function(_dereq_,module,exports){
 
-},{}]},{},[23])
-(23)
+},{}]},{},[25])
+(25)
 });

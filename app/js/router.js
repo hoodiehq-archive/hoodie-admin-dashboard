@@ -3,13 +3,13 @@
 var Router = Backbone.Router.extend({
 
   routes: {
-    ''                      : 'tiles',
-    'plugins/:id'           : 'tiles',
-    '*defaults'             : 'tiles'
+    ''                      : 'plugins',
+    'plugins/:name'         : 'plugins',
+    '*defaults'             : 'plugins'
   },
 
-  tiles: function (id, action) {
-    app.vent.trigger('tiles', id, action);
+  plugins: function (name, action) {
+    app.vent.trigger('plugins', name, action);
   }
 
 });

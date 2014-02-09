@@ -8,8 +8,11 @@ app.addInitializer(function (config) {
   'use strict';
 
   $.ajaxSetup({
-    cache : config.ajaxCache,
-    timeout: config.ajaxTimeout
+    cache : config.ajax.cache,
+    timeout: config.ajax.timeout,
+    contentType: config.ajax.contentType,
+    dataType: config.ajax.dataType,
+    async: config.ajax.contentType
   });
 
   $(global).ajaxStart(function () {
