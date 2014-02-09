@@ -14,17 +14,22 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":9,"../../../helpers/namespace":11,"../models/tile":5}],2:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":17,"../../../helpers/namespace":19,"../models/tile":5}],2:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
 
 var Tiles = _dereq_('./tiles');
 
+_dereq_('../../ui/logo/index');
+_dereq_('../../ui/plugin_list/index');
+
 var Controller = Marionette.Controller.extend({
+
 
   initialize: function (options) {
     this.options = options || {};
+    app.vent.trigger('logo:show', options);
   },
 
   tiles: function (id, action) {
@@ -39,7 +44,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"./tiles":3,"backbone.marionette":"Tt+p2S"}],3:[function(_dereq_,module,exports){
+},{"../../ui/logo/index":11,"../../ui/plugin_list/index":14,"./tiles":3,"backbone.marionette":"Tt+p2S"}],3:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -50,16 +55,20 @@ var Model = _dereq_('../models/tile');
 var controller = Marionette.Controller.extend({
 
   initialize: function (options) {
-    this.options = options || {};
+    var self = this;
 
-    //app.regions.meta.reset();
-    //app.regions.viewer.reset();
+    this.options = options || {};
 
     this.model = new Model();
     this.collection = new Collection();
     this.collection.fetch({ reset: true });
 
     this.listenTo(this.collection, 'reset', function () {
+
+      app.vent.trigger('plugin_list:show', {
+        model: self.collection.get(self.options.id),
+        collection: self.collection,
+      });
 
     });
 
@@ -84,6 +93,8 @@ app.module('pocket', function () {
 
     app.regions = app.rm.addRegions({
       sidebar: 'aside',
+      sidebar_logo: 'aside header',
+      sidebar_plugin_list: 'aside #plugin-list',
       content: 'section'
     });
 
@@ -102,7 +113,7 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":11,"./controllers/index":2}],5:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":19,"./controllers/index":2}],5:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -110,8 +121,10 @@ var BaseModel = _dereq_('../../../helpers/mvc/model');
 var Model = BaseModel.extend({
 
   defaults: {
+    name: '',
     description: '',
     title: '',
+    version: '',
     pos: '',
     width: ''
   }
@@ -120,7 +133,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":10}],6:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":18}],6:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
@@ -164,10 +177,10 @@ app.module('layout', function () {
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components['vertebrae-layout'].template = "<aside> </aside>\n<section> </section>\n";
+    options.app.components.layout.template = "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
 
     this._controller = new Controller(
-      options.app.components['vertebrae-layout']
+      options.app.components.layout
     );
 
   });
@@ -176,7 +189,221 @@ app.module('layout', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":11,"./controllers/index":6,"fs":23}],8:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":19,"./controllers/index":6,"fs":31}],8:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var Controller = Marionette.Controller.extend({
+
+  initialize: function (options) {
+    this.options = options || {};
+
+    // create layout object passing in a template string
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return options.template;
+      }
+    });
+
+    this.container = new Marionette.Region({
+      el: 'aside',
+    });
+
+    this.container.show(new Layout);
+  }
+});
+
+module.exports = Controller;
+
+},{"backbone.marionette":"Tt+p2S"}],9:[function(_dereq_,module,exports){
+/*jshint -W079 */
+var Controller = _dereq_('./controllers/index');
+var fs = _dereq_('fs');
+var app = _dereq_('../../../helpers/namespace');
+
+
+app.module('pocket.sidebar', function () {
+
+  'use strict';
+
+  this.addInitializer(function (options) {
+    options.app.components.sidebar.template = "<header></header>\n<section id=\"plugin-list\"></div>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
+
+    this._controller = new Controller(
+      options.app.components.sidebar
+    );
+
+  });
+
+});
+
+module.exports = app;
+
+},{"../../../helpers/namespace":19,"./controllers/index":8,"fs":31}],10:[function(_dereq_,module,exports){
+'use strict';
+
+var app = _dereq_('../../../../helpers/namespace');
+var Marionette = _dereq_('backbone.marionette');
+var View = _dereq_('../views/index');
+
+var Controller = Marionette.Controller.extend({
+
+  initialize: function (options) {
+    this.options = options || {};
+
+    // TODO: needs to come from the pocket components model
+    //
+    this.options.model = new Backbone.Model({
+      name: 'minutes.io'
+    });
+
+    this.show(this.options);
+  },
+
+  show: function (opts) {
+    var view = new View({
+      model: opts.model
+    });
+
+    app.regions.sidebar_logo.show(view);
+  }
+
+});
+
+module.exports = Controller;
+
+},{"../../../../helpers/namespace":19,"../views/index":12,"backbone.marionette":"Tt+p2S"}],11:[function(_dereq_,module,exports){
+'use strict';
+
+var app = _dereq_('../../../helpers/namespace');
+var Controller = _dereq_('./controllers/index');
+
+app.module('snug.logo', function () {
+
+  this.addInitializer(function (options) {
+    this._controller = new Controller(options);
+  });
+
+  this.on('before:start', function () {
+    var self = this;
+
+    app.vent.on('logo:show', function (options) {
+      self._controller.show(options);
+    });
+
+  });
+
+});
+
+module.exports = app;
+
+},{"../../../helpers/namespace":19,"./controllers/index":10}],12:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var Handlebars = _dereq_('handlebars');
+var fs = _dereq_('fs');
+
+_dereq_('../../../../helpers/handlebars');
+
+var tmpl = "<h1>\n  <a href=\"#\"> {{name}} </a>\n</h1>\n\n";
+
+var View = Marionette.ItemView.extend({
+  template: Handlebars.compile(tmpl),
+  initialize: function (options) {
+    this.options = options || {};
+  }
+});
+
+module.exports = View;
+
+},{"../../../../helpers/handlebars":16,"backbone.marionette":"Tt+p2S","fs":31,"handlebars":"S8Vyg4"}],13:[function(_dereq_,module,exports){
+'use strict';
+
+var app = _dereq_('../../../../helpers/namespace');
+var Marionette = _dereq_('backbone.marionette');
+var View = _dereq_('../views/index');
+
+var Controller = Marionette.Controller.extend({
+
+  initialize: function (options) {
+    this.options = options || {};
+  },
+
+  show: function (opts) {
+    var view = new View({
+      collection: opts.collection,
+      model: opts.model,
+      ns: opts.ns
+    });
+
+    app.regions.sidebar_plugin_list.show(view);
+  }
+
+});
+
+module.exports = Controller;
+
+},{"../../../../helpers/namespace":19,"../views/index":15,"backbone.marionette":"Tt+p2S"}],14:[function(_dereq_,module,exports){
+'use strict';
+
+var app = _dereq_('../../../helpers/namespace');
+var Controller = _dereq_('./controllers/index');
+
+app.module('snug.plugin_list', function () {
+
+  this.addInitializer(function (options) {
+    this._controller = new Controller(options);
+  });
+
+  this.on('before:start', function () {
+    var self = this;
+
+    app.vent.on('plugin_list:show', function (options) {
+      self._controller.show(options);
+    });
+
+  });
+
+});
+
+module.exports = app;
+
+},{"../../../helpers/namespace":19,"./controllers/index":13}],15:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var Handlebars = _dereq_('handlebars');
+var fs = _dereq_('fs');
+
+var tmpl = "<a href=\"#plugins/show/{{name}}\">{{name}}</a>\n";
+
+_dereq_('../../../../helpers/handlebars');
+
+var Row = Marionette.ItemView.extend({
+  tagName: 'li',
+  template: Handlebars.compile(tmpl),
+
+  events : {
+    'click' : 'show'
+  },
+
+  show: function () {
+    console.info('show plugin');
+  }
+
+});
+
+var View = Marionette.CollectionView.extend({
+  tagName: 'ul',
+  className: 'pluginList',
+  itemView: Row
+});
+
+module.exports = View;
+
+
+},{"../../../../helpers/handlebars":16,"backbone.marionette":"Tt+p2S","fs":31,"handlebars":"S8Vyg4"}],16:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('handlebars');
@@ -202,7 +429,7 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 
 module.exports = Handlebars;
 
-},{"handlebars":"S8Vyg4"}],9:[function(_dereq_,module,exports){
+},{"handlebars":"S8Vyg4"}],17:[function(_dereq_,module,exports){
 
 'use strict';
 
@@ -224,7 +451,7 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 
 module.exports = SuperCollection;
 
-},{"backbone":"m8WWUB","underscore":"EJRrov"}],10:[function(_dereq_,module,exports){
+},{"backbone":"m8WWUB","underscore":"EJRrov"}],18:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -235,7 +462,7 @@ var SuperModel = Backbone.Model.extend({
 
 module.exports = SuperModel;
 
-},{"backbone":"m8WWUB","jquery":"ZJsYNm"}],11:[function(_dereq_,module,exports){
+},{"backbone":"m8WWUB","jquery":"ZJsYNm"}],19:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
@@ -253,7 +480,6 @@ var app = new Marionette.Application();
 app.reqres.setHandler('config', function () {
   return new Config().toJSON();
 });
-
 
 app.on('initialize:before', function (options) {
 
@@ -287,7 +513,7 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../models/config":16,"../router":17,"backbone":"m8WWUB","backbone.marionette":"Tt+p2S"}],12:[function(_dereq_,module,exports){
+},{"../models/config":24,"../router":25,"backbone":"m8WWUB","backbone.marionette":"Tt+p2S"}],20:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
@@ -317,7 +543,7 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":11,"./storeError":13,"./storeSuccess":14,"jquery":"ZJsYNm"}],13:[function(_dereq_,module,exports){
+},{"../namespace":19,"./storeError":21,"./storeSuccess":22,"jquery":"ZJsYNm"}],21:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -341,7 +567,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"ZJsYNm"}],14:[function(_dereq_,module,exports){
+},{"jquery":"ZJsYNm"}],22:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
@@ -360,7 +586,7 @@ var success = function (e, jqXHR, opts, res) {
 
 module.exports = success;
 
-},{}],15:[function(_dereq_,module,exports){
+},{}],23:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Config = _dereq_('./models/config');
 var app = _dereq_('./helpers/namespace');
@@ -369,6 +595,7 @@ _dereq_('./helpers/storage/store');
 _dereq_('./helpers/handlebars');
 
 _dereq_('./components/structural/layout/index');
+_dereq_('./components/structural/sidebar/index');
 _dereq_('./components/pocket/index');
 
 app.start(new Config().toJSON());
@@ -376,7 +603,7 @@ app.start(new Config().toJSON());
 module.exports = app;
 
 
-},{"./components/pocket/index":4,"./components/structural/layout/index":7,"./helpers/handlebars":8,"./helpers/namespace":11,"./helpers/storage/store":12,"./models/config":16}],16:[function(_dereq_,module,exports){
+},{"./components/pocket/index":4,"./components/structural/layout/index":7,"./components/structural/sidebar/index":9,"./helpers/handlebars":16,"./helpers/namespace":19,"./helpers/storage/store":20,"./models/config":24}],24:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
@@ -385,15 +612,16 @@ var Model = BaseModel.extend({
     app: {
       name: 'pocket',
       components: {
-        'vertebrae-layout': {
+        'layout': {
           config: {
             template: null
           }
         },
-        'vertebrae': {
-          config: { }
+        'sidebar': {
+          config: {
+            template: null
+          }
         },
-
         'index': {
           config: { }
         }
@@ -423,7 +651,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../helpers/mvc/model":10}],17:[function(_dereq_,module,exports){
+},{"../helpers/mvc/model":18}],25:[function(_dereq_,module,exports){
 'use strict';
 
 var Router = Backbone.Router.extend({
@@ -436,7 +664,7 @@ var Router = Backbone.Router.extend({
 
   tiles: function (id, action) {
     app.vent.trigger('tiles', id, action);
-  },
+  }
 
 });
 
@@ -452,8 +680,8 @@ module.exports=_dereq_('S8Vyg4');
 module.exports=_dereq_('ZJsYNm');
 },{}],"underscore":[function(_dereq_,module,exports){
 module.exports=_dereq_('EJRrov');
-},{}],23:[function(_dereq_,module,exports){
+},{}],31:[function(_dereq_,module,exports){
 
-},{}]},{},[15])
-(15)
+},{}]},{},[23])
+(23)
 });

@@ -1,25 +1,23 @@
 'use strict';
 
 var Marionette = require('backbone.marionette');
-var View = require('../views/index');
-
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
 
-    app.regions = app.rm.addRegions({
-      header: 'header',
-      list: '#list'
+    // create layout object passing in a template string
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return options.template;
+      }
     });
 
-    // assign a region to the documents container
-    this.section = new Marionette.Region({
-      el: 'footer'
+    this.container = new Marionette.Region({
+      el: 'aside',
     });
 
-    this.section.show(new View());
-
+    this.container.show(new Layout);
   }
 });
 

@@ -9,10 +9,10 @@ app.module('layout', function () {
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components['vertebrae-layout'].template = fs.readFileSync(__dirname + '/templates/index.html');
+    options.app.components.layout.template = fs.readFileSync(__dirname + '/templates/index.html');
 
     this._controller = new Controller(
-      options.app.components['vertebrae-layout']
+      options.app.components.layout
     );
 
   });

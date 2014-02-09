@@ -7,14 +7,14 @@ app.module('vertebrae', function () {
 
   this.addInitializer(function () {
 
-    app.regions = app.rm.addRegions({
-      header: 'header',
-      section: 'section'
-    });
+    //app.regions = app.rm.addRegions({
+      //header: 'header',
+      //section: 'section'
+    //});
 
-    app.vent.on('route:index', function (id, action) {
-      console.log(id, action);
-    });
+    //app.vent.on('route:index', function (id, action) {
+      //console.log(id, action);
+    //});
 
   });
 

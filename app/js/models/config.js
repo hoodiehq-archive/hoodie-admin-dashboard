@@ -6,15 +6,16 @@ var Model = BaseModel.extend({
     app: {
       name: 'pocket',
       components: {
-        'vertebrae-layout': {
+        'layout': {
           config: {
             template: null
           }
         },
-        'vertebrae': {
-          config: { }
+        'sidebar': {
+          config: {
+            template: null
+          }
         },
-
         'index': {
           config: { }
         }

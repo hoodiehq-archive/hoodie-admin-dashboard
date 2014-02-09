@@ -30,7 +30,7 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      files: ['<%= jshint.files %>', 'app/scss/*.scss'],
+      files: ['<%= jshint.files %>', 'app/scss/*.scss', 'app/js/*.html'],
       tasks: ['jshint', 'compass', 'browserify:app', 'hapi'],
       options: {
         livereload: true
@@ -154,7 +154,7 @@ module.exports = function (grunt) {
     uglify: {
       dist: {
         files: {
-          'app/dist/<%= pkg.name %>.min.js': 'app/dist/pocket.js'
+          'app/dist/<%= pkg.name %>.min.js': ['app/dist/libs', 'app/dist/pocket.js']
         }
       }
     },

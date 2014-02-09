@@ -16,7 +16,6 @@ app.reqres.setHandler('config', function () {
   return new Config().toJSON();
 });
 
-
 app.on('initialize:before', function (options) {
 
   // create router instance

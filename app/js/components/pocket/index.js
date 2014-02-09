@@ -11,6 +11,8 @@ app.module('pocket', function () {
 
     app.regions = app.rm.addRegions({
       sidebar: 'aside',
+      sidebar_logo: 'aside header',
+      sidebar_plugin_list: 'aside #plugin-list',
       content: 'section'
     });
 

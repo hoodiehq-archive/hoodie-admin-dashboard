@@ -7,7 +7,7 @@ app.route([
   {
     method: 'GET',
     path: '/_api/_plugins',
-    handler: function (res, reply) {
+    handler: function (req, reply) {
       reply.file(path.resolve('./data/plugins.json'));
     }
   }

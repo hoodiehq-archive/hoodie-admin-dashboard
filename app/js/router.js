@@ -10,7 +10,7 @@ var Router = Backbone.Router.extend({
 
   tiles: function (id, action) {
     app.vent.trigger('tiles', id, action);
-  },
+  }
 
 });
 

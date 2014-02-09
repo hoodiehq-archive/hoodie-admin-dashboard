@@ -1,22 +1,19 @@
 /*jshint -W079 */
-var app = require('../../helpers/namespace');
-var fs = require('fs');
-
 var Controller = require('./controllers/index');
-var LayoutController = require('./controllers/layout');
+var fs = require('fs');
+var app = require('../../../helpers/namespace');
+
 
 app.module('pocket.sidebar', function () {
 
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components.sidebar.template = fs.readFileSync(__dirname + '/templates/layout/index.html');
+    options.app.components.sidebar.template = fs.readFileSync(__dirname + '/templates/index.html');
 
     this._controller = new Controller(
       options.app.components.sidebar
     );
-
-    this._layout = new LayoutController(options);
 
   });
 

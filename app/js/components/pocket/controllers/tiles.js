@@ -8,16 +8,20 @@ var Model = require('../models/tile');
 var controller = Marionette.Controller.extend({
 
   initialize: function (options) {
-    this.options = options || {};
+    var self = this;
 
-    //app.regions.meta.reset();
-    //app.regions.viewer.reset();
+    this.options = options || {};
 
     this.model = new Model();
     this.collection = new Collection();
     this.collection.fetch({ reset: true });
 
     this.listenTo(this.collection, 'reset', function () {
+
+      app.vent.trigger('plugin_list:show', {
+        model: self.collection.get(self.options.id),
+        collection: self.collection,
+      });
 
     });
 
