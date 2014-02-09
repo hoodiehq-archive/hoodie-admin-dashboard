@@ -35,7 +35,7 @@ var Controller = Marionette.Controller.extend({
     new Plugins({
       name: name,
       action: action,
-      ns: 'tiles'
+      ns: 'plugins'
     });
   }
 
@@ -94,7 +94,9 @@ app.module('pocket', function () {
       sidebar: 'aside',
       sidebar_logo: 'aside header',
       sidebar_nav: 'aside nav',
+      sidebar_footer: 'aside footer',
       content: 'section',
+      content_main: 'section iframe',
       content_footer: 'section footer'
     });
 
@@ -277,7 +279,7 @@ app.module('pocket.sidebar', function () {
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components.sidebar.template = "<header></header>\n<nav></nav>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
+    options.app.components.sidebar.template = "<header></header>\n<nav></nav>\n<footer></footer>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
 
     this._controller = new Controller(
       options.app.components.sidebar

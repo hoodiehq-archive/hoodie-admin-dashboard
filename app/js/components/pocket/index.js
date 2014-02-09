@@ -13,7 +13,9 @@ app.module('pocket', function () {
       sidebar: 'aside',
       sidebar_logo: 'aside header',
       sidebar_nav: 'aside nav',
+      sidebar_footer: 'aside footer',
       content: 'section',
+      content_main: 'section iframe',
       content_footer: 'section footer'
     });
 

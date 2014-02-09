@@ -18,7 +18,7 @@ var Controller = Marionette.Controller.extend({
     new Plugins({
       name: name,
       action: action,
-      ns: 'tiles'
+      ns: 'plugins'
     });
   }
 
