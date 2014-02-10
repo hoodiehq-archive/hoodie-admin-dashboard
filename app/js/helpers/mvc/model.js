@@ -3,7 +3,7 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 
 var SuperModel = Backbone.Model.extend({
-  idAttribute: 'id'
+  idAttribute: 'name'
 });
 
 module.exports = SuperModel;

@@ -3,7 +3,7 @@
 var app = require('../../../helpers/namespace');
 var Controller = require('./controllers/index');
 
-app.module('plugin_list', function () {
+app.module('navigation', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);

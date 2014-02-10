@@ -2,7 +2,10 @@
 
 var app = require('../../../../helpers/namespace');
 var Marionette = require('backbone.marionette');
-var View = require('../views/index');
+
+var ListView = require('../views/list');
+var ShowView = require('../views/show');
+var EditView = require('../views/edit');
 
 var Controller = Marionette.Controller.extend({
 
@@ -11,9 +14,8 @@ var Controller = Marionette.Controller.extend({
   },
 
   list: function (opts) {
-    var view = new View({
+    var view = new ListView({
       collection: opts.collection,
-      model: opts.model,
       ns: opts.ns
     });
 
@@ -21,7 +23,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   show: function (opts) {
-    var view = new View({
+    var view = new ShowView({
       collection: opts.collection,
       model: opts.model,
       ns: opts.ns
@@ -31,7 +33,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   edit: function (opts) {
-    var view = new View({
+    var view = new EditView({
       collection: opts.collection,
       model: opts.model,
       ns: opts.ns

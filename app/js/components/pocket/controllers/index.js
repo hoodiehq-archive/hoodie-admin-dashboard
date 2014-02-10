@@ -20,3 +20,4 @@ var Controller = Marionette.Controller.extend({
 });
 
 module.exports = Controller;
+

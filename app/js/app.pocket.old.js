@@ -13,7 +13,7 @@ var widgetMargin = 5;
 
 var widgetWidth = Math.floor(($('.dashboard > ul').width() / maximumColumns) - (widgetMargin * 2));
 
-gridster = $('.dashboard > ul').gridster({
+gridster = $('.content > ul').gridster({
   widget_margins: [widgetMargin, widgetMargin],
   widget_base_dimensions: [widgetWidth, 100]
 }).data('gridster');

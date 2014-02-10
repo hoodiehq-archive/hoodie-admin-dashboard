@@ -14,7 +14,7 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":19,"../../../helpers/namespace":21,"../models/plugin":5}],2:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":24,"../../../helpers/namespace":26,"../models/plugin":5}],2:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -38,6 +38,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
+
 },{"./plugins":3,"backbone.marionette":"Tt+p2S"}],3:[function(_dereq_,module,exports){
 'use strict';
 
@@ -51,33 +52,63 @@ var controller = Marionette.Controller.extend({
   initialize: function (options) {
     var self = this;
 
+    // require ui dependencies
+    _dereq_('../../ui/plugins/index');
+
     this.options = options || {};
 
     this.model = new Model();
     this.collection = new Collection();
-    this.collection.fetch({ reset: true });
+    this.collection.fetch({
+      reset: true
+    });
 
     this.listenTo(this.collection, 'reset', function () {
 
-      console.log(self.options);
+      console.log(self.collection);
+
+      switch (self.options.action) {
+        case 'show':
+          self.show(self.collection);
+          break;
+        case 'edit':
+          self.edit(self.collection);
+          break;
+        default:
+          self.list(self.collection);
+      }
 
       app.vent.trigger('nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
       });
 
-      self.list(self.collection);
-
     });
 
   },
+
+  show: function (model) {
+    app.vent.trigger('plugins:show', {
+      collection: model.collection,
+      model: model,
+      ns: this.options.ns
+    });
+  },
+
+  edit: function (model) {
+    app.vent.trigger('plugins:edit', {
+      collection: model.collection,
+      model: model,
+      ns: this.options.ns
+    });
+  },
+
 
   list: function (collection) {
     app.vent.trigger('plugins:list', {
       collection: collection,
       ns: this.options.ns
     });
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   }
 
 });
@@ -85,7 +116,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../collections/plugins":1,"../models/plugin":5,"backbone.marionette":"Tt+p2S"}],4:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":19,"../collections/plugins":1,"../models/plugin":5,"backbone.marionette":"Tt+p2S"}],4:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -116,12 +147,26 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":21,"../ui/logo/index":13,"../ui/navigation/index":16,"./controllers/index":2}],5:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":26,"../ui/logo/index":13,"../ui/navigation/index":16,"./controllers/index":2}],5:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
+var app = _dereq_('../../../helpers/namespace');
+
+var config = app.request('config');
 
 var Model = BaseModel.extend({
+
+  initialize: function () {
+    this.setIframeUrl();
+  },
+
+  setIframeUrl: function () {
+    var url =  config.api.url + '_plugins/' + this.get('name') + '/pocket/index.html';
+    this.set({
+      'iframeUrl': url
+    });
+  },
 
   defaults: {
     name: '',
@@ -129,14 +174,15 @@ var Model = BaseModel.extend({
     title: '',
     version: '',
     pos: '',
-    width: ''
+    width: '',
+    iframeUrl: ''
   }
 
 });
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":20}],6:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":25,"../../../helpers/namespace":26}],6:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -195,7 +241,7 @@ app.module('pocket.content', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":21,"./controllers/index":6,"fs":33}],8:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":26,"./controllers/index":6,"fs":38}],8:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
@@ -239,7 +285,7 @@ app.module('layout', function () {
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components.layout.template = "<aside class=\"sidebar\"> </aside>\n<section class=\"content dashboard\"> </section>\n";
+    options.app.components.layout.template = "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
 
     this._controller = new Controller(
       options.app.components.layout
@@ -251,7 +297,7 @@ app.module('layout', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":21,"./controllers/index":8,"fs":33}],10:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":26,"./controllers/index":8,"fs":38}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -312,7 +358,7 @@ app.module('pocket.sidebar', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":21,"./controllers/index":10,"fs":33}],12:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":26,"./controllers/index":10,"fs":38}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -343,7 +389,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":21,"../views/index":14,"backbone.marionette":"Tt+p2S"}],13:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":26,"../views/index":14,"backbone.marionette":"Tt+p2S"}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -368,7 +414,7 @@ app.module('logo', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":21,"./controllers/index":12}],14:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":26,"./controllers/index":12}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -388,7 +434,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":18,"backbone.marionette":"Tt+p2S","fs":33,"handlebars":"S8Vyg4"}],15:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":23,"backbone.marionette":"Tt+p2S","fs":38,"handlebars":"S8Vyg4"}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -415,13 +461,13 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":21,"../views/index":17,"backbone.marionette":"Tt+p2S"}],16:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":26,"../views/index":17,"backbone.marionette":"Tt+p2S"}],16:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
 
-app.module('plugin_list', function () {
+app.module('navigation', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);
@@ -440,7 +486,7 @@ app.module('plugin_list', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":21,"./controllers/index":15}],17:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":26,"./controllers/index":15}],17:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -461,7 +507,9 @@ var Row = Marionette.ItemView.extend({
 
   show: function () {
     app.vent.trigger('plugins:show', {
-      model: this.model
+      collection: this.model.collection,
+      model: this.model,
+      ns: 'plugins'
     });
   }
 
@@ -476,7 +524,163 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":18,"backbone.marionette":"Tt+p2S","fs":33,"handlebars":"S8Vyg4"}],18:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":23,"backbone.marionette":"Tt+p2S","fs":38,"handlebars":"S8Vyg4"}],18:[function(_dereq_,module,exports){
+'use strict';
+
+var app = _dereq_('../../../../helpers/namespace');
+var Marionette = _dereq_('backbone.marionette');
+
+var ListView = _dereq_('../views/list');
+var ShowView = _dereq_('../views/show');
+var EditView = _dereq_('../views/edit');
+
+var Controller = Marionette.Controller.extend({
+
+  initialize: function (options) {
+    this.options = options || {};
+  },
+
+  list: function (opts) {
+    var view = new ListView({
+      collection: opts.collection,
+      ns: opts.ns
+    });
+
+    app.rm.get('content').show(view);
+  },
+
+  show: function (opts) {
+    var view = new ShowView({
+      collection: opts.collection,
+      model: opts.model,
+      ns: opts.ns
+    });
+
+    app.rm.get('content').show(view);
+  },
+
+  edit: function (opts) {
+    var view = new EditView({
+      collection: opts.collection,
+      model: opts.model,
+      ns: opts.ns
+    });
+
+    app.rm.get('content').show(view);
+  }
+
+});
+
+module.exports = Controller;
+
+},{"../../../../helpers/namespace":26,"../views/edit":20,"../views/list":21,"../views/show":22,"backbone.marionette":"Tt+p2S"}],19:[function(_dereq_,module,exports){
+'use strict';
+
+var app = _dereq_('../../../helpers/namespace');
+var Controller = _dereq_('./controllers/index');
+
+app.module('plugins', function () {
+
+  this.addInitializer(function (options) {
+    this._controller = new Controller(options);
+  });
+
+  this.on('before:start', function () {
+    var self = this;
+
+    app.vent.on('plugins:list', function (options) {
+      self._controller.list(options);
+    });
+
+    app.vent.on('plugins:show', function (options) {
+      self._controller.show(options);
+    });
+
+    app.vent.on('plugins:edit', function (options) {
+      self._controller.edit(options);
+    });
+
+  });
+
+});
+
+module.exports = app;
+
+},{"../../../helpers/namespace":26,"./controllers/index":18}],20:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var Handlebars = _dereq_('handlebars');
+var fs = _dereq_('fs');
+
+_dereq_('../../../../helpers/handlebars');
+
+var tmpl = "edit\n";
+
+var View = Marionette.ItemView.extend({
+  template: Handlebars.compile(tmpl),
+  initialize: function (options) {
+    this.options = options || {};
+  }
+});
+
+module.exports = View;
+
+},{"../../../../helpers/handlebars":23,"backbone.marionette":"Tt+p2S","fs":38,"handlebars":"S8Vyg4"}],21:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var Handlebars = _dereq_('handlebars');
+var fs = _dereq_('fs');
+
+var tmpl = "<iframe src=\"{{iframeUrl}}\" frameborder=\"0\"></iframe>\n\n";
+
+_dereq_('../../../../helpers/handlebars');
+
+var Row = Marionette.ItemView.extend({
+  tagName: 'li',
+  template: Handlebars.compile(tmpl),
+
+  events : {
+    'click' : 'show'
+  },
+
+  show: function () {
+    console.info('show plugin');
+  }
+
+});
+
+var View = Marionette.CollectionView.extend({
+  tagName: 'ul',
+  className: 'pluginList',
+  itemView: Row
+});
+
+module.exports = View;
+
+
+},{"../../../../helpers/handlebars":23,"backbone.marionette":"Tt+p2S","fs":38,"handlebars":"S8Vyg4"}],22:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var Handlebars = _dereq_('handlebars');
+var fs = _dereq_('fs');
+
+_dereq_('../../../../helpers/handlebars');
+
+var tmpl = "<iframe src=\"{{iframeUrl}}\" frameborder=\"0\"></iframe>\n";
+
+var View = Marionette.ItemView.extend({
+  template: Handlebars.compile(tmpl),
+  initialize: function (options) {
+    this.options = options || {};
+  }
+});
+
+module.exports = View;
+
+},{"../../../../helpers/handlebars":23,"backbone.marionette":"Tt+p2S","fs":38,"handlebars":"S8Vyg4"}],23:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('handlebars');
@@ -502,7 +706,7 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 
 module.exports = Handlebars;
 
-},{"handlebars":"S8Vyg4"}],19:[function(_dereq_,module,exports){
+},{"handlebars":"S8Vyg4"}],24:[function(_dereq_,module,exports){
 
 'use strict';
 
@@ -524,18 +728,18 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 
 module.exports = SuperCollection;
 
-},{"backbone":"m8WWUB","underscore":"EJRrov"}],20:[function(_dereq_,module,exports){
+},{"backbone":"m8WWUB","underscore":"EJRrov"}],25:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
 
 var SuperModel = Backbone.Model.extend({
-  idAttribute: 'id'
+  idAttribute: 'name'
 });
 
 module.exports = SuperModel;
 
-},{"backbone":"m8WWUB","jquery":"ZJsYNm"}],21:[function(_dereq_,module,exports){
+},{"backbone":"m8WWUB","jquery":"ZJsYNm"}],26:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
@@ -584,7 +788,7 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../models/config":26,"../router":27,"backbone":"m8WWUB","backbone.marionette":"Tt+p2S"}],22:[function(_dereq_,module,exports){
+},{"../models/config":31,"../router":32,"backbone":"m8WWUB","backbone.marionette":"Tt+p2S"}],27:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
@@ -617,7 +821,7 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":21,"./storeError":23,"./storeSuccess":24,"jquery":"ZJsYNm"}],23:[function(_dereq_,module,exports){
+},{"../namespace":26,"./storeError":28,"./storeSuccess":29,"jquery":"ZJsYNm"}],28:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -641,7 +845,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"ZJsYNm"}],24:[function(_dereq_,module,exports){
+},{"jquery":"ZJsYNm"}],29:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
@@ -660,7 +864,7 @@ var success = function (e, jqXHR, opts, res) {
 
 module.exports = success;
 
-},{}],25:[function(_dereq_,module,exports){
+},{}],30:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Config = _dereq_('./models/config');
 var app = _dereq_('./helpers/namespace');
@@ -681,7 +885,7 @@ app.start(new Config().toJSON());
 module.exports = app;
 
 
-},{"./components/pocket/index":4,"./components/structural/content/index":7,"./components/structural/layout/index":9,"./components/structural/sidebar/index":11,"./helpers/handlebars":18,"./helpers/namespace":21,"./helpers/storage/store":22,"./models/config":26}],26:[function(_dereq_,module,exports){
+},{"./components/pocket/index":4,"./components/structural/content/index":7,"./components/structural/layout/index":9,"./components/structural/sidebar/index":11,"./helpers/handlebars":23,"./helpers/namespace":26,"./helpers/storage/store":27,"./models/config":31}],31:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
@@ -708,7 +912,7 @@ var Model = BaseModel.extend({
     },
 
     api: {
-      url: 'http://localhost:4444/_api/'
+      url: 'http://localhost:6013/_api/'
     },
 
     ajax: {
@@ -726,7 +930,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../helpers/mvc/model":20}],27:[function(_dereq_,module,exports){
+},{"../helpers/mvc/model":25}],32:[function(_dereq_,module,exports){
 'use strict';
 
 var Router = Backbone.Router.extend({
@@ -737,8 +941,16 @@ var Router = Backbone.Router.extend({
     '*defaults'             : 'plugins'
   },
 
-  plugins: function (name, action) {
-    app.vent.trigger('plugins', name, action);
+  plugins: function (filter) {
+    if (filter) {
+      var action = filter.split('/')[2] || '';
+      var name = filter.split('/')[1] || filter;
+
+      app.vent.trigger('plugins', name, action);
+    } else {
+      app.vent.trigger('plugins');
+    }
+
   }
 
 });
@@ -755,8 +967,8 @@ module.exports=_dereq_('S8Vyg4');
 module.exports=_dereq_('ZJsYNm');
 },{}],"underscore":[function(_dereq_,module,exports){
 module.exports=_dereq_('EJRrov');
-},{}],33:[function(_dereq_,module,exports){
+},{}],38:[function(_dereq_,module,exports){
 
-},{}]},{},[25])
-(25)
+},{}]},{},[30])
+(30)
 });

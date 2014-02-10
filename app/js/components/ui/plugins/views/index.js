@@ -10,16 +10,7 @@ require('../../../../helpers/handlebars');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
-  template: Handlebars.compile(tmpl),
-
-  events : {
-    'click' : 'show'
-  },
-
-  show: function () {
-    console.info('show plugin');
-  }
-
+  template: Handlebars.compile(tmpl)
 });
 
 var View = Marionette.CollectionView.extend({

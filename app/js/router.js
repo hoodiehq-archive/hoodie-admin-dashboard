@@ -8,8 +8,16 @@ var Router = Backbone.Router.extend({
     '*defaults'             : 'plugins'
   },
 
-  plugins: function (name, action) {
-    app.vent.trigger('plugins', name, action);
+  plugins: function (filter) {
+    if (filter) {
+      var action = filter.split('/')[2] || '';
+      var name = filter.split('/')[1] || filter;
+
+      app.vent.trigger('plugins', name, action);
+    } else {
+      app.vent.trigger('plugins');
+    }
+
   }
 
 });
