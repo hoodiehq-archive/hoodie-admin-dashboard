@@ -10,20 +10,7 @@ require('../../../../helpers/handlebars');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
-  template: Handlebars.compile(tmpl),
-
-  events : {
-    'click' : 'show'
-  },
-
-  show: function () {
-    app.vent.trigger('plugins:show', {
-      collection: this.model.collection,
-      model: this.model,
-      ns: 'plugins'
-    });
-  }
-
+  template: Handlebars.compile(tmpl)
 });
 
 var View = Marionette.CollectionView.extend({

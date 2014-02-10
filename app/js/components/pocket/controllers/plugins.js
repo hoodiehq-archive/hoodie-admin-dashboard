@@ -23,14 +23,14 @@ var controller = Marionette.Controller.extend({
 
     this.listenTo(this.collection, 'reset', function () {
 
-      console.log(self.collection);
+      console.log(self.options);
 
       switch (self.options.action) {
         case 'show':
-          self.show(self.collection);
+          self.show(self.collection.get(self.options.name));
           break;
         case 'edit':
-          self.edit(self.collection);
+          self.edit(self.collection.get(self.options.name));
           break;
         default:
           self.list(self.collection);
@@ -48,24 +48,21 @@ var controller = Marionette.Controller.extend({
   show: function (model) {
     app.vent.trigger('plugins:show', {
       collection: model.collection,
-      model: model,
-      ns: this.options.ns
+      model: model
     });
   },
 
   edit: function (model) {
     app.vent.trigger('plugins:edit', {
       collection: model.collection,
-      model: model,
-      ns: this.options.ns
+      model: model
     });
   },
 
 
   list: function (collection) {
     app.vent.trigger('plugins:list', {
-      collection: collection,
-      ns: this.options.ns
+      collection: collection
     });
   }
 

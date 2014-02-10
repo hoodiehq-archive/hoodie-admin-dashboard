@@ -65,14 +65,14 @@ var controller = Marionette.Controller.extend({
 
     this.listenTo(this.collection, 'reset', function () {
 
-      console.log(self.collection);
+      console.log(self.options);
 
       switch (self.options.action) {
         case 'show':
-          self.show(self.collection);
+          self.show(self.collection.get(self.options.name));
           break;
         case 'edit':
-          self.edit(self.collection);
+          self.edit(self.collection.get(self.options.name));
           break;
         default:
           self.list(self.collection);
@@ -90,24 +90,21 @@ var controller = Marionette.Controller.extend({
   show: function (model) {
     app.vent.trigger('plugins:show', {
       collection: model.collection,
-      model: model,
-      ns: this.options.ns
+      model: model
     });
   },
 
   edit: function (model) {
     app.vent.trigger('plugins:edit', {
       collection: model.collection,
-      model: model,
-      ns: this.options.ns
+      model: model
     });
   },
 
 
   list: function (collection) {
     app.vent.trigger('plugins:list', {
-      collection: collection,
-      ns: this.options.ns
+      collection: collection
     });
   }
 
@@ -221,7 +218,7 @@ app.module('pocket.content', function () {
 
   this.addInitializer(function (options) {
 
-    options.app.components.sidebar.template = "<section></section>\n<footer></footer>\n\n";
+    options.app.components.sidebar.template = "<header></header>\n<section></section>\n<footer></footer>\n\n";
 
     this._controller = new Controller(
       options.app.components.sidebar
@@ -232,6 +229,7 @@ app.module('pocket.content', function () {
   this.on('before:start', function () {
     app.rm.addRegions({
       content: 'section',
+      content_header: 'section header',
       content_main: 'section iframe',
       content_footer: 'section footer'
     });
@@ -499,20 +497,7 @@ _dereq_('../../../../helpers/handlebars');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
-  template: Handlebars.compile(tmpl),
-
-  events : {
-    'click' : 'show'
-  },
-
-  show: function () {
-    app.vent.trigger('plugins:show', {
-      collection: this.model.collection,
-      model: this.model,
-      ns: 'plugins'
-    });
-  }
-
+  template: Handlebars.compile(tmpl)
 });
 
 var View = Marionette.CollectionView.extend({
@@ -618,10 +603,7 @@ _dereq_('../../../../helpers/handlebars');
 var tmpl = "edit\n";
 
 var View = Marionette.ItemView.extend({
-  template: Handlebars.compile(tmpl),
-  initialize: function (options) {
-    this.options = options || {};
-  }
+  template: Handlebars.compile(tmpl)
 });
 
 module.exports = View;
@@ -639,16 +621,7 @@ _dereq_('../../../../helpers/handlebars');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
-  template: Handlebars.compile(tmpl),
-
-  events : {
-    'click' : 'show'
-  },
-
-  show: function () {
-    console.info('show plugin');
-  }
-
+  template: Handlebars.compile(tmpl)
 });
 
 var View = Marionette.CollectionView.extend({

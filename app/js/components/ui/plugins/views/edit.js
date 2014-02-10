@@ -9,10 +9,7 @@ require('../../../../helpers/handlebars');
 var tmpl = fs.readFileSync(__dirname + '/../templates/edit.html');
 
 var View = Marionette.ItemView.extend({
-  template: Handlebars.compile(tmpl),
-  initialize: function (options) {
-    this.options = options || {};
-  }
+  template: Handlebars.compile(tmpl)
 });
 
 module.exports = View;

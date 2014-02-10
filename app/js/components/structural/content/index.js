@@ -21,6 +21,7 @@ app.module('pocket.content', function () {
   this.on('before:start', function () {
     app.rm.addRegions({
       content: 'section',
+      content_header: 'section header',
       content_main: 'section iframe',
       content_footer: 'section footer'
     });

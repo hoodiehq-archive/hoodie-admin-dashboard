@@ -4,22 +4,13 @@ var Marionette = require('backbone.marionette');
 var Handlebars = require('handlebars');
 var fs = require('fs');
 
-var tmpl = fs.readFileSync(__dirname + '/../templates/item.html');
+var tmpl = fs.readFileSync(__dirname + '/../templates/list_item.html');
 
 require('../../../../helpers/handlebars');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
-  template: Handlebars.compile(tmpl),
-
-  events : {
-    'click' : 'show'
-  },
-
-  show: function () {
-    console.info('show plugin');
-  }
-
+  template: Handlebars.compile(tmpl)
 });
 
 var View = Marionette.CollectionView.extend({
