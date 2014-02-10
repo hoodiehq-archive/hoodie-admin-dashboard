@@ -146,7 +146,7 @@ module.exports = function (grunt) {
             './libs/jquery.gridster.with-extras.js/index.js'
           ]
         },
-        src: ['app/js/main.js'],
+        src: ['app/js/init.js'],
         dest: 'app/dist/pocket.js',
       }
     },

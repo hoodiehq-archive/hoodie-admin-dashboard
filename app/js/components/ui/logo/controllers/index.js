@@ -21,7 +21,7 @@ var Controller = Marionette.Controller.extend({
       model: opts.model
     });
 
-    app.regions.sidebar_logo.show(view);
+    app.rm.get('sidebar_logo').show(view);
   }
 
 });

@@ -17,7 +17,9 @@ var Row = Marionette.ItemView.extend({
   },
 
   show: function () {
-    console.info('show plugin');
+    app.vent.trigger('plugins:show', {
+      model: this.model
+    });
   }
 
 });

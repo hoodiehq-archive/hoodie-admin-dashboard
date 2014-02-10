@@ -17,6 +17,17 @@ app.module('pocket.sidebar', function () {
 
   });
 
+  this.on('before:start', function () {
+
+    app.rm.addRegions({
+      sidebar: 'aside',
+      sidebar_logo: 'aside header',
+      sidebar_nav: 'aside nav',
+      sidebar_footer: 'aside footer',
+    });
+
+  });
+
 });
 
 module.exports = app;

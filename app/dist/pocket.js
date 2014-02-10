@@ -18,17 +18,12 @@ module.exports = Collection;
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
-
 var Plugins = _dereq_('./plugins');
-
-_dereq_('../../ui/logo/index');
-_dereq_('../../ui/navigation/index');
 
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
-    app.vent.trigger('logo:show', options);
   },
 
   plugins: function (name, action) {
@@ -43,7 +38,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../ui/logo/index":13,"../../ui/navigation/index":16,"./plugins":3,"backbone.marionette":"Tt+p2S"}],3:[function(_dereq_,module,exports){
+},{"./plugins":3,"backbone.marionette":"Tt+p2S"}],3:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -64,13 +59,25 @@ var controller = Marionette.Controller.extend({
 
     this.listenTo(this.collection, 'reset', function () {
 
+      console.log(self.options);
+
       app.vent.trigger('nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
       });
 
+      self.list(self.collection);
+
     });
 
+  },
+
+  list: function (collection) {
+    app.vent.trigger('plugins:list', {
+      collection: collection,
+      ns: this.options.ns
+    });
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   }
 
 });
@@ -88,18 +95,12 @@ app.module('pocket', function () {
   'use strict';
 
   this.addInitializer(function (options) {
+
+    // boot up default UI components
+    _dereq_('../ui/logo/index');
+    _dereq_('../ui/navigation/index');
+
     this._controller = new Controller(options);
-
-    app.regions = app.rm.addRegions({
-      sidebar: 'aside',
-      sidebar_logo: 'aside header',
-      sidebar_nav: 'aside nav',
-      sidebar_footer: 'aside footer',
-      content: 'section',
-      content_main: 'section iframe',
-      content_footer: 'section footer'
-    });
-
   });
 
   this.on('before:start', function () {
@@ -115,7 +116,7 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":21,"./controllers/index":2}],5:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":21,"../ui/logo/index":13,"../ui/navigation/index":16,"./controllers/index":2}],5:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -173,12 +174,21 @@ app.module('pocket.content', function () {
   'use strict';
 
   this.addInitializer(function (options) {
+
     options.app.components.sidebar.template = "<section></section>\n<footer></footer>\n\n";
 
     this._controller = new Controller(
       options.app.components.sidebar
     );
 
+  });
+
+  this.on('before:start', function () {
+    app.rm.addRegions({
+      content: 'section',
+      content_main: 'section iframe',
+      content_footer: 'section footer'
+    });
   });
 
 });
@@ -287,6 +297,17 @@ app.module('pocket.sidebar', function () {
 
   });
 
+  this.on('before:start', function () {
+
+    app.rm.addRegions({
+      sidebar: 'aside',
+      sidebar_logo: 'aside header',
+      sidebar_nav: 'aside nav',
+      sidebar_footer: 'aside footer',
+    });
+
+  });
+
 });
 
 module.exports = app;
@@ -315,7 +336,7 @@ var Controller = Marionette.Controller.extend({
       model: opts.model
     });
 
-    app.regions.sidebar_logo.show(view);
+    app.rm.get('sidebar_logo').show(view);
   }
 
 });
@@ -387,7 +408,7 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
-    app.regions.sidebar_nav.show(view);
+    app.rm.get('sidebar_nav').show(view);
   }
 
 });
@@ -439,7 +460,9 @@ var Row = Marionette.ItemView.extend({
   },
 
   show: function () {
-    console.info('show plugin');
+    app.vent.trigger('plugins:show', {
+      model: this.model
+    });
   }
 
 });
@@ -645,10 +668,12 @@ var app = _dereq_('./helpers/namespace');
 _dereq_('./helpers/storage/store');
 _dereq_('./helpers/handlebars');
 
+// boot up default structural components
 _dereq_('./components/structural/layout/index');
 _dereq_('./components/structural/sidebar/index');
 _dereq_('./components/structural/content/index');
 
+// start the pocket component
 _dereq_('./components/pocket/index');
 
 app.start(new Config().toJSON());
