@@ -23,8 +23,6 @@ var controller = Marionette.Controller.extend({
 
     this.listenTo(this.collection, 'reset', function () {
 
-      console.log(self.options);
-
       switch (self.options.action) {
         case 'show':
           self.show(self.collection.get(self.options.name));
@@ -36,6 +34,7 @@ var controller = Marionette.Controller.extend({
           self.list(self.collection);
       }
 
+      // move this out
       app.vent.trigger('nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,

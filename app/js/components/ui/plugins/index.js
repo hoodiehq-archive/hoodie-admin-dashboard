@@ -3,7 +3,7 @@
 var app = require('../../../helpers/namespace');
 var Controller = require('./controllers/index');
 
-app.module('plugins', function () {
+app.module('pocket.plugins', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);

@@ -4,7 +4,7 @@ var fs = require('fs');
 
 var app = require('../../../helpers/namespace');
 
-app.module('layout', function () {
+app.module('pocket.layout', function () {
 
   'use strict';
 

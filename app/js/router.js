@@ -1,6 +1,8 @@
 'use strict';
 
-var Router = Backbone.Router.extend({
+var BaseRouter = require('./helpers/mvc/router');
+
+var Router = BaseRouter.extend({
 
   routes: {
     ''                      : 'plugins',
@@ -23,3 +25,4 @@ var Router = Backbone.Router.extend({
 });
 
 module.exports = Router;
+

@@ -4,9 +4,10 @@ var Marionette = require('backbone.marionette');
 var Handlebars = require('handlebars');
 var fs = require('fs');
 
-var tmpl = fs.readFileSync(__dirname + '/../templates/list_item.html');
-
 require('../../../../helpers/handlebars');
+require('gridster');
+
+var tmpl = fs.readFileSync(__dirname + '/../templates/list_item.html');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
