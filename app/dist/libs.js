@@ -1,6 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"backbone.babysitter":[function(require,module,exports){
-module.exports=require('AuHvPA');
-},{}],"AuHvPA":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"AuHvPA":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
 ; global.Backbone = require("backbone");
@@ -166,8 +164,8 @@ Backbone.ChildViewContainer = (function(Backbone, _){
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"backbone":"m8WWUB"}],"backbone.marionette":[function(require,module,exports){
-module.exports=require('Tt+p2S');
+},{"backbone":"m8WWUB"}],"backbone.babysitter":[function(require,module,exports){
+module.exports=require('AuHvPA');
 },{}],"Tt+p2S":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -2712,7 +2710,9 @@ _.extend(Marionette.Module, {
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"backbone":"m8WWUB","jquery":"ZJsYNm","underscore":"EJRrov"}],"routeFilter":[function(require,module,exports){
+},{"backbone":"m8WWUB","jquery":"ZJsYNm","underscore":"EJRrov"}],"backbone.marionette":[function(require,module,exports){
+module.exports=require('Tt+p2S');
+},{}],"routeFilter":[function(require,module,exports){
 module.exports=require('TTyT/Y');
 },{}],"TTyT/Y":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -3120,9 +3120,7 @@ Wreqr.EventAggregator = (function(Backbone, _){
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"backbone":"m8WWUB"}],"backbone":[function(require,module,exports){
-module.exports=require('m8WWUB');
-},{}],"m8WWUB":[function(require,module,exports){
+},{"backbone":"m8WWUB"}],"m8WWUB":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
 ; global.underscore = require("underscore");
@@ -4712,7 +4710,11 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"underscore":"EJRrov"}],"S8Vyg4":[function(require,module,exports){
+},{"underscore":"EJRrov"}],"backbone":[function(require,module,exports){
+module.exports=require('m8WWUB');
+},{}],"handlebars":[function(require,module,exports){
+module.exports=require('S8Vyg4');
+},{}],"S8Vyg4":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /*
 
@@ -6997,8 +6999,6 @@ Handlebars.template = Handlebars.VM.template;
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{}],"handlebars":[function(require,module,exports){
-module.exports=require('S8Vyg4');
 },{}],"3mD3xP":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 

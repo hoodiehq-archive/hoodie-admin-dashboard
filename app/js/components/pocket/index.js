@@ -11,6 +11,7 @@ app.module('pocket', function () {
     // boot up default UI components
     require('../ui/logo/index');
     require('../ui/navigation/index');
+    require('../ui/info/index');
 
     this._controller = new Controller(options);
   });

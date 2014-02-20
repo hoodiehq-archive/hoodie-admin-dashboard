@@ -19,7 +19,7 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
-    app.rm.get('content').show(view);
+    app.rm.get('content_main').show(view);
   },
 
   show: function (opts) {
@@ -29,7 +29,7 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
-    app.rm.get('content').show(view);
+    app.rm.get('content_main').show(view);
   },
 
   edit: function (opts) {
@@ -39,7 +39,7 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
-    app.rm.get('content').show(view);
+    app.rm.get('content_main').show(view);
   }
 
 });

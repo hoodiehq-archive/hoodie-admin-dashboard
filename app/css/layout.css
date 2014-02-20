@@ -1,0 +1,93 @@
+/**
+  @desc:    defines the main layout incuding margins, paddings and heights / widths, excluding the modules
+*/
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x:none;
+}
+
+	.sidebar {
+	  	width: 240px;	
+	  	position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
+		.sidebar header {
+		  height: 5em;
+		  line-height: 5em;
+		  padding: 0 0 0 1em;
+		  border-bottom: 1px solid;
+		}
+			.sidebar h1 {
+			  margin-top:0;
+			}
+
+		.sidebar .helpers {
+		  position: absolute;
+		  bottom: 0;
+		  padding: 0 0 0 1em;
+		}
+
+			.sidebar .helpers li {
+			  display: inline;
+			  padding: 0;
+			  margin: 0;
+			}
+
+				.sidebar .helpers li:nth-child(n+2):before {
+				  content: "|";
+				  margin: 0 .25em 0 0;
+				}
+
+		.pluginList {
+		  margin: 0;
+		  padding: 0;
+		}
+
+		.pluginList a {
+		  height: 4em;
+		  padding: 0 0 0 1em;
+		  border-bottom: 1px solid;
+		  display: block;
+		}
+
+	.content {
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  margin: 0 0 0 240px;
+	  height:100%;
+	}
+		.content header {
+		  height: 35px;
+		  margin-top: 23px;
+		}
+			.content header h3 {
+			  margin: 0 0 0 1.1rem;
+			}
+				.content header .placeMeta {
+				  position: absolute;
+				  right: 1rem;
+				  top: 0;
+				  margin: 20px 1.0rem 0 0 ;
+				}
+		
+		.dashboard {
+		  width: 99%;
+		  height:100%;
+		  margin: 20px 1% 1%;
+		}
+
+			/* clearfix */
+			.dashboard:after {
+			  content: ' ';
+			  display: block;
+			  clear: both;
+			}
