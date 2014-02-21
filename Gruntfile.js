@@ -70,10 +70,6 @@ module.exports = function (grunt) {
               path: 'libs/underscore/underscore.js',
               exports: '_'
             },
-            handlebars: {
-              path: 'libs/handlebars/handlebars.js',
-              exports: 'Handlebars'
-            },
             backbone: {
               path: 'libs/backbone/backbone.js',
               exports: 'Backbone',
@@ -129,13 +125,12 @@ module.exports = function (grunt) {
           standalone: 'app',
           //debug: true,
           transform: [
-            'brfs'
+            'hbsfy'
           ],
           alias: [
             './libs/jquery/jquery.js:jquery',
             './libs/lodash/dist/lodash.js:lodash',
             './libs/underscore/underscore.js:underscore',
-            './libs/handlebars/handlebars.js:handlebars',
             './libs/backbone/backbone.js:backbone',
             './libs/backbone.babysitter/lib/backbone.babysitter.js:backbone.babysitter',
             './libs/backbone.wreqr/lib/backbone.wreqr.js:backbone.wreqr',
@@ -147,7 +142,6 @@ module.exports = function (grunt) {
             './libs/jquery/jquery.js',
             './libs/lodash/dist/lodash.js',
             './libs/underscore/underscore.js',
-            './libs/handlebars/handlebars.js',
             './libs/backbone/backbone.js',
             './libs/backbone.babysitter/lib/backbone.babysitter.js',
             './libs/backbone.wreqr/lib/backbone.wreqr.js',

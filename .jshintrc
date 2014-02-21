@@ -17,7 +17,6 @@
   "globals": {
     "Backbone": true,
     "Backbone": true,
-    "Handlebars": true,
     "app": true,
     "Marionette": true
   },

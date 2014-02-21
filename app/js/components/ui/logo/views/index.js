@@ -1,15 +1,13 @@
 'use strict';
 
 var Marionette = require('backbone.marionette');
-var Handlebars = require('handlebars');
-var fs = require('fs');
 
 require('../../../../helpers/handlebars');
 
-var tmpl = fs.readFileSync(__dirname + '/../templates/index.html');
+var tmpl = require('../templates/index.hbs');
 
 var View = Marionette.ItemView.extend({
-  template: Handlebars.compile(tmpl),
+  template: tmpl,
   initialize: function (options) {
     this.options = options || {};
   }

@@ -1,18 +1,16 @@
 'use strict';
 
 var Marionette = require('backbone.marionette');
-var Handlebars = require('handlebars');
-var fs = require('fs');
 
 require('../../../../helpers/handlebars');
 
 require('gridster');
 
-var tmpl = fs.readFileSync(__dirname + '/../templates/list_item.html');
+var tmpl = require('../templates/list_item.hbs');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
-  template: Handlebars.compile(tmpl)
+  template: tmpl
 });
 
 var View = Marionette.CollectionView.extend({

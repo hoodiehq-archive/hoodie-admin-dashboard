@@ -7,7 +7,6 @@
     "jquery.gridster.with-extras.js": "https://raw2.github.com/espy/gridster.js/master/dist/jquery.gridster.with-extras.js",
     "backbone.routefilter": "https://raw.github.com/boazsender/backbone.routefilter/master/dist/backbone.routefilter.js",
     "lodash": "~2.4.1",
-    "handlebars": "1.0.0",
     "backbone": "~1.1.0",
     "backbone.marionette": "~1.6.1",
     "underscore": "~1.5.2"

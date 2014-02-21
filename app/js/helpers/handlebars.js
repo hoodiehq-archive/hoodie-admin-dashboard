@@ -1,6 +1,6 @@
 /*global Handlebars:true */
 
-var Handlebars = require('handlebars');
+var Handlebars = require('hbsfy/runtime');
 
 
 //
