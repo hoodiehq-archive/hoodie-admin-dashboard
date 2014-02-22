@@ -9,7 +9,7 @@ var Model = BaseModel.extend({
       components: {
         'layout': {
           config: {
-            template: null
+            template: '../templates/index.hbs'
           }
         },
         'sidebar': {
@@ -28,8 +28,6 @@ var Model = BaseModel.extend({
     },
 
     ajax: {
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
       timeout: 10000,
       cache: true,
       async: true
