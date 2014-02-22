@@ -6,6 +6,8 @@ var Backbone = require('backbone');
 var Router = require('../router');
 var Config = require('../models/config');
 
+var HoodieAdmin = require('hoodie.admin');
+
 var app = new Marionette.Application();
 
 //
@@ -16,6 +18,8 @@ app.reqres.setHandler('config', function () {
 });
 
 app.on('initialize:before', function (options) {
+
+  app.hoodieAdmin = new HoodieAdmin('http://localhost:6021/');
 
   // create router instance
   app.router = new Router();
