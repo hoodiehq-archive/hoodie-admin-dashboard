@@ -10,8 +10,6 @@ app.addInitializer(function (config) {
   $.ajaxSetup({
     cache : config.ajax.cache,
     timeout: config.ajax.timeout,
-    contentType: config.ajax.contentType,
-    dataType: config.ajax.dataType,
     async: config.ajax.contentType
   });
 
