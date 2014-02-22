@@ -18,7 +18,8 @@
     "Backbone": true,
     "Backbone": true,
     "app": true,
-    "Marionette": true
+    "Marionette": true,
+    "hoodieAdmin": true
   },
 
   "bitwise": false,
