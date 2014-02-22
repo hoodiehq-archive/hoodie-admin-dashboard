@@ -41,7 +41,7 @@
 
   "asi": false,
   "boss": true,
-  "debug": false,
+  "debug": true,
   "eqnull": true,
   "esnext": false,
   "evil": false,

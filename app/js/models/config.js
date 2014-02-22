@@ -24,7 +24,7 @@ var Model = BaseModel.extend({
     },
 
     api: {
-      url: 'http://localhost:6021/_api/'
+      url: 'http://127.0.0.1:6055/_api/'
     },
 
     ajax: {

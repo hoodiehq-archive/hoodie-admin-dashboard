@@ -14,7 +14,7 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":27,"../../../helpers/namespace":30,"../models/plugin":5}],2:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":36,"../../../helpers/namespace":39,"../models/plugin":5}],2:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -39,7 +39,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"./plugins":3,"backbone.marionette":"Tt+p2S"}],3:[function(_dereq_,module,exports){
+},{"./plugins":3,"backbone.marionette":"c6sTUs"}],3:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -112,7 +112,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../../ui/plugins/index":22,"../collections/plugins":1,"../models/plugin":5,"backbone.marionette":"Tt+p2S"}],4:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":28,"../collections/plugins":1,"../models/plugin":5,"backbone.marionette":"c6sTUs"}],4:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -144,7 +144,7 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":30,"../ui/info/index":13,"../ui/logo/index":16,"../ui/navigation/index":19,"./controllers/index":2}],5:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":39,"../ui/info/index":16,"../ui/logo/index":20,"../ui/navigation/index":24,"./controllers/index":2}],5:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -179,7 +179,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":28,"../../../helpers/namespace":30}],6:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":37,"../../../helpers/namespace":39}],6:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -205,12 +205,10 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Tt+p2S"}],7:[function(_dereq_,module,exports){
+},{"backbone.marionette":"c6sTUs"}],7:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
-var fs = _dereq_('fs');
 var app = _dereq_('../../../helpers/namespace');
-
 
 app.module('pocket.content', function () {
 
@@ -218,7 +216,7 @@ app.module('pocket.content', function () {
 
   this.addInitializer(function (options) {
 
-    options.app.components.sidebar.template = "<header></header>\n<section></section>\n<footer></footer>\n\n";
+    options.app.components.sidebar.template = _dereq_('./templates/index.hbs');
 
     this._controller = new Controller(
       options.app.components.sidebar
@@ -239,7 +237,19 @@ app.module('pocket.content', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":30,"./controllers/index":6,"fs":44}],8:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":39,"./controllers/index":6,"./templates/index.hbs":8}],8:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<header></header>\n<section class=\"pluginView\"></section>\n<footer></footer>\n";
+  });
+
+},{"hbsfy/runtime":60}],9:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
@@ -271,10 +281,9 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Tt+p2S"}],9:[function(_dereq_,module,exports){
+},{"backbone.marionette":"c6sTUs"}],10:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
-var fs = _dereq_('fs');
 
 var app = _dereq_('../../../helpers/namespace');
 
@@ -283,7 +292,7 @@ app.module('pocket.layout', function () {
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components.layout.template = "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
+    options.app.components.layout.template = _dereq_('./templates/index.hbs');
 
     this._controller = new Controller(
       options.app.components.layout
@@ -295,7 +304,19 @@ app.module('pocket.layout', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":30,"./controllers/index":8,"fs":44}],10:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":39,"./controllers/index":9,"./templates/index.hbs":11}],11:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
+  });
+
+},{"hbsfy/runtime":60}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -321,10 +342,9 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Tt+p2S"}],11:[function(_dereq_,module,exports){
+},{"backbone.marionette":"c6sTUs"}],13:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
-var fs = _dereq_('fs');
 var app = _dereq_('../../../helpers/namespace');
 
 
@@ -333,7 +353,7 @@ app.module('pocket.sidebar', function () {
   'use strict';
 
   this.addInitializer(function (options) {
-    options.app.components.sidebar.template = "<header></header>\n<nav></nav>\n<footer></footer>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
+    options.app.components.sidebar.template = _dereq_('./templates/index.hbs');
 
     this._controller = new Controller(
       options.app.components.sidebar
@@ -356,7 +376,19 @@ app.module('pocket.sidebar', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":30,"./controllers/index":10,"fs":44}],12:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":39,"./controllers/index":12,"./templates/index.hbs":14}],14:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<header></header>\n<nav></nav>\n<footer></footer>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
+  });
+
+},{"hbsfy/runtime":60}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -387,7 +419,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":30,"../views/index":14,"backbone.marionette":"Tt+p2S"}],13:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":39,"../views/index":18,"backbone.marionette":"c6sTUs"}],16:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -412,19 +444,29 @@ app.module('pocket.info', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":30,"./controllers/index":12}],14:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":39,"./controllers/index":15}],17:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<h3>Hello Admin!</h3>\n<div class=\"placeMeta\">\n  16:45 (GMT+1)\n  Oct. 12th, 2013\n  Berlin\n</div>\n";
+  });
+
+},{"hbsfy/runtime":60}],18:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
-var Handlebars = _dereq_('handlebars');
-var fs = _dereq_('fs');
 
 _dereq_('../../../../helpers/handlebars');
 
-var tmpl = "<h3>Hello Admin!</h3>\n<div class=\"placeMeta\">\n  16:45 (GMT+1)\n  Oct. 12th, 2013\n  Berlin\n</div>\n";
+var tmpl = _dereq_('../templates/index.hbs');
 
 var View = Marionette.ItemView.extend({
-  template: Handlebars.compile(tmpl),
+  template: tmpl,
   initialize: function (options) {
     this.options = options || {};
   }
@@ -432,7 +474,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":26,"backbone.marionette":"Tt+p2S","fs":44,"handlebars":"S8Vyg4"}],15:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":35,"../templates/index.hbs":17,"backbone.marionette":"c6sTUs"}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -452,6 +494,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   show: function (opts) {
+    console.log('model: ', opts.model);
     var view = new View({
       model: opts.model
     });
@@ -463,7 +506,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":30,"../views/index":17,"backbone.marionette":"Tt+p2S"}],16:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":39,"../views/index":22,"backbone.marionette":"c6sTUs"}],20:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -488,27 +531,26 @@ app.module('pocket.logo', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":30,"./controllers/index":15}],17:[function(_dereq_,module,exports){
-'use strict';
+},{"../../../helpers/namespace":39,"./controllers/index":19}],21:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
-var Marionette = _dereq_('backbone.marionette');
-var Handlebars = _dereq_('handlebars');
-var fs = _dereq_('fs');
 
-_dereq_('../../../../helpers/handlebars');
+  buffer += "<h1>\n  <a href=\"#\"> ";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + " </a>\n</h1>\n\n";
+  return buffer;
+  });
 
-var tmpl = "<h1>\n  <a href=\"#\"> {{name}} </a>\n</h1>\n\n";
-
-var View = Marionette.ItemView.extend({
-  template: Handlebars.compile(tmpl),
-  initialize: function (options) {
-    this.options = options || {};
-  }
-});
-
-module.exports = View;
-
-},{"../../../../helpers/handlebars":26,"backbone.marionette":"Tt+p2S","fs":44,"handlebars":"S8Vyg4"}],18:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":60}],22:[function(_dereq_,module,exports){
+arguments[4][18][0].apply(exports,arguments)
+},{"../../../../helpers/handlebars":35,"../templates/index.hbs":21,"backbone.marionette":"c6sTUs"}],23:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -535,7 +577,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":30,"../views/index":20,"backbone.marionette":"Tt+p2S"}],19:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":39,"../views/index":26,"backbone.marionette":"c6sTUs"}],24:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -560,20 +602,39 @@ app.module('pocket.navigation', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":30,"./controllers/index":18}],20:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":39,"./controllers/index":23}],25:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<a href=\"#plugins/";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "/show\">";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</a>\n";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":60}],26:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
-var Handlebars = _dereq_('handlebars');
-var fs = _dereq_('fs');
 
-var tmpl = "<a href=\"#plugins/{{name}}/show\">{{name}}</a>\n";
+var tmpl = _dereq_('../templates/item.hbs');
 
 _dereq_('../../../../helpers/handlebars');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
-  template: Handlebars.compile(tmpl)
+  template: tmpl
 });
 
 var View = Marionette.CollectionView.extend({
@@ -585,7 +646,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":26,"backbone.marionette":"Tt+p2S","fs":44,"handlebars":"S8Vyg4"}],21:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":35,"../templates/item.hbs":25,"backbone.marionette":"c6sTUs"}],27:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -634,7 +695,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":30,"../views/edit":23,"../views/list":24,"../views/show":25,"backbone.marionette":"Tt+p2S"}],22:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":39,"../views/edit":32,"../views/list":33,"../views/show":34,"backbone.marionette":"c6sTUs"}],28:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -667,39 +728,81 @@ app.module('pocket.plugins', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":30,"./controllers/index":21}],23:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":39,"./controllers/index":27}],29:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "edit\n";
+  });
+
+},{"hbsfy/runtime":60}],30:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<iframe src=\"";
+  if (helper = helpers.iframeUrl) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.iframeUrl); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" frameborder=\"0\"></iframe>\n\n";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":60}],31:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<iframe src=\"";
+  if (helper = helpers.iframeUrl) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.iframeUrl); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" frameborder=\"0\"></iframe>\n";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":60}],32:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
-var Handlebars = _dereq_('handlebars');
-var fs = _dereq_('fs');
 
 _dereq_('../../../../helpers/handlebars');
 
-var tmpl = "edit\n";
+var tmpl = _dereq_('../templates/edit.hbs');
 
 var View = Marionette.ItemView.extend({
-  template: Handlebars.compile(tmpl)
+  template: tmpl
 });
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":26,"backbone.marionette":"Tt+p2S","fs":44,"handlebars":"S8Vyg4"}],24:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":35,"../templates/edit.hbs":29,"backbone.marionette":"c6sTUs"}],33:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
-var Handlebars = _dereq_('handlebars');
-var fs = _dereq_('fs');
 
 _dereq_('../../../../helpers/handlebars');
 
 _dereq_('gridster');
 
-var tmpl = "<iframe src=\"{{iframeUrl}}\" frameborder=\"0\"></iframe>\n\n";
+var tmpl = _dereq_('../templates/list_item.hbs');
 
 var Row = Marionette.ItemView.extend({
   tagName: 'li',
-  template: Handlebars.compile(tmpl)
+  template: tmpl
 });
 
 var View = Marionette.CollectionView.extend({
@@ -711,19 +814,18 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":26,"backbone.marionette":"Tt+p2S","fs":44,"gridster":"3mD3xP","handlebars":"S8Vyg4"}],25:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":35,"../templates/list_item.hbs":30,"backbone.marionette":"c6sTUs","gridster":"50ccI7"}],34:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
-var Handlebars = _dereq_('handlebars');
-var fs = _dereq_('fs');
 
 _dereq_('../../../../helpers/handlebars');
 
-var tmpl = "<iframe src=\"{{iframeUrl}}\" frameborder=\"0\"></iframe>\n";
+var tmpl = _dereq_('../templates/show.hbs');
+
 
 var View = Marionette.ItemView.extend({
-  template: Handlebars.compile(tmpl),
+  template: tmpl,
   initialize: function (options) {
     this.options = options || {};
   }
@@ -731,10 +833,10 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":26,"backbone.marionette":"Tt+p2S","fs":44,"handlebars":"S8Vyg4"}],26:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":35,"../templates/show.hbs":31,"backbone.marionette":"c6sTUs"}],35:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
-var Handlebars = _dereq_('handlebars');
+var Handlebars = _dereq_('hbsfy/runtime');
 
 
 //
@@ -757,7 +859,7 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 
 module.exports = Handlebars;
 
-},{"handlebars":"S8Vyg4"}],27:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":60}],36:[function(_dereq_,module,exports){
 
 'use strict';
 
@@ -779,7 +881,7 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 
 module.exports = SuperCollection;
 
-},{"backbone":"m8WWUB","underscore":"EJRrov"}],28:[function(_dereq_,module,exports){
+},{"backbone":"xlgzdd","underscore":"zjxVFF"}],37:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -790,7 +892,7 @@ var SuperModel = Backbone.Model.extend({
 
 module.exports = SuperModel;
 
-},{"backbone":"m8WWUB","jquery":"ZJsYNm"}],29:[function(_dereq_,module,exports){
+},{"backbone":"xlgzdd","jquery":"rN9BJm"}],38:[function(_dereq_,module,exports){
 'use strict';
 
 _dereq_('routefilter');
@@ -812,7 +914,7 @@ var BaseRouter = Backbone.Router.extend({
 module.exports = BaseRouter;
 
 
-},{"backbone":"m8WWUB","routefilter":"TTyT/Y"}],30:[function(_dereq_,module,exports){
+},{"backbone":"xlgzdd","routefilter":"0buMsC"}],39:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
@@ -861,7 +963,7 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../models/config":35,"../router":36,"backbone":"m8WWUB","backbone.marionette":"Tt+p2S"}],31:[function(_dereq_,module,exports){
+},{"../models/config":44,"../router":45,"backbone":"xlgzdd","backbone.marionette":"c6sTUs"}],40:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
@@ -894,7 +996,7 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":30,"./storeError":32,"./storeSuccess":33,"jquery":"ZJsYNm"}],32:[function(_dereq_,module,exports){
+},{"../namespace":39,"./storeError":41,"./storeSuccess":42,"jquery":"rN9BJm"}],41:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -918,7 +1020,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"ZJsYNm"}],33:[function(_dereq_,module,exports){
+},{"jquery":"rN9BJm"}],42:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
@@ -937,7 +1039,7 @@ var success = function (e, jqXHR, opts, res) {
 
 module.exports = success;
 
-},{}],34:[function(_dereq_,module,exports){
+},{}],43:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Config = _dereq_('./models/config');
 var app = _dereq_('./helpers/namespace');
@@ -958,7 +1060,7 @@ app.start(new Config().toJSON());
 module.exports = app;
 
 
-},{"./components/pocket/index":4,"./components/structural/content/index":7,"./components/structural/layout/index":9,"./components/structural/sidebar/index":11,"./helpers/handlebars":26,"./helpers/namespace":30,"./helpers/storage/store":31,"./models/config":35}],35:[function(_dereq_,module,exports){
+},{"./components/pocket/index":4,"./components/structural/content/index":7,"./components/structural/layout/index":10,"./components/structural/sidebar/index":13,"./helpers/handlebars":35,"./helpers/namespace":39,"./helpers/storage/store":40,"./models/config":44}],44:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
@@ -985,7 +1087,7 @@ var Model = BaseModel.extend({
     },
 
     api: {
-      url: 'http://localhost:6021/_api/'
+      url: 'http://127.0.0.1:6055/_api/'
     },
 
     ajax: {
@@ -1003,7 +1105,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../helpers/mvc/model":28}],36:[function(_dereq_,module,exports){
+},{"../helpers/mvc/model":37}],45:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseRouter = _dereq_('./helpers/mvc/router');
@@ -1033,22 +1135,498 @@ var Router = BaseRouter.extend({
 module.exports = Router;
 
 
-},{"./helpers/mvc/router":29}],"backbone.marionette":[function(_dereq_,module,exports){
-module.exports=_dereq_('Tt+p2S');
+},{"./helpers/mvc/router":38}],"backbone.marionette":[function(_dereq_,module,exports){
+module.exports=_dereq_('c6sTUs');
 },{}],"routefilter":[function(_dereq_,module,exports){
-module.exports=_dereq_('TTyT/Y');
+module.exports=_dereq_('0buMsC');
 },{}],"backbone":[function(_dereq_,module,exports){
-module.exports=_dereq_('m8WWUB');
-},{}],"handlebars":[function(_dereq_,module,exports){
-module.exports=_dereq_('S8Vyg4');
+module.exports=_dereq_('xlgzdd');
 },{}],"gridster":[function(_dereq_,module,exports){
-module.exports=_dereq_('3mD3xP');
+module.exports=_dereq_('50ccI7');
 },{}],"jquery":[function(_dereq_,module,exports){
-module.exports=_dereq_('ZJsYNm');
+module.exports=_dereq_('rN9BJm');
 },{}],"underscore":[function(_dereq_,module,exports){
-module.exports=_dereq_('EJRrov');
-},{}],44:[function(_dereq_,module,exports){
+module.exports=_dereq_('zjxVFF');
+},{}],52:[function(_dereq_,module,exports){
 
-},{}]},{},[34])
-(34)
+},{}],53:[function(_dereq_,module,exports){
+"use strict";
+/*globals Handlebars: true */
+var base = _dereq_("./handlebars/base");
+
+// Each of these augment the Handlebars object. No need to setup here.
+// (This is done to easily share code between commonjs and browse envs)
+var SafeString = _dereq_("./handlebars/safe-string")["default"];
+var Exception = _dereq_("./handlebars/exception")["default"];
+var Utils = _dereq_("./handlebars/utils");
+var runtime = _dereq_("./handlebars/runtime");
+
+// For compatibility and usage outside of module systems, make the Handlebars object a namespace
+var create = function() {
+  var hb = new base.HandlebarsEnvironment();
+
+  Utils.extend(hb, base);
+  hb.SafeString = SafeString;
+  hb.Exception = Exception;
+  hb.Utils = Utils;
+
+  hb.VM = runtime;
+  hb.template = function(spec) {
+    return runtime.template(spec, hb);
+  };
+
+  return hb;
+};
+
+var Handlebars = create();
+Handlebars.create = create;
+
+exports["default"] = Handlebars;
+},{"./handlebars/base":54,"./handlebars/exception":55,"./handlebars/runtime":56,"./handlebars/safe-string":57,"./handlebars/utils":58}],54:[function(_dereq_,module,exports){
+"use strict";
+var Utils = _dereq_("./utils");
+var Exception = _dereq_("./exception")["default"];
+
+var VERSION = "1.3.0";
+exports.VERSION = VERSION;var COMPILER_REVISION = 4;
+exports.COMPILER_REVISION = COMPILER_REVISION;
+var REVISION_CHANGES = {
+  1: '<= 1.0.rc.2', // 1.0.rc.2 is actually rev2 but doesn't report it
+  2: '== 1.0.0-rc.3',
+  3: '== 1.0.0-rc.4',
+  4: '>= 1.0.0'
+};
+exports.REVISION_CHANGES = REVISION_CHANGES;
+var isArray = Utils.isArray,
+    isFunction = Utils.isFunction,
+    toString = Utils.toString,
+    objectType = '[object Object]';
+
+function HandlebarsEnvironment(helpers, partials) {
+  this.helpers = helpers || {};
+  this.partials = partials || {};
+
+  registerDefaultHelpers(this);
+}
+
+exports.HandlebarsEnvironment = HandlebarsEnvironment;HandlebarsEnvironment.prototype = {
+  constructor: HandlebarsEnvironment,
+
+  logger: logger,
+  log: log,
+
+  registerHelper: function(name, fn, inverse) {
+    if (toString.call(name) === objectType) {
+      if (inverse || fn) { throw new Exception('Arg not supported with multiple helpers'); }
+      Utils.extend(this.helpers, name);
+    } else {
+      if (inverse) { fn.not = inverse; }
+      this.helpers[name] = fn;
+    }
+  },
+
+  registerPartial: function(name, str) {
+    if (toString.call(name) === objectType) {
+      Utils.extend(this.partials,  name);
+    } else {
+      this.partials[name] = str;
+    }
+  }
+};
+
+function registerDefaultHelpers(instance) {
+  instance.registerHelper('helperMissing', function(arg) {
+    if(arguments.length === 2) {
+      return undefined;
+    } else {
+      throw new Exception("Missing helper: '" + arg + "'");
+    }
+  });
+
+  instance.registerHelper('blockHelperMissing', function(context, options) {
+    var inverse = options.inverse || function() {}, fn = options.fn;
+
+    if (isFunction(context)) { context = context.call(this); }
+
+    if(context === true) {
+      return fn(this);
+    } else if(context === false || context == null) {
+      return inverse(this);
+    } else if (isArray(context)) {
+      if(context.length > 0) {
+        return instance.helpers.each(context, options);
+      } else {
+        return inverse(this);
+      }
+    } else {
+      return fn(context);
+    }
+  });
+
+  instance.registerHelper('each', function(context, options) {
+    var fn = options.fn, inverse = options.inverse;
+    var i = 0, ret = "", data;
+
+    if (isFunction(context)) { context = context.call(this); }
+
+    if (options.data) {
+      data = createFrame(options.data);
+    }
+
+    if(context && typeof context === 'object') {
+      if (isArray(context)) {
+        for(var j = context.length; i<j; i++) {
+          if (data) {
+            data.index = i;
+            data.first = (i === 0);
+            data.last  = (i === (context.length-1));
+          }
+          ret = ret + fn(context[i], { data: data });
+        }
+      } else {
+        for(var key in context) {
+          if(context.hasOwnProperty(key)) {
+            if(data) { 
+              data.key = key; 
+              data.index = i;
+              data.first = (i === 0);
+            }
+            ret = ret + fn(context[key], {data: data});
+            i++;
+          }
+        }
+      }
+    }
+
+    if(i === 0){
+      ret = inverse(this);
+    }
+
+    return ret;
+  });
+
+  instance.registerHelper('if', function(conditional, options) {
+    if (isFunction(conditional)) { conditional = conditional.call(this); }
+
+    // Default behavior is to render the positive path if the value is truthy and not empty.
+    // The `includeZero` option may be set to treat the condtional as purely not empty based on the
+    // behavior of isEmpty. Effectively this determines if 0 is handled by the positive path or negative.
+    if ((!options.hash.includeZero && !conditional) || Utils.isEmpty(conditional)) {
+      return options.inverse(this);
+    } else {
+      return options.fn(this);
+    }
+  });
+
+  instance.registerHelper('unless', function(conditional, options) {
+    return instance.helpers['if'].call(this, conditional, {fn: options.inverse, inverse: options.fn, hash: options.hash});
+  });
+
+  instance.registerHelper('with', function(context, options) {
+    if (isFunction(context)) { context = context.call(this); }
+
+    if (!Utils.isEmpty(context)) return options.fn(context);
+  });
+
+  instance.registerHelper('log', function(context, options) {
+    var level = options.data && options.data.level != null ? parseInt(options.data.level, 10) : 1;
+    instance.log(level, context);
+  });
+}
+
+var logger = {
+  methodMap: { 0: 'debug', 1: 'info', 2: 'warn', 3: 'error' },
+
+  // State enum
+  DEBUG: 0,
+  INFO: 1,
+  WARN: 2,
+  ERROR: 3,
+  level: 3,
+
+  // can be overridden in the host environment
+  log: function(level, obj) {
+    if (logger.level <= level) {
+      var method = logger.methodMap[level];
+      if (typeof console !== 'undefined' && console[method]) {
+        console[method].call(console, obj);
+      }
+    }
+  }
+};
+exports.logger = logger;
+function log(level, obj) { logger.log(level, obj); }
+
+exports.log = log;var createFrame = function(object) {
+  var obj = {};
+  Utils.extend(obj, object);
+  return obj;
+};
+exports.createFrame = createFrame;
+},{"./exception":55,"./utils":58}],55:[function(_dereq_,module,exports){
+"use strict";
+
+var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
+
+function Exception(message, node) {
+  var line;
+  if (node && node.firstLine) {
+    line = node.firstLine;
+
+    message += ' - ' + line + ':' + node.firstColumn;
+  }
+
+  var tmp = Error.prototype.constructor.call(this, message);
+
+  // Unfortunately errors are not enumerable in Chrome (at least), so `for prop in tmp` doesn't work.
+  for (var idx = 0; idx < errorProps.length; idx++) {
+    this[errorProps[idx]] = tmp[errorProps[idx]];
+  }
+
+  if (line) {
+    this.lineNumber = line;
+    this.column = node.firstColumn;
+  }
+}
+
+Exception.prototype = new Error();
+
+exports["default"] = Exception;
+},{}],56:[function(_dereq_,module,exports){
+"use strict";
+var Utils = _dereq_("./utils");
+var Exception = _dereq_("./exception")["default"];
+var COMPILER_REVISION = _dereq_("./base").COMPILER_REVISION;
+var REVISION_CHANGES = _dereq_("./base").REVISION_CHANGES;
+
+function checkRevision(compilerInfo) {
+  var compilerRevision = compilerInfo && compilerInfo[0] || 1,
+      currentRevision = COMPILER_REVISION;
+
+  if (compilerRevision !== currentRevision) {
+    if (compilerRevision < currentRevision) {
+      var runtimeVersions = REVISION_CHANGES[currentRevision],
+          compilerVersions = REVISION_CHANGES[compilerRevision];
+      throw new Exception("Template was precompiled with an older version of Handlebars than the current runtime. "+
+            "Please update your precompiler to a newer version ("+runtimeVersions+") or downgrade your runtime to an older version ("+compilerVersions+").");
+    } else {
+      // Use the embedded version info since the runtime doesn't know about this revision yet
+      throw new Exception("Template was precompiled with a newer version of Handlebars than the current runtime. "+
+            "Please update your runtime to a newer version ("+compilerInfo[1]+").");
+    }
+  }
+}
+
+exports.checkRevision = checkRevision;// TODO: Remove this line and break up compilePartial
+
+function template(templateSpec, env) {
+  if (!env) {
+    throw new Exception("No environment passed to template");
+  }
+
+  // Note: Using env.VM references rather than local var references throughout this section to allow
+  // for external users to override these as psuedo-supported APIs.
+  var invokePartialWrapper = function(partial, name, context, helpers, partials, data) {
+    var result = env.VM.invokePartial.apply(this, arguments);
+    if (result != null) { return result; }
+
+    if (env.compile) {
+      var options = { helpers: helpers, partials: partials, data: data };
+      partials[name] = env.compile(partial, { data: data !== undefined }, env);
+      return partials[name](context, options);
+    } else {
+      throw new Exception("The partial " + name + " could not be compiled when running in runtime-only mode");
+    }
+  };
+
+  // Just add water
+  var container = {
+    escapeExpression: Utils.escapeExpression,
+    invokePartial: invokePartialWrapper,
+    programs: [],
+    program: function(i, fn, data) {
+      var programWrapper = this.programs[i];
+      if(data) {
+        programWrapper = program(i, fn, data);
+      } else if (!programWrapper) {
+        programWrapper = this.programs[i] = program(i, fn);
+      }
+      return programWrapper;
+    },
+    merge: function(param, common) {
+      var ret = param || common;
+
+      if (param && common && (param !== common)) {
+        ret = {};
+        Utils.extend(ret, common);
+        Utils.extend(ret, param);
+      }
+      return ret;
+    },
+    programWithDepth: env.VM.programWithDepth,
+    noop: env.VM.noop,
+    compilerInfo: null
+  };
+
+  return function(context, options) {
+    options = options || {};
+    var namespace = options.partial ? options : env,
+        helpers,
+        partials;
+
+    if (!options.partial) {
+      helpers = options.helpers;
+      partials = options.partials;
+    }
+    var result = templateSpec.call(
+          container,
+          namespace, context,
+          helpers,
+          partials,
+          options.data);
+
+    if (!options.partial) {
+      env.VM.checkRevision(container.compilerInfo);
+    }
+
+    return result;
+  };
+}
+
+exports.template = template;function programWithDepth(i, fn, data /*, $depth */) {
+  var args = Array.prototype.slice.call(arguments, 3);
+
+  var prog = function(context, options) {
+    options = options || {};
+
+    return fn.apply(this, [context, options.data || data].concat(args));
+  };
+  prog.program = i;
+  prog.depth = args.length;
+  return prog;
+}
+
+exports.programWithDepth = programWithDepth;function program(i, fn, data) {
+  var prog = function(context, options) {
+    options = options || {};
+
+    return fn(context, options.data || data);
+  };
+  prog.program = i;
+  prog.depth = 0;
+  return prog;
+}
+
+exports.program = program;function invokePartial(partial, name, context, helpers, partials, data) {
+  var options = { partial: true, helpers: helpers, partials: partials, data: data };
+
+  if(partial === undefined) {
+    throw new Exception("The partial " + name + " could not be found");
+  } else if(partial instanceof Function) {
+    return partial(context, options);
+  }
+}
+
+exports.invokePartial = invokePartial;function noop() { return ""; }
+
+exports.noop = noop;
+},{"./base":54,"./exception":55,"./utils":58}],57:[function(_dereq_,module,exports){
+"use strict";
+// Build out our basic SafeString type
+function SafeString(string) {
+  this.string = string;
+}
+
+SafeString.prototype.toString = function() {
+  return "" + this.string;
+};
+
+exports["default"] = SafeString;
+},{}],58:[function(_dereq_,module,exports){
+"use strict";
+/*jshint -W004 */
+var SafeString = _dereq_("./safe-string")["default"];
+
+var escape = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#x27;",
+  "`": "&#x60;"
+};
+
+var badChars = /[&<>"'`]/g;
+var possible = /[&<>"'`]/;
+
+function escapeChar(chr) {
+  return escape[chr] || "&amp;";
+}
+
+function extend(obj, value) {
+  for(var key in value) {
+    if(Object.prototype.hasOwnProperty.call(value, key)) {
+      obj[key] = value[key];
+    }
+  }
+}
+
+exports.extend = extend;var toString = Object.prototype.toString;
+exports.toString = toString;
+// Sourced from lodash
+// https://github.com/bestiejs/lodash/blob/master/LICENSE.txt
+var isFunction = function(value) {
+  return typeof value === 'function';
+};
+// fallback for older versions of Chrome and Safari
+if (isFunction(/x/)) {
+  isFunction = function(value) {
+    return typeof value === 'function' && toString.call(value) === '[object Function]';
+  };
+}
+var isFunction;
+exports.isFunction = isFunction;
+var isArray = Array.isArray || function(value) {
+  return (value && typeof value === 'object') ? toString.call(value) === '[object Array]' : false;
+};
+exports.isArray = isArray;
+
+function escapeExpression(string) {
+  // don't escape SafeStrings, since they're already safe
+  if (string instanceof SafeString) {
+    return string.toString();
+  } else if (!string && string !== 0) {
+    return "";
+  }
+
+  // Force a string conversion as this will be done by the append regardless and
+  // the regex test will do this transparently behind the scenes, causing issues if
+  // an object's to string has escaped characters in it.
+  string = "" + string;
+
+  if(!possible.test(string)) { return string; }
+  return string.replace(badChars, escapeChar);
+}
+
+exports.escapeExpression = escapeExpression;function isEmpty(value) {
+  if (!value && value !== 0) {
+    return true;
+  } else if (isArray(value) && value.length === 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+exports.isEmpty = isEmpty;
+},{"./safe-string":57}],59:[function(_dereq_,module,exports){
+// Create a simple path alias to allow browserify to resolve
+// the runtime on a supported path.
+module.exports = _dereq_('./dist/cjs/handlebars.runtime');
+
+},{"./dist/cjs/handlebars.runtime":53}],60:[function(_dereq_,module,exports){
+module.exports = _dereq_("handlebars/runtime")["default"];
+
+},{"handlebars/runtime":59}]},{},[43])
+(43)
 });
