@@ -30,7 +30,7 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      files: ['<%= jshint.files %>', 'www/scss/*.scss', 'www/js/*.html'],
+      files: ['<%= jshint.files %>', 'www/scss/*.scss', 'www/js/*.html', 'app/js/**/*.hbs'],
       tasks: ['jshint', 'compass', 'browserify:app'],
       options: {
         livereload: true

@@ -1,4 +1,4 @@
-/**
+    /**
   @desc:    defines the main layout incuding margins, paddings and heights / widths, excluding the modules
 */
 
@@ -9,7 +9,7 @@ body {
 }
 
 	.sidebar {
-	  	width: 240px;	
+	  	width: 240px;
 	  	position: absolute;
 		top: 0;
 		left: 0;
@@ -78,7 +78,7 @@ body {
 				  top: 0;
 				  margin: 20px 1.0rem 0 0 ;
 				}
-		
+
 		.dashboard {
 		  width: 99%;
 		  height:100%;
@@ -91,3 +91,16 @@ body {
 			  display: block;
 			  clear: both;
 			}
+
+        .pluginView{
+            position: absolute;
+            top: 80px;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+
+        .pluginView iframe{
+            height: 100%;
+            width: 100%;
+        }
