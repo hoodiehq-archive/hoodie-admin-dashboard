@@ -1,7 +1,5 @@
 /*global module:false*/
 
-var path = require('path');
-
 module.exports = function (grunt) {
 
   'use strict';
@@ -11,8 +9,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-hapi');
 
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-connect-proxy');
+  grunt.loadNpmTasks('grunt-hoodie');
 
   // Project configuration.
   grunt.initConfig({
@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     jshint: {
       files: [
         'Gruntfile.js',
-        'app/js/**/**/*.js'
+        'www/js/**/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -30,25 +30,62 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      files: ['<%= jshint.files %>', 'app/scss/*.scss', 'app/js/*.html'],
-      tasks: ['jshint', 'compass', 'browserify:app', 'hapi'],
+      files: ['<%= jshint.files %>', 'www/scss/*.scss', 'www/js/*.html'],
+      tasks: ['jshint', 'compass', 'browserify:app'],
       options: {
         livereload: true
       }
     },
 
+    hoodie: {
+      start: {
+        options: {
+          callback: function (config) {
+            grunt.config.set('cfg', config);
+          }
+        }
+      }
+    },
+
+    connect: {
+      server: {
+        options: {
+          port: 9000,
+          base: 'www',
+          hostname: '0.0.0.0',
+          middleware: function (connect, options) {
+            var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest;
+            return [
+              proxy,
+              connect.static(options.base),
+              connect.directory(options.base)
+            ];
+          }
+        },
+        proxies: [
+          {
+            context: '/_api',
+            host: '<%= cfg.stack.www.host %>',
+            port: '<%= cfg.stack.www.port %>'
+          }
+
+        ]
+      }
+    },
+
+
     compass: {
       dist: {
         options: {
-          sassDir: 'app/scss',
-          cssDir: 'app/css',
+          sassDir: 'www/scss',
+          cssDir: 'www/css',
           environment: 'production'
         }
       },
       dev: {
         options: {
-          sassDir: 'app/scss',
-          cssDir: 'app/css'
+          sassDir: 'www/scss',
+          cssDir: 'www/css'
         }
       }
 
@@ -118,7 +155,7 @@ module.exports = function (grunt) {
           }
         },
         src: ['./libs/*.js'],
-        dest: 'app/dist/libs.js'
+        dest: 'www/dist/libs.js'
       },
       app: {
         options: {
@@ -150,26 +187,15 @@ module.exports = function (grunt) {
             './libs/backbone.routefilter/index.js'
           ]
         },
-        src: ['app/js/init.js'],
-        dest: 'app/dist/pocket.js',
+        src: ['www/js/init.js'],
+        dest: 'www/dist/pocket.js',
       }
     },
 
     uglify: {
       dist: {
         files: {
-          'app/dist/<%= pkg.name %>.min.js': ['app/dist/libs', 'app/dist/pocket.js']
-        }
-      }
-    },
-
-    hapi: {
-      custom_options: {
-        options: {
-          server: path.resolve('./server'),
-          bases: {
-            '/': './app'
-          }
+          'www/dist/<%= pkg.name %>.min.js': ['www/dist/libs', 'www/dist/pocket.js']
         }
       }
     },
@@ -180,6 +206,11 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['jshint']);
   grunt.registerTask('build', ['jshint', 'compass', 'browserify', 'uglify']);
 
-  grunt.registerTask('server', ['hapi', 'watch']);
+  grunt.registerTask('serve', [
+    'hoodie',
+    'connect:server',
+    'configureProxies:server',
+    'watch'
+  ]);
 
 };
