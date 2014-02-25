@@ -17,40 +17,19 @@ This will enable you to work on Pocket, pocket UIKit and plugins.
 
 ## Working on Pocket
 
-For now, you will need a separate hoodie app to work as your backend. Let's call it `pocketBackend`. Just make it happen somewhere with `$ hoodie new pocketBackend`. pocketBackend's `hoodie-server` will need to be modified to allow CORS requests from the dev Pocket:
-
-In `pocketBackend/node_modules/hoodie_server/lib/server/index.js`, insert
+This has improved considerably thanks to @svnlto. All you do is
 
 ````
-var cors = {
-      origin: ['http://localhost:4444'],
-      isOriginExposed: true,
-      headers: ['Authorization', 'Content-Type', 'If-None-Match', 'access-control-allow-headers'],
-      credentials: true
-    };
-
-    pack.server(server_config.www_port, {
-      labels: ['web'],
-      cors: cors
-    });
-
-    pack.server(server_config.admin_port, {
-      labels: ['admin'],
-      cors: cors
-    });
+$ git clone git@github.com:hoodiehq/pocket.git
+$ npm install
+$ grunt browserify
 ````
 
-underneath `var pack = new Hapi.Pack();`.
+You'll also need to `$ grunt browserify` each time you add libraries to be compiled into `libs.js`.
 
-In your dev Pocket's `app/js/models/config.js`, there should be an `api` object that points to the Hoodie endpoint Pocket should be using. Your pocketBackend's www URL goes in here:
+Then `$ grunt server`. This will lauch Hoodie as well as the Grunt server and also connect the two, so there is no further config needed. Pocket will be running at http://0.0.0.0:9000, not at the Hoodie URLs.
 
-````
-api: {
-  url: 'http://127.0.0.1:6055/_api/'
-},
-````
-
-You should now be able to run pocketBackend with `$ hoodie start` and your dev Pocket with `$ grunt server`, and they should happily talk to each other.
+You can then `$ hoodie install pluginName` as usual.
 
 ## Working on pocket-UIKit
 

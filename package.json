@@ -32,6 +32,14 @@
   },
   "homepage": "https://github.com/hoodiehq/pocket",
   "dependencies": {
-    "hoodie-server": "^0.9.19"
+    "hoodie-server": "^0.9.19",
+    "hoodie-plugin-users": "~0.1.0",
+    "hoodie-plugin-appconfig": "~0.2.0"
+  },
+  "hoodie": {
+    "plugins": [
+      "hoodie-plugin-users",
+      "hoodie-plugin-appconfig"
+    ]
   }
 }
