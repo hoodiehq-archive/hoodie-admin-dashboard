@@ -32,7 +32,6 @@
   },
   "homepage": "https://github.com/hoodiehq/pocket",
   "dependencies": {
-    "brfs": "0.0.9",
-    "hoodie-server": "^0.9.17"
+    "hoodie-server": "^0.9.18"
   }
 }
