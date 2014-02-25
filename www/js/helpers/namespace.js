@@ -19,7 +19,7 @@ app.reqres.setHandler('config', function () {
 
 app.on('initialize:before', function (options) {
 
-  app.hoodieAdmin = new HoodieAdmin('http://localhost:6021/');
+  app.hoodieAdmin = new HoodieAdmin();
 
   // create router instance
   app.router = new Router();
