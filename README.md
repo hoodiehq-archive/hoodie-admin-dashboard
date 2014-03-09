@@ -4,7 +4,7 @@ Static HTML for now. Currently includes a fluid version of gridster.js (check ou
 
 Remember to `$ npm install` :)
 
-Start dev server with `$ grunt server` and open `http://localhost:4444`.
+Start dev server with `$ grunt serve` and open `http://localhost:4444`.
 You need the livereload plugin for Chrome if you want livereload.
 
 Build CSS with `$ grunt compass`
@@ -27,7 +27,7 @@ $ grunt browserify
 
 You'll also need to `$ grunt browserify` each time you add libraries to be compiled into `libs.js`.
 
-Then `$ grunt server`. This will lauch Hoodie as well as the Grunt server and also connect the two, so there is no further config needed. Pocket will be running at http://0.0.0.0:9000, not at the Hoodie URLs.
+Then `$ grunt serve`. This will lauch Hoodie as well as the Grunt server and also connect the two, so there is no further config needed. Pocket will be running at http://0.0.0.0:9000, not at the Hoodie URLs.
 
 You can then `$ hoodie install pluginName` as usual.
 
