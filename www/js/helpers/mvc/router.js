@@ -1,8 +1,10 @@
 'use strict';
-
-require('routefilter');
-
+var app = require('../namespace');
 var Backbone = require('backbone');
+
+require('barf');
+
+console.log(app);
 
 var BaseRouter = Backbone.Router.extend({
 
@@ -21,33 +23,17 @@ var BaseRouter = Backbone.Router.extend({
     return this.history[this.history.length - 2];
   },
 
-  // Before routing, we check whether the user is signed in
-  // If not, we save their target route and redirect to login
-  before: function () {
-    //var currentRoute = Backbone.history.fragment;
-    //console.log('user wants route: ', currentRoute);
-    //console.log('routeAfterSignIn: ', this.routeAfterSignIn);
+  before: {
+    'plugins': function (fragment, args, next) {
 
+      console.log(fragment, args, next);
 
-    //if ($.inArray(currentRoute, this.avoidRoute) === -1) {
-      //console.log('user has no session! redirecting to signIn');
-      //this.routeAfterSignIn = currentRoute;
-      //console.log('set routeAfterSignIn: ', this.routeAfterSignIn);
-      //Backbone.history.navigate('signin', {
-        //trigger: true
-      //});
-      //return false;
-    //}
-    //if (currentRoute === this.routeAfterSignIn) {
-      //console.log('cleared routeAfterSignIn: ', this.routeAfterSignIn);
-      //this.routeAfterSignIn = '';
-    //}
-
-    //console.log('before:route', route);
-
-  },
-
-  after: function () {
+      //if (this.user.hasValidSession()) {
+        //next();
+      //} else {
+        //Backbone.history.navigate('', { trigger: true });
+      //}
+    }
   }
 
 });

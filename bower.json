@@ -5,7 +5,6 @@
   "dependencies": {
     "jquery": "~2.0.3",
     "jquery.gridster.with-extras.js": "https://raw2.github.com/espy/gridster.js/master/dist/jquery.gridster.with-extras.js",
-    "backbone.routefilter": "https://raw.github.com/boazsender/backbone.routefilter/master/dist/backbone.routefilter.js",
     "lodash": "~2.4.1",
     "backbone": "~1.1.0",
     "backbone.marionette": "~1.6.1",
