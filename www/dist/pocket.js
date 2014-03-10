@@ -3941,12 +3941,14 @@ var Controller = Marionette.Controller.extend({
     var view = new View({
       model: this.user
     });
+
     app.rm.get('login').show(view);
   }
 
 });
 
 module.exports = Controller;
+
 
 },{"../../../../models/user":88,"../views/index":61,"backbone.marionette":"Mn2A9x"}],59:[function(_dereq_,module,exports){
 'use strict';
@@ -3972,19 +3974,20 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<form class=\"form-horizontal\">\n<fieldset>\n\n<!-- Form Name -->\n<div class=\"logo ir\">Hoodie Pocket</div>\n<h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n\n<!-- Password input-->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"password\">Password</label>\n  <div class=\"controls\">\n    <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Password\" class=\"input-xlarge\" required=\"\">\n\n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"\">Submit</label>\n  <div class=\"controls\">\n    <button id=\"submit\" name=\"\" class=\"btn btn-default\">Button</button>\n  </div>\n</div>\n\n</fieldset>\n</form>\n\n";
+  return "<form class=\"form-horizontal\">\n<fieldset>\n\n<!-- Form Name -->\n<div class=\"logo ir\">Hoodie Pocket</div>\n<h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n\n<!-- Password input-->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"password\">Password</label>\n  <div class=\"controls\">\n    <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Password\" class=\"input-xlarge\" required=\"\">\n\n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"\">Submit</label>\n  <div class=\"controls\">\n    <a id=\"submit\" name=\"\" class=\"btn btn-default\">Button</a>\n  </div>\n</div>\n\n</fieldset>\n</form>\n\n";
   });
 
 },{"hbsfy/runtime":17}],61:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
-
-_dereq_('../../../../helpers/handlebars');
-_dereq_('backbone.validation');
 var Syphon = _dereq_('backbone.syphon');
 
 var tmpl = _dereq_('../templates/index.hbs');
+
+_dereq_('../../../../helpers/handlebars');
+_dereq_('backbone.validation');
+
 
 var View = Marionette.ItemView.extend({
   template: tmpl,
@@ -4001,6 +4004,9 @@ var View = Marionette.ItemView.extend({
   invalid: function () { },
 
   valid: function () {
+    Backbone.history.navigate('plugins');
+    app.vent.trigger('layout:app');
+    app.vent.trigger('app:start');
   },
 
   modelEvents: {
@@ -4455,15 +4461,17 @@ _dereq_('barf');
 var BaseRouter = Backbone.Router.extend({
 
   before: {
+
     '*any': function (fragment, args, next) {
       if (app.hoodieAdmin.account.hasValidSession()) {
-        app.vent.trigger('layout:app');
         next();
       } else {
+        // move these events elsewhere
         app.vent.trigger('layout:login');
         Backbone.history.navigate('', { trigger: true });
       }
     }
+
   }
 
 });
@@ -4624,10 +4632,7 @@ var Model = BaseModel.extend({
       name: 'appname',
       components: {
         'layout': {
-          config: {
-            app_template: '../templates/index.hbs',
-            login_template: '../templates/login.hbs'
-          }
+          config: { }
         },
         'sidebar': {
           config: {

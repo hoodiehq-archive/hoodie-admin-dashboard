@@ -1,12 +1,13 @@
 'use strict';
 
 var Marionette = require('backbone.marionette');
-
-require('../../../../helpers/handlebars');
-require('backbone.validation');
 var Syphon = require('backbone.syphon');
 
 var tmpl = require('../templates/index.hbs');
+
+require('../../../../helpers/handlebars');
+require('backbone.validation');
+
 
 var View = Marionette.ItemView.extend({
   template: tmpl,
@@ -23,6 +24,12 @@ var View = Marionette.ItemView.extend({
   invalid: function () { },
 
   valid: function () {
+    Backbone.history.navigate('plugins', {
+      trigger: true
+    });
+
+    app.vent.trigger('layout:app');
+    app.vent.trigger('app:start');
   },
 
   modelEvents: {

@@ -16,9 +16,11 @@ var Controller = Marionette.Controller.extend({
     var view = new View({
       model: this.user
     });
+
     app.rm.get('login').show(view);
   }
 
 });
 
 module.exports = Controller;
+

@@ -8,10 +8,7 @@ var Model = BaseModel.extend({
       name: 'appname',
       components: {
         'layout': {
-          config: {
-            app_template: '../templates/index.hbs',
-            login_template: '../templates/login.hbs'
-          }
+          config: { }
         },
         'sidebar': {
           config: {
