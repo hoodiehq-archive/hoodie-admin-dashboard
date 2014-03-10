@@ -8,7 +8,7 @@ var Controller = Marionette.Controller.extend({
 
     this.options = options || {};
     this.container = new Backbone.Marionette.Region({
-      el: '#container'
+      el: '#content'
     });
   },
 

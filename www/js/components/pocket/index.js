@@ -7,10 +7,10 @@ app.module('pocket', function () {
   'use strict';
 
   this.addInitializer(function (options) {
+    require('../structural/layout/index');
 
     // boot up default UI components
     app.vent.on('app:start', function () {
-      require('../structural/layout/index');
       require('../structural/sidebar/index');
       require('../structural/content/index');
 
@@ -20,9 +20,7 @@ app.module('pocket', function () {
     });
 
     app.vent.on('app:login', function () {
-      require('../structural/login/index');
-
-      require('../ui/login');
+      require('../ui/login/index');
     });
 
     this._controller = new Controller(options);

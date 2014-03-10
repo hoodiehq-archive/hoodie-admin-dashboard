@@ -17,7 +17,6 @@ app.module('pocket.layout', function () {
     var self = this;
 
     this.listenTo(app.vent, 'layout:login', function () {
-      console.log('show login');
       self._controller.showLoginLayout(require('./templates/login.hbs')());
     });
 
