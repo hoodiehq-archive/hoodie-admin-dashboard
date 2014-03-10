@@ -1,6 +1,6 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"backbone.babysitter":[function(require,module,exports){
-module.exports=require('WJzNxy');
-},{}],"WJzNxy":[function(require,module,exports){
+module.exports=require('iV8lA4');
+},{}],"iV8lA4":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
 ; global.Backbone = require("backbone");
@@ -166,7 +166,9 @@ Backbone.ChildViewContainer = (function(Backbone, _){
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"backbone":"xlgzdd"}],"c6sTUs":[function(require,module,exports){
+},{"backbone":"atSdsZ"}],"backbone.marionette":[function(require,module,exports){
+module.exports=require('Mn2A9x');
+},{}],"Mn2A9x":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
 ; global.$ = require("jquery");
@@ -174,7 +176,7 @@ global.Backbone = require("backbone");
 global._ = require("underscore");
 // MarionetteJS (Backbone.Marionette)
 // ----------------------------------
-// v1.6.2
+// v1.6.1
 //
 // Copyright (c)2014 Derick Bailey, Muted Solutions, LLC.
 // Distributed under MIT license
@@ -665,25 +667,6 @@ Marionette.getOption = function(target, optionName){
   return value;
 };
 
-// Marionette.normalizeMethods
-// ----------------------
-
-// Pass in a mapping of events => functions or function names
-// and return a mapping of events => functions
-Marionette.normalizeMethods = function(hash) {
-  var normalizedHash = {}, method;
-  _.each(hash, function(fn, name) {
-    method = fn;
-    if (!_.isFunction(method)) {
-      method = this[method];
-    }
-    if (!method) {
-      return;
-    }
-    normalizedHash[name] = method;
-  }, this);
-  return normalizedHash;
-};
 // Trigger an event and/or a corresponding method name. Examples:
 //
 // `this.triggerMethod("foo")` will trigger the "foo" event and
@@ -1423,10 +1406,6 @@ Marionette.View = Backbone.View.extend({
   // methods if the method exists
   triggerMethod: Marionette.triggerMethod,
 
-  // Imports the "normalizeMethods" to transform hashes of
-  // events=>function references/names to a hash of events=>function references
-  normalizeMethods: Marionette.normalizeMethods,
-
   // Get the template for this view
   // instance. You can set a `template` attribute in the view
   // definition or pass a `template: "whatever"` parameter in
@@ -1737,7 +1716,8 @@ Marionette.CollectionView = Marionette.View.extend({
   },
 
   // Configured the initial events that the collection view
-  // binds to.
+  // binds to. Override this method to prevent the initial
+  // events, or to add your own initial events.
   _initialEvents: function(){
     if (this.collection){
       this.listenTo(this.collection, "add", this.addChildView, this);
@@ -1903,7 +1883,7 @@ Marionette.CollectionView = Marionette.View.extend({
     this.listenTo(view, "all", function(){
       var args = slice(arguments);
       var rootEvent = args[0];
-      var itemEvents = this.normalizeMethods(this.getItemEvents());
+      var itemEvents = this.getItemEvents();
 
       args[0] = prefix + ":" + rootEvent;
       args.splice(1, 0, view);
@@ -2520,7 +2500,7 @@ Marionette.Module = function(moduleName, app, options){
   this.triggerMethod = Marionette.triggerMethod;
 
   if (_.isFunction(this.initialize)){
-    this.initialize(this.options, moduleName, app);
+    this.initialize(this.options);
   }
 };
 
@@ -2732,140 +2712,9 @@ _.extend(Marionette.Module, {
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"backbone":"xlgzdd","jquery":"rN9BJm","underscore":"zjxVFF"}],"backbone.marionette":[function(require,module,exports){
-module.exports=require('c6sTUs');
-},{}],"routeFilter":[function(require,module,exports){
-module.exports=require('0buMsC');
-},{}],"0buMsC":[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
-
-; global.Backbone = require("backbone");
-/*! backbone.routefilter - v0.2.0 - 2013-02-16
-* https://github.com/boazsender/backbone.routefilter
-* Copyright (c) 2013 Boaz Sender; Licensed MIT */
-
-(function(Backbone, _) {
-
-  // Save a reference to the original route method to be called
-  // after we pave it over.
-  var originalRoute = Backbone.Router.prototype.route;
-
-  // Create a reusable no operation func for the case where a before
-  // or after filter is not set. Backbone or Underscore should have
-  // a global one of these in my opinion.
-  var nop = function(){};
-
-  // Extend the router prototype with a default before function,
-  // a default after function, and a pave over of _bindRoutes.
-  _.extend(Backbone.Router.prototype, {
-
-    // Add default before filter.
-    before: nop,
-
-    // Add default after filter.
-    after: nop,
-
-    // Pave over Backbone.Router.prototype.route, the public method used
-    // for adding routes to a router instance on the fly, and the
-    // method which backbone uses internally for binding routes to handlers
-    // on the Backbone.history singleton once it's instantiated.
-    route: function(route, name, callback) {
-
-      // If there is no callback present for this route, then set it to
-      // be the name that was set in the routes property of the constructor,
-      // or the name arguement of the route method invocation. This is what
-      // Backbone.Router.route already does. We need to do it again,
-      // because we are about to wrap the callback in a function that calls
-      // the before and after filters as well as the original callback that
-      // was passed in.
-      if( !callback ){
-        callback = this[ name ];
-      }
-
-      // Create a new callback to replace the original callback that calls
-      // the before and after filters as well as the original callback
-      // internally.
-      var wrappedCallback = _.bind( function() {
-
-        // Call the before filter and if it returns false, run the
-        // route's original callback, and after filter. This allows
-        // the user to return false from within the before filter
-        // to prevent the original route callback and after
-        // filter from running.
-        var callbackArgs = [ route, _.toArray(arguments) ];
-        var beforeCallback;
-
-        if ( _.isFunction(this.before) ) {
-
-          // If the before filter is just a single function, then call
-          // it with the arguments.
-          beforeCallback = this.before;
-        } else if ( typeof this.before[route] !== "undefined" ) {
-
-          // otherwise, find the appropriate callback for the route name
-          // and call that.
-          beforeCallback = this.before[route];
-        } else {
-
-          // otherwise, if we have a hash of routes, but no before callback
-          // for this route, just use a nop function.
-          beforeCallback = nop;
-        }
-
-        // If the before callback fails during its execusion (by returning)
-        // false, then do not proceed with the route triggering.
-        if ( beforeCallback.apply(this, callbackArgs) === false ) {
-          return;
-        }
-
-        // If the callback exists, then call it. This means that the before
-        // and after filters will be called whether or not an actual
-        // callback function is supplied to handle a given route.
-        if( callback ) {
-          callback.apply( this, arguments );
-        }
-
-        var afterCallback;
-        if ( _.isFunction(this.after) ) {
-
-          // If the after filter is a single funciton, then call it with
-          // the proper arguments.
-          afterCallback = this.after;
-
-        } else if ( typeof this.after[route] !== "undefined" ) {
-
-          // otherwise if we have a hash of routes, call the appropriate
-          // callback based on the route name.
-          afterCallback = this.after[route];
-
-        } else {
-
-          // otherwise, if we have a has of routes but no after callback
-          // for this route, just use the nop function.
-          afterCallback = nop;
-        }
-
-        // Call the after filter.
-        afterCallback.apply( this, callbackArgs );
-
-      }, this);
-
-      // Call our original route, replacing the callback that was originally
-      // passed in when Backbone.Router.route was invoked with our wrapped
-      // callback that calls the before and after callbacks as well as the
-      // original callback.
-      return originalRoute.call( this, route, name, wrappedCallback );
-    }
-
-  });
-
-}(Backbone, _));
-
-; browserify_shim__define__module__export__(typeof Backbone.Router != "undefined" ? Backbone.Router : window.Backbone.Router);
-
-}).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
-
-},{"backbone":"xlgzdd"}],"stNeNC":[function(require,module,exports){
+},{"backbone":"atSdsZ","jquery":"KvN3hc","underscore":"Y10LaM"}],"backbone.wreqr":[function(require,module,exports){
+module.exports=require('ybCiOs');
+},{}],"ybCiOs":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
 ; global.Backbone = require("backbone");
@@ -3140,45 +2989,26 @@ Wreqr.EventAggregator = (function(Backbone, _){
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"backbone":"xlgzdd"}],"backbone.wreqr":[function(require,module,exports){
-module.exports=require('stNeNC');
-},{}],"backbone":[function(require,module,exports){
-module.exports=require('xlgzdd');
-},{}],"xlgzdd":[function(require,module,exports){
+},{"backbone":"atSdsZ"}],"atSdsZ":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
 ; global.underscore = require("underscore");
-//     Backbone.js 1.1.2
+//     Backbone.js 1.1.0
 
-//     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+//     (c) 2010-2011 Jeremy Ashkenas, DocumentCloud Inc.
+//     (c) 2011-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Backbone may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     http://backbonejs.org
 
-(function(root, factory) {
-
-  // Set up Backbone appropriately for the environment. Start with AMD.
-  if (typeof define === 'function' && define.amd) {
-    define(['underscore', 'jquery', 'exports'], function(_, $, exports) {
-      // Export global even in AMD case in case this script is loaded with
-      // others that may still expect a global Backbone.
-      root.Backbone = factory(root, exports, _, $);
-    });
-
-  // Next for Node.js or CommonJS. jQuery may not be needed as a module.
-  } else if (typeof exports !== 'undefined') {
-    var _ = require('underscore');
-    factory(root, exports, _);
-
-  // Finally, as a browser global.
-  } else {
-    root.Backbone = factory(root, {}, root._, (root.jQuery || root.Zepto || root.ender || root.$));
-  }
-
-}(this, function(root, Backbone, _, $) {
+(function(){
 
   // Initial Setup
   // -------------
+
+  // Save a reference to the global object (`window` in the browser, `exports`
+  // on the server).
+  var root = this;
 
   // Save the previous value of the `Backbone` variable, so that it can be
   // restored later on, if `noConflict` is used.
@@ -3190,12 +3020,25 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
   var slice = array.slice;
   var splice = array.splice;
 
+  // The top-level namespace. All public Backbone classes and modules will
+  // be attached to this. Exported for both the browser and the server.
+  var Backbone;
+  if (typeof exports !== 'undefined') {
+    Backbone = exports;
+  } else {
+    Backbone = root.Backbone = {};
+  }
+
   // Current version of the library. Keep in sync with `package.json`.
-  Backbone.VERSION = '1.1.2';
+  Backbone.VERSION = '1.1.0';
+
+  // Require Underscore, if we're on the server, and it's not already present.
+  var _ = root._;
+  if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
 
   // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
   // the `$` variable.
-  Backbone.$ = $;
+  Backbone.$ = root.jQuery || root.Zepto || root.ender || root.$;
 
   // Runs Backbone.js in *noConflict* mode, returning the `Backbone` variable
   // to its previous owner. Returns a reference to this Backbone object.
@@ -3261,7 +3104,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       var retain, ev, events, names, i, l, j, k;
       if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
       if (!name && !callback && !context) {
-        this._events = void 0;
+        this._events = {};
         return this;
       }
       names = name ? [name] : _.keys(this._events);
@@ -3357,7 +3200,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       case 1: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1); return;
       case 2: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2); return;
       case 3: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2, a3); return;
-      default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args); return;
+      default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args);
     }
   };
 
@@ -3502,7 +3345,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
       // Trigger all relevant attribute changes.
       if (!silent) {
-        if (changes.length) this._pending = options;
+        if (changes.length) this._pending = true;
         for (var i = 0, l = changes.length; i < l; i++) {
           this.trigger('change:' + changes[i], this, current[changes[i]], options);
         }
@@ -3513,7 +3356,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       if (changing) return this;
       if (!silent) {
         while (this._pending) {
-          options = this._pending;
           this._pending = false;
           this.trigger('change', this, options);
         }
@@ -3681,12 +3523,9 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     // using Backbone's restful methods, override this to change the endpoint
     // that will be called.
     url: function() {
-      var base =
-        _.result(this, 'urlRoot') ||
-        _.result(this.collection, 'url') ||
-        urlError();
+      var base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
       if (this.isNew()) return base;
-      return base.replace(/([^\/])$/, '$1/') + encodeURIComponent(this.id);
+      return base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id);
     },
 
     // **parse** converts a response into the hash of attributes to be `set` on
@@ -3702,7 +3541,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
     // A model is new if it has never been saved to the server, and lacks an id.
     isNew: function() {
-      return !this.has(this.idAttribute);
+      return this.id == null;
     },
 
     // Check if the model is currently in a valid state.
@@ -3806,7 +3645,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
           options.index = index;
           model.trigger('remove', model, this, options);
         }
-        this._removeReference(model, options);
+        this._removeReference(model);
       }
       return singular ? models[0] : models;
     },
@@ -3832,11 +3671,11 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       // Turn bare objects into model references, and prevent invalid models
       // from being added.
       for (i = 0, l = models.length; i < l; i++) {
-        attrs = models[i] || {};
+        attrs = models[i];
         if (attrs instanceof Model) {
           id = model = attrs;
         } else {
-          id = attrs[targetModel.prototype.idAttribute || 'id'];
+          id = attrs[targetModel.prototype.idAttribute];
         }
 
         // If a duplicate is found, prevent it from being added and
@@ -3856,13 +3695,14 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
           model = models[i] = this._prepareModel(attrs, options);
           if (!model) continue;
           toAdd.push(model);
-          this._addReference(model, options);
-        }
 
-        // Do not add multiple models with the same `id`.
-        model = existing || model;
-        if (order && (model.isNew() || !modelMap[model.id])) order.push(model);
-        modelMap[model.id] = true;
+          // Listen to added models' events, and index models for lookup by
+          // `id` and by `cid`.
+          model.on('all', this._onModelEvent, this);
+          this._byId[model.cid] = model;
+          if (model.id != null) this._byId[model.id] = model;
+        }
+        if (order) order.push(existing || model);
       }
 
       // Remove nonexistent models if appropriate.
@@ -3900,7 +3740,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
         }
         if (sort || (order && order.length)) this.trigger('sort', this, options);
       }
-
+      
       // Return the added (or merged) model (or models).
       return singular ? models[0] : models;
     },
@@ -3912,7 +3752,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     reset: function(models, options) {
       options || (options = {});
       for (var i = 0, l = this.models.length; i < l; i++) {
-        this._removeReference(this.models[i], options);
+        this._removeReference(this.models[i]);
       }
       options.previousModels = this.models;
       this._reset();
@@ -3953,7 +3793,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     // Get a model from the set by id.
     get: function(obj) {
       if (obj == null) return void 0;
-      return this._byId[obj] || this._byId[obj.id] || this._byId[obj.cid];
+      return this._byId[obj.id] || this._byId[obj.cid] || this._byId[obj];
     },
 
     // Get the model at the given index.
@@ -4029,7 +3869,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       if (!options.wait) this.add(model, options);
       var collection = this;
       var success = options.success;
-      options.success = function(model, resp) {
+      options.success = function(model, resp, options) {
         if (options.wait) collection.add(model, options);
         if (success) success(model, resp, options);
       };
@@ -4059,7 +3899,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     // Prepare a hash of attributes (or other model) to be added to this
     // collection.
     _prepareModel: function(attrs, options) {
-      if (attrs instanceof Model) return attrs;
+      if (attrs instanceof Model) {
+        if (!attrs.collection) attrs.collection = this;
+        return attrs;
+      }
       options = options ? _.clone(options) : {};
       options.collection = this;
       var model = new this.model(attrs, options);
@@ -4068,16 +3911,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       return false;
     },
 
-    // Internal method to create a model's ties to a collection.
-    _addReference: function(model, options) {
-      this._byId[model.cid] = model;
-      if (model.id != null) this._byId[model.id] = model;
-      if (!model.collection) model.collection = this;
-      model.on('all', this._onModelEvent, this);
-    },
-
     // Internal method to sever a model's ties to a collection.
-    _removeReference: function(model, options) {
+    _removeReference: function(model) {
       if (this === model.collection) delete model.collection;
       model.off('all', this._onModelEvent, this);
     },
@@ -4106,7 +3941,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
     'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
     'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
-    'lastIndexOf', 'isEmpty', 'chain', 'sample'];
+    'lastIndexOf', 'isEmpty', 'chain'];
 
   // Mix in each Underscore method as a proxy to `Collection#models`.
   _.each(methods, function(method) {
@@ -4118,7 +3953,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
   });
 
   // Underscore methods that take a property name as an argument.
-  var attributeMethods = ['groupBy', 'countBy', 'sortBy', 'indexBy'];
+  var attributeMethods = ['groupBy', 'countBy', 'sortBy'];
 
   // Use attributes instead of properties.
   _.each(attributeMethods, function(method) {
@@ -4340,9 +4175,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     return xhr;
   };
 
-  var noXhrPatch =
-    typeof window !== 'undefined' && !!window.ActiveXObject &&
-      !(window.XMLHttpRequest && (new XMLHttpRequest).dispatchEvent);
+  var noXhrPatch = typeof window !== 'undefined' && !!window.ActiveXObject && !(window.XMLHttpRequest && (new XMLHttpRequest).dispatchEvent);
 
   // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
   var methodMap = {
@@ -4401,18 +4234,12 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       var router = this;
       Backbone.history.route(route, function(fragment) {
         var args = router._extractParameters(route, fragment);
-        router.execute(callback, args);
+        callback && callback.apply(router, args);
         router.trigger.apply(router, ['route:' + name].concat(args));
         router.trigger('route', name, args);
         Backbone.history.trigger('route', router, name, args);
       });
       return this;
-    },
-
-    // Execute a route handler with the provided parameters.  This is an
-    // excellent place to do pre-route setup or post-route cleanup.
-    execute: function(callback, args) {
-      if (callback) callback.apply(this, args);
     },
 
     // Simple proxy to `Backbone.history` to save a fragment into the history.
@@ -4439,10 +4266,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       route = route.replace(escapeRegExp, '\\$&')
                    .replace(optionalParam, '(?:$1)?')
                    .replace(namedParam, function(match, optional) {
-                     return optional ? match : '([^/?]+)';
+                     return optional ? match : '([^\/]+)';
                    })
-                   .replace(splatParam, '([^?]*?)');
-      return new RegExp('^' + route + '(?:\\?([\\s\\S]*))?$');
+                   .replace(splatParam, '(.*?)');
+      return new RegExp('^' + route + '$');
     },
 
     // Given a route, and a URL fragment that it matches, return the array of
@@ -4450,9 +4277,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     // treated as `null` to normalize cross-browser behavior.
     _extractParameters: function(route, fragment) {
       var params = route.exec(fragment).slice(1);
-      return _.map(params, function(param, i) {
-        // Don't decode the search params.
-        if (i === params.length - 1) return param || null;
+      return _.map(params, function(param) {
         return param ? decodeURIComponent(param) : null;
       });
     }
@@ -4490,8 +4315,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
   // Cached regex for removing a trailing slash.
   var trailingSlash = /\/$/;
 
-  // Cached regex for stripping urls of hash.
-  var pathStripper = /#.*$/;
+  // Cached regex for stripping urls of hash and query.
+  var pathStripper = /[?#].*$/;
 
   // Has the history handling already been started?
   History.started = false;
@@ -4502,11 +4327,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     // The default interval to poll for hash changes, if necessary, is
     // twenty times a second.
     interval: 50,
-
-    // Are we at the app root?
-    atRoot: function() {
-      return this.location.pathname.replace(/[^\/]$/, '$&/') === this.root;
-    },
 
     // Gets the true hash value. Cannot use location.hash directly due to bug
     // in Firefox where location.hash will always be decoded.
@@ -4520,7 +4340,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     getFragment: function(fragment, forcePushState) {
       if (fragment == null) {
         if (this._hasPushState || !this._wantsHashChange || forcePushState) {
-          fragment = decodeURI(this.location.pathname + this.location.search);
+          fragment = this.location.pathname;
           var root = this.root.replace(trailingSlash, '');
           if (!fragment.indexOf(root)) fragment = fragment.slice(root.length);
         } else {
@@ -4551,8 +4371,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       this.root = ('/' + this.root + '/').replace(rootStripper, '/');
 
       if (oldIE && this._wantsHashChange) {
-        var frame = Backbone.$('<iframe src="javascript:0" tabindex="-1">');
-        this.iframe = frame.hide().appendTo('body')[0].contentWindow;
+        this.iframe = Backbone.$('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo('body')[0].contentWindow;
         this.navigate(fragment);
       }
 
@@ -4570,6 +4389,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       // opened by a non-pushState browser.
       this.fragment = fragment;
       var loc = this.location;
+      var atRoot = loc.pathname.replace(/[^\/]$/, '$&/') === this.root;
 
       // Transition from hashChange to pushState or vice versa if both are
       // requested.
@@ -4577,17 +4397,17 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
         // If we've started off with a route from a `pushState`-enabled
         // browser, but we're currently in a browser that doesn't support it...
-        if (!this._hasPushState && !this.atRoot()) {
+        if (!this._hasPushState && !atRoot) {
           this.fragment = this.getFragment(null, true);
-          this.location.replace(this.root + '#' + this.fragment);
+          this.location.replace(this.root + this.location.search + '#' + this.fragment);
           // Return immediately as browser will do redirect to new url
           return true;
 
         // Or if we've started out with a hash-based route, but we're currently
         // in a browser where it could be `pushState`-based instead...
-        } else if (this._hasPushState && this.atRoot() && loc.hash) {
+        } else if (this._hasPushState && atRoot && loc.hash) {
           this.fragment = this.getHash().replace(routeStripper, '');
-          this.history.replaceState({}, document.title, this.root + this.fragment);
+          this.history.replaceState({}, document.title, this.root + this.fragment + loc.search);
         }
 
       }
@@ -4599,7 +4419,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     // but possibly useful for unit testing Routers.
     stop: function() {
       Backbone.$(window).off('popstate', this.checkUrl).off('hashchange', this.checkUrl);
-      if (this._checkUrlInterval) clearInterval(this._checkUrlInterval);
+      clearInterval(this._checkUrlInterval);
       History.started = false;
     },
 
@@ -4647,7 +4467,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
       var url = this.root + (fragment = this.getFragment(fragment || ''));
 
-      // Strip the hash for matching.
+      // Strip the fragment of the query and hash for matching.
       fragment = fragment.replace(pathStripper, '');
 
       if (this.fragment === fragment) return;
@@ -4753,17 +4573,15 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     };
   };
 
-  return Backbone;
-
-}));
+}).call(this);
 
 ; browserify_shim__define__module__export__(typeof Backbone != "undefined" ? Backbone : window.Backbone);
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"underscore":"zjxVFF"}],"gridster":[function(require,module,exports){
-module.exports=require('50ccI7');
-},{}],"50ccI7":[function(require,module,exports){
+},{"underscore":"Y10LaM"}],"backbone":[function(require,module,exports){
+module.exports=require('atSdsZ');
+},{}],"OOmgq/":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
 ; global.$ = require("jquery");
@@ -8622,9 +8440,11 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"jquery":"rN9BJm"}],"jquery":[function(require,module,exports){
-module.exports=require('rN9BJm');
-},{}],"rN9BJm":[function(require,module,exports){
+},{"jquery":"KvN3hc"}],"gridster":[function(require,module,exports){
+module.exports=require('OOmgq/');
+},{}],"jquery":[function(require,module,exports){
+module.exports=require('KvN3hc');
+},{}],"KvN3hc":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /*!
  * jQuery JavaScript Library v2.0.3
@@ -17461,8 +17281,8 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 },{}],"lodash":[function(require,module,exports){
-module.exports=require('zDihW2');
-},{}],"zDihW2":[function(require,module,exports){
+module.exports=require('TT22vk');
+},{}],"TT22vk":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /**
  * @license
@@ -24254,7 +24074,9 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{}],"zjxVFF":[function(require,module,exports){
+},{}],"underscore":[function(require,module,exports){
+module.exports=require('Y10LaM');
+},{}],"Y10LaM":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 //     Underscore.js 1.5.2
 //     http://underscorejs.org
@@ -25537,6 +25359,122 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{}],"underscore":[function(require,module,exports){
-module.exports=require('zjxVFF');
+},{}],"L/4556":[function(require,module,exports){
+var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
+
+; global.Backbone = require("backbone");
+// barf - 1.0.1
+// https://github.com/svnlto/barf.js
+// Copyright 2012 - 2014 https://github.com/svnlto/
+// Licensed Apache License 2.0
+
+!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var o;"undefined"!=typeof window?o=window:"undefined"!=typeof global?o=global:"undefined"!=typeof self&&(o=self),(o.Backbone||(o.Backbone={})).Router=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+'use strict';
+
+var _ = _dereq_('underscore');
+var Backbone = _dereq_('backbone');
+
+_.extend(Backbone.Router.prototype, {
+
+  /**
+   * Override default route fn to call before/after filters
+   *
+   * @param {String} route
+   * @param {String} name
+   * @param {Function} [callback]
+   * @return {*}
+   */
+  route: function (route, name, callback) {
+
+    if (!_.isRegExp(route)) {
+      route = this._routeToRegExp(route);
+    }
+
+    if (_.isFunction(name)) {
+      callback = name;
+      name = '';
+    }
+
+    if (!callback) {
+      callback = this[name];
+    }
+
+    var router = this;
+
+    // store all the before and after routes in a stack
+    var beforeStack = [];
+    var afterStack = [];
+
+    _.each(router.before, function (value, key) {
+      beforeStack.push({
+        'filter': key,
+        'filterFn': value
+      });
+    });
+
+    _.each(router.after, function (value, key) {
+      afterStack.push({
+        'filter': key,
+        'filterFn': value
+      });
+    });
+
+    Backbone.history.route(route, function (fragment) {
+      var args = router._extractParameters(route, fragment);
+
+      var beforeStackClone = _.clone(beforeStack);
+      var afterStackClone = _.clone(afterStack);
+
+      function next(stack, runRoute) {
+        var layer = stack.shift();
+
+        if (layer) {
+          var filter = _.isRegExp(layer.filter) ? layer.filter : router._routeToRegExp(layer.filter);
+
+          if (filter.test(fragment)) {
+            var fn = _.isFunction(layer.filterFn) ? layer.filterFn : router[layer.filterFn];
+
+            fn.apply(router, [
+                fragment,
+                args,
+                function () {
+                  next(stack, runRoute);
+                }
+              ]);
+          } else {
+            next(stack, runRoute);
+          }
+        } else if (runRoute) {
+          callback.apply(router, args);
+        }
+      }
+
+      // start with top of the before stack
+      next(beforeStackClone, true);
+
+      router.trigger.apply(router, ['route:' + name].concat(args));
+      router.trigger('route', name, args);
+
+      Backbone.history.trigger('route', router, name, args);
+
+      next(afterStackClone);
+
+    });
+
+    return this;
+  }
+
+});
+
+module.exports = Backbone;
+
+},{}]},{},[1])
+(1)
+});
+; browserify_shim__define__module__export__(typeof Backbone.Router != "undefined" ? Backbone.Router : window.Backbone.Router);
+
+}).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
+
+},{"backbone":"atSdsZ"}],"barf":[function(require,module,exports){
+module.exports=require('L/4556');
 },{}]},{},[])

@@ -1,16 +1,114 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.app=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"backbone.marionette":[function(_dereq_,module,exports){
-module.exports=_dereq_('c6sTUs');
-},{}],"routefilter":[function(_dereq_,module,exports){
-module.exports=_dereq_('0buMsC');
+module.exports=_dereq_('Mn2A9x');
 },{}],"backbone":[function(_dereq_,module,exports){
-module.exports=_dereq_('xlgzdd');
+module.exports=_dereq_('atSdsZ');
 },{}],"gridster":[function(_dereq_,module,exports){
-module.exports=_dereq_('50ccI7');
+module.exports=_dereq_('OOmgq/');
 },{}],"jquery":[function(_dereq_,module,exports){
-module.exports=_dereq_('rN9BJm');
+module.exports=_dereq_('KvN3hc');
 },{}],"underscore":[function(_dereq_,module,exports){
-module.exports=_dereq_('zjxVFF');
-},{}],7:[function(_dereq_,module,exports){
+module.exports=_dereq_('Y10LaM');
+},{}],6:[function(_dereq_,module,exports){
+'use strict';
+
+var _ = _dereq_('underscore');
+var Backbone = _dereq_('backbone');
+
+_.extend(Backbone.Router.prototype, {
+
+  /**
+   * Override default route fn to call before/after filters
+   *
+   * @param {String} route
+   * @param {String} name
+   * @param {Function} [callback]
+   * @return {*}
+   */
+  route: function (route, name, callback) {
+
+    if (!_.isRegExp(route)) {
+      route = this._routeToRegExp(route);
+    }
+
+    if (_.isFunction(name)) {
+      callback = name;
+      name = '';
+    }
+
+    if (!callback) {
+      callback = this[name];
+    }
+
+    var router = this;
+
+    // store all the before and after routes in a stack
+    var beforeStack = [];
+    var afterStack = [];
+
+    _.each(router.before, function (value, key) {
+      beforeStack.push({
+        'filter': key,
+        'filterFn': value
+      });
+    });
+
+    _.each(router.after, function (value, key) {
+      afterStack.push({
+        'filter': key,
+        'filterFn': value
+      });
+    });
+
+    Backbone.history.route(route, function (fragment) {
+      var args = router._extractParameters(route, fragment);
+
+      var beforeStackClone = _.clone(beforeStack);
+      var afterStackClone = _.clone(afterStack);
+
+      function next(stack, runRoute) {
+        var layer = stack.shift();
+
+        if (layer) {
+          var filter = _.isRegExp(layer.filter) ? layer.filter : router._routeToRegExp(layer.filter);
+
+          if (filter.test(fragment)) {
+            var fn = _.isFunction(layer.filterFn) ? layer.filterFn : router[layer.filterFn];
+
+            fn.apply(router, [
+                fragment,
+                args,
+                function () {
+                  next(stack, runRoute);
+                }
+              ]);
+          } else {
+            next(stack, runRoute);
+          }
+        } else if (runRoute) {
+          callback.apply(router, args);
+        }
+      }
+
+      // start with top of the before stack
+      next(beforeStackClone, true);
+
+      router.trigger.apply(router, ['route:' + name].concat(args));
+      router.trigger('route', name, args);
+
+      Backbone.history.trigger('route', router, name, args);
+
+      next(afterStackClone);
+
+    });
+
+    return this;
+  }
+
+});
+
+module.exports = Backbone;
+
+},{"backbone":"atSdsZ","underscore":"Y10LaM"}],7:[function(_dereq_,module,exports){
 
 },{}],8:[function(_dereq_,module,exports){
 "use strict";
@@ -2524,6 +2622,7 @@ function hoodieAccount (hoodieAdmin) {
 
   // public API
   var account = {};
+  var signedIn = null;
 
   // add events API
   hoodieEvents(hoodieAdmin, {
@@ -2546,6 +2645,7 @@ function hoodieAccount (hoodieAdmin) {
 
     return hoodieAdmin.request('POST', '/_session', requestOptions)
     .done( function() {
+      signedIn = true;
       account.trigger('signin', ADMIN_USERNAME);
     });
   };
@@ -2553,13 +2653,20 @@ function hoodieAccount (hoodieAdmin) {
 
   // sign out
   // ---------
-
-  //
   account.signOut = function signOut() {
     return hoodieAdmin.request('DELETE', '/_session')
     .done( function() {
+      signedIn = false;
       return hoodieAdmin.trigger('signout');
     });
+  };
+
+  account.hasValidSession = function() {
+    return !!signedIn;
+  };
+
+  account.hasInValidSession = function() {
+    return !!signedIn;
   };
 
   hoodieAdmin.account = account;
@@ -2628,7 +2735,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"./plugins":34,"backbone.marionette":"c6sTUs"}],34:[function(_dereq_,module,exports){
+},{"./plugins":34,"backbone.marionette":"Mn2A9x"}],34:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -2701,7 +2808,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../../ui/plugins/index":59,"../collections/plugins":32,"../models/plugin":36,"backbone.marionette":"c6sTUs"}],35:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":59,"../collections/plugins":32,"../models/plugin":36,"backbone.marionette":"Mn2A9x"}],35:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -2794,7 +2901,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"c6sTUs"}],38:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],38:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -2870,7 +2977,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"c6sTUs"}],41:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],41:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 
@@ -2931,7 +3038,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"c6sTUs"}],44:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],44:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -3008,7 +3115,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":70,"../views/index":49,"backbone.marionette":"c6sTUs"}],47:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":70,"../views/index":49,"backbone.marionette":"Mn2A9x"}],47:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3063,7 +3170,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":66,"../templates/index.hbs":48,"backbone.marionette":"c6sTUs"}],50:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":66,"../templates/index.hbs":48,"backbone.marionette":"Mn2A9x"}],50:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3095,7 +3202,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":70,"../views/index":53,"backbone.marionette":"c6sTUs"}],51:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":70,"../views/index":53,"backbone.marionette":"Mn2A9x"}],51:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3139,7 +3246,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 },{"hbsfy/runtime":15}],53:[function(_dereq_,module,exports){
 arguments[4][49][0].apply(exports,arguments)
-},{"../../../../helpers/handlebars":66,"../templates/index.hbs":52,"backbone.marionette":"c6sTUs"}],54:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":66,"../templates/index.hbs":52,"backbone.marionette":"Mn2A9x"}],54:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3166,7 +3273,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":70,"../views/index":57,"backbone.marionette":"c6sTUs"}],55:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":70,"../views/index":57,"backbone.marionette":"Mn2A9x"}],55:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3235,7 +3342,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":66,"../templates/item.hbs":56,"backbone.marionette":"c6sTUs"}],58:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":66,"../templates/item.hbs":56,"backbone.marionette":"Mn2A9x"}],58:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3284,7 +3391,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":70,"../views/edit":63,"../views/list":64,"../views/show":65,"backbone.marionette":"c6sTUs"}],59:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":70,"../views/edit":63,"../views/list":64,"../views/show":65,"backbone.marionette":"Mn2A9x"}],59:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3378,7 +3485,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":66,"../templates/edit.hbs":60,"backbone.marionette":"c6sTUs"}],64:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":66,"../templates/edit.hbs":60,"backbone.marionette":"Mn2A9x"}],64:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3403,7 +3510,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":66,"../templates/list_item.hbs":61,"backbone.marionette":"c6sTUs","gridster":"50ccI7"}],65:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":66,"../templates/list_item.hbs":61,"backbone.marionette":"Mn2A9x","gridster":"OOmgq/"}],65:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3422,7 +3529,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":66,"../templates/show.hbs":62,"backbone.marionette":"c6sTUs"}],66:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":66,"../templates/show.hbs":62,"backbone.marionette":"Mn2A9x"}],66:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('hbsfy/runtime');
@@ -3470,7 +3577,7 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 
 module.exports = SuperCollection;
 
-},{"backbone":"xlgzdd","underscore":"zjxVFF"}],68:[function(_dereq_,module,exports){
+},{"backbone":"atSdsZ","underscore":"Y10LaM"}],68:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -3481,12 +3588,14 @@ var SuperModel = Backbone.Model.extend({
 
 module.exports = SuperModel;
 
-},{"backbone":"xlgzdd","jquery":"rN9BJm"}],69:[function(_dereq_,module,exports){
+},{"backbone":"atSdsZ","jquery":"KvN3hc"}],69:[function(_dereq_,module,exports){
 'use strict';
-
-_dereq_('routefilter');
-
+var app = _dereq_('../namespace');
 var Backbone = _dereq_('backbone');
+
+_dereq_('barf');
+
+console.log(app);
 
 var BaseRouter = Backbone.Router.extend({
 
@@ -3505,33 +3614,17 @@ var BaseRouter = Backbone.Router.extend({
     return this.history[this.history.length - 2];
   },
 
-  // Before routing, we check whether the user is signed in
-  // If not, we save their target route and redirect to login
-  before: function () {
-    //var currentRoute = Backbone.history.fragment;
-    //console.log('user wants route: ', currentRoute);
-    //console.log('routeAfterSignIn: ', this.routeAfterSignIn);
+  before: {
+    'plugins': function (fragment, args, next) {
 
+      console.log(fragment, args, next);
 
-    //if ($.inArray(currentRoute, this.avoidRoute) === -1) {
-      //console.log('user has no session! redirecting to signIn');
-      //this.routeAfterSignIn = currentRoute;
-      //console.log('set routeAfterSignIn: ', this.routeAfterSignIn);
-      //Backbone.history.navigate('signin', {
-        //trigger: true
-      //});
-      //return false;
-    //}
-    //if (currentRoute === this.routeAfterSignIn) {
-      //console.log('cleared routeAfterSignIn: ', this.routeAfterSignIn);
-      //this.routeAfterSignIn = '';
-    //}
-
-    //console.log('before:route', route);
-
-  },
-
-  after: function () {
+      //if (this.user.hasValidSession()) {
+        //next();
+      //} else {
+        //Backbone.history.navigate('', { trigger: true });
+      //}
+    }
   }
 
 });
@@ -3539,7 +3632,7 @@ var BaseRouter = Backbone.Router.extend({
 module.exports = BaseRouter;
 
 
-},{"backbone":"xlgzdd","routefilter":"0buMsC"}],70:[function(_dereq_,module,exports){
+},{"../namespace":70,"backbone":"atSdsZ","barf":6}],70:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
@@ -3592,7 +3685,7 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../models/config":75,"../router":76,"backbone":"xlgzdd","backbone.marionette":"c6sTUs","hoodie.admin":28}],71:[function(_dereq_,module,exports){
+},{"../models/config":75,"../router":76,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x","hoodie.admin":28}],71:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
@@ -3623,7 +3716,7 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":70,"./storeError":72,"./storeSuccess":73,"jquery":"rN9BJm"}],72:[function(_dereq_,module,exports){
+},{"../namespace":70,"./storeError":72,"./storeSuccess":73,"jquery":"KvN3hc"}],72:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -3647,7 +3740,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"rN9BJm"}],73:[function(_dereq_,module,exports){
+},{"jquery":"KvN3hc"}],73:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
