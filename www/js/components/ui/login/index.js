@@ -3,19 +3,11 @@
 var app = require('../../../helpers/namespace');
 var Controller = require('./controllers/index');
 
-app.module('pocket.signin', function () {
+app.module('pocket.login', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);
-  });
-
-  this.on('before:start', function () {
-    var self = this;
-
-    app.vent.on('signin:show', function (options) {
-      self._controller.show(options);
-    });
-
+    this._controller.show(options);
   });
 
 });

@@ -9,9 +9,21 @@ app.module('pocket', function () {
   this.addInitializer(function (options) {
 
     // boot up default UI components
-    require('../ui/logo/index');
-    require('../ui/navigation/index');
-    require('../ui/info/index');
+    app.vent.on('app:start', function () {
+      require('../structural/layout/index');
+      require('../structural/sidebar/index');
+      require('../structural/content/index');
+
+      require('../ui/logo/index');
+      require('../ui/navigation/index');
+      require('../ui/info/index');
+    });
+
+    app.vent.on('app:login', function () {
+      require('../structural/login/index');
+
+      require('../ui/login');
+    });
 
     this._controller = new Controller(options);
   });

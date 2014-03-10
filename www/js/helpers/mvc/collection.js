@@ -18,3 +18,4 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 });
 
 module.exports = SuperCollection;
+

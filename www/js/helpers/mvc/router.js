@@ -1,10 +1,6 @@
 'use strict';
-var app = require('../namespace');
-var Backbone = require('backbone');
 
 require('barf');
-
-console.log(app);
 
 var BaseRouter = Backbone.Router.extend({
 
@@ -24,15 +20,14 @@ var BaseRouter = Backbone.Router.extend({
   },
 
   before: {
-    'plugins': function (fragment, args, next) {
-
-      console.log(fragment, args, next);
-
-      //if (this.user.hasValidSession()) {
-        //next();
-      //} else {
-        //Backbone.history.navigate('', { trigger: true });
-      //}
+    '*any': function (fragment, args, next) {
+      if (app.hoodieAdmin.account.hasValidSession()) {
+        app.vent.trigger('layout:app');
+        next();
+      } else {
+        app.vent.trigger('layout:login');
+        Backbone.history.navigate('', { trigger: true });
+      }
     }
   }
 

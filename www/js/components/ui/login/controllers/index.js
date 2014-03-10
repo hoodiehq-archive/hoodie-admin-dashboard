@@ -1,6 +1,5 @@
 'use strict';
 
-var app = require('../../../../helpers/namespace');
 var Marionette = require('backbone.marionette');
 var View = require('../views/index');
 
@@ -21,7 +20,7 @@ var Controller = Marionette.Controller.extend({
       model: opts.model
     });
 
-    app.rm.get('content_header').show(view);
+    app.rm.get('login').show(view);
   }
 
 });

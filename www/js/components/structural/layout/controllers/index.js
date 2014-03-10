@@ -7,24 +7,22 @@ var Controller = Marionette.Controller.extend({
     'use strict';
 
     this.options = options || {};
-
-    // create layout object passing in a template string
-    var Layout = Marionette.Layout.extend({
-      template:  function () {
-        return options.template;
-      }
-    });
-
-    // assign a region to the documents container
     this.container = new Backbone.Marionette.Region({
-      el: '#content'
+      el: '#container'
     });
+  },
 
-    // bind layout to container element
-    this.container.show(new Layout());
+  showAppLayout: function (tmpl) {
+    app.vent.trigger('app:start');
+    Marionette.$(this.container.el).html(tmpl);
+  },
 
+  showLoginLayout: function (tmpl) {
+    app.vent.trigger('app:login');
+    Marionette.$(this.container.el).html(tmpl);
   }
 
 });
 
 module.exports = Controller;
+

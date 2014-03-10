@@ -7,3 +7,4 @@ var SuperModel = Backbone.Model.extend({
 });
 
 module.exports = SuperModel;
+

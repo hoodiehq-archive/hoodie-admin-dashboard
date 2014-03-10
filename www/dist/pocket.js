@@ -699,13 +699,169 @@ function hoodieOpen(hoodie) {
 
 module.exports = hoodieOpen;
 
-},{"../lib/store/remote":23,"extend":16}],18:[function(_dereq_,module,exports){
+},{"../lib/store/remote":24,"extend":16}],18:[function(_dereq_,module,exports){
+//
+// hoodie.request
+// ================
+
+// Hoodie's central place to send request to its backend.
+// At the moment, it's a wrapper around jQuery's ajax method,
+// but we might get rid of this dependency in the future.
+//
+// It has build in support for CORS and a standard error
+// handling that normalizes errors returned by CouchDB
+// to JavaScript's native conventions of errors having
+// a name & a message property.
+//
+// Common errors to expect:
+//
+// * HoodieRequestError
+// * HoodieUnauthorizedError
+// * HoodieConflictError
+// * HoodieServerError
+
+var hoodiefyRequestErrorName = _dereq_('../utils/hoodiefy_request_error_name');
+var extend = _dereq_('extend');
+var rejectWith = _dereq_('../utils/promise/reject_with');
+
+function hoodieRequest(hoodie) {
+  var $ajax = $.ajax;
+
+  // Hoodie backend listents to requests prefixed by /_api,
+  // so we prefix all requests with relative URLs
+  var API_PATH = '/_api';
+
+  // Requests
+  // ----------
+
+  // sends requests to the hoodie backend.
+  //
+  //     promise = hoodie.request('GET', '/user_database/doc_id')
+  //
+  function request(type, url, options) {
+    var defaults, requestPromise, pipedPromise;
+
+    options = options || {};
+
+    defaults = {
+      type: type,
+      dataType: 'json'
+    };
+
+    // if absolute path passed, set CORS headers
+
+    // if relative path passed, prefix with baseUrl
+    if (!/^http/.test(url)) {
+      url = (hoodie.baseUrl || '') + API_PATH + url;
+    }
+
+    // if url is cross domain, set CORS headers
+    if (/^http/.test(url)) {
+      defaults.xhrFields = {
+        withCredentials: true
+      };
+      defaults.crossDomain = true;
+    }
+
+    defaults.url = url;
+
+
+    // we are piping the result of the request to return a nicer
+    // error if the request cannot reach the server at all.
+    // We can't return the promise of ajax directly because of
+    // the piping, as for whatever reason the returned promise
+    // does not have the `abort` method any more, maybe others
+    // as well. See also http://bugs.jquery.com/ticket/14104
+    requestPromise = $ajax(extend(defaults, options));
+    pipedPromise = requestPromise.then( null, handleRequestError);
+    pipedPromise.abort = requestPromise.abort;
+
+    return pipedPromise;
+  }
+
+  //
+  //
+  //
+  function handleRequestError(xhr) {
+    var error;
+
+    try {
+      error = parseErrorFromResponse(xhr);
+    } catch (_error) {
+
+      if (xhr.responseText) {
+        error = xhr.responseText;
+      } else {
+        error = {
+          name: 'HoodieConnectionError',
+          message: 'Could not connect to Hoodie server at {{url}}.',
+          url: hoodie.baseUrl || '/'
+        };
+      }
+    }
+
+    return rejectWith(error).promise();
+  }
+
+  //
+  // CouchDB returns errors in JSON format, with the properties
+  // `error` and `reason`. Hoodie uses JavaScript's native Error
+  // properties `name` and `message` instead, so we are normalizing
+  // that.
+  //
+  // Besides the renaming we also do a matching with a map of known
+  // errors to make them more clear. For reference, see
+  // https://wiki.apache.org/couchdb/Default_http_errors &
+  // https://github.com/apache/couchdb/blob/master/src/couchdb/couch_httpd.erl#L807
+  //
+
+  function parseErrorFromResponse(xhr) {
+    var error = JSON.parse(xhr.responseText);
+
+    // get error name
+    error.name = HTTP_STATUS_ERROR_MAP[xhr.status];
+    if (! error.name) {
+      error.name = hoodiefyRequestErrorName(error.error);
+    }
+
+    // store status & message
+    error.status = xhr.status;
+    error.message = error.reason || '';
+    error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1);
+
+    // cleanup
+    delete error.error;
+    delete error.reason;
+
+    return error;
+  }
+
+  // map CouchDB HTTP status codes to Hoodie Errors
+  var HTTP_STATUS_ERROR_MAP = {
+    400: 'HoodieRequestError', // bad request
+    401: 'HoodieUnauthorizedError',
+    403: 'HoodieRequestError', // forbidden
+    404: 'HoodieNotFoundError', // forbidden
+    409: 'HoodieConflictError',
+    412: 'HoodieConflictError', // file exist
+    500: 'HoodieServerError'
+  };
+
+  //
+  // public API
+  //
+  hoodie.request = request;
+}
+
+module.exports = hoodieRequest;
+
+},{"../utils/hoodiefy_request_error_name":27,"../utils/promise/reject_with":31,"extend":16}],19:[function(_dereq_,module,exports){
 // Hoodie Error
 // -------------
 
 // With the custom hoodie error function
 // we normalize all errors the get returned
-// when using hoodie.rejectWith
+// when using hoodie's rejectWith
 //
 // The native JavaScript error method has
 // a name & a message property. HoodieError
@@ -765,7 +921,7 @@ HoodieError.prototype.constructor = HoodieError;
 module.exports = HoodieError;
 
 
-},{"extend":16}],19:[function(_dereq_,module,exports){
+},{"extend":16}],20:[function(_dereq_,module,exports){
 // Hoodie Invalid Type Or Id Error
 // -------------------------------
 
@@ -792,7 +948,7 @@ HoodieObjectIdError.prototype.rules = 'Lowercase letters, numbers and dashes all
 
 module.exports = HoodieObjectIdError;
 
-},{"./error":18}],20:[function(_dereq_,module,exports){
+},{"./error":19}],21:[function(_dereq_,module,exports){
 // Hoodie Invalid Type Or Id Error
 // -------------------------------
 
@@ -826,7 +982,7 @@ HoodieObjectTypeError.prototype.rules = 'lowercase letters, numbers and dashes a
 
 module.exports = HoodieObjectTypeError;
 
-},{"./error":18}],21:[function(_dereq_,module,exports){
+},{"./error":19}],22:[function(_dereq_,module,exports){
 // Events
 // ========
 //
@@ -990,7 +1146,7 @@ function hoodieEvents(hoodie, options) {
 
 module.exports = hoodieEvents;
 
-},{}],22:[function(_dereq_,module,exports){
+},{}],23:[function(_dereq_,module,exports){
 // Store
 // ============
 
@@ -1030,6 +1186,11 @@ var HoodieError = _dereq_('../error/error');
 var HoodieObjectTypeError = _dereq_('../error/object_type');
 var HoodieObjectIdError = _dereq_('../error/object_id');
 var extend = _dereq_('extend');
+
+var getDefer = _dereq_('../../utils/promise/defer');
+var rejectWith = _dereq_('../../utils/promise/reject_with');
+var resolveWith = _dereq_('../../utils/promise/resolve_with');
+var isPromise = _dereq_('../../utils/promise/is_promise');
 
 //
 function hoodieStoreApi(hoodie, options) {
@@ -1138,7 +1299,7 @@ function hoodieStoreApi(hoodie, options) {
     var error = api.validate(object, options || {});
 
     if (error) {
-      return hoodie.rejectWith(error);
+      return rejectWith(error);
     }
 
     return decoratePromise(backend.save(object, options || {}));
@@ -1239,7 +1400,7 @@ function hoodieStoreApi(hoodie, options) {
       }
 
       if (!objectUpdate) {
-        return hoodie.resolveWith(currentObject);
+        return resolveWith(currentObject);
       }
 
       // check if something changed
@@ -1261,7 +1422,7 @@ function hoodieStoreApi(hoodie, options) {
       })();
 
       if (!(changedProperties.length || options)) {
-        return hoodie.resolveWith(newObj);
+        return resolveWith(newObj);
       }
 
       //apply update
@@ -1316,11 +1477,11 @@ function hoodieStoreApi(hoodie, options) {
     case typeof filterOrObjects === 'string':
       promise = api.findAll(filterOrObjects);
       break;
-    case hoodie.isPromise(filterOrObjects):
+    case isPromise(filterOrObjects):
       promise = filterOrObjects;
       break;
     case $.isArray(filterOrObjects):
-      promise = hoodie.defer().resolve(filterOrObjects).promise();
+      promise = getDefer().resolve(filterOrObjects).promise();
       break;
     default:
       // e.g. null, update all
@@ -1421,7 +1582,7 @@ function hoodieStoreApi(hoodie, options) {
 
 module.exports = hoodieStoreApi;
 
-},{"../error/error":18,"../error/object_id":19,"../error/object_type":20,"../events":21,"./scoped":24,"extend":16}],23:[function(_dereq_,module,exports){
+},{"../../utils/promise/defer":28,"../../utils/promise/is_promise":29,"../../utils/promise/reject_with":31,"../../utils/promise/resolve_with":32,"../error/error":19,"../error/object_id":20,"../error/object_type":21,"../events":22,"./scoped":25,"extend":16}],24:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};// Remote
 // ========
 
@@ -1463,6 +1624,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 var hoodieStoreApi = _dereq_('./api');
 var extend = _dereq_('extend');
 var generateId = _dereq_('../../utils/generate_id');
+var resolveWith = _dereq_('../../utils/promise/resolve_with');
 
 //
 function hoodieRemoteStore(hoodie, options) {
@@ -1646,10 +1808,10 @@ function hoodieRemoteStore(hoodie, options) {
   // request
   // ---------
 
-  // wrapper for hoodie.request, with some store specific defaults
+  // wrapper for hoodie's request, with some store specific defaults
   // and a prefixed path
   //
-  remote.request = function request(type, path, options) {
+  remote.request = function remoteRequest(type, path, options) {
     options = options || {};
 
     if (remoteName) {
@@ -1810,7 +1972,7 @@ function hoodieRemoteStore(hoodie, options) {
     }
 
     if (objects.length === 0) {
-      return hoodie.resolveWith([]);
+      return resolveWith([]);
     }
 
     objectsForRemote = [];
@@ -1936,7 +2098,7 @@ function hoodieRemoteStore(hoodie, options) {
   }
 
 
-  // ### _parseFromRemote
+  // ### parseFromRemote
 
   // normalize objects coming from remote
   //
@@ -1944,7 +2106,7 @@ function hoodieRemoteStore(hoodie, options) {
   // e.g. `type/123` -> `123`
   //
   function parseFromRemote(object) {
-    var id, ignore, _ref;
+    var id, matches;
 
     // handle id and type
     id = object._id || object.id;
@@ -1952,26 +2114,20 @@ function hoodieRemoteStore(hoodie, options) {
 
     if (remote.prefix) {
       id = id.replace(remotePrefixPattern, '');
-      // id = id.replace(new RegExp('^' + remote.prefix), '');
     }
 
     // turn doc/123 into type = doc & id = 123
     // NOTE: we don't use a simple id.split(/\//) here,
     // as in some cases IDs might contain '/', too
     //
-    _ref = id.match(/([^\/]+)\/(.*)/), ignore = _ref[0], object.type = _ref[1], object.id = _ref[2];
+    matches = id.match(/([^\/]+)\/(.*)/);
+    object.type = matches[1], object.id = matches[2];
 
     return object;
   }
 
   function parseAllFromRemote(objects) {
-    var object, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = objects.length; _i < _len; _i++) {
-      object = objects[_i];
-      _results.push(parseFromRemote(object));
-    }
-    return _results;
+    return objects.map(parseFromRemote);
   }
 
 
@@ -1980,9 +2136,9 @@ function hoodieRemoteStore(hoodie, options) {
   // extends passed object with a _rev property
   //
   function addRevisionTo(attributes) {
-    var currentRevId, currentRevNr, newRevisionId, _ref;
+    var currentRevId, currentRevNr, newRevisionId, parts;
     try {
-      _ref = attributes._rev.split(/-/), currentRevNr = _ref[0], currentRevId = _ref[1];
+      parts = attributes._rev.split(/-/), currentRevNr = parts[0], currentRevId = parts[1];
     } catch (_error) {}
     currentRevNr = parseInt(currentRevNr, 10) || 0;
     newRevisionId = generateNewRevisionId();
@@ -2193,7 +2349,7 @@ function hoodieRemoteStore(hoodie, options) {
 
 module.exports = hoodieRemoteStore;
 
-},{"../../utils/generate_id":25,"./api":22,"extend":16}],24:[function(_dereq_,module,exports){
+},{"../../utils/generate_id":26,"../../utils/promise/resolve_with":32,"./api":23,"extend":16}],25:[function(_dereq_,module,exports){
 // scoped Store
 // ============
 
@@ -2306,7 +2462,7 @@ function hoodieScopedStoreApi(hoodie, storeApi, options) {
 
 module.exports = hoodieScopedStoreApi;
 
-},{"../events":21}],25:[function(_dereq_,module,exports){
+},{"../events":22}],26:[function(_dereq_,module,exports){
 var chars, i, radix;
 
 // uuids consist of numbers and lowercase letters only.
@@ -2336,7 +2492,7 @@ function generateId (length) {
 
 module.exports = generateId;
 
-},{}],26:[function(_dereq_,module,exports){
+},{}],27:[function(_dereq_,module,exports){
 var findLettersToUpperCase = /(^\w|_\w)/g;
 
 function hoodiefyRequestErrorName (name) {
@@ -2348,169 +2504,57 @@ function hoodiefyRequestErrorName (name) {
 }
 
 module.exports = hoodiefyRequestErrorName;
-},{}],27:[function(_dereq_,module,exports){
-//
-// hoodie.request
-// ================
-
-// Hoodie's central place to send request to its backend.
-// At the moment, it's a wrapper around jQuery's ajax method,
-// but we might get rid of this dependency in the future.
-//
-// It has build in support for CORS and a standard error
-// handling that normalizes errors returned by CouchDB
-// to JavaScript's native conventions of errors having
-// a name & a message property.
-//
-// Common errors to expect:
-//
-// * HoodieRequestError
-// * HoodieUnauthorizedError
-// * HoodieConflictError
-// * HoodieServerError
-
-var hoodiefyRequestErrorName = _dereq_('./hoodiefy_request_error_name');
-var extend = _dereq_('extend');
-
-function hoodieRequest(hoodie) {
-  var $ajax = $.ajax;
-
-  // Hoodie backend listents to requests prefixed by /_api,
-  // so we prefix all requests with relative URLs
-  var API_PATH = '/_api';
-
-  // Requests
-  // ----------
-
-  // sends requests to the hoodie backend.
-  //
-  //     promise = hoodie.request('GET', '/user_database/doc_id')
-  //
-  function request(type, url, options) {
-    var defaults, requestPromise, pipedPromise;
-
-    options = options || {};
-
-    defaults = {
-      type: type,
-      dataType: 'json'
-    };
-
-    // if absolute path passed, set CORS headers
-
-    // if relative path passed, prefix with baseUrl
-    if (!/^http/.test(url)) {
-      url = (hoodie.baseUrl || '') + API_PATH + url;
-    }
-
-    // if url is cross domain, set CORS headers
-    if (/^http/.test(url)) {
-      defaults.xhrFields = {
-        withCredentials: true
-      };
-      defaults.crossDomain = true;
-    }
-
-    defaults.url = url;
-
-
-    // we are piping the result of the request to return a nicer
-    // error if the request cannot reach the server at all.
-    // We can't return the promise of ajax directly because of
-    // the piping, as for whatever reason the returned promise
-    // does not have the `abort` method any more, maybe others
-    // as well. See also http://bugs.jquery.com/ticket/14104
-    requestPromise = $ajax(extend(defaults, options));
-    pipedPromise = requestPromise.then( null, handleRequestError);
-    pipedPromise.abort = requestPromise.abort;
-
-    return pipedPromise;
-  }
-
-  //
-  //
-  //
-  function handleRequestError(xhr) {
-    var error;
-
-    try {
-      error = parseErrorFromResponse(xhr);
-    } catch (_error) {
-
-      if (xhr.responseText) {
-        error = xhr.responseText;
-      } else {
-        error = {
-          name: 'HoodieConnectionError',
-          message: 'Could not connect to Hoodie server at {{url}}.',
-          url: hoodie.baseUrl || '/'
-        };
-      }
-    }
-
-    return hoodie.rejectWith(error).promise();
-  }
-
-  //
-  // CouchDB returns errors in JSON format, with the properties
-  // `error` and `reason`. Hoodie uses JavaScript's native Error
-  // properties `name` and `message` instead, so we are normalizing
-  // that.
-  //
-  // Besides the renaming we also do a matching with a map of known
-  // errors to make them more clear. For reference, see
-  // https://wiki.apache.org/couchdb/Default_http_errors &
-  // https://github.com/apache/couchdb/blob/master/src/couchdb/couch_httpd.erl#L807
-  //
-
-  function parseErrorFromResponse(xhr) {
-    var error = JSON.parse(xhr.responseText);
-
-    // get error name
-    error.name = HTTP_STATUS_ERROR_MAP[xhr.status];
-    if (! error.name) {
-      error.name = hoodiefyRequestErrorName(error.error);
-    }
-
-    // store status & message
-    error.status = xhr.status;
-    error.message = error.reason || '';
-    error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1);
-
-    // cleanup
-    delete error.error;
-    delete error.reason;
-
-    return error;
-  }
-
-  // map CouchDB HTTP status codes to Hoodie Errors
-  var HTTP_STATUS_ERROR_MAP = {
-    400: 'HoodieRequestError', // bad request
-    401: 'HoodieUnauthorizedError',
-    403: 'HoodieRequestError', // forbidden
-    404: 'HoodieNotFoundError', // forbidden
-    409: 'HoodieConflictError',
-    412: 'HoodieConflictError', // file exist
-    500: 'HoodieServerError'
-  };
-
-  //
-  // public API
-  //
-  hoodie.request = request;
+},{}],28:[function(_dereq_,module,exports){
+var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};module.exports = global.jQuery.Deferred;
+},{}],29:[function(_dereq_,module,exports){
+// returns true if passed object is a promise (but not a deferred),
+// otherwise false.
+function isPromise(object) {
+  return !! (object &&
+             typeof object.done === 'function' &&
+             typeof object.resolve !== 'function');
 }
 
-module.exports = hoodieRequest;
+module.exports = isPromise;
+},{}],30:[function(_dereq_,module,exports){
+var defer = _dereq_('./defer');
+//
+function reject() {
+  return defer().reject().promise();
+}
 
-},{"./hoodiefy_request_error_name":26,"extend":16}],28:[function(_dereq_,module,exports){
+module.exports = reject;
+},{"./defer":28}],31:[function(_dereq_,module,exports){
+var getDefer = _dereq_('./defer');
+var HoodieError = _dereq_('../../lib/error/error');
+
+//
+function rejectWith(errorProperties) {
+  var error = new HoodieError(errorProperties);
+  return getDefer().reject(error).promise();
+}
+
+module.exports = rejectWith;
+
+},{"../../lib/error/error":19,"./defer":28}],32:[function(_dereq_,module,exports){
+var getDefer = _dereq_('./defer');
+
+//
+function resolveWith() {
+  var defer = getDefer();
+  return defer.resolve.apply(defer, arguments).promise();
+}
+
+module.exports = resolveWith;
+
+},{"./defer":28}],33:[function(_dereq_,module,exports){
 // Hoodie Admin
 // -------------
 //
 // your friendly library for pocket,
 // the Hoodie Admin UI
 //
-var hoodieRequest = _dereq_('hoodie/src/utils/request');
+var hoodieRequest = _dereq_('hoodie/src/hoodie/request');
 var hoodieOpen = _dereq_('hoodie/src/hoodie/open');
 
 var hoodieAdminAccount = _dereq_('./hoodie.admin/account');
@@ -2610,11 +2654,13 @@ function applyExtensions(hoodie) {
 
 module.exports = HoodieAdmin;
 
-},{"./hoodie.admin/account":29,"./hoodie.admin/plugin":30,"./hoodie.admin/user":31,"hoodie/src/hoodie/open":17,"hoodie/src/lib/events":21,"hoodie/src/utils/request":27}],29:[function(_dereq_,module,exports){
+},{"./hoodie.admin/account":34,"./hoodie.admin/plugin":35,"./hoodie.admin/user":36,"hoodie/src/hoodie/open":17,"hoodie/src/hoodie/request":18,"hoodie/src/lib/events":22}],34:[function(_dereq_,module,exports){
 // HoodieAdmin Account
 // ===================
 
 var hoodieEvents = _dereq_('hoodie/src/lib/events');
+var resolveWith = _dereq_('hoodie/src/utils/promise/resolve_with');
+var reject = _dereq_('hoodie/src/utils/promise/reject');
 
 var ADMIN_USERNAME = 'admin';
 
@@ -2629,6 +2675,22 @@ function hoodieAccount (hoodieAdmin) {
     context: account,
     namespace: 'account'
   });
+
+
+  // Authenticate
+  // --------------
+
+  // Use this method to assure that the admin is authenticated:
+  // `hoodieAdmin.account.authenticate().done( doSomething ).fail( handleError )`
+  // 
+  // Note that this authenticated is a much simpler imlementation then the
+  // one from `hoodie.admin.authenticate`. It sends a GET request every single
+  // time it gets called, without bundling requests or caching the state on
+  // whether the admin is authenticated or not.
+  //
+  account.authenticate = function authenticate() {
+    return hoodieAdmin.request('GET', '/_session').then(handleAuthenticateRequestSuccess);
+  };
 
 
   // sign in with password
@@ -2669,13 +2731,35 @@ function hoodieAccount (hoodieAdmin) {
     return !!signedIn;
   };
 
+  //
+  // handle a successful authentication request.
+  //
+  // As long as there is no server error or internet connection issue,
+  // the authenticate request (GET /_session) does always return
+  // a 200 status. To differentiate whether the user is signed in or
+  // not, we check `userCtx.name` in the response. If the user is not
+  // signed in, it's null, otherwise the name the user signed in with
+  //
+  // If the user is not signed in, we difeerentiate between users that
+  // signed in with a username / password or anonymously. For anonymous
+  // users, the password is stored in local store, so we don't need
+  // to trigger an 'unauthenticated' error, but instead try to sign in.
+  //
+  function handleAuthenticateRequestSuccess(response) {
+    if (response.userCtx.name) {
+      return resolveWith(response.userCtx.name);
+    }
+
+    return reject();
+  }
+
   hoodieAdmin.account = account;
 }
 
 module.exports = hoodieAccount;
 
 
-},{"hoodie/src/lib/events":21}],30:[function(_dereq_,module,exports){
+},{"hoodie/src/lib/events":22,"hoodie/src/utils/promise/reject":30,"hoodie/src/utils/promise/resolve_with":32}],35:[function(_dereq_,module,exports){
 function hoodieAdminPlugin(hoodieAdmin) {
   hoodieAdmin.plugins = hoodieAdmin.open('plugins');
   hoodieAdmin.plugins.connect();
@@ -2684,7 +2768,7 @@ function hoodieAdminPlugin(hoodieAdmin) {
 module.exports = hoodieAdminPlugin;
 
 
-},{}],31:[function(_dereq_,module,exports){
+},{}],36:[function(_dereq_,module,exports){
 function hoodieAdminUser(hoodieAdmin) {
   hoodieAdmin.user = hoodieAdmin.open('_users', {
     prefix: 'org.couchdb.user:'
@@ -2694,7 +2778,7 @@ function hoodieAdminUser(hoodieAdmin) {
 module.exports = hoodieAdminUser;
 
 
-},{}],32:[function(_dereq_,module,exports){
+},{}],37:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -2710,7 +2794,7 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":67,"../../../helpers/namespace":70,"../models/plugin":36}],33:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":80,"../../../helpers/namespace":83,"../models/plugin":41}],38:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -2735,7 +2819,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"./plugins":34,"backbone.marionette":"Mn2A9x"}],34:[function(_dereq_,module,exports){
+},{"./plugins":39,"backbone.marionette":"Mn2A9x"}],39:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -2808,7 +2892,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../../ui/plugins/index":59,"../collections/plugins":32,"../models/plugin":36,"backbone.marionette":"Mn2A9x"}],35:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":72,"../collections/plugins":37,"../models/plugin":41,"backbone.marionette":"Mn2A9x"}],40:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -2820,9 +2904,21 @@ app.module('pocket', function () {
   this.addInitializer(function (options) {
 
     // boot up default UI components
-    _dereq_('../ui/logo/index');
-    _dereq_('../ui/navigation/index');
-    _dereq_('../ui/info/index');
+    app.vent.on('app:start', function () {
+      _dereq_('../structural/layout/index');
+      _dereq_('../structural/sidebar/index');
+      _dereq_('../structural/content/index');
+
+      _dereq_('../ui/logo/index');
+      _dereq_('../ui/navigation/index');
+      _dereq_('../ui/info/index');
+    });
+
+    app.vent.on('app:login', function () {
+      _dereq_('../structural/login/index');
+
+      _dereq_('../ui/login');
+    });
 
     this._controller = new Controller(options);
   });
@@ -2840,7 +2936,7 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":70,"../ui/info/index":47,"../ui/logo/index":51,"../ui/navigation/index":55,"./controllers/index":33}],36:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":83,"../structural/content/index":43,"../structural/layout/index":46,"../structural/login/index":50,"../structural/sidebar/index":53,"../ui/info/index":56,"../ui/login":60,"../ui/logo/index":64,"../ui/navigation/index":68,"./controllers/index":38}],41:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -2875,7 +2971,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":68,"../../../helpers/namespace":70}],37:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":81,"../../../helpers/namespace":83}],42:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -2901,7 +2997,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],38:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],43:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -2933,7 +3029,7 @@ app.module('pocket.content', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":70,"./controllers/index":37,"./templates/index.hbs":39}],39:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":83,"./controllers/index":42,"./templates/index.hbs":44}],44:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -2945,7 +3041,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<header></header>\n<section class=\"pluginView\"></section>\n<footer></footer>\n";
   });
 
-},{"hbsfy/runtime":15}],40:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],45:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
@@ -2955,29 +3051,27 @@ var Controller = Marionette.Controller.extend({
     'use strict';
 
     this.options = options || {};
-
-    // create layout object passing in a template string
-    var Layout = Marionette.Layout.extend({
-      template:  function () {
-        return options.template;
-      }
-    });
-
-    // assign a region to the documents container
     this.container = new Backbone.Marionette.Region({
-      el: '#content'
+      el: '#container'
     });
+  },
 
-    // bind layout to container element
-    this.container.show(new Layout());
+  showAppLayout: function (tmpl) {
+    app.vent.trigger('app:start');
+    Marionette.$(this.container.el).html(tmpl);
+  },
 
+  showLoginLayout: function (tmpl) {
+    app.vent.trigger('app:login');
+    Marionette.$(this.container.el).html(tmpl);
   }
 
 });
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],41:[function(_dereq_,module,exports){
+
+},{"backbone.marionette":"Mn2A9x"}],46:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 
@@ -2987,12 +3081,23 @@ app.module('pocket.layout', function () {
 
   'use strict';
 
-  this.addInitializer(function (options) {
-    options.app.components.layout.template = _dereq_('./templates/index.hbs');
+  this.addInitializer(function () {
+    this._controller = new Controller();
 
-    this._controller = new Controller(
-      options.app.components.layout
-    );
+  });
+
+  this.on('before:start', function () {
+
+    var self = this;
+
+    this.listenTo(app.vent, 'layout:login', function () {
+      console.log('show login');
+      self._controller.showLoginLayout(_dereq_('./templates/login.hbs')());
+    });
+
+    this.listenTo(app.vent, 'layout:app', function () {
+      self._controller.showAppLayout(_dereq_('./templates/index.hbs')());
+    });
 
   });
 
@@ -3000,7 +3105,8 @@ app.module('pocket.layout', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":70,"./controllers/index":40,"./templates/index.hbs":42}],42:[function(_dereq_,module,exports){
+
+},{"../../../helpers/namespace":83,"./controllers/index":45,"./templates/index.hbs":47,"./templates/login.hbs":48}],47:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3012,7 +3118,89 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
   });
 
-},{"hbsfy/runtime":15}],43:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],48:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "";
+
+
+  return buffer;
+  });
+
+},{"hbsfy/runtime":15}],49:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var Controller = Marionette.Controller.extend({
+
+  initialize: function (options) {
+    this.options = options || {};
+
+    // create layout object passing in a template string
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return options.template;
+      }
+    });
+
+    console.log(this);
+
+    this.container = new Marionette.Region({
+      el: '.login',
+    });
+
+    this.container.show(new Layout);
+  }
+});
+
+module.exports = Controller;
+
+},{"backbone.marionette":"Mn2A9x"}],50:[function(_dereq_,module,exports){
+/*jshint -W079 */
+var Controller = _dereq_('./controllers/index');
+var app = _dereq_('../../../helpers/namespace');
+
+
+app.module('pocket.loginview', function () {
+
+  'use strict';
+
+  this.addInitializer(function (options) {
+
+    this._controller = new Controller(
+      options.template = _dereq_('./templates/index.hbs')()
+    );
+
+  });
+
+  this.on('before:start', function () {
+
+    app.rm.addRegions({
+      login: 'login'
+    });
+
+  });
+
+});
+
+module.exports = app;
+
+},{"../../../helpers/namespace":83,"./controllers/index":49,"./templates/index.hbs":51}],51:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<section class=\"login\"></section>\n\n";
+  });
+
+},{"hbsfy/runtime":15}],52:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3038,7 +3226,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],44:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],53:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -3072,7 +3260,7 @@ app.module('pocket.sidebar', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":70,"./controllers/index":43,"./templates/index.hbs":45}],45:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":83,"./controllers/index":52,"./templates/index.hbs":54}],54:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3084,7 +3272,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<header></header>\n<nav></nav>\n<footer></footer>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
   });
 
-},{"hbsfy/runtime":15}],46:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],55:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3115,7 +3303,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":70,"../views/index":49,"backbone.marionette":"Mn2A9x"}],47:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":83,"../views/index":58,"backbone.marionette":"Mn2A9x"}],56:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3140,7 +3328,7 @@ app.module('pocket.info', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":70,"./controllers/index":46}],48:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":83,"./controllers/index":55}],57:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3152,7 +3340,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<h3>Hello Admin!</h3>\n<div class=\"placeMeta\">\n  16:45 (GMT+1)\n  Oct. 12th, 2013\n  Berlin\n</div>\n";
   });
 
-},{"hbsfy/runtime":15}],49:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],58:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3170,7 +3358,119 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":66,"../templates/index.hbs":48,"backbone.marionette":"Mn2A9x"}],50:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":79,"../templates/index.hbs":57,"backbone.marionette":"Mn2A9x"}],59:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+var View = _dereq_('../views/index');
+
+var Controller = Marionette.Controller.extend({
+
+  initialize: function (options) {
+    this.options = options || {};
+
+    this.options.model = new Backbone.Model({
+      name: options.app.name
+    });
+
+    this.show(this.options);
+  },
+
+  show: function (opts) {
+    var view = new View({
+      model: opts.model
+    });
+
+    app.rm.get('login').show(view);
+  }
+
+});
+
+module.exports = Controller;
+
+},{"../views/index":62,"backbone.marionette":"Mn2A9x"}],60:[function(_dereq_,module,exports){
+'use strict';
+
+var app = _dereq_('../../../helpers/namespace');
+var Controller = _dereq_('./controllers/index');
+
+app.module('pocket.login', function () {
+
+  this.addInitializer(function (options) {
+    this._controller = new Controller(options);
+    this._controller.show(options);
+  });
+
+});
+
+module.exports = app;
+
+},{"../../../helpers/namespace":83,"./controllers/index":59}],61:[function(_dereq_,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = _dereq_('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<h1>LOGIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</h1>\n\n<div class=\"signInContainer\">\n  <div class=\"logo ir\">Hoodie Pocket</div>\n  <h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n  <form class=\"signIn form-horizontal\">\n    <section class=\"noBorder\">\n      <span class=\"error\"></span>\n      <div class=\"control-group\">\n        <label>Admin password</label>\n        <div class=\"controls\">\n          <input id=\"signInPassword\" type=\"password\" autofocus=\"\">\n        </div>\n      </div>\n      <div class=\"control-group\">\n        <label></label>\n        <div class=\"controls\">\n          <button id=\"signIn\" type=\"submit\" class=\"btn\">Sign in!</button>\n        </div>\n      </div>\n    </section>\n  </form>\n</div>\n\n";
+  });
+
+},{"hbsfy/runtime":15}],62:[function(_dereq_,module,exports){
+'use strict';
+
+var Marionette = _dereq_('backbone.marionette');
+
+_dereq_('../../../../helpers/handlebars');
+
+var tmpl = _dereq_('../templates/index.hbs');
+
+var View = Marionette.ItemView.extend({
+  template: tmpl,
+
+  initialize: function () {
+    //Backbone.Validation.bind(this);
+  },
+
+  events: {
+    'click #submit' : 'submit',
+    'keydown input' : 'submitOnEnter'
+  },
+
+  invalid: function () { },
+
+  valid: function () {
+  },
+
+  modelEvents: {
+    'validated:invalid': 'invalid'
+  },
+
+  submitOnEnter: function (e) {
+    var key = e.keyCode || e.which;
+
+    if (key === 13) {
+      e.preventDefault();
+      this.submit();
+    }
+  },
+
+  submit: function () {
+    //var self = this;
+    //var data = Syphon.serialize(this);
+
+    //self.model.signIn(data.username, data.password)
+    //.done(self.valid())
+    //.fail(self.invalid());
+  }
+
+});
+
+module.exports = View;
+
+
+},{"../../../../helpers/handlebars":79,"../templates/index.hbs":61,"backbone.marionette":"Mn2A9x"}],63:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3190,7 +3490,6 @@ var Controller = Marionette.Controller.extend({
   },
 
   show: function (opts) {
-    console.log('model: ', opts.model);
     var view = new View({
       model: opts.model
     });
@@ -3202,7 +3501,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":70,"../views/index":53,"backbone.marionette":"Mn2A9x"}],51:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":83,"../views/index":66,"backbone.marionette":"Mn2A9x"}],64:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3227,7 +3526,7 @@ app.module('pocket.logo', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":70,"./controllers/index":50}],52:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":83,"./controllers/index":63}],65:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3244,9 +3543,9 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":15}],53:[function(_dereq_,module,exports){
-arguments[4][49][0].apply(exports,arguments)
-},{"../../../../helpers/handlebars":66,"../templates/index.hbs":52,"backbone.marionette":"Mn2A9x"}],54:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],66:[function(_dereq_,module,exports){
+arguments[4][58][0].apply(exports,arguments)
+},{"../../../../helpers/handlebars":79,"../templates/index.hbs":65,"backbone.marionette":"Mn2A9x"}],67:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3273,7 +3572,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":70,"../views/index":57,"backbone.marionette":"Mn2A9x"}],55:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":83,"../views/index":70,"backbone.marionette":"Mn2A9x"}],68:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3298,7 +3597,7 @@ app.module('pocket.navigation', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":70,"./controllers/index":54}],56:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":83,"./controllers/index":67}],69:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3319,7 +3618,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":15}],57:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],70:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3342,7 +3641,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":66,"../templates/item.hbs":56,"backbone.marionette":"Mn2A9x"}],58:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":79,"../templates/item.hbs":69,"backbone.marionette":"Mn2A9x"}],71:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3391,7 +3690,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":70,"../views/edit":63,"../views/list":64,"../views/show":65,"backbone.marionette":"Mn2A9x"}],59:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":83,"../views/edit":76,"../views/list":77,"../views/show":78,"backbone.marionette":"Mn2A9x"}],72:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3424,7 +3723,7 @@ app.module('pocket.plugins', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":70,"./controllers/index":58}],60:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":83,"./controllers/index":71}],73:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3436,7 +3735,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "edit\n";
   });
 
-},{"hbsfy/runtime":15}],61:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],74:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3453,7 +3752,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":15}],62:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],75:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3470,7 +3769,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":15}],63:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],76:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3485,7 +3784,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":66,"../templates/edit.hbs":60,"backbone.marionette":"Mn2A9x"}],64:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":79,"../templates/edit.hbs":73,"backbone.marionette":"Mn2A9x"}],77:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3510,7 +3809,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":66,"../templates/list_item.hbs":61,"backbone.marionette":"Mn2A9x","gridster":"OOmgq/"}],65:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":79,"../templates/list_item.hbs":74,"backbone.marionette":"Mn2A9x","gridster":"OOmgq/"}],78:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3529,7 +3828,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":66,"../templates/show.hbs":62,"backbone.marionette":"Mn2A9x"}],66:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":79,"../templates/show.hbs":75,"backbone.marionette":"Mn2A9x"}],79:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('hbsfy/runtime');
@@ -3555,7 +3854,7 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 
 module.exports = Handlebars;
 
-},{"hbsfy/runtime":15}],67:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":15}],80:[function(_dereq_,module,exports){
 
 'use strict';
 
@@ -3577,7 +3876,8 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 
 module.exports = SuperCollection;
 
-},{"backbone":"atSdsZ","underscore":"Y10LaM"}],68:[function(_dereq_,module,exports){
+
+},{"backbone":"atSdsZ","underscore":"Y10LaM"}],81:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -3588,14 +3888,11 @@ var SuperModel = Backbone.Model.extend({
 
 module.exports = SuperModel;
 
-},{"backbone":"atSdsZ","jquery":"KvN3hc"}],69:[function(_dereq_,module,exports){
+
+},{"backbone":"atSdsZ","jquery":"KvN3hc"}],82:[function(_dereq_,module,exports){
 'use strict';
-var app = _dereq_('../namespace');
-var Backbone = _dereq_('backbone');
 
 _dereq_('barf');
-
-console.log(app);
 
 var BaseRouter = Backbone.Router.extend({
 
@@ -3615,15 +3912,14 @@ var BaseRouter = Backbone.Router.extend({
   },
 
   before: {
-    'plugins': function (fragment, args, next) {
-
-      console.log(fragment, args, next);
-
-      //if (this.user.hasValidSession()) {
-        //next();
-      //} else {
-        //Backbone.history.navigate('', { trigger: true });
-      //}
+    '*any': function (fragment, args, next) {
+      if (app.hoodieAdmin.account.hasValidSession()) {
+        app.vent.trigger('layout:app');
+        next();
+      } else {
+        app.vent.trigger('layout:login');
+        Backbone.history.navigate('', { trigger: true });
+      }
     }
   }
 
@@ -3632,7 +3928,7 @@ var BaseRouter = Backbone.Router.extend({
 module.exports = BaseRouter;
 
 
-},{"../namespace":70,"backbone":"atSdsZ","barf":6}],70:[function(_dereq_,module,exports){
+},{"barf":6}],83:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
@@ -3641,9 +3937,8 @@ var Backbone = _dereq_('backbone');
 var Router = _dereq_('../router');
 var Config = _dereq_('../models/config');
 
-var HoodieAdmin = _dereq_('hoodie.admin');
-
 var app = new Marionette.Application();
+var AdminUser = _dereq_('../models/user');
 
 //
 // set global request handler exposing app config
@@ -3654,7 +3949,7 @@ app.reqres.setHandler('config', function () {
 
 app.on('initialize:before', function (options) {
 
-  app.hoodieAdmin = new HoodieAdmin();
+  app.hoodieAdmin = new AdminUser().admin;
 
   // create router instance
   app.router = new Router();
@@ -3685,7 +3980,7 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../models/config":75,"../router":76,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x","hoodie.admin":28}],71:[function(_dereq_,module,exports){
+},{"../models/config":88,"../models/user":89,"../router":90,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],84:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
@@ -3716,7 +4011,7 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":70,"./storeError":72,"./storeSuccess":73,"jquery":"KvN3hc"}],72:[function(_dereq_,module,exports){
+},{"../namespace":83,"./storeError":85,"./storeSuccess":86,"jquery":"KvN3hc"}],85:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -3740,7 +4035,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"KvN3hc"}],73:[function(_dereq_,module,exports){
+},{"jquery":"KvN3hc"}],86:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
@@ -3759,28 +4054,23 @@ var success = function (e, jqXHR, opts, res) {
 
 module.exports = success;
 
-},{}],74:[function(_dereq_,module,exports){
+},{}],87:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Config = _dereq_('./models/config');
 var app = _dereq_('./helpers/namespace');
 
-_dereq_('./helpers/storage/store');
-_dereq_('./helpers/handlebars');
-
-// boot up default structural components
-_dereq_('./components/structural/layout/index');
-_dereq_('./components/structural/sidebar/index');
-_dereq_('./components/structural/content/index');
-
 // start the pocket component
 _dereq_('./components/pocket/index');
+
+_dereq_('./helpers/storage/store');
+_dereq_('./helpers/handlebars');
 
 app.start(new Config().toJSON());
 
 module.exports = app;
 
 
-},{"./components/pocket/index":35,"./components/structural/content/index":38,"./components/structural/layout/index":41,"./components/structural/sidebar/index":44,"./helpers/handlebars":66,"./helpers/namespace":70,"./helpers/storage/store":71,"./models/config":75}],75:[function(_dereq_,module,exports){
+},{"./components/pocket/index":40,"./helpers/handlebars":79,"./helpers/namespace":83,"./helpers/storage/store":84,"./models/config":88}],88:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
@@ -3792,7 +4082,8 @@ var Model = BaseModel.extend({
       components: {
         'layout': {
           config: {
-            template: '../templates/index.hbs'
+            app_template: '../templates/index.hbs',
+            login_template: '../templates/login.hbs'
           }
         },
         'sidebar': {
@@ -3823,7 +4114,45 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../helpers/mvc/model":68}],76:[function(_dereq_,module,exports){
+},{"../helpers/mvc/model":81}],89:[function(_dereq_,module,exports){
+var Backbone = _dereq_('backbone');
+var Hoodieadmin = _dereq_('hoodie.admin');
+
+var Model = Backbone.Model.extend({
+
+  initialize: function () {
+    this.admin = new Hoodieadmin();
+  },
+
+  hasValidSession: function () {
+    return this.admin.account.hasValidSession();
+  },
+
+  hasInvalidSession: function () {
+    return this.admin.account.hasInvalidSession();
+  },
+
+  signIn: function (username, password) {
+    return this.admin.account.signIn(username, password);
+  },
+
+  signOut: function () {
+    return this.admin.account.signOut();
+  },
+
+  validation: {
+    password: {
+      required: true,
+      msg: 'Password can\'t be empty'
+    }
+  }
+
+});
+
+module.exports = Model;
+
+
+},{"backbone":"atSdsZ","hoodie.admin":33}],90:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseRouter = _dereq_('./helpers/mvc/router');
@@ -3853,6 +4182,6 @@ var Router = BaseRouter.extend({
 module.exports = Router;
 
 
-},{"./helpers/mvc/router":69}]},{},[74])
-(74)
+},{"./helpers/mvc/router":82}]},{},[87])
+(87)
 });

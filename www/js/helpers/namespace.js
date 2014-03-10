@@ -6,9 +6,8 @@ var Backbone = require('backbone');
 var Router = require('../router');
 var Config = require('../models/config');
 
-var HoodieAdmin = require('hoodie.admin');
-
 var app = new Marionette.Application();
+var AdminUser = require('../models/user');
 
 //
 // set global request handler exposing app config
@@ -19,7 +18,7 @@ app.reqres.setHandler('config', function () {
 
 app.on('initialize:before', function (options) {
 
-  app.hoodieAdmin = new HoodieAdmin();
+  app.hoodieAdmin = new AdminUser().admin;
 
   // create router instance
   app.router = new Router();

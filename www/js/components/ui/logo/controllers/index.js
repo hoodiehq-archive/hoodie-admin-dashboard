@@ -17,7 +17,6 @@ var Controller = Marionette.Controller.extend({
   },
 
   show: function (opts) {
-    console.log('model: ', opts.model);
     var view = new View({
       model: opts.model
     });

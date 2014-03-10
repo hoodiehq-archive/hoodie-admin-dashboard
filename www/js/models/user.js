@@ -1,22 +1,26 @@
 var Backbone = require('backbone');
-var app = require('../helpers/namespace');
+var Hoodieadmin = require('hoodie.admin');
 
-return Backbone.Model.extend({
+var Model = Backbone.Model.extend({
+
+  initialize: function () {
+    this.admin = new Hoodieadmin();
+  },
 
   hasValidSession: function () {
-    return app.Hoodieadmin.account.hasValidSession();
+    return this.admin.account.hasValidSession();
   },
 
   hasInvalidSession: function () {
-    return app.Hoodieadmin.account.hasInvalidSession();
+    return this.admin.account.hasInvalidSession();
   },
 
   signIn: function (username, password) {
-    return app.Hoodieadmin.account.signIn(username, password);
+    return this.admin.account.signIn(username, password);
   },
 
   signOut: function () {
-    return app.Hoodieadmin.account.signOut();
+    return this.admin.account.signOut();
   },
 
   validation: {
@@ -27,3 +31,6 @@ return Backbone.Model.extend({
   }
 
 });
+
+module.exports = Model;
+
