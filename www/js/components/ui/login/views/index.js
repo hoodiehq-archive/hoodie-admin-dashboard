@@ -3,6 +3,8 @@
 var Marionette = require('backbone.marionette');
 
 require('../../../../helpers/handlebars');
+require('backbone.validation');
+var Syphon = require('backbone.syphon');
 
 var tmpl = require('../templates/index.hbs');
 
@@ -10,7 +12,7 @@ var View = Marionette.ItemView.extend({
   template: tmpl,
 
   initialize: function () {
-    //Backbone.Validation.bind(this);
+    Backbone.Validation.bind(this);
   },
 
   events: {
@@ -37,12 +39,12 @@ var View = Marionette.ItemView.extend({
   },
 
   submit: function () {
-    //var self = this;
-    //var data = Syphon.serialize(this);
+    var self = this;
+    var data = Syphon.serialize(this);
 
-    //self.model.signIn(data.username, data.password)
-    //.done(self.valid())
-    //.fail(self.invalid());
+    self.model.signIn(data.password)
+    .done(self.valid())
+    .fail(self.invalid());
   }
 
 });

@@ -150,6 +150,13 @@ module.exports = function (grunt) {
               depends: {
                 backbone: 'Backbone'
               }
+            },
+            'backbone.syphon': {
+              path: 'libs/backbone.syphon/lib/backbone.syphon.js',
+              exports: 'Backbone.Syphon',
+              depends: {
+                backbone: 'Backbone'
+              }
             }
           }
         },
@@ -171,7 +178,8 @@ module.exports = function (grunt) {
             './libs/backbone.babysitter/lib/backbone.babysitter.js:backbone.babysitter',
             './libs/backbone.wreqr/lib/backbone.wreqr.js:backbone.wreqr',
             './libs/backbone.marionette/lib/backbone.marionette.js:backbone.marionette',
-            './libs/jquery.gridster.with-extras.js/index.js:gridster'
+            './libs/jquery.gridster.with-extras.js/index.js:gridster',
+            './libs/backbone.syphon/lib/backbone.syphon.js:backbone.syphon'
           ],
           external: [
             './libs/jquery/jquery.js',
@@ -181,7 +189,8 @@ module.exports = function (grunt) {
             './libs/backbone.babysitter/lib/backbone.babysitter.js',
             './libs/backbone.wreqr/lib/backbone.wreqr.js',
             './libs/backbone.marionette/lib/backbone.marionette.js',
-            './libs/jquery.gridster.with-extras.js/index.js'
+            './libs/jquery.gridster.with-extras.js/index.js',
+            './libs/backbone.syphon/lib/backbone.syphon.js'
           ]
         },
         src: ['www/js/init.js'],

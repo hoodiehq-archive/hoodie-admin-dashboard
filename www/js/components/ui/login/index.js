@@ -6,7 +6,6 @@ app.module('pocket.login', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);
-
   });
 
 });

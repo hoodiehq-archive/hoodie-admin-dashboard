@@ -35,7 +35,8 @@
     "hoodie.admin": "git://github.com/hoodiehq/hoodie.admin.js.git#new",
     "hoodie-plugin-users": "~0.1.0",
     "hoodie-plugin-appconfig": "~0.2.0",
-    "barf": "~1.0.2"
+    "barf": "~1.0.2",
+    "backbone.validation": "~0.7.1"
   },
   "hoodie": {
     "plugins": [

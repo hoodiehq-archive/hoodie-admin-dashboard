@@ -3,6 +3,10 @@ var Hoodieadmin = require('hoodie.admin');
 
 var Model = Backbone.Model.extend({
 
+  defaults: {
+    password: ''
+  },
+
   initialize: function () {
     this.admin = new Hoodieadmin();
   },
@@ -15,8 +19,9 @@ var Model = Backbone.Model.extend({
     return this.admin.account.hasInvalidSession();
   },
 
-  signIn: function (username, password) {
-    return this.admin.account.signIn(username, password);
+  signIn: function (password) {
+    console.log('password');
+    return this.admin.account.signIn(password);
   },
 
   signOut: function () {

@@ -1,5 +1,7 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.app=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"backbone.marionette":[function(_dereq_,module,exports){
 module.exports=_dereq_('Mn2A9x');
+},{}],"backbone.syphon":[function(_dereq_,module,exports){
+module.exports=_dereq_('zpJqfl');
 },{}],"backbone":[function(_dereq_,module,exports){
 module.exports=_dereq_('atSdsZ');
 },{}],"gridster":[function(_dereq_,module,exports){
@@ -8,7 +10,618 @@ module.exports=_dereq_('OOmgq/');
 module.exports=_dereq_('KvN3hc');
 },{}],"underscore":[function(_dereq_,module,exports){
 module.exports=_dereq_('Y10LaM');
-},{}],6:[function(_dereq_,module,exports){
+},{}],7:[function(_dereq_,module,exports){
+// Backbone.Validation v0.7.1
+//
+// Copyright (c) 2011-2012 Thomas Pedersen
+// Distributed under MIT License
+//
+// Documentation and full license available at:
+// http://thedersen.com/projects/backbone-validation
+(function (factory) {
+  if (typeof exports === 'object') {
+    module.exports = factory(_dereq_('backbone'), _dereq_('underscore'));
+  } else if (typeof define === 'function' && define.amd) {
+    define(['backbone', 'underscore'], factory);
+  }
+}(function (Backbone, _) {
+  Backbone.Validation = (function(_){
+    'use strict';
+  
+    // Default options
+    // ---------------
+  
+    var defaultOptions = {
+      forceUpdate: false,
+      selector: 'name',
+      labelFormatter: 'sentenceCase',
+      valid: Function.prototype,
+      invalid: Function.prototype
+    };
+  
+  
+    // Helper functions
+    // ----------------
+  
+    // Formatting functions used for formatting error messages
+    var formatFunctions = {
+      // Uses the configured label formatter to format the attribute name
+      // to make it more readable for the user
+      formatLabel: function(attrName, model) {
+        return defaultLabelFormatters[defaultOptions.labelFormatter](attrName, model);
+      },
+  
+      // Replaces nummeric placeholders like {0} in a string with arguments
+      // passed to the function
+      format: function() {
+        var args = Array.prototype.slice.call(arguments),
+            text = args.shift();
+        return text.replace(/\{(\d+)\}/g, function(match, number) {
+          return typeof args[number] !== 'undefined' ? args[number] : match;
+        });
+      }
+    };
+  
+    // Flattens an object
+    // eg:
+    //
+    //     var o = {
+    //       address: {
+    //         street: 'Street',
+    //         zip: 1234
+    //       }
+    //     };
+    //
+    // becomes:
+    //
+    //     var o = {
+    //       'address.street': 'Street',
+    //       'address.zip': 1234
+    //     };
+    var flatten = function (obj, into, prefix) {
+      into = into || {};
+      prefix = prefix || '';
+  
+      _.each(obj, function(val, key) {
+        if(obj.hasOwnProperty(key)) {
+          if (val && typeof val === 'object' && !(val instanceof Date || val instanceof RegExp)) {
+            flatten(val, into, prefix + key + '.');
+          }
+          else {
+            into[prefix + key] = val;
+          }
+        }
+      });
+  
+      return into;
+    };
+  
+    // Validation
+    // ----------
+  
+    var Validation = (function(){
+  
+      // Returns an object with undefined properties for all
+      // attributes on the model that has defined one or more
+      // validation rules.
+      var getValidatedAttrs = function(model) {
+        return _.reduce(_.keys(model.validation || {}), function(memo, key) {
+          memo[key] = void 0;
+          return memo;
+        }, {});
+      };
+  
+      // Looks on the model for validations for a specified
+      // attribute. Returns an array of any validators defined,
+      // or an empty array if none is defined.
+      var getValidators = function(model, attr) {
+        var attrValidationSet = model.validation ? model.validation[attr] || {} : {};
+  
+        // If the validator is a function or a string, wrap it in a function validator
+        if (_.isFunction(attrValidationSet) || _.isString(attrValidationSet)) {
+          attrValidationSet = {
+            fn: attrValidationSet
+          };
+        }
+  
+        // Stick the validator object into an array
+        if(!_.isArray(attrValidationSet)) {
+          attrValidationSet = [attrValidationSet];
+        }
+  
+        // Reduces the array of validators into a new array with objects
+        // with a validation method to call, the value to validate against
+        // and the specified error message, if any
+        return _.reduce(attrValidationSet, function(memo, attrValidation) {
+          _.each(_.without(_.keys(attrValidation), 'msg'), function(validator) {
+            memo.push({
+              fn: defaultValidators[validator],
+              val: attrValidation[validator],
+              msg: attrValidation.msg
+            });
+          });
+          return memo;
+        }, []);
+      };
+  
+      // Validates an attribute against all validators defined
+      // for that attribute. If one or more errors are found,
+      // the first error message is returned.
+      // If the attribute is valid, an empty string is returned.
+      var validateAttr = function(model, attr, value, computed) {
+        // Reduces the array of validators to an error message by
+        // applying all the validators and returning the first error
+        // message, if any.
+        return _.reduce(getValidators(model, attr), function(memo, validator){
+          // Pass the format functions plus the default
+          // validators as the context to the validator
+          var ctx = _.extend({}, formatFunctions, defaultValidators),
+              result = validator.fn.call(ctx, value, attr, validator.val, model, computed);
+  
+          if(result === false || memo === false) {
+            return false;
+          }
+          if (result && !memo) {
+            return validator.msg || result;
+          }
+          return memo;
+        }, '');
+      };
+  
+      // Loops through the model's attributes and validates them all.
+      // Returns and object containing names of invalid attributes
+      // as well as error messages.
+      var validateModel = function(model, attrs) {
+        var error,
+            invalidAttrs = {},
+            isValid = true,
+            computed = _.clone(attrs),
+            flattened = flatten(attrs);
+  
+        _.each(flattened, function(val, attr) {
+          error = validateAttr(model, attr, val, computed);
+          if (error) {
+            invalidAttrs[attr] = error;
+            isValid = false;
+          }
+        });
+  
+        return {
+          invalidAttrs: invalidAttrs,
+          isValid: isValid
+        };
+      };
+  
+      // Contains the methods that are mixed in on the model when binding
+      var mixin = function(view, options) {
+        return {
+  
+          // Check whether or not a value passes validation
+          // without updating the model
+          preValidate: function(attr, value) {
+            return validateAttr(this, attr, value, _.extend({}, this.attributes));
+          },
+  
+          // Check to see if an attribute, an array of attributes or the
+          // entire model is valid. Passing true will force a validation
+          // of the model.
+          isValid: function(option) {
+            var flattened = flatten(this.attributes);
+  
+            if(_.isString(option)){
+              return !validateAttr(this, option, flattened[option], _.extend({}, this.attributes));
+            }
+            if(_.isArray(option)){
+              return _.reduce(option, function(memo, attr) {
+                return memo && !validateAttr(this, attr, flattened[attr], _.extend({}, this.attributes));
+              }, true, this);
+            }
+            if(option === true) {
+              this.validate();
+            }
+            return this.validation ? this._isValid : true;
+          },
+  
+          // This is called by Backbone when it needs to perform validation.
+          // You can call it manually without any parameters to validate the
+          // entire model.
+          validate: function(attrs, setOptions){
+            var model = this,
+                validateAll = !attrs,
+                opt = _.extend({}, options, setOptions),
+                validatedAttrs = getValidatedAttrs(model),
+                allAttrs = _.extend({}, validatedAttrs, model.attributes, attrs),
+                changedAttrs = flatten(attrs || allAttrs),
+  
+                result = validateModel(model, allAttrs);
+  
+            model._isValid = result.isValid;
+  
+            // After validation is performed, loop through all changed attributes
+            // and call the valid callbacks so the view is updated.
+            _.each(validatedAttrs, function(val, attr){
+              var invalid = result.invalidAttrs.hasOwnProperty(attr);
+              if(!invalid){
+                opt.valid(view, attr, opt.selector);
+              }
+            });
+  
+            // After validation is performed, loop through all changed attributes
+            // and call the invalid callback so the view is updated.
+            _.each(validatedAttrs, function(val, attr){
+              var invalid = result.invalidAttrs.hasOwnProperty(attr),
+                  changed = changedAttrs.hasOwnProperty(attr);
+  
+              if(invalid && (changed || validateAll)){
+                opt.invalid(view, attr, result.invalidAttrs[attr], opt.selector);
+              }
+            });
+  
+            // Trigger validated events.
+            // Need to defer this so the model is actually updated before
+            // the event is triggered.
+            _.defer(function() {
+              model.trigger('validated', model._isValid, model, result.invalidAttrs);
+              model.trigger('validated:' + (model._isValid ? 'valid' : 'invalid'), model, result.invalidAttrs);
+            });
+  
+            // Return any error messages to Backbone, unless the forceUpdate flag is set.
+            // Then we do not return anything and fools Backbone to believe the validation was
+            // a success. That way Backbone will update the model regardless.
+            if (!opt.forceUpdate && _.intersection(_.keys(result.invalidAttrs), _.keys(changedAttrs)).length > 0) {
+              return result.invalidAttrs;
+            }
+          }
+        };
+      };
+  
+      // Helper to mix in validation on a model
+      var bindModel = function(view, model, options) {
+        _.extend(model, mixin(view, options));
+      };
+  
+      // Removes the methods added to a model
+      var unbindModel = function(model) {
+        delete model.validate;
+        delete model.preValidate;
+        delete model.isValid;
+      };
+  
+      // Mix in validation on a model whenever a model is
+      // added to a collection
+      var collectionAdd = function(model) {
+        bindModel(this.view, model, this.options);
+      };
+  
+      // Remove validation from a model whenever a model is
+      // removed from a collection
+      var collectionRemove = function(model) {
+        unbindModel(model);
+      };
+  
+      // Returns the public methods on Backbone.Validation
+      return {
+  
+        // Current version of the library
+        version: '0.7.1',
+  
+        // Called to configure the default options
+        configure: function(options) {
+          _.extend(defaultOptions, options);
+        },
+  
+        // Hooks up validation on a view with a model
+        // or collection
+        bind: function(view, options) {
+          var model = view.model,
+              collection = view.collection;
+  
+          options = _.extend({}, defaultOptions, defaultCallbacks, options);
+  
+          if(typeof model === 'undefined' && typeof collection === 'undefined'){
+            throw 'Before you execute the binding your view must have a model or a collection.\n' +
+                  'See http://thedersen.com/projects/backbone-validation/#using-form-model-validation for more information.';
+          }
+  
+          if(model) {
+            bindModel(view, model, options);
+          }
+          else if(collection) {
+            collection.each(function(model){
+              bindModel(view, model, options);
+            });
+            collection.bind('add', collectionAdd, {view: view, options: options});
+            collection.bind('remove', collectionRemove);
+          }
+        },
+  
+        // Removes validation from a view with a model
+        // or collection
+        unbind: function(view) {
+          var model = view.model,
+              collection = view.collection;
+  
+          if(model) {
+            unbindModel(view.model);
+          }
+          if(collection) {
+            collection.each(function(model){
+              unbindModel(model);
+            });
+            collection.unbind('add', collectionAdd);
+            collection.unbind('remove', collectionRemove);
+          }
+        },
+  
+        // Used to extend the Backbone.Model.prototype
+        // with validation
+        mixin: mixin(null, defaultOptions)
+      };
+    }());
+  
+  
+    // Callbacks
+    // ---------
+  
+    var defaultCallbacks = Validation.callbacks = {
+  
+      // Gets called when a previously invalid field in the
+      // view becomes valid. Removes any error message.
+      // Should be overridden with custom functionality.
+      valid: function(view, attr, selector) {
+        view.$('[' + selector + '~="' + attr + '"]')
+            .removeClass('invalid')
+            .removeAttr('data-error');
+      },
+  
+      // Gets called when a field in the view becomes invalid.
+      // Adds a error message.
+      // Should be overridden with custom functionality.
+      invalid: function(view, attr, error, selector) {
+        view.$('[' + selector + '~="' + attr + '"]')
+            .addClass('invalid')
+            .attr('data-error', error);
+      }
+    };
+  
+  
+    // Patterns
+    // --------
+  
+    var defaultPatterns = Validation.patterns = {
+      // Matches any digit(s) (i.e. 0-9)
+      digits: /^\d+$/,
+  
+      // Matched any number (e.g. 100.000)
+      number: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,
+  
+      // Matches a valid email address (e.g. mail@example.com)
+      email: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,
+  
+      // Mathes any valid url (e.g. http://www.xample.com)
+      url: /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i
+    };
+  
+  
+    // Error messages
+    // --------------
+  
+    // Error message for the build in validators.
+    // {x} gets swapped out with arguments form the validator.
+    var defaultMessages = Validation.messages = {
+      required: '{0} is required',
+      acceptance: '{0} must be accepted',
+      min: '{0} must be greater than or equal to {1}',
+      max: '{0} must be less than or equal to {1}',
+      range: '{0} must be between {1} and {2}',
+      length: '{0} must be {1} characters',
+      minLength: '{0} must be at least {1} characters',
+      maxLength: '{0} must be at most {1} characters',
+      rangeLength: '{0} must be between {1} and {2} characters',
+      oneOf: '{0} must be one of: {1}',
+      equalTo: '{0} must be the same as {1}',
+      pattern: '{0} must be a valid {1}'
+    };
+  
+    // Label formatters
+    // ----------------
+  
+    // Label formatters are used to convert the attribute name
+    // to a more human friendly label when using the built in
+    // error messages.
+    // Configure which one to use with a call to
+    //
+    //     Backbone.Validation.configure({
+    //       labelFormatter: 'label'
+    //     });
+    var defaultLabelFormatters = Validation.labelFormatters = {
+  
+      // Returns the attribute name with applying any formatting
+      none: function(attrName) {
+        return attrName;
+      },
+  
+      // Converts attributeName or attribute_name to Attribute name
+      sentenceCase: function(attrName) {
+        return attrName.replace(/(?:^\w|[A-Z]|\b\w)/g, function(match, index) {
+          return index === 0 ? match.toUpperCase() : ' ' + match.toLowerCase();
+        }).replace('_', ' ');
+      },
+  
+      // Looks for a label configured on the model and returns it
+      //
+      //      var Model = Backbone.Model.extend({
+      //        validation: {
+      //          someAttribute: {
+      //            required: true
+      //          }
+      //        },
+      //
+      //        labels: {
+      //          someAttribute: 'Custom label'
+      //        }
+      //      });
+      label: function(attrName, model) {
+        return (model.labels && model.labels[attrName]) || defaultLabelFormatters.sentenceCase(attrName, model);
+      }
+    };
+  
+  
+    // Built in validators
+    // -------------------
+  
+    var defaultValidators = Validation.validators = (function(){
+      // Use native trim when defined
+      var trim = String.prototype.trim ?
+        function(text) {
+          return text === null ? '' : String.prototype.trim.call(text);
+        } :
+        function(text) {
+          var trimLeft = /^\s+/,
+              trimRight = /\s+$/;
+  
+          return text === null ? '' : text.toString().replace(trimLeft, '').replace(trimRight, '');
+        };
+  
+      // Determines whether or not a value is a number
+      var isNumber = function(value){
+        return _.isNumber(value) || (_.isString(value) && value.match(defaultPatterns.number));
+      };
+  
+      // Determines whether or not not a value is empty
+      var hasValue = function(value) {
+        return !(_.isNull(value) || _.isUndefined(value) || (_.isString(value) && trim(value) === ''));
+      };
+  
+      return {
+        // Function validator
+        // Lets you implement a custom function used for validation
+        fn: function(value, attr, fn, model, computed) {
+          if(_.isString(fn)){
+            fn = model[fn];
+          }
+          return fn.call(model, value, attr, computed);
+        },
+  
+        // Required validator
+        // Validates if the attribute is required or not
+        required: function(value, attr, required, model, computed) {
+          var isRequired = _.isFunction(required) ? required.call(model, value, attr, computed) : required;
+          if(!isRequired && !hasValue(value)) {
+            return false; // overrides all other validators
+          }
+          if (isRequired && !hasValue(value)) {
+            return this.format(defaultMessages.required, this.formatLabel(attr, model));
+          }
+        },
+  
+        // Acceptance validator
+        // Validates that something has to be accepted, e.g. terms of use
+        // `true` or 'true' are valid
+        acceptance: function(value, attr, accept, model) {
+          if(value !== 'true' && (!_.isBoolean(value) || value === false)) {
+            return this.format(defaultMessages.acceptance, this.formatLabel(attr, model));
+          }
+        },
+  
+        // Min validator
+        // Validates that the value has to be a number and equal to or greater than
+        // the min value specified
+        min: function(value, attr, minValue, model) {
+          if (!isNumber(value) || value < minValue) {
+            return this.format(defaultMessages.min, this.formatLabel(attr, model), minValue);
+          }
+        },
+  
+        // Max validator
+        // Validates that the value has to be a number and equal to or less than
+        // the max value specified
+        max: function(value, attr, maxValue, model) {
+          if (!isNumber(value) || value > maxValue) {
+            return this.format(defaultMessages.max, this.formatLabel(attr, model), maxValue);
+          }
+        },
+  
+        // Range validator
+        // Validates that the value has to be a number and equal to or between
+        // the two numbers specified
+        range: function(value, attr, range, model) {
+          if(!isNumber(value) || value < range[0] || value > range[1]) {
+            return this.format(defaultMessages.range, this.formatLabel(attr, model), range[0], range[1]);
+          }
+        },
+  
+        // Length validator
+        // Validates that the value has to be a string with length equal to
+        // the length value specified
+        length: function(value, attr, length, model) {
+          if (!hasValue(value) || trim(value).length !== length) {
+            return this.format(defaultMessages.length, this.formatLabel(attr, model), length);
+          }
+        },
+  
+        // Min length validator
+        // Validates that the value has to be a string with length equal to or greater than
+        // the min length value specified
+        minLength: function(value, attr, minLength, model) {
+          if (!hasValue(value) || trim(value).length < minLength) {
+            return this.format(defaultMessages.minLength, this.formatLabel(attr, model), minLength);
+          }
+        },
+  
+        // Max length validator
+        // Validates that the value has to be a string with length equal to or less than
+        // the max length value specified
+        maxLength: function(value, attr, maxLength, model) {
+          if (!hasValue(value) || trim(value).length > maxLength) {
+            return this.format(defaultMessages.maxLength, this.formatLabel(attr, model), maxLength);
+          }
+        },
+  
+        // Range length validator
+        // Validates that the value has to be a string and equal to or between
+        // the two numbers specified
+        rangeLength: function(value, attr, range, model) {
+          if(!hasValue(value) || trim(value).length < range[0] || trim(value).length > range[1]) {
+            return this.format(defaultMessages.rangeLength, this.formatLabel(attr, model), range[0], range[1]);
+          }
+        },
+  
+        // One of validator
+        // Validates that the value has to be equal to one of the elements in
+        // the specified array. Case sensitive matching
+        oneOf: function(value, attr, values, model) {
+          if(!_.include(values, value)){
+            return this.format(defaultMessages.oneOf, this.formatLabel(attr, model), values.join(', '));
+          }
+        },
+  
+        // Equal to validator
+        // Validates that the value has to be equal to the value of the attribute
+        // with the name specified
+        equalTo: function(value, attr, equalTo, model, computed) {
+          if(value !== computed[equalTo]) {
+            return this.format(defaultMessages.equalTo, this.formatLabel(attr, model), this.formatLabel(equalTo, model));
+          }
+        },
+  
+        // Pattern validator
+        // Validates that the value has to match the pattern specified.
+        // Can be a regular expression or the name of one of the built in patterns
+        pattern: function(value, attr, pattern, model) {
+          if (!hasValue(value) || !value.toString().match(defaultPatterns[pattern] || pattern)) {
+            return this.format(defaultMessages.pattern, this.formatLabel(attr, model), pattern);
+          }
+        }
+      };
+    }());
+  
+    return Validation;
+  }(_));
+  
+  return Backbone.Validation;
+}));
+},{"backbone":"atSdsZ","underscore":"Y10LaM"}],8:[function(_dereq_,module,exports){
 'use strict';
 
 var _ = _dereq_('underscore');
@@ -108,9 +721,9 @@ _.extend(Backbone.Router.prototype, {
 
 module.exports = Backbone;
 
-},{"backbone":"atSdsZ","underscore":"Y10LaM"}],7:[function(_dereq_,module,exports){
+},{"backbone":"atSdsZ","underscore":"Y10LaM"}],9:[function(_dereq_,module,exports){
 
-},{}],8:[function(_dereq_,module,exports){
+},{}],10:[function(_dereq_,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var base = _dereq_("./handlebars/base");
@@ -143,7 +756,7 @@ var Handlebars = create();
 Handlebars.create = create;
 
 exports["default"] = Handlebars;
-},{"./handlebars/base":9,"./handlebars/exception":10,"./handlebars/runtime":11,"./handlebars/safe-string":12,"./handlebars/utils":13}],9:[function(_dereq_,module,exports){
+},{"./handlebars/base":11,"./handlebars/exception":12,"./handlebars/runtime":13,"./handlebars/safe-string":14,"./handlebars/utils":15}],11:[function(_dereq_,module,exports){
 "use strict";
 var Utils = _dereq_("./utils");
 var Exception = _dereq_("./exception")["default"];
@@ -324,7 +937,7 @@ exports.log = log;var createFrame = function(object) {
   return obj;
 };
 exports.createFrame = createFrame;
-},{"./exception":10,"./utils":13}],10:[function(_dereq_,module,exports){
+},{"./exception":12,"./utils":15}],12:[function(_dereq_,module,exports){
 "use strict";
 
 var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
@@ -353,7 +966,7 @@ function Exception(message, node) {
 Exception.prototype = new Error();
 
 exports["default"] = Exception;
-},{}],11:[function(_dereq_,module,exports){
+},{}],13:[function(_dereq_,module,exports){
 "use strict";
 var Utils = _dereq_("./utils");
 var Exception = _dereq_("./exception")["default"];
@@ -491,7 +1104,7 @@ exports.program = program;function invokePartial(partial, name, context, helpers
 exports.invokePartial = invokePartial;function noop() { return ""; }
 
 exports.noop = noop;
-},{"./base":9,"./exception":10,"./utils":13}],12:[function(_dereq_,module,exports){
+},{"./base":11,"./exception":12,"./utils":15}],14:[function(_dereq_,module,exports){
 "use strict";
 // Build out our basic SafeString type
 function SafeString(string) {
@@ -503,7 +1116,7 @@ SafeString.prototype.toString = function() {
 };
 
 exports["default"] = SafeString;
-},{}],13:[function(_dereq_,module,exports){
+},{}],15:[function(_dereq_,module,exports){
 "use strict";
 /*jshint -W004 */
 var SafeString = _dereq_("./safe-string")["default"];
@@ -580,15 +1193,15 @@ exports.escapeExpression = escapeExpression;function isEmpty(value) {
 }
 
 exports.isEmpty = isEmpty;
-},{"./safe-string":12}],14:[function(_dereq_,module,exports){
+},{"./safe-string":14}],16:[function(_dereq_,module,exports){
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
 module.exports = _dereq_('./dist/cjs/handlebars.runtime');
 
-},{"./dist/cjs/handlebars.runtime":8}],15:[function(_dereq_,module,exports){
+},{"./dist/cjs/handlebars.runtime":10}],17:[function(_dereq_,module,exports){
 module.exports = _dereq_("handlebars/runtime")["default"];
 
-},{"handlebars/runtime":14}],16:[function(_dereq_,module,exports){
+},{"handlebars/runtime":16}],18:[function(_dereq_,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -668,7 +1281,7 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],17:[function(_dereq_,module,exports){
+},{}],19:[function(_dereq_,module,exports){
 // Open stores
 // -------------
 
@@ -699,7 +1312,7 @@ function hoodieOpen(hoodie) {
 
 module.exports = hoodieOpen;
 
-},{"../lib/store/remote":24,"extend":16}],18:[function(_dereq_,module,exports){
+},{"../lib/store/remote":26,"extend":18}],20:[function(_dereq_,module,exports){
 //
 // hoodie.request
 // ================
@@ -855,7 +1468,7 @@ function hoodieRequest(hoodie) {
 
 module.exports = hoodieRequest;
 
-},{"../utils/hoodiefy_request_error_name":27,"../utils/promise/reject_with":31,"extend":16}],19:[function(_dereq_,module,exports){
+},{"../utils/hoodiefy_request_error_name":29,"../utils/promise/reject_with":33,"extend":18}],21:[function(_dereq_,module,exports){
 // Hoodie Error
 // -------------
 
@@ -921,7 +1534,7 @@ HoodieError.prototype.constructor = HoodieError;
 module.exports = HoodieError;
 
 
-},{"extend":16}],20:[function(_dereq_,module,exports){
+},{"extend":18}],22:[function(_dereq_,module,exports){
 // Hoodie Invalid Type Or Id Error
 // -------------------------------
 
@@ -948,7 +1561,7 @@ HoodieObjectIdError.prototype.rules = 'Lowercase letters, numbers and dashes all
 
 module.exports = HoodieObjectIdError;
 
-},{"./error":19}],21:[function(_dereq_,module,exports){
+},{"./error":21}],23:[function(_dereq_,module,exports){
 // Hoodie Invalid Type Or Id Error
 // -------------------------------
 
@@ -982,7 +1595,7 @@ HoodieObjectTypeError.prototype.rules = 'lowercase letters, numbers and dashes a
 
 module.exports = HoodieObjectTypeError;
 
-},{"./error":19}],22:[function(_dereq_,module,exports){
+},{"./error":21}],24:[function(_dereq_,module,exports){
 // Events
 // ========
 //
@@ -1146,7 +1759,7 @@ function hoodieEvents(hoodie, options) {
 
 module.exports = hoodieEvents;
 
-},{}],23:[function(_dereq_,module,exports){
+},{}],25:[function(_dereq_,module,exports){
 // Store
 // ============
 
@@ -1582,7 +2195,7 @@ function hoodieStoreApi(hoodie, options) {
 
 module.exports = hoodieStoreApi;
 
-},{"../../utils/promise/defer":28,"../../utils/promise/is_promise":29,"../../utils/promise/reject_with":31,"../../utils/promise/resolve_with":32,"../error/error":19,"../error/object_id":20,"../error/object_type":21,"../events":22,"./scoped":25,"extend":16}],24:[function(_dereq_,module,exports){
+},{"../../utils/promise/defer":30,"../../utils/promise/is_promise":31,"../../utils/promise/reject_with":33,"../../utils/promise/resolve_with":34,"../error/error":21,"../error/object_id":22,"../error/object_type":23,"../events":24,"./scoped":27,"extend":18}],26:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};// Remote
 // ========
 
@@ -2349,7 +2962,7 @@ function hoodieRemoteStore(hoodie, options) {
 
 module.exports = hoodieRemoteStore;
 
-},{"../../utils/generate_id":26,"../../utils/promise/resolve_with":32,"./api":23,"extend":16}],25:[function(_dereq_,module,exports){
+},{"../../utils/generate_id":28,"../../utils/promise/resolve_with":34,"./api":25,"extend":18}],27:[function(_dereq_,module,exports){
 // scoped Store
 // ============
 
@@ -2462,7 +3075,7 @@ function hoodieScopedStoreApi(hoodie, storeApi, options) {
 
 module.exports = hoodieScopedStoreApi;
 
-},{"../events":22}],26:[function(_dereq_,module,exports){
+},{"../events":24}],28:[function(_dereq_,module,exports){
 var chars, i, radix;
 
 // uuids consist of numbers and lowercase letters only.
@@ -2492,7 +3105,7 @@ function generateId (length) {
 
 module.exports = generateId;
 
-},{}],27:[function(_dereq_,module,exports){
+},{}],29:[function(_dereq_,module,exports){
 var findLettersToUpperCase = /(^\w|_\w)/g;
 
 function hoodiefyRequestErrorName (name) {
@@ -2504,9 +3117,9 @@ function hoodiefyRequestErrorName (name) {
 }
 
 module.exports = hoodiefyRequestErrorName;
-},{}],28:[function(_dereq_,module,exports){
+},{}],30:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};module.exports = global.jQuery.Deferred;
-},{}],29:[function(_dereq_,module,exports){
+},{}],31:[function(_dereq_,module,exports){
 // returns true if passed object is a promise (but not a deferred),
 // otherwise false.
 function isPromise(object) {
@@ -2516,7 +3129,7 @@ function isPromise(object) {
 }
 
 module.exports = isPromise;
-},{}],30:[function(_dereq_,module,exports){
+},{}],32:[function(_dereq_,module,exports){
 var defer = _dereq_('./defer');
 //
 function reject() {
@@ -2524,7 +3137,7 @@ function reject() {
 }
 
 module.exports = reject;
-},{"./defer":28}],31:[function(_dereq_,module,exports){
+},{"./defer":30}],33:[function(_dereq_,module,exports){
 var getDefer = _dereq_('./defer');
 var HoodieError = _dereq_('../../lib/error/error');
 
@@ -2536,7 +3149,7 @@ function rejectWith(errorProperties) {
 
 module.exports = rejectWith;
 
-},{"../../lib/error/error":19,"./defer":28}],32:[function(_dereq_,module,exports){
+},{"../../lib/error/error":21,"./defer":30}],34:[function(_dereq_,module,exports){
 var getDefer = _dereq_('./defer');
 
 //
@@ -2547,7 +3160,7 @@ function resolveWith() {
 
 module.exports = resolveWith;
 
-},{"./defer":28}],33:[function(_dereq_,module,exports){
+},{"./defer":30}],35:[function(_dereq_,module,exports){
 // Hoodie Admin
 // -------------
 //
@@ -2654,7 +3267,7 @@ function applyExtensions(hoodie) {
 
 module.exports = HoodieAdmin;
 
-},{"./hoodie.admin/account":34,"./hoodie.admin/plugin":35,"./hoodie.admin/user":36,"hoodie/src/hoodie/open":17,"hoodie/src/hoodie/request":18,"hoodie/src/lib/events":22}],34:[function(_dereq_,module,exports){
+},{"./hoodie.admin/account":36,"./hoodie.admin/plugin":37,"./hoodie.admin/user":38,"hoodie/src/hoodie/open":19,"hoodie/src/hoodie/request":20,"hoodie/src/lib/events":24}],36:[function(_dereq_,module,exports){
 // HoodieAdmin Account
 // ===================
 
@@ -2759,7 +3372,7 @@ function hoodieAccount (hoodieAdmin) {
 module.exports = hoodieAccount;
 
 
-},{"hoodie/src/lib/events":22,"hoodie/src/utils/promise/reject":30,"hoodie/src/utils/promise/resolve_with":32}],35:[function(_dereq_,module,exports){
+},{"hoodie/src/lib/events":24,"hoodie/src/utils/promise/reject":32,"hoodie/src/utils/promise/resolve_with":34}],37:[function(_dereq_,module,exports){
 function hoodieAdminPlugin(hoodieAdmin) {
   hoodieAdmin.plugins = hoodieAdmin.open('plugins');
   hoodieAdmin.plugins.connect();
@@ -2768,7 +3381,7 @@ function hoodieAdminPlugin(hoodieAdmin) {
 module.exports = hoodieAdminPlugin;
 
 
-},{}],36:[function(_dereq_,module,exports){
+},{}],38:[function(_dereq_,module,exports){
 function hoodieAdminUser(hoodieAdmin) {
   hoodieAdmin.user = hoodieAdmin.open('_users', {
     prefix: 'org.couchdb.user:'
@@ -2778,7 +3391,7 @@ function hoodieAdminUser(hoodieAdmin) {
 module.exports = hoodieAdminUser;
 
 
-},{}],37:[function(_dereq_,module,exports){
+},{}],39:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -2794,7 +3407,7 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":77,"../../../helpers/namespace":80,"../models/plugin":41}],38:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":79,"../../../helpers/namespace":82,"../models/plugin":43}],40:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -2819,7 +3432,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"./plugins":39,"backbone.marionette":"Mn2A9x"}],39:[function(_dereq_,module,exports){
+},{"./plugins":41,"backbone.marionette":"Mn2A9x"}],41:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -2892,7 +3505,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../../ui/plugins/index":69,"../collections/plugins":37,"../models/plugin":41,"backbone.marionette":"Mn2A9x"}],40:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":71,"../collections/plugins":39,"../models/plugin":43,"backbone.marionette":"Mn2A9x"}],42:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -2934,7 +3547,7 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":80,"../structural/content/index":43,"../structural/layout/index":46,"../structural/sidebar/index":50,"../ui/info/index":53,"../ui/login/index":57,"../ui/logo/index":61,"../ui/navigation/index":65,"./controllers/index":38}],41:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":82,"../structural/content/index":45,"../structural/layout/index":48,"../structural/sidebar/index":52,"../ui/info/index":55,"../ui/login/index":59,"../ui/logo/index":63,"../ui/navigation/index":67,"./controllers/index":40}],43:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -2969,7 +3582,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":78,"../../../helpers/namespace":80}],42:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":80,"../../../helpers/namespace":82}],44:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -2995,7 +3608,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],43:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],45:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -3027,7 +3640,7 @@ app.module('pocket.content', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":80,"./controllers/index":42,"./templates/index.hbs":44}],44:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":82,"./controllers/index":44,"./templates/index.hbs":46}],46:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3039,7 +3652,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<header></header>\n<section class=\"pluginView\"></section>\n<footer></footer>\n";
   });
 
-},{"hbsfy/runtime":15}],45:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],47:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
@@ -3052,7 +3665,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   showAppLayout: function (tmpl) {
-    // create layout object passing in a template string
+
     var Layout = Marionette.Layout.extend({
       template:  function () {
         return tmpl;
@@ -3094,7 +3707,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"backbone.marionette":"Mn2A9x"}],46:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],48:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 
@@ -3127,7 +3740,7 @@ app.module('pocket.layout', function () {
 module.exports = app;
 
 
-},{"../../../helpers/namespace":80,"./controllers/index":45,"./templates/index.hbs":47,"./templates/login.hbs":48}],47:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":82,"./controllers/index":47,"./templates/index.hbs":49,"./templates/login.hbs":50}],49:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3139,7 +3752,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
   });
 
-},{"hbsfy/runtime":15}],48:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],50:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3151,7 +3764,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<section class=\"login\"></section>\n\n";
   });
 
-},{"hbsfy/runtime":15}],49:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],51:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3177,7 +3790,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],50:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],52:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -3211,7 +3824,7 @@ app.module('pocket.sidebar', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":80,"./controllers/index":49,"./templates/index.hbs":51}],51:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":82,"./controllers/index":51,"./templates/index.hbs":53}],53:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3223,7 +3836,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<header></header>\n<nav></nav>\n<footer></footer>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
   });
 
-},{"hbsfy/runtime":15}],52:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],54:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3254,7 +3867,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":80,"../views/index":55,"backbone.marionette":"Mn2A9x"}],53:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":82,"../views/index":57,"backbone.marionette":"Mn2A9x"}],55:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3279,7 +3892,7 @@ app.module('pocket.info', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":80,"./controllers/index":52}],54:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":82,"./controllers/index":54}],56:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3291,7 +3904,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<h3>Hello Admin!</h3>\n<div class=\"placeMeta\">\n  16:45 (GMT+1)\n  Oct. 12th, 2013\n  Berlin\n</div>\n";
   });
 
-},{"hbsfy/runtime":15}],55:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],57:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3309,21 +3922,25 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":76,"../templates/index.hbs":54,"backbone.marionette":"Mn2A9x"}],56:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":78,"../templates/index.hbs":56,"backbone.marionette":"Mn2A9x"}],58:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
 var View = _dereq_('../views/index');
+var User =  _dereq_('../../../../models/user');
 
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
+    this.user = new User();
     this.show();
   },
 
   show: function () {
-    var view = new View();
+    var view = new View({
+      model: this.user
+    });
     app.rm.get('login').show(view);
   }
 
@@ -3331,7 +3948,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../views/index":59,"backbone.marionette":"Mn2A9x"}],57:[function(_dereq_,module,exports){
+},{"../../../../models/user":88,"../views/index":61,"backbone.marionette":"Mn2A9x"}],59:[function(_dereq_,module,exports){
 'use strict';
 
 var Controller = _dereq_('./controllers/index');
@@ -3340,14 +3957,13 @@ app.module('pocket.login', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);
-
   });
 
 });
 
 module.exports = app;
 
-},{"./controllers/index":56}],58:[function(_dereq_,module,exports){
+},{"./controllers/index":58}],60:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3356,15 +3972,17 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<h1>LOGIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</h1>\n\n<div class=\"signInContainer\">\n  <div class=\"logo ir\">Hoodie Pocket</div>\n  <h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n  <form class=\"signIn form-horizontal\">\n    <section class=\"noBorder\">\n      <span class=\"error\"></span>\n      <div class=\"control-group\">\n        <label>Admin password</label>\n        <div class=\"controls\">\n          <input id=\"signInPassword\" type=\"password\" autofocus=\"\">\n        </div>\n      </div>\n      <div class=\"control-group\">\n        <label></label>\n        <div class=\"controls\">\n          <button id=\"signIn\" type=\"submit\" class=\"btn\">Sign in!</button>\n        </div>\n      </div>\n    </section>\n  </form>\n</div>\n\n";
+  return "<form class=\"form-horizontal\">\n<fieldset>\n\n<!-- Form Name -->\n<div class=\"logo ir\">Hoodie Pocket</div>\n<h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n\n<!-- Password input-->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"password\">Password</label>\n  <div class=\"controls\">\n    <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Password\" class=\"input-xlarge\" required=\"\">\n\n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"\">Submit</label>\n  <div class=\"controls\">\n    <button id=\"submit\" name=\"\" class=\"btn btn-default\">Button</button>\n  </div>\n</div>\n\n</fieldset>\n</form>\n\n";
   });
 
-},{"hbsfy/runtime":15}],59:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],61:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
 
 _dereq_('../../../../helpers/handlebars');
+_dereq_('backbone.validation');
+var Syphon = _dereq_('backbone.syphon');
 
 var tmpl = _dereq_('../templates/index.hbs');
 
@@ -3372,7 +3990,7 @@ var View = Marionette.ItemView.extend({
   template: tmpl,
 
   initialize: function () {
-    //Backbone.Validation.bind(this);
+    Backbone.Validation.bind(this);
   },
 
   events: {
@@ -3399,12 +4017,12 @@ var View = Marionette.ItemView.extend({
   },
 
   submit: function () {
-    //var self = this;
-    //var data = Syphon.serialize(this);
+    var self = this;
+    var data = Syphon.serialize(this);
 
-    //self.model.signIn(data.username, data.password)
-    //.done(self.valid())
-    //.fail(self.invalid());
+    self.model.signIn(data.password)
+    .done(self.valid())
+    .fail(self.invalid());
   }
 
 });
@@ -3412,7 +4030,7 @@ var View = Marionette.ItemView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":76,"../templates/index.hbs":58,"backbone.marionette":"Mn2A9x"}],60:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":78,"../templates/index.hbs":60,"backbone.marionette":"Mn2A9x","backbone.syphon":"zpJqfl","backbone.validation":7}],62:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3443,7 +4061,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":80,"../views/index":63,"backbone.marionette":"Mn2A9x"}],61:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":82,"../views/index":65,"backbone.marionette":"Mn2A9x"}],63:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3468,7 +4086,7 @@ app.module('pocket.logo', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":80,"./controllers/index":60}],62:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":82,"./controllers/index":62}],64:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3485,9 +4103,9 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":15}],63:[function(_dereq_,module,exports){
-arguments[4][55][0].apply(exports,arguments)
-},{"../../../../helpers/handlebars":76,"../templates/index.hbs":62,"backbone.marionette":"Mn2A9x"}],64:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],65:[function(_dereq_,module,exports){
+arguments[4][57][0].apply(exports,arguments)
+},{"../../../../helpers/handlebars":78,"../templates/index.hbs":64,"backbone.marionette":"Mn2A9x"}],66:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3514,7 +4132,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":80,"../views/index":67,"backbone.marionette":"Mn2A9x"}],65:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":82,"../views/index":69,"backbone.marionette":"Mn2A9x"}],67:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3539,7 +4157,7 @@ app.module('pocket.navigation', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":80,"./controllers/index":64}],66:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":82,"./controllers/index":66}],68:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3560,7 +4178,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":15}],67:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],69:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3583,7 +4201,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":76,"../templates/item.hbs":66,"backbone.marionette":"Mn2A9x"}],68:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":78,"../templates/item.hbs":68,"backbone.marionette":"Mn2A9x"}],70:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3632,7 +4250,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":80,"../views/edit":73,"../views/list":74,"../views/show":75,"backbone.marionette":"Mn2A9x"}],69:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":82,"../views/edit":75,"../views/list":76,"../views/show":77,"backbone.marionette":"Mn2A9x"}],71:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3665,7 +4283,7 @@ app.module('pocket.plugins', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":80,"./controllers/index":68}],70:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":82,"./controllers/index":70}],72:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3677,7 +4295,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "edit\n";
   });
 
-},{"hbsfy/runtime":15}],71:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],73:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3694,7 +4312,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":15}],72:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],74:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3711,7 +4329,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":15}],73:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],75:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3726,7 +4344,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":76,"../templates/edit.hbs":70,"backbone.marionette":"Mn2A9x"}],74:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":78,"../templates/edit.hbs":72,"backbone.marionette":"Mn2A9x"}],76:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3751,7 +4369,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":76,"../templates/list_item.hbs":71,"backbone.marionette":"Mn2A9x","gridster":"OOmgq/"}],75:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":78,"../templates/list_item.hbs":73,"backbone.marionette":"Mn2A9x","gridster":"OOmgq/"}],77:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3770,7 +4388,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":76,"../templates/show.hbs":72,"backbone.marionette":"Mn2A9x"}],76:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":78,"../templates/show.hbs":74,"backbone.marionette":"Mn2A9x"}],78:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('hbsfy/runtime');
@@ -3796,7 +4414,7 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 
 module.exports = Handlebars;
 
-},{"hbsfy/runtime":15}],77:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],79:[function(_dereq_,module,exports){
 
 'use strict';
 
@@ -3819,7 +4437,7 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 module.exports = SuperCollection;
 
 
-},{"backbone":"atSdsZ","underscore":"Y10LaM"}],78:[function(_dereq_,module,exports){
+},{"backbone":"atSdsZ","underscore":"Y10LaM"}],80:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -3831,7 +4449,7 @@ var SuperModel = Backbone.Model.extend({
 module.exports = SuperModel;
 
 
-},{"backbone":"atSdsZ","jquery":"KvN3hc"}],79:[function(_dereq_,module,exports){
+},{"backbone":"atSdsZ","jquery":"KvN3hc"}],81:[function(_dereq_,module,exports){
 _dereq_('barf');
 
 var BaseRouter = Backbone.Router.extend({
@@ -3853,7 +4471,7 @@ var BaseRouter = Backbone.Router.extend({
 module.exports = BaseRouter;
 
 
-},{"barf":6}],80:[function(_dereq_,module,exports){
+},{"barf":8}],82:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
@@ -3905,7 +4523,7 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../models/config":85,"../models/user":86,"../router":87,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],81:[function(_dereq_,module,exports){
+},{"../models/config":87,"../models/user":88,"../router":89,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],83:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
@@ -3936,7 +4554,7 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":80,"./storeError":82,"./storeSuccess":83,"jquery":"KvN3hc"}],82:[function(_dereq_,module,exports){
+},{"../namespace":82,"./storeError":84,"./storeSuccess":85,"jquery":"KvN3hc"}],84:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -3960,7 +4578,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"KvN3hc"}],83:[function(_dereq_,module,exports){
+},{"jquery":"KvN3hc"}],85:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
@@ -3979,7 +4597,7 @@ var success = function (e, jqXHR, opts, res) {
 
 module.exports = success;
 
-},{}],84:[function(_dereq_,module,exports){
+},{}],86:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Config = _dereq_('./models/config');
 var app = _dereq_('./helpers/namespace');
@@ -3995,7 +4613,7 @@ app.start(new Config().toJSON());
 module.exports = app;
 
 
-},{"./components/pocket/index":40,"./helpers/handlebars":76,"./helpers/namespace":80,"./helpers/storage/store":81,"./models/config":85}],85:[function(_dereq_,module,exports){
+},{"./components/pocket/index":42,"./helpers/handlebars":78,"./helpers/namespace":82,"./helpers/storage/store":83,"./models/config":87}],87:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
@@ -4039,11 +4657,15 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../helpers/mvc/model":78}],86:[function(_dereq_,module,exports){
+},{"../helpers/mvc/model":80}],88:[function(_dereq_,module,exports){
 var Backbone = _dereq_('backbone');
 var Hoodieadmin = _dereq_('hoodie.admin');
 
 var Model = Backbone.Model.extend({
+
+  defaults: {
+    password: ''
+  },
 
   initialize: function () {
     this.admin = new Hoodieadmin();
@@ -4057,8 +4679,9 @@ var Model = Backbone.Model.extend({
     return this.admin.account.hasInvalidSession();
   },
 
-  signIn: function (username, password) {
-    return this.admin.account.signIn(username, password);
+  signIn: function (password) {
+    console.log('password');
+    return this.admin.account.signIn(password);
   },
 
   signOut: function () {
@@ -4077,7 +4700,7 @@ var Model = Backbone.Model.extend({
 module.exports = Model;
 
 
-},{"backbone":"atSdsZ","hoodie.admin":33}],87:[function(_dereq_,module,exports){
+},{"backbone":"atSdsZ","hoodie.admin":35}],89:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseRouter = _dereq_('./helpers/mvc/router');
@@ -4107,6 +4730,6 @@ var Router = BaseRouter.extend({
 module.exports = Router;
 
 
-},{"./helpers/mvc/router":79}]},{},[84])
-(84)
+},{"./helpers/mvc/router":81}]},{},[86])
+(86)
 });
