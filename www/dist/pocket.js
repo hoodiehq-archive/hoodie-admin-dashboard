@@ -2903,11 +2903,11 @@ app.module('pocket', function () {
 
   this.addInitializer(function (options) {
     _dereq_('../structural/layout/index');
+    _dereq_('../structural/sidebar/index');
+    _dereq_('../structural/content/index');
 
     // boot up default UI components
     app.vent.on('app:start', function () {
-      _dereq_('../structural/sidebar/index');
-      _dereq_('../structural/content/index');
 
       _dereq_('../ui/logo/index');
       _dereq_('../ui/navigation/index');
@@ -3049,19 +3049,44 @@ var Controller = Marionette.Controller.extend({
     'use strict';
 
     this.options = options || {};
-    this.container = new Backbone.Marionette.Region({
-      el: '#content'
-    });
   },
 
   showAppLayout: function (tmpl) {
+    // create layout object passing in a template string
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return tmpl;
+      }
+    });
+
+    this.container = new Marionette.Region({
+      el: '#content',
+    });
+
+    this.container.show(new Layout);
+
     app.vent.trigger('app:start');
-    Marionette.$(this.container.el).html(tmpl);
   },
 
   showLoginLayout: function (tmpl) {
+
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return tmpl;
+      }
+    });
+
+    this.container = new Marionette.Region({
+      el: '#content',
+    });
+
+    this.container.show(new Layout);
+
+    app.rm.addRegions({
+      login: 'section.login'
+    });
+
     app.vent.trigger('app:login');
-    Marionette.$(this.container.el).html(tmpl);
   }
 
 });
@@ -3081,7 +3106,6 @@ app.module('pocket.layout', function () {
 
   this.addInitializer(function () {
     this._controller = new Controller();
-
   });
 
   this.on('before:start', function () {
@@ -3089,11 +3113,11 @@ app.module('pocket.layout', function () {
     var self = this;
 
     this.listenTo(app.vent, 'layout:login', function () {
-      self._controller.showLoginLayout(_dereq_('./templates/login.hbs')());
+      self._controller.showLoginLayout(_dereq_('./templates/login.hbs'));
     });
 
     this.listenTo(app.vent, 'layout:app', function () {
-      self._controller.showAppLayout(_dereq_('./templates/index.hbs')());
+      self._controller.showAppLayout(_dereq_('./templates/index.hbs'));
     });
 
   });
@@ -3112,7 +3136,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<section class=\"login\"> </section>\n<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
+  return "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
   });
 
 },{"hbsfy/runtime":15}],48:[function(_dereq_,module,exports){
@@ -3124,7 +3148,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<section class=\"login\"> </section>\n\n";
+  return "<section class=\"login\"></section>\n\n";
   });
 
 },{"hbsfy/runtime":15}],49:[function(_dereq_,module,exports){
@@ -3291,20 +3315,16 @@ module.exports = View;
 var Marionette = _dereq_('backbone.marionette');
 var View = _dereq_('../views/index');
 
-var $ = Marionette.$;
-
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
-
-    this.show(this.options);
+    this.show();
   },
 
   show: function () {
     var view = new View();
-
-    $('.login').html(view.el);
+    app.rm.get('login').show(view);
   }
 
 });
@@ -3314,21 +3334,20 @@ module.exports = Controller;
 },{"../views/index":59,"backbone.marionette":"Mn2A9x"}],57:[function(_dereq_,module,exports){
 'use strict';
 
-var app = _dereq_('../../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
 
 app.module('pocket.login', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);
-    this._controller.show(options);
+
   });
 
 });
 
 module.exports = app;
 
-},{"../../../helpers/namespace":80,"./controllers/index":56}],58:[function(_dereq_,module,exports){
+},{"./controllers/index":56}],58:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3813,26 +3832,9 @@ module.exports = SuperModel;
 
 
 },{"backbone":"atSdsZ","jquery":"KvN3hc"}],79:[function(_dereq_,module,exports){
-'use strict';
-
 _dereq_('barf');
 
 var BaseRouter = Backbone.Router.extend({
-
-  constructor: function (options) {
-    Backbone.Router.prototype.constructor.call(this, options);
-    this.history = [];
-    this.routeAfterSignIn = '';
-    this.avoidRoute = ['signup', 'signin', 'signout', 'reset', '*defaults'];
-  },
-
-  storeRoute: function () {
-    this.history.push(Backbone.history.fragment.split('/')[0]);
-  },
-
-  getPreviousRoute: function () {
-    return this.history[this.history.length - 2];
-  },
 
   before: {
     '*any': function (fragment, args, next) {

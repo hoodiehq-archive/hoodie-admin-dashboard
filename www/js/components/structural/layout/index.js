@@ -9,7 +9,6 @@ app.module('pocket.layout', function () {
 
   this.addInitializer(function () {
     this._controller = new Controller();
-
   });
 
   this.on('before:start', function () {
@@ -17,11 +16,11 @@ app.module('pocket.layout', function () {
     var self = this;
 
     this.listenTo(app.vent, 'layout:login', function () {
-      self._controller.showLoginLayout(require('./templates/login.hbs')());
+      self._controller.showLoginLayout(require('./templates/login.hbs'));
     });
 
     this.listenTo(app.vent, 'layout:app', function () {
-      self._controller.showAppLayout(require('./templates/index.hbs')());
+      self._controller.showAppLayout(require('./templates/index.hbs'));
     });
 
   });

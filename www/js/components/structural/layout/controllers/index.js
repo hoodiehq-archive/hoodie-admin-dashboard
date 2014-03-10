@@ -7,19 +7,44 @@ var Controller = Marionette.Controller.extend({
     'use strict';
 
     this.options = options || {};
-    this.container = new Backbone.Marionette.Region({
-      el: '#content'
-    });
   },
 
   showAppLayout: function (tmpl) {
+
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return tmpl;
+      }
+    });
+
+    this.container = new Marionette.Region({
+      el: '#content',
+    });
+
+    this.container.show(new Layout);
+
     app.vent.trigger('app:start');
-    Marionette.$(this.container.el).html(tmpl);
   },
 
   showLoginLayout: function (tmpl) {
+
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return tmpl;
+      }
+    });
+
+    this.container = new Marionette.Region({
+      el: '#content',
+    });
+
+    this.container.show(new Layout);
+
+    app.rm.addRegions({
+      login: 'section.login'
+    });
+
     app.vent.trigger('app:login');
-    Marionette.$(this.container.el).html(tmpl);
   }
 
 });

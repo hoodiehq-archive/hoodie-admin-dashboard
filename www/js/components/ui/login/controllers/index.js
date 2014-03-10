@@ -3,20 +3,16 @@
 var Marionette = require('backbone.marionette');
 var View = require('../views/index');
 
-var $ = Marionette.$;
-
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
-
-    this.show(this.options);
+    this.show();
   },
 
   show: function () {
     var view = new View();
-
-    $('.login').html(view.el);
+    app.rm.get('login').show(view);
   }
 
 });

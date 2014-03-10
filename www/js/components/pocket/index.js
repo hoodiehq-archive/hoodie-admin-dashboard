@@ -8,11 +8,11 @@ app.module('pocket', function () {
 
   this.addInitializer(function (options) {
     require('../structural/layout/index');
+    require('../structural/sidebar/index');
+    require('../structural/content/index');
 
     // boot up default UI components
     app.vent.on('app:start', function () {
-      require('../structural/sidebar/index');
-      require('../structural/content/index');
 
       require('../ui/logo/index');
       require('../ui/navigation/index');
