@@ -8,16 +8,17 @@ var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
+
     this.user = new User();
+    this.view = new View({
+      model: this.user
+    });
+
     this.show();
   },
 
   show: function () {
-    var view = new View({
-      model: this.user
-    });
-
-    app.rm.get('login').show(view);
+    app.rm.get('login').show(this.view);
   }
 
 });

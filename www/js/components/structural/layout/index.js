@@ -15,11 +15,11 @@ app.module('pocket.layout', function () {
 
     var self = this;
 
-    this.listenTo(app.vent, 'layout:login', function () {
+    this.listenTo(app.vent, 'app:layout:login', function () {
       self._controller.showLoginLayout(require('./templates/login.hbs'));
     });
 
-    this.listenTo(app.vent, 'layout:app', function () {
+    this.listenTo(app.vent, 'app:layout:app', function () {
       self._controller.showAppLayout(require('./templates/index.hbs'));
     });
 

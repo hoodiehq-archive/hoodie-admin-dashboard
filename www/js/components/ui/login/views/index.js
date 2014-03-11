@@ -21,15 +21,14 @@ var View = Marionette.ItemView.extend({
     'keydown input' : 'submitOnEnter'
   },
 
-  invalid: function () { },
+  invalid: function () {
+    console.log('invalid password');
+  },
 
   valid: function () {
     Backbone.history.navigate('plugins', {
       trigger: true
     });
-
-    app.vent.trigger('layout:app');
-    app.vent.trigger('app:start');
   },
 
   modelEvents: {

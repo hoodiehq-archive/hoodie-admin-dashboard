@@ -4,14 +4,16 @@ var BaseRouter = Backbone.Router.extend({
 
   before: {
 
-    '*any': function (fragment, args, next) {
-      if (app.hoodieAdmin.account.hasValidSession()) {
+    '*plugins(/:filter)': function (fragment, args, next) {
+      app.hoodieAdmin.account.authenticate()
+      .done(function () {
+        app.vent.trigger('app:layout:app');
         next();
-      } else {
-        // move these events elsewhere
-        app.vent.trigger('layout:login');
-        Backbone.history.navigate('', { trigger: true });
-      }
+      })
+      .fail(function () {
+        app.vent.trigger('app:layout:login');
+        app.vent.trigger('app:login');
+      });
     }
 
   }

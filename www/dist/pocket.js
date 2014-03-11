@@ -3515,6 +3515,7 @@ app.module('pocket', function () {
   'use strict';
 
   this.addInitializer(function (options) {
+
     _dereq_('../structural/layout/index');
     _dereq_('../structural/sidebar/index');
     _dereq_('../structural/content/index');
@@ -3539,6 +3540,10 @@ app.module('pocket', function () {
 
     app.vent.on('plugins', function (name, action) {
       self._controller.plugins(name, action);
+    });
+
+    app.vent.on('app:user:logout', function () {
+      app.hoodieAdmin.account.signOut();
     });
 
   });
@@ -3677,8 +3682,6 @@ var Controller = Marionette.Controller.extend({
     });
 
     this.container.show(new Layout);
-
-    app.vent.trigger('app:start');
   },
 
   showLoginLayout: function (tmpl) {
@@ -3699,7 +3702,6 @@ var Controller = Marionette.Controller.extend({
       login: 'section.login'
     });
 
-    app.vent.trigger('app:login');
   }
 
 });
@@ -3725,11 +3727,11 @@ app.module('pocket.layout', function () {
 
     var self = this;
 
-    this.listenTo(app.vent, 'layout:login', function () {
+    this.listenTo(app.vent, 'app:layout:login', function () {
       self._controller.showLoginLayout(_dereq_('./templates/login.hbs'));
     });
 
-    this.listenTo(app.vent, 'layout:app', function () {
+    this.listenTo(app.vent, 'app:layout:app', function () {
       self._controller.showAppLayout(_dereq_('./templates/index.hbs'));
     });
 
@@ -3933,16 +3935,17 @@ var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
+
     this.user = new User();
+    this.view = new View({
+      model: this.user
+    });
+
     this.show();
   },
 
   show: function () {
-    var view = new View({
-      model: this.user
-    });
-
-    app.rm.get('login').show(view);
+    app.rm.get('login').show(this.view);
   }
 
 });
@@ -4001,12 +4004,14 @@ var View = Marionette.ItemView.extend({
     'keydown input' : 'submitOnEnter'
   },
 
-  invalid: function () { },
+  invalid: function () {
+    console.log('invalid password');
+  },
 
   valid: function () {
-    Backbone.history.navigate('plugins');
-    app.vent.trigger('layout:app');
-    app.vent.trigger('app:start');
+    Backbone.history.navigate('plugins', {
+      trigger: true
+    });
   },
 
   modelEvents: {
@@ -4462,14 +4467,16 @@ var BaseRouter = Backbone.Router.extend({
 
   before: {
 
-    '*any': function (fragment, args, next) {
-      if (app.hoodieAdmin.account.hasValidSession()) {
+    '*plugins(/:filter)': function (fragment, args, next) {
+      app.hoodieAdmin.account.authenticate()
+      .done(function () {
+        app.vent.trigger('app:layout:app');
         next();
-      } else {
-        // move these events elsewhere
-        app.vent.trigger('layout:login');
-        Backbone.history.navigate('', { trigger: true });
-      }
+      })
+      .fail(function () {
+        app.vent.trigger('app:layout:login');
+        app.vent.trigger('app:login');
+      });
     }
 
   }
@@ -4676,6 +4683,10 @@ var Model = Backbone.Model.extend({
     this.admin = new Hoodieadmin();
   },
 
+  authenticate: function () {
+    return this.admin.account.authenticate();
+  },
+
   hasValidSession: function () {
     return this.admin.account.hasValidSession();
   },
@@ -4714,7 +4725,8 @@ var Router = BaseRouter.extend({
 
   routes: {
     ''                      : 'plugins',
-    'plugins/:name'         : 'plugins',
+    'plugins/:filter'       : 'plugins',
+    'logout'                : 'logout',
     '*defaults'             : 'plugins'
   },
 
@@ -4728,6 +4740,11 @@ var Router = BaseRouter.extend({
       app.vent.trigger('plugins');
     }
 
+  },
+
+  logout: function () {
+    app.vent.trigger('app:layout:login');
+    app.vent.trigger('app:user:logout');
   }
 
 });

@@ -22,8 +22,6 @@ var Controller = Marionette.Controller.extend({
     });
 
     this.container.show(new Layout);
-
-    app.vent.trigger('app:start');
   },
 
   showLoginLayout: function (tmpl) {
@@ -44,7 +42,6 @@ var Controller = Marionette.Controller.extend({
       login: 'section.login'
     });
 
-    app.vent.trigger('app:login');
   }
 
 });

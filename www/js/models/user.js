@@ -11,6 +11,10 @@ var Model = Backbone.Model.extend({
     this.admin = new Hoodieadmin();
   },
 
+  authenticate: function () {
+    return this.admin.account.authenticate();
+  },
+
   hasValidSession: function () {
     return this.admin.account.hasValidSession();
   },

@@ -7,6 +7,7 @@ app.module('pocket', function () {
   'use strict';
 
   this.addInitializer(function (options) {
+
     require('../structural/layout/index');
     require('../structural/sidebar/index');
     require('../structural/content/index');
@@ -31,6 +32,10 @@ app.module('pocket', function () {
 
     app.vent.on('plugins', function (name, action) {
       self._controller.plugins(name, action);
+    });
+
+    app.vent.on('app:user:logout', function () {
+      app.hoodieAdmin.account.signOut();
     });
 
   });
