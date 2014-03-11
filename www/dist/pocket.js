@@ -3485,6 +3485,8 @@ var controller = Marionette.Controller.extend({
   initialize: function (options) {
     var self = this;
 
+    console.log('>>>>>>', options);
+
     // require ui dependencies
     _dereq_('../../ui/plugins/index');
 
@@ -3507,7 +3509,7 @@ var controller = Marionette.Controller.extend({
           self.list(self.collection);
       }
 
-      // move this out
+      // TODO: move this out
       app.vent.trigger('nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
@@ -3533,7 +3535,6 @@ var controller = Marionette.Controller.extend({
       model: model
     });
   },
-
 
   list: function (collection) {
     app.vent.trigger('plugins:list', {
@@ -3728,6 +3729,8 @@ var Controller = Marionette.Controller.extend({
 
     _dereq_('../../sidebar/index');
     _dereq_('../../content/index');
+
+    app.vent.trigger('app:start');
   },
 
   showLoginLayout: function (tmpl) {
@@ -4518,8 +4521,22 @@ _dereq_('barf');
 
 var BaseRouter = Backbone.Router.extend({
 
-  before: {
+  constructor: function (options) {
+    Backbone.Router.prototype.constructor.call(this, options);
 
+    this.history = [];
+    this.avoidRoute = ['login', 'logout'];
+  },
+
+  storeRoute: function () {
+    this.history.push(Backbone.history.fragment.split('/')[0]);
+  },
+
+  getPreviousRoute: function () {
+    return this.history[this.history.length - 2];
+  },
+
+  before: {
     '*plugins(/:filter)': function (fragment, args, next) {
       app.hoodieAdmin.account.authenticate()
       .done(function () {
@@ -4777,6 +4794,7 @@ var Router = BaseRouter.extend({
 
   routes: {
     'logout'                : 'logout',
+    ''                      : 'plugins',
     'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
   },

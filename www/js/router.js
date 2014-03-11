@@ -6,6 +6,7 @@ var Router = BaseRouter.extend({
 
   routes: {
     'logout'                : 'logout',
+    ''                      : 'plugins',
     'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
   },

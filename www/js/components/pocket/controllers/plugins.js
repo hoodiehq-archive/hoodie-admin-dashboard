@@ -11,6 +11,8 @@ var controller = Marionette.Controller.extend({
   initialize: function (options) {
     var self = this;
 
+    console.log('>>>>>>', options);
+
     // require ui dependencies
     require('../../ui/plugins/index');
 
@@ -33,7 +35,7 @@ var controller = Marionette.Controller.extend({
           self.list(self.collection);
       }
 
-      // move this out
+      // TODO: move this out
       app.vent.trigger('nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
@@ -59,7 +61,6 @@ var controller = Marionette.Controller.extend({
       model: model
     });
   },
-
 
   list: function (collection) {
     app.vent.trigger('plugins:list', {

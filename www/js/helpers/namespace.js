@@ -7,7 +7,7 @@ var Router = require('../router');
 var Config = require('../models/config');
 
 var app = new Marionette.Application();
-var AdminUser = require('../models/user');
+var AdminUser = require('../components/pocket/models/user');
 
 //
 // set global request handler exposing app config
