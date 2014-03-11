@@ -8,10 +8,6 @@ var Controller = Marionette.Controller.extend({
     this.options = options || {};
   },
 
-  login: function (password) {
-    app.hoodieAdmin.account.signIn('admin', password);
-  },
-
   logout: function () {
     app.hoodieAdmin.account.signOut();
 

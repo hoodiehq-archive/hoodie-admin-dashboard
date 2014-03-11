@@ -5,9 +5,8 @@ var BaseRouter = require('./helpers/mvc/router');
 var Router = BaseRouter.extend({
 
   routes: {
-    ''                      : 'login',
-    'plugins/:filter'       : 'plugins',
     'logout'                : 'logout',
+    'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
   },
 

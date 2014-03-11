@@ -1,6 +1,7 @@
 'use strict';
 
 var Marionette = require('backbone.marionette');
+var $ = Marionette.$;
 
 var Collection = require('../collections/plugins');
 var Model = require('../models/plugin');
@@ -17,11 +18,9 @@ var controller = Marionette.Controller.extend({
 
     this.model = new Model();
     this.collection = new Collection();
-    this.collection.fetch({
-      reset: true
-    });
 
-    this.listenTo(this.collection, 'reset', function () {
+    $.when(this.collection.fetch())
+    .done(function () {
 
       switch (self.options.action) {
         case 'show':
@@ -40,6 +39,9 @@ var controller = Marionette.Controller.extend({
         collection: self.collection,
       });
 
+    })
+    .fail(function () {
+      throw new Error('failed to fetch plugins');
     });
 
   },

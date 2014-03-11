@@ -3436,6 +3436,7 @@ module.exports = Controller;
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
+var $ = Marionette.$;
 
 var Collection = _dereq_('../collections/plugins');
 var Model = _dereq_('../models/plugin');
@@ -3452,11 +3453,9 @@ var controller = Marionette.Controller.extend({
 
     this.model = new Model();
     this.collection = new Collection();
-    this.collection.fetch({
-      reset: true
-    });
 
-    this.listenTo(this.collection, 'reset', function () {
+    $.when(this.collection.fetch())
+    .done(function () {
 
       switch (self.options.action) {
         case 'show':
@@ -3475,6 +3474,9 @@ var controller = Marionette.Controller.extend({
         collection: self.collection,
       });
 
+    })
+    .fail(function () {
+      throw new Error('failed to fetch plugins');
     });
 
   },
@@ -3517,12 +3519,9 @@ app.module('pocket', function () {
   this.addInitializer(function (options) {
 
     _dereq_('../structural/layout/index');
-    _dereq_('../structural/sidebar/index');
-    _dereq_('../structural/content/index');
 
     // boot up default UI components
     app.vent.on('app:start', function () {
-
       _dereq_('../ui/logo/index');
       _dereq_('../ui/navigation/index');
       _dereq_('../ui/info/index');
@@ -3552,7 +3551,7 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":82,"../structural/content/index":45,"../structural/layout/index":48,"../structural/sidebar/index":52,"../ui/info/index":55,"../ui/login/index":59,"../ui/logo/index":63,"../ui/navigation/index":67,"./controllers/index":40}],43:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":82,"../structural/layout/index":48,"../ui/info/index":55,"../ui/login/index":59,"../ui/logo/index":63,"../ui/navigation/index":67,"./controllers/index":40}],43:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -3663,39 +3662,35 @@ var Marionette = _dereq_('backbone.marionette');
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
-
-    'use strict';
-
     this.options = options || {};
+
+    this.container = new Marionette.Region({
+      el: '#content',
+    });
+  },
+
+  createLayout: function (tmpl) {
+    return Marionette.Layout.extend({
+      template:  function () {
+        return tmpl;
+      }
+    });
   },
 
   showAppLayout: function (tmpl) {
-
-    var Layout = Marionette.Layout.extend({
-      template:  function () {
-        return tmpl;
-      }
-    });
-
-    this.container = new Marionette.Region({
-      el: '#content',
-    });
+    var Layout = this.createLayout(tmpl);
 
     this.container.reset();
     this.container.show(new Layout);
+
+    _dereq_('../../sidebar/index');
+    _dereq_('../../content/index');
+
+    app.vent.trigger('app:start');
   },
 
   showLoginLayout: function (tmpl) {
-
-    var Layout = Marionette.Layout.extend({
-      template:  function () {
-        return tmpl;
-      }
-    });
-
-    this.container = new Marionette.Region({
-      el: '#content',
-    });
+    var Layout = this.createLayout(tmpl);
 
     this.container.reset();
     this.container.show(new Layout);
@@ -3703,7 +3698,6 @@ var Controller = Marionette.Controller.extend({
     app.rm.addRegions({
       login: 'section.login'
     });
-
   }
 
 });
@@ -3711,7 +3705,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"backbone.marionette":"Mn2A9x"}],48:[function(_dereq_,module,exports){
+},{"../../content/index":45,"../../sidebar/index":52,"backbone.marionette":"Mn2A9x"}],48:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 
@@ -3970,6 +3964,7 @@ app.module('pocket.login', function () {
 
 module.exports = app;
 
+
 },{"./controllers/index":58}],60:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
@@ -4014,6 +4009,8 @@ var View = Marionette.ItemView.extend({
     Backbone.history.navigate('plugins', {
       trigger: true
     });
+
+    app.vent.trigger('app:start');
   },
 
   modelEvents: {
@@ -4729,9 +4726,8 @@ var BaseRouter = _dereq_('./helpers/mvc/router');
 var Router = BaseRouter.extend({
 
   routes: {
-    ''                      : 'login',
-    'plugins/:filter'       : 'plugins',
     'logout'                : 'logout',
+    'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
   },
 

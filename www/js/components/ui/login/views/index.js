@@ -29,6 +29,8 @@ var View = Marionette.ItemView.extend({
     Backbone.history.navigate('plugins', {
       trigger: true
     });
+
+    app.vent.trigger('app:start');
   },
 
   modelEvents: {
