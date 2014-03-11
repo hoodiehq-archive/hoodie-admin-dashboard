@@ -2,6 +2,7 @@
 
 var Marionette = require('backbone.marionette');
 var Plugins = require('./plugins');
+var Dashboard = require('./dashboard');
 
 var Controller = Marionette.Controller.extend({
 
@@ -14,6 +15,12 @@ var Controller = Marionette.Controller.extend({
       name: name,
       action: action,
       ns: 'plugins'
+    });
+  },
+
+  dashboard: function () {
+    new Dashboard({
+      ns: 'dashboard'
     });
   }
 

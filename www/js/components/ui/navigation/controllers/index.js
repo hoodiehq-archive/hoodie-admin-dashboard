@@ -14,7 +14,8 @@ var Controller = Marionette.Controller.extend({
   show: function (opts) {
 
     opts.collection.add(new Backbone.Model({
-      name: 'dashboard'
+      name: 'dashboard',
+      title: 'dashboard'
     }), {
       at: 0
     });

@@ -31,6 +31,10 @@ app.module('pocket', function () {
       self._controller.plugins(name, action);
     });
 
+    app.vent.on('dashboard', function () {
+      self._controller.dashboard();
+    });
+
     app.vent.on('app:user:logout', function () {
       app.hoodieAdmin.account.signOut();
     });
