@@ -3681,6 +3681,7 @@ var Controller = Marionette.Controller.extend({
       el: '#content',
     });
 
+    this.container.reset();
     this.container.show(new Layout);
   },
 
@@ -3696,6 +3697,7 @@ var Controller = Marionette.Controller.extend({
       el: '#content',
     });
 
+    this.container.reset();
     this.container.show(new Layout);
 
     app.rm.addRegions({
@@ -4031,9 +4033,13 @@ var View = Marionette.ItemView.extend({
     var self = this;
     var data = Syphon.serialize(this);
 
-    self.model.signIn(data.password)
-    .done(self.valid())
-    .fail(self.invalid());
+    this.model.signIn(data.password)
+    .done(function () {
+      self.valid();
+    })
+    .fail(function () {
+      self.invalid();
+    });
   }
 
 });
@@ -4696,7 +4702,6 @@ var Model = Backbone.Model.extend({
   },
 
   signIn: function (password) {
-    console.log('password');
     return this.admin.account.signIn(password);
   },
 
@@ -4724,7 +4729,7 @@ var BaseRouter = _dereq_('./helpers/mvc/router');
 var Router = BaseRouter.extend({
 
   routes: {
-    ''                      : 'plugins',
+    ''                      : 'login',
     'plugins/:filter'       : 'plugins',
     'logout'                : 'logout',
     '*defaults'             : 'plugins'
@@ -4734,7 +4739,6 @@ var Router = BaseRouter.extend({
     if (filter) {
       var action = filter.split('/')[2] || '';
       var name = filter.split('/')[1] || filter;
-
       app.vent.trigger('plugins', name, action);
     } else {
       app.vent.trigger('plugins');
@@ -4743,6 +4747,14 @@ var Router = BaseRouter.extend({
   },
 
   logout: function () {
+    app.vent.trigger('app:layout:login');
+    app.vent.trigger('app:user:logout');
+    Backbone.history.navigate('', {
+      trigger: true
+    });
+  },
+
+  login: function () {
     app.vent.trigger('app:layout:login');
     app.vent.trigger('app:user:logout');
   }

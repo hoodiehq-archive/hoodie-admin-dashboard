@@ -48,9 +48,13 @@ var View = Marionette.ItemView.extend({
     var self = this;
     var data = Syphon.serialize(this);
 
-    self.model.signIn(data.password)
-    .done(self.valid())
-    .fail(self.invalid());
+    this.model.signIn(data.password)
+    .done(function () {
+      self.valid();
+    })
+    .fail(function () {
+      self.invalid();
+    });
   }
 
 });

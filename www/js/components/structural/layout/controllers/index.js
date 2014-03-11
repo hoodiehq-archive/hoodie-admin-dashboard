@@ -21,6 +21,7 @@ var Controller = Marionette.Controller.extend({
       el: '#content',
     });
 
+    this.container.reset();
     this.container.show(new Layout);
   },
 
@@ -36,6 +37,7 @@ var Controller = Marionette.Controller.extend({
       el: '#content',
     });
 
+    this.container.reset();
     this.container.show(new Layout);
 
     app.rm.addRegions({

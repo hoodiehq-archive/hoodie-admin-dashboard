@@ -24,7 +24,6 @@ var Model = Backbone.Model.extend({
   },
 
   signIn: function (password) {
-    console.log('password');
     return this.admin.account.signIn(password);
   },
 
