@@ -3831,7 +3831,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<header></header>\n<nav></nav>\n<footer></footer>\n<!--<ul class=\"helpers\">-->\n  <!--<li>Pocket guides</li>-->\n  <!--<li>Hoodie</li>-->\n<!--</ul>-->\n";
+  return "<header></header>\n<nav></nav>\n<footer></footer>\n<ul class=\"helpers\">\n  <li>Pocket guides</li>\n  <li>Hoodie</li>\n</ul>\n";
   });
 
 },{"hbsfy/runtime":17}],54:[function(_dereq_,module,exports){
@@ -4124,6 +4124,7 @@ arguments[4][57][0].apply(exports,arguments)
 
 var app = _dereq_('../../../../helpers/namespace');
 var Marionette = _dereq_('backbone.marionette');
+var Backbone = _dereq_('backbone');
 var View = _dereq_('../views/index');
 
 var Controller = Marionette.Controller.extend({
@@ -4133,6 +4134,13 @@ var Controller = Marionette.Controller.extend({
   },
 
   show: function (opts) {
+
+    opts.collection.add(new Backbone.Model({
+      name: 'dashboard'
+    }), {
+      at: 0
+    });
+
     var view = new View({
       collection: opts.collection,
       model: opts.model,
@@ -4146,7 +4154,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":82,"../views/index":69,"backbone.marionette":"Mn2A9x"}],67:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":82,"../views/index":69,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],67:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
