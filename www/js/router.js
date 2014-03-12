@@ -6,7 +6,6 @@ var Router = BaseRouter.extend({
 
   routes: {
     'logout'                : 'logout',
-    ''                      : 'plugins',
     'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
   },
@@ -16,9 +15,9 @@ var Router = BaseRouter.extend({
       var action = filter.split('/')[2] || '';
       var name = filter.split('/')[1] || filter;
 
-      app.vent.trigger('plugins', name, action);
+      app.vent.trigger('app:plugins', name, action);
     } else {
-      app.vent.trigger('plugins');
+      app.vent.trigger('app:plugins');
     }
 
   },
