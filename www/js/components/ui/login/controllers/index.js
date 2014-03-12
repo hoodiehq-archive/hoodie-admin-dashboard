@@ -2,6 +2,7 @@
 
 var Marionette = require('backbone.marionette');
 var View = require('../views/index');
+
 var User =  require('../../../pocket/models/user');
 
 var Controller = Marionette.Controller.extend({

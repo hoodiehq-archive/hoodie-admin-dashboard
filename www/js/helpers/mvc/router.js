@@ -26,7 +26,6 @@ var BaseRouter = Backbone.Router.extend({
       })
       .fail(function () {
         app.vent.trigger('app:layout:login');
-        app.vent.trigger('app:login');
       });
     }
 

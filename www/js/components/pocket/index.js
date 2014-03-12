@@ -10,17 +10,6 @@ app.module('pocket', function () {
 
     require('../structural/layout/index');
 
-    // boot up default UI components
-    app.vent.on('app:start', function () {
-      require('../ui/logo/index');
-      require('../ui/navigation/index');
-      require('../ui/info/index');
-    });
-
-    app.vent.on('app:login', function () {
-      require('../ui/login/index');
-    });
-
     this._controller = new Controller(options);
   });
 
@@ -37,6 +26,9 @@ app.module('pocket', function () {
 
     app.vent.on('app:user:logout', function () {
       app.hoodieAdmin.account.signOut();
+      Backbone.history.navigate('', {
+        trigger: true
+      });
     });
 
   });

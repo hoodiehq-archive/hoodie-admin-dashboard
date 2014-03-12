@@ -3407,7 +3407,7 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":80,"../../../helpers/namespace":83,"../models/plugin":44}],40:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":81,"../../../helpers/namespace":84,"../models/plugin":44}],40:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3547,7 +3547,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../../ui/plugins/index":72,"../collections/plugins":39,"../models/plugin":44,"backbone.marionette":"Mn2A9x"}],43:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":73,"../collections/plugins":39,"../models/plugin":44,"backbone.marionette":"Mn2A9x"}],43:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -3559,17 +3559,6 @@ app.module('pocket', function () {
   this.addInitializer(function (options) {
 
     _dereq_('../structural/layout/index');
-
-    // boot up default UI components
-    app.vent.on('app:start', function () {
-      _dereq_('../ui/logo/index');
-      _dereq_('../ui/navigation/index');
-      _dereq_('../ui/info/index');
-    });
-
-    app.vent.on('app:login', function () {
-      _dereq_('../ui/login/index');
-    });
 
     this._controller = new Controller(options);
   });
@@ -3587,6 +3576,9 @@ app.module('pocket', function () {
 
     app.vent.on('app:user:logout', function () {
       app.hoodieAdmin.account.signOut();
+      Backbone.history.navigate('', {
+        trigger: true
+      });
     });
 
   });
@@ -3595,7 +3587,7 @@ app.module('pocket', function () {
 
 module.exports = app;
 
-},{"../../helpers/namespace":83,"../structural/layout/index":49,"../ui/info/index":56,"../ui/login/index":60,"../ui/logo/index":64,"../ui/navigation/index":68,"./controllers/index":41}],44:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":84,"../structural/layout/index":50,"./controllers/index":41}],44:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -3630,7 +3622,52 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":81,"../../../helpers/namespace":83}],45:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":82,"../../../helpers/namespace":84}],45:[function(_dereq_,module,exports){
+var Backbone = _dereq_('backbone');
+var Hoodieadmin = _dereq_('hoodie.admin');
+
+var Model = Backbone.Model.extend({
+
+  defaults: {
+    password: ''
+  },
+
+  initialize: function () {
+    this.admin = new Hoodieadmin();
+  },
+
+  authenticate: function () {
+    return this.admin.account.authenticate();
+  },
+
+  hasValidSession: function () {
+    return this.admin.account.hasValidSession();
+  },
+
+  hasInvalidSession: function () {
+    return this.admin.account.hasInvalidSession();
+  },
+
+  signIn: function (password) {
+    return this.admin.account.signIn(password);
+  },
+
+  signOut: function () {
+    return this.admin.account.signOut();
+  },
+
+  validation: {
+    password: {
+      required: true,
+      msg: 'Password can\'t be empty'
+    }
+  }
+
+});
+
+module.exports = Model;
+
+},{"backbone":"atSdsZ","hoodie.admin":35}],46:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3656,7 +3693,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],46:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],47:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -3688,7 +3725,7 @@ app.module('pocket.content', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":83,"./controllers/index":45,"./templates/index.hbs":47}],47:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":84,"./controllers/index":46,"./templates/index.hbs":48}],48:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3700,7 +3737,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<header></header>\n<section class=\"pluginView\"></section>\n<footer></footer>\n";
   });
 
-},{"hbsfy/runtime":17}],48:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],49:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
@@ -3730,7 +3767,9 @@ var Controller = Marionette.Controller.extend({
     _dereq_('../../sidebar/index');
     _dereq_('../../content/index');
 
-    app.vent.trigger('app:start');
+    _dereq_('../../../ui/logo/index');
+    _dereq_('../../../ui/navigation/index');
+    _dereq_('../../../ui/info/index');
   },
 
   showLoginLayout: function (tmpl) {
@@ -3742,6 +3781,9 @@ var Controller = Marionette.Controller.extend({
     app.rm.addRegions({
       login: 'section.login'
     });
+
+    _dereq_('../../../ui/login/index');
+
   }
 
 });
@@ -3749,7 +3791,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"../../content/index":46,"../../sidebar/index":53,"backbone.marionette":"Mn2A9x"}],49:[function(_dereq_,module,exports){
+},{"../../../ui/info/index":57,"../../../ui/login/index":61,"../../../ui/logo/index":65,"../../../ui/navigation/index":69,"../../content/index":47,"../../sidebar/index":54,"backbone.marionette":"Mn2A9x"}],50:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 
@@ -3782,7 +3824,7 @@ app.module('pocket.layout', function () {
 module.exports = app;
 
 
-},{"../../../helpers/namespace":83,"./controllers/index":48,"./templates/index.hbs":50,"./templates/login.hbs":51}],50:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":84,"./controllers/index":49,"./templates/index.hbs":51,"./templates/login.hbs":52}],51:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3794,7 +3836,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
   });
 
-},{"hbsfy/runtime":17}],51:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],52:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3806,7 +3848,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<section class=\"login\"></section>\n\n";
   });
 
-},{"hbsfy/runtime":17}],52:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],53:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3832,7 +3874,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],53:[function(_dereq_,module,exports){
+},{"backbone.marionette":"Mn2A9x"}],54:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -3866,7 +3908,7 @@ app.module('pocket.sidebar', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":83,"./controllers/index":52,"./templates/index.hbs":54}],54:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":84,"./controllers/index":53,"./templates/index.hbs":55}],55:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3878,7 +3920,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<header></header>\n<nav></nav>\n<footer></footer>\n<ul class=\"helpers\">\n  <li>Pocket guides</li>\n  <li>Hoodie</li>\n</ul>\n";
   });
 
-},{"hbsfy/runtime":17}],55:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],56:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -3909,7 +3951,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":83,"../views/index":58,"backbone.marionette":"Mn2A9x"}],56:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":84,"../views/index":59,"backbone.marionette":"Mn2A9x"}],57:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -3934,7 +3976,7 @@ app.module('pocket.info', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":83,"./controllers/index":55}],57:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":84,"./controllers/index":56}],58:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -3946,7 +3988,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<h3>Hello Admin!</h3>\n<div class=\"placeMeta\">\n  16:45 (GMT+1)\n  Oct. 12th, 2013\n  Berlin\n</div>\n";
   });
 
-},{"hbsfy/runtime":17}],58:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],59:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -3964,12 +4006,13 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":79,"../templates/index.hbs":57,"backbone.marionette":"Mn2A9x"}],59:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":80,"../templates/index.hbs":58,"backbone.marionette":"Mn2A9x"}],60:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
 var View = _dereq_('../views/index');
-var User =  _dereq_('../../../../models/user');
+
+var User =  _dereq_('../../../pocket/models/user');
 
 var Controller = Marionette.Controller.extend({
 
@@ -3993,7 +4036,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"../../../../models/user":89,"../views/index":62,"backbone.marionette":"Mn2A9x"}],60:[function(_dereq_,module,exports){
+},{"../../../pocket/models/user":45,"../views/index":63,"backbone.marionette":"Mn2A9x"}],61:[function(_dereq_,module,exports){
 'use strict';
 
 var Controller = _dereq_('./controllers/index');
@@ -4009,7 +4052,7 @@ app.module('pocket.login', function () {
 module.exports = app;
 
 
-},{"./controllers/index":59}],61:[function(_dereq_,module,exports){
+},{"./controllers/index":60}],62:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -4021,7 +4064,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<form class=\"form-horizontal\">\n<fieldset>\n\n<!-- Form Name -->\n<div class=\"logo ir\">Hoodie Pocket</div>\n<h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n\n<!-- Password input-->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"password\">Password</label>\n  <div class=\"controls\">\n    <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Password\" class=\"input-xlarge\" required=\"\">\n\n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"\">Submit</label>\n  <div class=\"controls\">\n    <a id=\"submit\" name=\"\" class=\"btn btn-default\">Button</a>\n  </div>\n</div>\n\n</fieldset>\n</form>\n\n";
   });
 
-},{"hbsfy/runtime":17}],62:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],63:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -4088,7 +4131,7 @@ var View = Marionette.ItemView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":79,"../templates/index.hbs":61,"backbone.marionette":"Mn2A9x","backbone.syphon":"zpJqfl","backbone.validation":7}],63:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":80,"../templates/index.hbs":62,"backbone.marionette":"Mn2A9x","backbone.syphon":"zpJqfl","backbone.validation":7}],64:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -4119,7 +4162,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":83,"../views/index":66,"backbone.marionette":"Mn2A9x"}],64:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":84,"../views/index":67,"backbone.marionette":"Mn2A9x"}],65:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -4144,7 +4187,7 @@ app.module('pocket.logo', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":83,"./controllers/index":63}],65:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":84,"./controllers/index":64}],66:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -4161,9 +4204,9 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],66:[function(_dereq_,module,exports){
-arguments[4][58][0].apply(exports,arguments)
-},{"../../../../helpers/handlebars":79,"../templates/index.hbs":65,"backbone.marionette":"Mn2A9x"}],67:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],67:[function(_dereq_,module,exports){
+arguments[4][59][0].apply(exports,arguments)
+},{"../../../../helpers/handlebars":80,"../templates/index.hbs":66,"backbone.marionette":"Mn2A9x"}],68:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -4199,7 +4242,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":83,"../views/index":70,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],68:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":84,"../views/index":71,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],69:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -4224,7 +4267,7 @@ app.module('pocket.navigation', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":83,"./controllers/index":67}],69:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":84,"./controllers/index":68}],70:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -4245,7 +4288,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],70:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],71:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -4268,7 +4311,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":79,"../templates/item.hbs":69,"backbone.marionette":"Mn2A9x"}],71:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":80,"../templates/item.hbs":70,"backbone.marionette":"Mn2A9x"}],72:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -4317,7 +4360,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":83,"../views/edit":76,"../views/list":77,"../views/show":78,"backbone.marionette":"Mn2A9x"}],72:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":84,"../views/edit":77,"../views/list":78,"../views/show":79,"backbone.marionette":"Mn2A9x"}],73:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -4350,7 +4393,7 @@ app.module('pocket.plugins', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":83,"./controllers/index":71}],73:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":84,"./controllers/index":72}],74:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -4362,7 +4405,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "edit\n";
   });
 
-},{"hbsfy/runtime":17}],74:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],75:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -4379,7 +4422,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],75:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],76:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -4396,7 +4439,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],76:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],77:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -4411,7 +4454,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":79,"../templates/edit.hbs":73,"backbone.marionette":"Mn2A9x"}],77:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":80,"../templates/edit.hbs":74,"backbone.marionette":"Mn2A9x"}],78:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -4436,7 +4479,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":79,"../templates/list_item.hbs":74,"backbone.marionette":"Mn2A9x","gridster":"OOmgq/"}],78:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":80,"../templates/list_item.hbs":75,"backbone.marionette":"Mn2A9x","gridster":"OOmgq/"}],79:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -4455,7 +4498,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":79,"../templates/show.hbs":75,"backbone.marionette":"Mn2A9x"}],79:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":80,"../templates/show.hbs":76,"backbone.marionette":"Mn2A9x"}],80:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('hbsfy/runtime');
@@ -4481,7 +4524,7 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 
 module.exports = Handlebars;
 
-},{"hbsfy/runtime":17}],80:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],81:[function(_dereq_,module,exports){
 
 'use strict';
 
@@ -4504,7 +4547,7 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 module.exports = SuperCollection;
 
 
-},{"backbone":"atSdsZ","underscore":"Y10LaM"}],81:[function(_dereq_,module,exports){
+},{"backbone":"atSdsZ","underscore":"Y10LaM"}],82:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -4516,7 +4559,7 @@ var SuperModel = Backbone.Model.extend({
 module.exports = SuperModel;
 
 
-},{"backbone":"atSdsZ","jquery":"KvN3hc"}],82:[function(_dereq_,module,exports){
+},{"backbone":"atSdsZ","jquery":"KvN3hc"}],83:[function(_dereq_,module,exports){
 _dereq_('barf');
 
 var BaseRouter = Backbone.Router.extend({
@@ -4545,7 +4588,6 @@ var BaseRouter = Backbone.Router.extend({
       })
       .fail(function () {
         app.vent.trigger('app:layout:login');
-        app.vent.trigger('app:login');
       });
     }
 
@@ -4556,7 +4598,7 @@ var BaseRouter = Backbone.Router.extend({
 module.exports = BaseRouter;
 
 
-},{"barf":8}],83:[function(_dereq_,module,exports){
+},{"barf":8}],84:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
@@ -4566,7 +4608,7 @@ var Router = _dereq_('../router');
 var Config = _dereq_('../models/config');
 
 var app = new Marionette.Application();
-var AdminUser = _dereq_('../models/user');
+var AdminUser = _dereq_('../components/pocket/models/user');
 
 //
 // set global request handler exposing app config
@@ -4608,7 +4650,7 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../models/config":88,"../models/user":89,"../router":90,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],84:[function(_dereq_,module,exports){
+},{"../components/pocket/models/user":45,"../models/config":89,"../router":90,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],85:[function(_dereq_,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
@@ -4639,7 +4681,7 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":83,"./storeError":85,"./storeSuccess":86,"jquery":"KvN3hc"}],85:[function(_dereq_,module,exports){
+},{"../namespace":84,"./storeError":86,"./storeSuccess":87,"jquery":"KvN3hc"}],86:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -4663,7 +4705,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"KvN3hc"}],86:[function(_dereq_,module,exports){
+},{"jquery":"KvN3hc"}],87:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
@@ -4682,7 +4724,7 @@ var success = function (e, jqXHR, opts, res) {
 
 module.exports = success;
 
-},{}],87:[function(_dereq_,module,exports){
+},{}],88:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Config = _dereq_('./models/config');
 var app = _dereq_('./helpers/namespace');
@@ -4698,7 +4740,7 @@ app.start(new Config().toJSON());
 module.exports = app;
 
 
-},{"./components/pocket/index":43,"./helpers/handlebars":79,"./helpers/namespace":83,"./helpers/storage/store":84,"./models/config":88}],88:[function(_dereq_,module,exports){
+},{"./components/pocket/index":43,"./helpers/handlebars":80,"./helpers/namespace":84,"./helpers/storage/store":85,"./models/config":89}],89:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
@@ -4739,53 +4781,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../helpers/mvc/model":81}],89:[function(_dereq_,module,exports){
-var Backbone = _dereq_('backbone');
-var Hoodieadmin = _dereq_('hoodie.admin');
-
-var Model = Backbone.Model.extend({
-
-  defaults: {
-    password: ''
-  },
-
-  initialize: function () {
-    this.admin = new Hoodieadmin();
-  },
-
-  authenticate: function () {
-    return this.admin.account.authenticate();
-  },
-
-  hasValidSession: function () {
-    return this.admin.account.hasValidSession();
-  },
-
-  hasInvalidSession: function () {
-    return this.admin.account.hasInvalidSession();
-  },
-
-  signIn: function (password) {
-    return this.admin.account.signIn(password);
-  },
-
-  signOut: function () {
-    return this.admin.account.signOut();
-  },
-
-  validation: {
-    password: {
-      required: true,
-      msg: 'Password can\'t be empty'
-    }
-  }
-
-});
-
-module.exports = Model;
-
-
-},{"backbone":"atSdsZ","hoodie.admin":35}],90:[function(_dereq_,module,exports){
+},{"../helpers/mvc/model":82}],90:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseRouter = _dereq_('./helpers/mvc/router');
@@ -4803,6 +4799,7 @@ var Router = BaseRouter.extend({
     if (filter) {
       var action = filter.split('/')[2] || '';
       var name = filter.split('/')[1] || filter;
+
       app.vent.trigger('plugins', name, action);
     } else {
       app.vent.trigger('plugins');
@@ -4811,11 +4808,8 @@ var Router = BaseRouter.extend({
   },
 
   logout: function () {
-    app.vent.trigger('app:layout:login');
     app.vent.trigger('app:user:logout');
-    Backbone.history.navigate('', {
-      trigger: true
-    });
+    app.vent.trigger('app:layout:login');
   },
 
   login: function () {
@@ -4828,6 +4822,6 @@ var Router = BaseRouter.extend({
 module.exports = Router;
 
 
-},{"./helpers/mvc/router":82}]},{},[87])
-(87)
+},{"./helpers/mvc/router":83}]},{},[88])
+(88)
 });

@@ -27,7 +27,9 @@ var Controller = Marionette.Controller.extend({
     require('../../sidebar/index');
     require('../../content/index');
 
-    app.vent.trigger('app:start');
+    require('../../../ui/logo/index');
+    require('../../../ui/navigation/index');
+    require('../../../ui/info/index');
   },
 
   showLoginLayout: function (tmpl) {
@@ -39,6 +41,8 @@ var Controller = Marionette.Controller.extend({
     app.rm.addRegions({
       login: 'section.login'
     });
+
+    require('../../../ui/login/index');
   }
 
 });
