@@ -14,11 +14,9 @@ var controller = Marionette.Controller.extend({
     this.model = new Model();
     this.collection = new Collection();
 
-    $.when(this.collection.fetch())
-    .done(function () {
+    $.when(this.collection.fetch()).done(function () {
 
-    })
-    .fail(function () {
+    }).fail(function () {
       throw new Error('failed to fetch plugins');
     });
 

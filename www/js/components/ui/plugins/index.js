@@ -12,15 +12,15 @@ app.module('pocket.plugins', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('plugins:list', function (options) {
+    app.vent.on('app:plugins:list', function (options) {
       self._controller.list(options);
     });
 
-    app.vent.on('plugins:show', function (options) {
+    app.vent.on('app:plugins:show', function (options) {
       self._controller.show(options);
     });
 
-    app.vent.on('plugins:edit', function (options) {
+    app.vent.on('app:plugins:edit', function (options) {
       self._controller.edit(options);
     });
 

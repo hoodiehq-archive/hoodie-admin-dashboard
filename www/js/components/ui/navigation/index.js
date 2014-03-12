@@ -12,7 +12,7 @@ app.module('pocket.navigation', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('nav:show', function (options) {
+    app.vent.on('app:nav:show', function (options) {
       self._controller.show(options);
     });
 

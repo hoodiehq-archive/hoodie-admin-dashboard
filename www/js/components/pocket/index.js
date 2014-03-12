@@ -16,11 +16,11 @@ app.module('pocket', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('plugins', function (name, action) {
+    app.vent.on('app:plugins', function (name, action) {
       self._controller.plugins(name, action);
     });
 
-    app.vent.on('dashboard', function () {
+    app.vent.on('app:dashboard', function () {
       self._controller.dashboard();
     });
 

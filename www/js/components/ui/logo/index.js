@@ -12,7 +12,7 @@ app.module('pocket.logo', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('logo:show', function (options) {
+    app.vent.on('app:logo:show', function (options) {
       self._controller.show(options);
     });
 

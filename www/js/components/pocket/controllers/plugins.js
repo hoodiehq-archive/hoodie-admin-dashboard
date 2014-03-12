@@ -11,8 +11,6 @@ var controller = Marionette.Controller.extend({
   initialize: function (options) {
     var self = this;
 
-    console.log('>>>>>>', options);
-
     // require ui dependencies
     require('../../ui/plugins/index');
 
@@ -21,8 +19,7 @@ var controller = Marionette.Controller.extend({
     this.model = new Model();
     this.collection = new Collection();
 
-    $.when(this.collection.fetch())
-    .done(function () {
+    $.when(this.collection.fetch()).done(function () {
 
       switch (self.options.action) {
         case 'show':
@@ -35,35 +32,33 @@ var controller = Marionette.Controller.extend({
           self.list(self.collection);
       }
 
-      // TODO: move this out
-      app.vent.trigger('nav:show', {
+      app.vent.trigger('app:nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
       });
 
-    })
-    .fail(function () {
+    }).fail(function () {
       throw new Error('failed to fetch plugins');
     });
 
   },
 
   show: function (model) {
-    app.vent.trigger('plugins:show', {
+    app.vent.trigger('app:plugins:show', {
       collection: model.collection,
       model: model
     });
   },
 
   edit: function (model) {
-    app.vent.trigger('plugins:edit', {
+    app.vent.trigger('app:plugins:edit', {
       collection: model.collection,
       model: model
     });
   },
 
   list: function (collection) {
-    app.vent.trigger('plugins:list', {
+    app.vent.trigger('app:plugins:list', {
       collection: collection
     });
   }

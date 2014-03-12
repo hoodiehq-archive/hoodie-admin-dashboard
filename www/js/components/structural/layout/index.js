@@ -8,18 +8,17 @@ app.module('pocket.layout', function () {
   'use strict';
 
   this.addInitializer(function () {
-    this._controller = new Controller();
-  });
-
-  this.on('before:start', function () {
-
     var self = this;
 
-    this.listenTo(app.vent, 'app:layout:login', function () {
+    this._controller = new Controller();
+
+    console.info('layout start');
+
+    app.vent.on('app:layout:login', function () {
       self._controller.showLoginLayout(require('./templates/login.hbs'));
     });
 
-    this.listenTo(app.vent, 'app:layout:app', function () {
+    app.vent.on('app:layout:app', function () {
       self._controller.showAppLayout(require('./templates/index.hbs'));
     });
 
