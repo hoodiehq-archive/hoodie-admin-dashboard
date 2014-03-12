@@ -10,11 +10,9 @@ app.module('pocket.navigation', function () {
   });
 
   this.on('before:start', function () {
-    var self = this;
-
     app.vent.on('app:nav:show', function (options) {
-      self._controller.show(options);
-    });
+      this._controller.show(options);
+    }, this);
 
   });
 

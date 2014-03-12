@@ -3545,29 +3545,28 @@ module.exports = controller;
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
 
+_dereq_('../structural/layout/index');
+
 app.module('pocket', function () {
 
   'use strict';
 
   this.addInitializer(function (options) {
-
-    _dereq_('../structural/layout/index');
-
     this._controller = new Controller(options);
   });
 
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('app:plugins', function (name, action) {
+    this.listenTo(app.vent, 'app:plugins', function (name, action) {
       self._controller.plugins(name, action);
     });
 
-    app.vent.on('app:dashboard', function () {
+    this.listenTo(app.vent, 'app:dashboard', function () {
       self._controller.dashboard();
     });
 
-    app.vent.on('app:user:logout', function () {
+    this.listenTo(app.vent, 'app:user:logout', function () {
       app.hoodieAdmin.signOut();
       Backbone.history.navigate('', {
         trigger: true
@@ -3579,6 +3578,7 @@ app.module('pocket', function () {
 });
 
 module.exports = app;
+
 
 },{"../../helpers/namespace":84,"../structural/layout/index":50,"./controllers/index":41}],44:[function(_dereq_,module,exports){
 'use strict';
@@ -3712,6 +3712,7 @@ app.module('pocket.content', function () {
 
 module.exports = app;
 
+
 },{"../../../helpers/namespace":84,"./controllers/index":46,"./templates/index.hbs":48}],48:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
@@ -3748,21 +3749,19 @@ var Controller = Marionette.Controller.extend({
   showAppLayout: function (tmpl) {
     var Layout = this.createLayout(tmpl);
 
-    this.container.reset();
     this.container.show(new Layout);
 
     _dereq_('../../sidebar/index');
     _dereq_('../../content/index');
-
     _dereq_('../../../ui/logo/index');
     _dereq_('../../../ui/navigation/index');
     _dereq_('../../../ui/info/index');
+
   },
 
   showLoginLayout: function (tmpl) {
     var Layout = this.createLayout(tmpl);
 
-    this.container.reset();
     this.container.show(new Layout);
 
     app.rm.addRegions({
@@ -4044,7 +4043,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<form class=\"form-horizontal\">\n<fieldset>\n\n<!-- Form Name -->\n<div class=\"logo ir\">Hoodie Pocket</div>\n<h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n\n<!-- Password input-->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"password\">Password</label>\n  <div class=\"controls\">\n    <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Password\" class=\"input-xlarge\" required=\"\">\n\n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"\">Submit</label>\n  <div class=\"controls\">\n    <a id=\"submit\" name=\"\" class=\"btn btn-default\">Button</a>\n  </div>\n</div>\n\n</fieldset>\n</form>\n\n";
+  return "<fieldset>\n\n<!-- Form Name -->\n<div class=\"logo ir\">Hoodie Pocket</div>\n<h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n\n<!-- Password input-->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"password\">Password</label>\n  <div class=\"controls\">\n    <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Password\" class=\"input-xlarge\" required=\"\">\n\n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"\">Submit</label>\n  <div class=\"controls\">\n    <a id=\"submit\" name=\"\" class=\"btn btn-default\">Button</a>\n  </div>\n</div>\n\n</fieldset>\n";
   });
 
 },{"hbsfy/runtime":17}],63:[function(_dereq_,module,exports){
@@ -4061,6 +4060,8 @@ _dereq_('backbone.validation');
 
 var View = Marionette.ItemView.extend({
   template: tmpl,
+  tagName: 'form',
+  className: 'form-horizontal',
 
   initialize: function () {
     Backbone.Validation.bind(this);
@@ -4236,11 +4237,9 @@ app.module('pocket.navigation', function () {
   });
 
   this.on('before:start', function () {
-    var self = this;
-
     app.vent.on('app:nav:show', function (options) {
-      self._controller.show(options);
-    });
+      this._controller.show(options);
+    }, this);
 
   });
 

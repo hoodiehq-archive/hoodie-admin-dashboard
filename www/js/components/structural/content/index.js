@@ -28,3 +28,4 @@ app.module('pocket.content', function () {
 });
 
 module.exports = app;
+

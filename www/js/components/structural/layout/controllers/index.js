@@ -21,21 +21,19 @@ var Controller = Marionette.Controller.extend({
   showAppLayout: function (tmpl) {
     var Layout = this.createLayout(tmpl);
 
-    this.container.reset();
     this.container.show(new Layout);
 
     require('../../sidebar/index');
     require('../../content/index');
-
     require('../../../ui/logo/index');
     require('../../../ui/navigation/index');
     require('../../../ui/info/index');
+
   },
 
   showLoginLayout: function (tmpl) {
     var Layout = this.createLayout(tmpl);
 
-    this.container.reset();
     this.container.show(new Layout);
 
     app.rm.addRegions({

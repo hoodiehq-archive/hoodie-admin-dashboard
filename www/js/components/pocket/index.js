@@ -2,29 +2,28 @@
 var app = require('../../helpers/namespace');
 var Controller = require('./controllers/index');
 
+require('../structural/layout/index');
+
 app.module('pocket', function () {
 
   'use strict';
 
   this.addInitializer(function (options) {
-
-    require('../structural/layout/index');
-
     this._controller = new Controller(options);
   });
 
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('app:plugins', function (name, action) {
+    this.listenTo(app.vent, 'app:plugins', function (name, action) {
       self._controller.plugins(name, action);
     });
 
-    app.vent.on('app:dashboard', function () {
+    this.listenTo(app.vent, 'app:dashboard', function () {
       self._controller.dashboard();
     });
 
-    app.vent.on('app:user:logout', function () {
+    this.listenTo(app.vent, 'app:user:logout', function () {
       app.hoodieAdmin.signOut();
       Backbone.history.navigate('', {
         trigger: true
@@ -36,3 +35,4 @@ app.module('pocket', function () {
 });
 
 module.exports = app;
+

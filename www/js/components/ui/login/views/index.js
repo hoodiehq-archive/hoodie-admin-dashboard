@@ -11,6 +11,8 @@ require('backbone.validation');
 
 var View = Marionette.ItemView.extend({
   template: tmpl,
+  tagName: 'form',
+  className: 'form-horizontal',
 
   initialize: function () {
     Backbone.Validation.bind(this);
