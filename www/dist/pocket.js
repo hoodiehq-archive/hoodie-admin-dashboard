@@ -3424,11 +3424,9 @@ var controller = Marionette.Controller.extend({
     this.model = new Model();
     this.collection = new Collection();
 
-    $.when(this.collection.fetch())
-    .done(function () {
+    $.when(this.collection.fetch()).done(function () {
 
-    })
-    .fail(function () {
+    }).fail(function () {
       throw new Error('failed to fetch plugins');
     });
 
@@ -3485,8 +3483,6 @@ var controller = Marionette.Controller.extend({
   initialize: function (options) {
     var self = this;
 
-    console.log('>>>>>>', options);
-
     // require ui dependencies
     _dereq_('../../ui/plugins/index');
 
@@ -3495,8 +3491,7 @@ var controller = Marionette.Controller.extend({
     this.model = new Model();
     this.collection = new Collection();
 
-    $.when(this.collection.fetch())
-    .done(function () {
+    $.when(this.collection.fetch()).done(function () {
 
       switch (self.options.action) {
         case 'show':
@@ -3509,35 +3504,33 @@ var controller = Marionette.Controller.extend({
           self.list(self.collection);
       }
 
-      // TODO: move this out
-      app.vent.trigger('nav:show', {
+      app.vent.trigger('app:nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
       });
 
-    })
-    .fail(function () {
+    }).fail(function () {
       throw new Error('failed to fetch plugins');
     });
 
   },
 
   show: function (model) {
-    app.vent.trigger('plugins:show', {
+    app.vent.trigger('app:plugins:show', {
       collection: model.collection,
       model: model
     });
   },
 
   edit: function (model) {
-    app.vent.trigger('plugins:edit', {
+    app.vent.trigger('app:plugins:edit', {
       collection: model.collection,
       model: model
     });
   },
 
   list: function (collection) {
-    app.vent.trigger('plugins:list', {
+    app.vent.trigger('app:plugins:list', {
       collection: collection
     });
   }
@@ -3566,11 +3559,11 @@ app.module('pocket', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('plugins', function (name, action) {
+    app.vent.on('app:plugins', function (name, action) {
       self._controller.plugins(name, action);
     });
 
-    app.vent.on('dashboard', function () {
+    app.vent.on('app:dashboard', function () {
       self._controller.dashboard();
     });
 
@@ -3795,18 +3788,15 @@ app.module('pocket.layout', function () {
   'use strict';
 
   this.addInitializer(function () {
-    this._controller = new Controller();
-  });
-
-  this.on('before:start', function () {
-
     var self = this;
 
-    this.listenTo(app.vent, 'app:layout:login', function () {
+    this._controller = new Controller();
+
+    app.vent.on('app:layout:login', function () {
       self._controller.showLoginLayout(_dereq_('./templates/login.hbs'));
     });
 
-    this.listenTo(app.vent, 'app:layout:app', function () {
+    app.vent.on('app:layout:app', function () {
       self._controller.showAppLayout(_dereq_('./templates/index.hbs'));
     });
 
@@ -3959,7 +3949,7 @@ app.module('pocket.info', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('info:show', function (options) {
+    app.vent.on('app:info:show', function (options) {
       self._controller.show(options);
     });
 
@@ -4089,8 +4079,6 @@ var View = Marionette.ItemView.extend({
     Backbone.history.navigate('plugins', {
       trigger: true
     });
-
-    app.vent.trigger('app:start');
   },
 
   modelEvents: {
@@ -4170,7 +4158,7 @@ app.module('pocket.logo', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('logo:show', function (options) {
+    app.vent.on('app:logo:show', function (options) {
       self._controller.show(options);
     });
 
@@ -4250,7 +4238,7 @@ app.module('pocket.navigation', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('nav:show', function (options) {
+    app.vent.on('app:nav:show', function (options) {
       self._controller.show(options);
     });
 
@@ -4368,15 +4356,15 @@ app.module('pocket.plugins', function () {
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('plugins:list', function (options) {
+    app.vent.on('app:plugins:list', function (options) {
       self._controller.list(options);
     });
 
-    app.vent.on('plugins:show', function (options) {
+    app.vent.on('app:plugins:show', function (options) {
       self._controller.show(options);
     });
 
-    app.vent.on('plugins:edit', function (options) {
+    app.vent.on('app:plugins:edit', function (options) {
       self._controller.edit(options);
     });
 
@@ -4768,7 +4756,6 @@ var Router = BaseRouter.extend({
 
   routes: {
     'logout'                : 'logout',
-    ''                      : 'plugins',
     'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
   },
@@ -4778,9 +4765,9 @@ var Router = BaseRouter.extend({
       var action = filter.split('/')[2] || '';
       var name = filter.split('/')[1] || filter;
 
-      app.vent.trigger('plugins', name, action);
+      app.vent.trigger('app:plugins', name, action);
     } else {
-      app.vent.trigger('plugins');
+      app.vent.trigger('app:plugins');
     }
 
   },
