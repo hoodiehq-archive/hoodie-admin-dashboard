@@ -12,6 +12,7 @@ app.module('pocket.info', function () {
   this.on('before:start', function () {
     var self = this;
 
+
     app.vent.on('app:info:show', function (options) {
       self._controller.show(options);
     });

@@ -26,6 +26,11 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
+    this.showView(view);
+
+  },
+
+  showView: function (view) {
     app.rm.get('sidebar_nav').show(view);
   }
 
