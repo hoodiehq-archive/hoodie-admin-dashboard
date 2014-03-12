@@ -3575,7 +3575,7 @@ app.module('pocket', function () {
     });
 
     app.vent.on('app:user:logout', function () {
-      app.hoodieAdmin.account.signOut();
+      app.hoodieAdmin.signOut();
       Backbone.history.navigate('', {
         trigger: true
       });
@@ -3624,7 +3624,9 @@ module.exports = Model;
 
 },{"../../../helpers/mvc/model":82,"../../../helpers/namespace":84}],45:[function(_dereq_,module,exports){
 var Backbone = _dereq_('backbone');
-var Hoodieadmin = _dereq_('hoodie.admin');
+var HoodieAdmin = _dereq_('hoodie.admin');
+
+var admin = new HoodieAdmin();
 
 var Model = Backbone.Model.extend({
 
@@ -3632,28 +3634,20 @@ var Model = Backbone.Model.extend({
     password: ''
   },
 
-  initialize: function () {
-    this.admin = new Hoodieadmin();
-  },
-
   authenticate: function () {
-    return this.admin.account.authenticate();
-  },
-
-  hasValidSession: function () {
-    return this.admin.account.hasValidSession();
+    return admin.account.authenticate();
   },
 
   hasInvalidSession: function () {
-    return this.admin.account.hasInvalidSession();
+    return admin.account.hasInvalidSession();
   },
 
   signIn: function (password) {
-    return this.admin.account.signIn(password);
+    return admin.account.signIn(password);
   },
 
   signOut: function () {
-    return this.admin.account.signOut();
+    return admin.account.signOut();
   },
 
   validation: {
@@ -3783,7 +3777,6 @@ var Controller = Marionette.Controller.extend({
     });
 
     _dereq_('../../../ui/login/index');
-
   }
 
 });
@@ -4564,24 +4557,9 @@ _dereq_('barf');
 
 var BaseRouter = Backbone.Router.extend({
 
-  constructor: function (options) {
-    Backbone.Router.prototype.constructor.call(this, options);
-
-    this.history = [];
-    this.avoidRoute = ['login', 'logout'];
-  },
-
-  storeRoute: function () {
-    this.history.push(Backbone.history.fragment.split('/')[0]);
-  },
-
-  getPreviousRoute: function () {
-    return this.history[this.history.length - 2];
-  },
-
   before: {
-    '*plugins(/:filter)': function (fragment, args, next) {
-      app.hoodieAdmin.account.authenticate()
+    '*any': function (fragment, args, next) {
+      app.hoodieAdmin.authenticate()
       .done(function () {
         app.vent.trigger('app:layout:app');
         next();
@@ -4619,7 +4597,7 @@ app.reqres.setHandler('config', function () {
 
 app.on('initialize:before', function (options) {
 
-  app.hoodieAdmin = new AdminUser().admin;
+  app.hoodieAdmin = new AdminUser();
 
   // create router instance
   app.router = new Router();

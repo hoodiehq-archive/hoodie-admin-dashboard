@@ -18,7 +18,7 @@ app.reqres.setHandler('config', function () {
 
 app.on('initialize:before', function (options) {
 
-  app.hoodieAdmin = new AdminUser().admin;
+  app.hoodieAdmin = new AdminUser();
 
   // create router instance
   app.router = new Router();

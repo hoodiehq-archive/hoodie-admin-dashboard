@@ -25,7 +25,7 @@ app.module('pocket', function () {
     });
 
     app.vent.on('app:user:logout', function () {
-      app.hoodieAdmin.account.signOut();
+      app.hoodieAdmin.signOut();
       Backbone.history.navigate('', {
         trigger: true
       });

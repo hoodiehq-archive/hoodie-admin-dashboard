@@ -1,5 +1,7 @@
 var Backbone = require('backbone');
-var Hoodieadmin = require('hoodie.admin');
+var HoodieAdmin = require('hoodie.admin');
+
+var admin = new HoodieAdmin();
 
 var Model = Backbone.Model.extend({
 
@@ -7,28 +9,20 @@ var Model = Backbone.Model.extend({
     password: ''
   },
 
-  initialize: function () {
-    this.admin = new Hoodieadmin();
-  },
-
   authenticate: function () {
-    return this.admin.account.authenticate();
-  },
-
-  hasValidSession: function () {
-    return this.admin.account.hasValidSession();
+    return admin.account.authenticate();
   },
 
   hasInvalidSession: function () {
-    return this.admin.account.hasInvalidSession();
+    return admin.account.hasInvalidSession();
   },
 
   signIn: function (password) {
-    return this.admin.account.signIn(password);
+    return admin.account.signIn(password);
   },
 
   signOut: function () {
-    return this.admin.account.signOut();
+    return admin.account.signOut();
   },
 
   validation: {
