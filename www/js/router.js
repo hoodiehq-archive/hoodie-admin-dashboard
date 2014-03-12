@@ -6,6 +6,7 @@ var Router = BaseRouter.extend({
 
   routes: {
     'logout'                : 'logout',
+    ''                      : 'dashboard',
     'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
   },
@@ -20,6 +21,10 @@ var Router = BaseRouter.extend({
       app.vent.trigger('app:plugins');
     }
 
+  },
+
+  dashboard: function () {
+    app.vent.trigger('app:dashboard');
   },
 
   logout: function () {
