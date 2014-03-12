@@ -37,7 +37,8 @@
     "hoodie-plugin-appconfig": "~0.2.0",
     "barf": "~1.0.2",
     "backbone.validation": "~0.7.1",
-    "hoodie-plugin-email": "~0.1.4"
+    "hoodie-plugin-email": "~0.1.4",
+    "moment": "~2.5.1"
   },
   "hoodie": {
     "plugins": [

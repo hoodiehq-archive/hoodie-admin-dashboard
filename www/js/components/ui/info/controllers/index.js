@@ -3,22 +3,20 @@
 var app = require('../../../../helpers/namespace');
 var Marionette = require('backbone.marionette');
 var View = require('../views/index');
+var Model = require('../models/time');
 
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
-
-    this.options.model = new Backbone.Model({
-      name: options.app.name
-    });
+    this.model = new Model();
 
     this.show(this.options);
   },
 
-  show: function (opts) {
+  show: function () {
     var view = new View({
-      model: opts.model
+      model: this.model
     });
 
     app.rm.get('content_header').show(view);
