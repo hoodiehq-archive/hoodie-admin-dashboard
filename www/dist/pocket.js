@@ -6086,6 +6086,8 @@ var Controller = Marionette.Controller.extend({
       el: 'section',
     });
 
+    console.info('show:content');
+
     this.container.show(new Layout);
   }
 });
@@ -6161,10 +6163,12 @@ var Controller = Marionette.Controller.extend({
   showAppLayout: function (tmpl) {
     var Layout = this.createLayout(tmpl);
 
+    this.container.reset();
     this.container.show(new Layout);
 
     _dereq_('../../sidebar/index');
     _dereq_('../../content/index');
+
     _dereq_('../../../ui/logo/index');
     _dereq_('../../../ui/navigation/index');
     _dereq_('../../../ui/info/index');
@@ -6251,6 +6255,9 @@ var Controller = Marionette.Controller.extend({
   initialize: function (options) {
     this.options = options || {};
 
+    console.info('show:sidebar');
+
+
     // create layout object passing in a template string
     var Layout = Marionette.Layout.extend({
       template:  function () {
@@ -6288,7 +6295,6 @@ app.module('pocket.sidebar', function () {
   });
 
   this.on('before:start', function () {
-
     app.rm.addRegions({
       sidebar: 'aside',
       sidebar_logo: 'aside header',
@@ -6357,6 +6363,7 @@ app.module('pocket.info', function () {
 
   this.on('before:start', function () {
     var self = this;
+
 
     app.vent.on('app:info:show', function (options) {
       self._controller.show(options);
@@ -6653,6 +6660,11 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
+    this.showView(view);
+
+  },
+
+  showView: function (view) {
     app.rm.get('sidebar_nav').show(view);
   }
 
@@ -6673,6 +6685,7 @@ app.module('pocket.navigation', function () {
   });
 
   this.on('before:start', function () {
+
     app.vent.on('app:nav:show', function (options) {
       this._controller.show(options);
     }, this);
@@ -6749,7 +6762,7 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
-    app.rm.get('content_main').show(view);
+    this.showView(view);
   },
 
   show: function (opts) {
@@ -6759,7 +6772,7 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
-    app.rm.get('content_main').show(view);
+    this.showView(view);
   },
 
   edit: function (opts) {
@@ -6769,6 +6782,10 @@ var Controller = Marionette.Controller.extend({
       ns: opts.ns
     });
 
+    this.showView(view);
+  },
+
+  showView: function (view) {
     app.rm.get('content_main').show(view);
   }
 
@@ -6979,6 +6996,39 @@ module.exports = SuperModel;
 _dereq_('barf');
 
 var BaseRouter = Backbone.Router.extend({
+
+  constructor: function (options) {
+    Backbone.Router.prototype.constructor.call(this, options);
+
+    this.history = [];
+
+    this.on('all', function (route, fragment) {
+      var r = route.split(':');
+
+      this.storeRoute();
+
+      if (fragment) {
+        r.push(fragment);
+      }
+
+      r.shift();
+
+      this.current = r;
+      this.prev = this.getPreviousRoute();
+
+      app.vent.trigger('route', this.prev, this.current);
+
+    });
+
+  },
+
+  storeRoute: function () {
+    return this.history.push(Backbone.history.fragment);
+  },
+
+  getPreviousRoute: function () {
+    return this.history[this.history.length - 2];
+  },
 
   before: {
     '*any': function (fragment, args, next) {
