@@ -6,7 +6,7 @@ var $ = Marionette.$;
 var PluginsCollection = require('../collections/plugins');
 var PluginModel = require('../models/plugin');
 
-var controller = Marionette.Controller.extend({
+var PluginsController = Marionette.Controller.extend({
 
   initialize: function (options) {
     var self = this;
@@ -65,5 +65,5 @@ var controller = Marionette.Controller.extend({
 
 });
 
-module.exports = controller;
+module.exports = PluginsController;
 
