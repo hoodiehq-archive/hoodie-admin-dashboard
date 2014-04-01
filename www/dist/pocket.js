@@ -3286,6 +3286,7 @@ var hoodieConnection = _dereq_('hoodie/src/hoodie/connection');
 var hoodieAdminAccount = _dereq_('./hoodie.admin/account');
 var hoodieAdminPlugin = _dereq_('./hoodie.admin/plugin');
 var hoodieAdminUser = _dereq_('./hoodie.admin/user');
+var hoodieAdminId = _dereq_('./hoodie.admin/id');
 
 var hoodieEvents = _dereq_('hoodie/src/lib/events');
 
@@ -3352,6 +3353,9 @@ function HoodieAdmin(baseUrl) {
   // * hoodieAdmin.user
   hoodieAdmin.extend(hoodieAdminUser);
 
+  // * hoodieAdmin.id
+  hoodieAdmin.extend(hoodieAdminId);
+
   //
   // loading user extensions
   //
@@ -3383,7 +3387,7 @@ function applyExtensions(hoodie) {
 
 module.exports = HoodieAdmin;
 
-},{"./hoodie.admin/account":38,"./hoodie.admin/plugin":39,"./hoodie.admin/user":40,"hoodie/src/hoodie/connection":19,"hoodie/src/hoodie/open":20,"hoodie/src/hoodie/request":21,"hoodie/src/lib/events":25}],38:[function(_dereq_,module,exports){
+},{"./hoodie.admin/account":38,"./hoodie.admin/id":39,"./hoodie.admin/plugin":40,"./hoodie.admin/user":41,"hoodie/src/hoodie/connection":19,"hoodie/src/hoodie/open":20,"hoodie/src/hoodie/request":21,"hoodie/src/lib/events":25}],38:[function(_dereq_,module,exports){
 // HoodieAdmin Account
 // ===================
 
@@ -3489,6 +3493,16 @@ module.exports = hoodieAccount;
 
 
 },{"hoodie/src/lib/events":25,"hoodie/src/utils/promise/reject":33,"hoodie/src/utils/promise/resolve_with":36}],39:[function(_dereq_,module,exports){
+function hoodieAdminId(hoodieAdmin) {
+  hoodieAdmin.id = function id() {
+    return 'admin';
+  };
+}
+
+module.exports = hoodieAdminId;
+
+
+},{}],40:[function(_dereq_,module,exports){
 function hoodieAdminPlugin(hoodieAdmin) {
   hoodieAdmin.plugins = hoodieAdmin.open('plugins');
   hoodieAdmin.plugins.connect();
@@ -3497,7 +3511,7 @@ function hoodieAdminPlugin(hoodieAdmin) {
 module.exports = hoodieAdminPlugin;
 
 
-},{}],40:[function(_dereq_,module,exports){
+},{}],41:[function(_dereq_,module,exports){
 function hoodieAdminUser(hoodieAdmin) {
   hoodieAdmin.user = hoodieAdmin.open('_users', {
     prefix: 'org.couchdb.user:'
@@ -3507,7 +3521,7 @@ function hoodieAdminUser(hoodieAdmin) {
 module.exports = hoodieAdminUser;
 
 
-},{}],41:[function(_dereq_,module,exports){
+},{}],42:[function(_dereq_,module,exports){
 //! moment.js
 //! version : 2.5.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -5909,7 +5923,7 @@ module.exports = hoodieAdminUser;
     }
 }).call(this);
 
-},{}],42:[function(_dereq_,module,exports){
+},{}],43:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -5925,7 +5939,7 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":85,"../../../helpers/namespace":88,"../models/plugin":47}],43:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":85,"../../../helpers/namespace":88,"../models/plugin":48}],44:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -5965,7 +5979,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../collections/plugins":42,"../models/plugin":47,"backbone.marionette":"gYtR1c"}],44:[function(_dereq_,module,exports){
+},{"../collections/plugins":43,"../models/plugin":48,"backbone.marionette":"gYtR1c"}],45:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -5997,7 +6011,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"./dashboard":43,"./plugins":45,"backbone.marionette":"gYtR1c"}],45:[function(_dereq_,module,exports){
+},{"./dashboard":44,"./plugins":46,"backbone.marionette":"gYtR1c"}],46:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6068,7 +6082,7 @@ var PluginsController = Marionette.Controller.extend({
 module.exports = PluginsController;
 
 
-},{"../../ui/plugins/index":77,"../collections/plugins":42,"../models/plugin":47,"backbone.marionette":"gYtR1c"}],46:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":77,"../collections/plugins":43,"../models/plugin":48,"backbone.marionette":"gYtR1c"}],47:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -6108,7 +6122,7 @@ app.module('pocket', function () {
 module.exports = app;
 
 
-},{"../../helpers/namespace":88,"../structural/layout/index":53,"./controllers/index":44}],47:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":88,"../structural/layout/index":54,"./controllers/index":45}],48:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -6145,7 +6159,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":86,"../../../helpers/namespace":88}],48:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":86,"../../../helpers/namespace":88}],49:[function(_dereq_,module,exports){
 var Backbone = _dereq_('backbone');
 var HoodieAdmin = _dereq_('hoodie.admin');
 
@@ -6184,7 +6198,7 @@ var Model = Backbone.Model.extend({
 
 module.exports = Model;
 
-},{"backbone":"fZAJ/5","hoodie.admin":37}],49:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","hoodie.admin":37}],50:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6201,7 +6215,7 @@ var Controller = Marionette.Controller.extend({
     });
 
     this.container = new Marionette.Region({
-      el: 'section',
+      el: '[data-component=content]',
     });
 
     this.container.show(new Layout);
@@ -6210,7 +6224,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"gYtR1c"}],50:[function(_dereq_,module,exports){
+},{"backbone.marionette":"gYtR1c"}],51:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -6231,10 +6245,10 @@ app.module('pocket.content', function () {
 
   this.on('before:start', function () {
     app.rm.addRegions({
-      content: 'section',
-      content_header: 'section header',
-      content_main: 'section section',
-      content_footer: 'section footer'
+      content: '[data-component=content]',
+      contentHeader: '[data-component=contentHeader]',
+      contentMain: '[data-component=contentMain]',
+      contentFooter: '[data-component=contentFooter]'
     });
   });
 
@@ -6243,7 +6257,7 @@ app.module('pocket.content', function () {
 module.exports = app;
 
 
-},{"../../../helpers/namespace":88,"./controllers/index":49,"./templates/index.hbs":51}],51:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":50,"./templates/index.hbs":52}],52:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6252,91 +6266,84 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<header></header>\n<section class=\"pluginView\"></section>\n<footer></footer>\n";
+  return "<header data-component=contentHeader></header>\n<section  data-component=contentMain class=\"pluginView\"></section>\n<footer data-component=contentFooter></footer>\n";
   });
 
-},{"hbsfy/runtime":17}],52:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],53:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
-    this.options = options || {};
+    options = options || {};
+    this.options = options;
+
+    // create layout object passing in a template string
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return options.template;
+      }
+    });
 
     this.container = new Marionette.Region({
       el: '#content',
     });
-  },
-
-  createLayout: function (tmpl) {
-    return Marionette.Layout.extend({
-      template:  function () {
-        return tmpl;
-      }
-    });
-  },
-
-  showAppLayout: function (tmpl) {
-    var Layout = this.createLayout(tmpl);
 
     this.container.show(new Layout);
 
+    // login
+    app.rm.addRegions({ login: '[data-component=login]' });
+    _dereq_('../../../ui/login/index');
+
+    // main app
     _dereq_('../../sidebar/index');
     _dereq_('../../content/index');
     _dereq_('../../../ui/logo/index');
     _dereq_('../../../ui/navigation/index');
     _dereq_('../../../ui/info/index');
-
   },
 
-  showLoginLayout: function (tmpl) {
-    var Layout = this.createLayout(tmpl);
+  showLogin: function () {
+    this.container.$el.attr('data-state', 'signed-out');
+  },
 
-    this.container.show(new Layout);
-
-    app.rm.addRegions({
-      login: 'section.login'
-    });
-
-    _dereq_('../../../ui/login/index');
-  }
+  showApp: function () {
+    this.container.$el.attr('data-state', 'signed-in');
+  },
 
 });
 
 module.exports = Controller;
 
 
-},{"../../../ui/info/index":60,"../../../ui/login/index":65,"../../../ui/logo/index":69,"../../../ui/navigation/index":73,"../../content/index":50,"../../sidebar/index":57,"backbone.marionette":"gYtR1c"}],53:[function(_dereq_,module,exports){
+},{"../../../ui/info/index":60,"../../../ui/login/index":65,"../../../ui/logo/index":69,"../../../ui/navigation/index":73,"../../content/index":51,"../../sidebar/index":57,"backbone.marionette":"gYtR1c"}],54:[function(_dereq_,module,exports){
 /*jshint -W079 */
-var Controller = _dereq_('./controllers/index');
-
+var LayoutController = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
 
 app.module('pocket.layout', function () {
-
   'use strict';
 
-  this.addInitializer(function () {
-    var self = this;
+  this.addInitializer(function (options) {
+    var layoutController;
 
-    this._controller = new Controller();
+    options.app.components.layout.template = _dereq_('./templates/index.hbs');
+    layoutController = new LayoutController(options.app.components.layout);
 
     app.vent.on('app:layout:login', function () {
-      self._controller.showLoginLayout(_dereq_('./templates/login.hbs'));
+      layoutController.showLogin();
     });
 
     app.vent.on('app:layout:app', function () {
-      self._controller.showAppLayout(_dereq_('./templates/index.hbs'));
+      layoutController.showApp();
     });
-
   });
 
 });
-
 module.exports = app;
 
 
-},{"../../../helpers/namespace":88,"./controllers/index":52,"./templates/index.hbs":54,"./templates/login.hbs":55}],54:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":53,"./templates/index.hbs":55}],55:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6345,19 +6352,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
-  });
-
-},{"hbsfy/runtime":17}],55:[function(_dereq_,module,exports){
-// hbsfy compiled Handlebars template
-var Handlebars = _dereq_('hbsfy/runtime');
-module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
-
-
-  return "<section class=\"login\"></section>\n\n";
+  return "<section data-component=\"login\" class=\"login\"></section>\n<aside data-component=\"sidebar\" class=\"sidebar\"> </aside>\n<section data-component=\"content\" class=\"content\"> </section>\n";
   });
 
 },{"hbsfy/runtime":17}],56:[function(_dereq_,module,exports){
@@ -6377,7 +6372,7 @@ var Controller = Marionette.Controller.extend({
     });
 
     this.container = new Marionette.Region({
-      el: 'aside',
+      el: '[data-component=sidebar]',
     });
 
     this.container.show(new Layout);
@@ -6408,10 +6403,10 @@ app.module('pocket.sidebar', function () {
   this.on('before:start', function () {
 
     app.rm.addRegions({
-      sidebar: 'aside',
-      sidebar_logo: 'aside header',
-      sidebar_nav: 'aside nav',
-      sidebar_footer: 'aside footer',
+      sidebar: '[data-component=sidebar]',
+      sidebarLogo: '[data-component=sidebarLogo]',
+      sidebarNav: '[data-component=sidebarNav]',
+      sidebarFooter: '[data-component=sidebarFooter]',
     });
 
   });
@@ -6429,7 +6424,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<header></header>\n<nav></nav>\n<footer></footer>\n<ul class=\"helpers\">\n  <li>Pocket guides</li>\n  <li>Hoodie</li>\n</ul>\n";
+  return "<header data-component=sidebarLogo></header>\n<nav data-component=sidebarNav></nav>\n<footer data-component=sidebarFooter></footer>\n<ul class=\"helpers\">\n  <li>Pocket guides</li>\n  <li>Hoodie</li>\n</ul>\n";
   });
 
 },{"hbsfy/runtime":17}],59:[function(_dereq_,module,exports){
@@ -6454,7 +6449,7 @@ var Controller = Marionette.Controller.extend({
       model: this.model
     });
 
-    app.rm.get('content_header').show(view);
+    app.rm.get('contentHeader').show(view);
   }
 
 });
@@ -6508,7 +6503,7 @@ var Model = Backbone.Model.extend({
 module.exports = Model;
 
 
-},{"backbone":"fZAJ/5","moment":41}],62:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","moment":42}],62:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6573,7 +6568,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"../../../pocket/models/user":48,"../views/index":67,"backbone.marionette":"gYtR1c"}],65:[function(_dereq_,module,exports){
+},{"../../../pocket/models/user":49,"../views/index":67,"backbone.marionette":"gYtR1c"}],65:[function(_dereq_,module,exports){
 'use strict';
 
 var Controller = _dereq_('./controllers/index');
@@ -6692,7 +6687,7 @@ var Controller = Marionette.Controller.extend({
       model: opts.model
     });
 
-    app.rm.get('sidebar_logo').show(view);
+    app.rm.get('sidebarLogo').show(view);
   }
 
 });
@@ -6777,7 +6772,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   showView: function (view) {
-    app.rm.get('sidebar_nav').show(view);
+    app.rm.get('sidebarNav').show(view);
   }
 
 });
@@ -6898,7 +6893,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   showView: function (view) {
-    app.rm.get('content_main').show(view);
+    app.rm.get('contentMain').show(view);
   }
 
 });
@@ -7215,7 +7210,7 @@ module.exports = app;
 
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../components/pocket/models/user":48,"../models/config":93,"../router":94,"backbone":"fZAJ/5","backbone.marionette":"gYtR1c"}],89:[function(_dereq_,module,exports){
+},{"../components/pocket/models/user":49,"../models/config":93,"../router":94,"backbone":"fZAJ/5","backbone.marionette":"gYtR1c"}],89:[function(_dereq_,module,exports){
 (function (global){
 var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
@@ -7307,7 +7302,7 @@ app.start(new Config().toJSON());
 module.exports = app;
 
 
-},{"./components/pocket/index":46,"./helpers/handlebars":84,"./helpers/namespace":88,"./helpers/storage/store":89,"./models/config":93}],93:[function(_dereq_,module,exports){
+},{"./components/pocket/index":47,"./helpers/handlebars":84,"./helpers/namespace":88,"./helpers/storage/store":89,"./models/config":93}],93:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({

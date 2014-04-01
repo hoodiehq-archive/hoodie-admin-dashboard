@@ -14,7 +14,7 @@ var Controller = Marionette.Controller.extend({
     });
 
     this.container = new Marionette.Region({
-      el: 'aside',
+      el: '[data-component=sidebar]',
     });
 
     this.container.show(new Layout);

@@ -19,10 +19,10 @@ app.module('pocket.sidebar', function () {
   this.on('before:start', function () {
 
     app.rm.addRegions({
-      sidebar: 'aside',
-      sidebar_logo: 'aside header',
-      sidebar_nav: 'aside nav',
-      sidebar_footer: 'aside footer',
+      sidebar: '[data-component=sidebar]',
+      sidebarLogo: '[data-component=sidebarLogo]',
+      sidebarNav: '[data-component=sidebarNav]',
+      sidebarFooter: '[data-component=sidebarFooter]',
     });
 
   });

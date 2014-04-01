@@ -2,134 +2,160 @@
   @desc:    defines all colours and shemes
   @usage:   do not duplicate colours, concat class
 */
-
 /* ----- ### BACKGROUNDS ----- */
 /* light creamwhite */
+/* line 8, ../scss/colour.scss */
 body, .dashboard, .pluginList .active a {
   background: #f1f1eb;
 }
-    .pluginList a:hover {
-      background-color: #585858;
-    }
+
+/* line 11, ../scss/colour.scss */
+.pluginList a:hover {
+  background-color: #585858;
+}
 
 /* lightgray */
-  .sidebar {
-    background-color: #333;
-  }
+/* line 16, ../scss/colour.scss */
+.sidebar {
+  background-color: #333;
+}
 
 /* light gray */
+/* line 21, ../scss/colour.scss */
 .content {
   background-color: #EEE;
 }
 
 /* white */
-    .content header,   .item .itemContent, .item .handle {
-      background: #FFF;
-    }
-
- 
+/* line 26, ../scss/colour.scss */
+.content header, .item .itemContent, .item .handle {
+  background: #FFF;
+}
 
 /* ----- ### Font colours ----- */
 /* light cold white */
+/* line 34, ../scss/colour.scss */
 a {
   color: #F1F1F1;
 }
 
 /* light cold gray */
-  .sidebar {
-    color: #FDFBFA;
-  }
+/* line 39, ../scss/colour.scss */
+.sidebar {
+  color: #FDFBFA;
+}
 
 /* dark gray */
+/* line 44, ../scss/colour.scss */
 .pluginList .active a {
   color: #222;
 }
 
 /* gray */
+/* line 49, ../scss/colour.scss */
 .item {
   color: #888;
 }
 
 /* lighter gray */
-  .content header {
-      color: #BFBFBF;
-    }
+/* line 54, ../scss/colour.scss */
+.content header {
+  color: #BFBFBF;
+}
 
 /* darker gray */
-  .item .handle {
-    color: rgba(10, 10, 10, 0.3);
-  }
+/* line 59, ../scss/colour.scss */
+.item .handle {
+  color: rgba(10, 10, 10, 0.3);
+}
 
 /* ----- ### border colours ----- */
 /* light cold white*/
-    .sidebar header, .pluginList a {
-      border-bottom-color: #585858 !important;
-    }
-
-
+/* line 65, ../scss/colour.scss */
+.sidebar header, .pluginList a {
+  border-bottom-color: #585858 !important;
+}
 
 /* #### themes for tiles on dashboard ----- */
 /* blue */
+/* line 73, ../scss/colour.scss */
 .b {
   background-color: #79BDE0 !important;
-  border-color: #D5D6F2 !important; 
-  color: white !important; 
+  border-color: #D5D6F2 !important;
+  color: white !important;
 }
-  .b .handle {
-    background-color: #6CB0D5 !important;
-    color: white;
-  }
+
+/* line 78, ../scss/colour.scss */
+.b .handle {
+  background-color: #6CB0D5 !important;
+  color: white;
+}
 
 /* green */
+/* line 84, ../scss/colour.scss */
 .g {
   background-color: #4BBD78 !important;
-  color: white !important; 
+  color: white !important;
 }
-  .g .handle {
-    background-color: #38AB68 !important;
-    color: white;
-  }
+
+/* line 88, ../scss/colour.scss */
+.g .handle {
+  background-color: #38AB68 !important;
+  color: white;
+}
 
 /* red */
+/* line 94, ../scss/colour.scss */
 .r {
   background-color: #EB7D7C !important;
-  border-color: #D5D6F2 !important; 
-  color: white !important; 
+  border-color: #D5D6F2 !important;
+  color: white !important;
 }
-  .r .handle {
-    background-color: #D96F6F !important;
-    color: white;
-  }
+
+/* line 99, ../scss/colour.scss */
+.r .handle {
+  background-color: #D96F6F !important;
+  color: white;
+}
 
 /* orange */
+/* line 105, ../scss/colour.scss */
 .o {
   background-color: #F1A655 !important;
-  border-color: #D5D6F2 !important; 
-  color: white !important; 
+  border-color: #D5D6F2 !important;
+  color: white !important;
 }
-  .o .handle {
-    background-color: #D58641 !important;
-    color: white;
-  }
+
+/* line 110, ../scss/colour.scss */
+.o .handle {
+  background-color: #D58641 !important;
+  color: white;
+}
 
 /* dark gray */
+/* line 116, ../scss/colour.scss */
 .dg {
   background-color: #59686B !important;
-  border-color: #D5D6F2 !important; 
-  color: white !important; 
+  border-color: #D5D6F2 !important;
+  color: white !important;
 }
-  .dg .handle {
-    background-color: #556063 !important;
-    color: white;
-  }
+
+/* line 121, ../scss/colour.scss */
+.dg .handle {
+  background-color: #556063 !important;
+  color: white;
+}
 
 /* light gray */
+/* line 127, ../scss/colour.scss */
 .lg {
   background-color: #68777A !important;
-  border-color: #D5D6F2 !important; 
-  color: white !important; 
+  border-color: #D5D6F2 !important;
+  color: white !important;
 }
-  .lg .handle {
-    background-color: #626E70 !important;
-    color: white;
-  }
+
+/* line 132, ../scss/colour.scss */
+.lg .handle {
+  background-color: #626E70 !important;
+  color: white;
+}

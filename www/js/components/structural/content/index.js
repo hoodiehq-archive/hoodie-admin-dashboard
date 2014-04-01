@@ -18,10 +18,10 @@ app.module('pocket.content', function () {
 
   this.on('before:start', function () {
     app.rm.addRegions({
-      content: 'section',
-      content_header: 'section header',
-      content_main: 'section section',
-      content_footer: 'section footer'
+      content: '[data-component=content]',
+      contentHeader: '[data-component=contentHeader]',
+      contentMain: '[data-component=contentMain]',
+      contentFooter: '[data-component=contentFooter]'
     });
   });
 

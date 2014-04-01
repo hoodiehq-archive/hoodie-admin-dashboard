@@ -85,7 +85,8 @@ module.exports = function (grunt) {
       dev: {
         options: {
           sassDir: 'www/scss',
-          cssDir: 'www/css'
+          cssDir: 'www/css',
+          outputStyle: 'expanded'
         }
       }
 
@@ -210,13 +211,13 @@ module.exports = function (grunt) {
 
   // Default task.
   grunt.registerTask('default', ['jshint']);
-  grunt.registerTask('build', ['jshint', 'compass', 'browserify', 'uglify']);
+  grunt.registerTask('build', ['jshint', 'compass:production', 'browserify', 'uglify']);
 
   grunt.registerTask('serve', [
     'hoodie',
     'connect:server',
     'configureProxies:server',
-    'compass',
+    'compass:dev',
     'browserify',
     'watch'
   ]);

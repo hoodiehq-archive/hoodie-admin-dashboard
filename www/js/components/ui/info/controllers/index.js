@@ -19,7 +19,7 @@ var Controller = Marionette.Controller.extend({
       model: this.model
     });
 
-    app.rm.get('content_header').show(view);
+    app.rm.get('contentHeader').show(view);
   }
 
 });

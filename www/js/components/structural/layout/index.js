@@ -1,28 +1,25 @@
 /*jshint -W079 */
-var Controller = require('./controllers/index');
-
+var LayoutController = require('./controllers/index');
 var app = require('../../../helpers/namespace');
 
 app.module('pocket.layout', function () {
-
   'use strict';
 
-  this.addInitializer(function () {
-    var self = this;
+  this.addInitializer(function (options) {
+    var layoutController;
 
-    this._controller = new Controller();
+    options.app.components.layout.template = require('./templates/index.hbs');
+    layoutController = new LayoutController(options.app.components.layout);
 
     app.vent.on('app:layout:login', function () {
-      self._controller.showLoginLayout(require('./templates/login.hbs'));
+      layoutController.showLogin();
     });
 
     app.vent.on('app:layout:app', function () {
-      self._controller.showAppLayout(require('./templates/index.hbs'));
+      layoutController.showApp();
     });
-
   });
 
 });
-
 module.exports = app;
 

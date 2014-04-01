@@ -43,7 +43,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   showView: function (view) {
-    app.rm.get('content_main').show(view);
+    app.rm.get('contentMain').show(view);
   }
 
 });

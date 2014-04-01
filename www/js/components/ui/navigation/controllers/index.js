@@ -31,7 +31,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   showView: function (view) {
-    app.rm.get('sidebar_nav').show(view);
+    app.rm.get('sidebarNav').show(view);
   }
 
 });

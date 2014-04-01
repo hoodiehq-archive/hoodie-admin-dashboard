@@ -14,7 +14,7 @@ var Controller = Marionette.Controller.extend({
     });
 
     this.container = new Marionette.Region({
-      el: 'section',
+      el: '[data-component=content]',
     });
 
     this.container.show(new Layout);

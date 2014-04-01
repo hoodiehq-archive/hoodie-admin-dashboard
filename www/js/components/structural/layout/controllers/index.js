@@ -3,45 +3,41 @@ var Marionette = require('backbone.marionette');
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
-    this.options = options || {};
+    options = options || {};
+    this.options = options;
+
+    // create layout object passing in a template string
+    var Layout = Marionette.Layout.extend({
+      template:  function () {
+        return options.template;
+      }
+    });
 
     this.container = new Marionette.Region({
       el: '#content',
     });
-  },
-
-  createLayout: function (tmpl) {
-    return Marionette.Layout.extend({
-      template:  function () {
-        return tmpl;
-      }
-    });
-  },
-
-  showAppLayout: function (tmpl) {
-    var Layout = this.createLayout(tmpl);
 
     this.container.show(new Layout);
 
+    // login
+    app.rm.addRegions({ login: '[data-component=login]' });
+    require('../../../ui/login/index');
+
+    // main app
     require('../../sidebar/index');
     require('../../content/index');
     require('../../../ui/logo/index');
     require('../../../ui/navigation/index');
     require('../../../ui/info/index');
-
   },
 
-  showLoginLayout: function (tmpl) {
-    var Layout = this.createLayout(tmpl);
+  showLogin: function () {
+    this.container.$el.attr('data-state', 'signed-out');
+  },
 
-    this.container.show(new Layout);
-
-    app.rm.addRegions({
-      login: 'section.login'
-    });
-
-    require('../../../ui/login/index');
-  }
+  showApp: function () {
+    this.container.$el.attr('data-state', 'signed-in');
+  },
 
 });
 

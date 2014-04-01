@@ -1,25 +1,29 @@
 /**
   @desc:    defines all grids, which are aviable
 */
-
-.w1{
-	width: 33%;
+/* line 5, ../scss/grid.scss */
+.w1 {
+  width: 33%;
 }
 
-.w2{
-	width: 65.5%;
+/* line 9, ../scss/grid.scss */
+.w2 {
+  width: 65.5%;
 }
 
-.w3{
-	width: 99%;
+/* line 13, ../scss/grid.scss */
+.w3 {
+  width: 99%;
 }
 
-	.w2 .grid50 {
-		width: 49%;
-		height: 100%;
-	}
+/* line 17, ../scss/grid.scss */
+.w2 .grid50 {
+  width: 49%;
+  height: 100%;
+}
 
-	.w3 .grid30 {
-	      width: 32.5%;
-	      height: 100%;
-	    }
+/* line 22, ../scss/grid.scss */
+.w3 .grid30 {
+  width: 32.5%;
+  height: 100%;
+}
