@@ -26,7 +26,9 @@ var Model = BaseModel.extend({
     pos: '',
     width: '',
     iframeUrl: ''
-  }
+  },
+
+  idAttribute: 'name'
 
 });
 

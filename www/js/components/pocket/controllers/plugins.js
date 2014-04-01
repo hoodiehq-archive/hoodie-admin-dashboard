@@ -3,8 +3,8 @@
 var Marionette = require('backbone.marionette');
 var $ = Marionette.$;
 
-var Collection = require('../collections/plugins');
-var Model = require('../models/plugin');
+var PluginsCollection = require('../collections/plugins');
+var PluginModel = require('../models/plugin');
 
 var controller = Marionette.Controller.extend({
 
@@ -16,8 +16,8 @@ var controller = Marionette.Controller.extend({
 
     this.options = options || {};
 
-    this.model = new Model();
-    this.collection = new Collection();
+    this.model = new PluginModel();
+    this.collection = new PluginsCollection();
 
     $.when(this.collection.fetch()).done(function () {
 

@@ -5915,11 +5915,11 @@ module.exports = hoodieAdminUser;
 var app = _dereq_('../../../helpers/namespace');
 
 var BaseCollection = _dereq_('../../../helpers/mvc/collection');
-var Model = _dereq_('../models/plugin');
+var PluginModel = _dereq_('../models/plugin');
 
 var Collection = BaseCollection.extend({
   url: app.request('config').api.url + '_plugins',
-  model: Model
+  model: PluginModel
 });
 
 module.exports = Collection;
@@ -6003,8 +6003,8 @@ module.exports = Controller;
 var Marionette = _dereq_('backbone.marionette');
 var $ = Marionette.$;
 
-var Collection = _dereq_('../collections/plugins');
-var Model = _dereq_('../models/plugin');
+var PluginsCollection = _dereq_('../collections/plugins');
+var PluginModel = _dereq_('../models/plugin');
 
 var controller = Marionette.Controller.extend({
 
@@ -6016,8 +6016,8 @@ var controller = Marionette.Controller.extend({
 
     this.options = options || {};
 
-    this.model = new Model();
-    this.collection = new Collection();
+    this.model = new PluginModel();
+    this.collection = new PluginsCollection();
 
     $.when(this.collection.fetch()).done(function () {
 
@@ -6137,7 +6137,9 @@ var Model = BaseModel.extend({
     pos: '',
     width: '',
     iframeUrl: ''
-  }
+  },
+
+  idAttribute: 'name'
 
 });
 
@@ -7355,7 +7357,7 @@ var Router = BaseRouter.extend({
 
   routes: {
     'logout'                : 'logout',
-    ''                      : 'dashboard',
+    // ''                      : 'dashboard',
     'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
   },
@@ -7372,9 +7374,9 @@ var Router = BaseRouter.extend({
 
   },
 
-  dashboard: function () {
-    app.vent.trigger('app:dashboard');
-  },
+  // dashboard: function () {
+  //   app.vent.trigger('app:dashboard');
+  // },
 
   logout: function () {
     app.vent.trigger('app:user:logout');
