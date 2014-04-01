@@ -1,15 +1,15 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.app=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"backbone.marionette":[function(_dereq_,module,exports){
-module.exports=_dereq_('Mn2A9x');
+module.exports=_dereq_('gYtR1c');
 },{}],"backbone.syphon":[function(_dereq_,module,exports){
-module.exports=_dereq_('zpJqfl');
+module.exports=_dereq_('QSvLHL');
 },{}],"backbone":[function(_dereq_,module,exports){
-module.exports=_dereq_('atSdsZ');
+module.exports=_dereq_('fZAJ/5');
 },{}],"gridster":[function(_dereq_,module,exports){
-module.exports=_dereq_('OOmgq/');
+module.exports=_dereq_('v3lzmR');
 },{}],"jquery":[function(_dereq_,module,exports){
-module.exports=_dereq_('KvN3hc');
+module.exports=_dereq_('inqvBg');
 },{}],"underscore":[function(_dereq_,module,exports){
-module.exports=_dereq_('Y10LaM');
+module.exports=_dereq_('2Btyq2');
 },{}],7:[function(_dereq_,module,exports){
 // Backbone.Validation v0.7.1
 //
@@ -621,7 +621,7 @@ module.exports=_dereq_('Y10LaM');
   
   return Backbone.Validation;
 }));
-},{"backbone":"atSdsZ","underscore":"Y10LaM"}],8:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","underscore":"2Btyq2"}],8:[function(_dereq_,module,exports){
 'use strict';
 
 var _ = _dereq_('underscore');
@@ -721,7 +721,7 @@ _.extend(Backbone.Router.prototype, {
 
 module.exports = Backbone;
 
-},{"backbone":"atSdsZ","underscore":"Y10LaM"}],9:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","underscore":"2Btyq2"}],9:[function(_dereq_,module,exports){
 
 },{}],10:[function(_dereq_,module,exports){
 "use strict";
@@ -2196,7 +2196,8 @@ function hoodieStoreApi(hoodie, options) {
 module.exports = hoodieStoreApi;
 
 },{"../../utils/promise/defer":30,"../../utils/promise/is_promise":31,"../../utils/promise/reject_with":33,"../../utils/promise/resolve_with":34,"../error/error":21,"../error/object_id":22,"../error/object_type":23,"../events":24,"./scoped":27,"extend":18}],26:[function(_dereq_,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};// Remote
+(function (global){
+// Remote
 // ========
 
 // Connection to a remote Couch Database.
@@ -2962,6 +2963,7 @@ function hoodieRemoteStore(hoodie, options) {
 
 module.exports = hoodieRemoteStore;
 
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/generate_id":28,"../../utils/promise/resolve_with":34,"./api":25,"extend":18}],27:[function(_dereq_,module,exports){
 // scoped Store
 // ============
@@ -3118,7 +3120,9 @@ function hoodiefyRequestErrorName (name) {
 
 module.exports = hoodiefyRequestErrorName;
 },{}],30:[function(_dereq_,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};module.exports = global.jQuery.Deferred;
+(function (global){
+module.exports = global.jQuery.Deferred;
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],31:[function(_dereq_,module,exports){
 // returns true if passed object is a promise (but not a deferred),
 // otherwise false.
@@ -5849,7 +5853,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../collections/plugins":40,"../models/plugin":45,"backbone.marionette":"Mn2A9x"}],42:[function(_dereq_,module,exports){
+},{"../collections/plugins":40,"../models/plugin":45,"backbone.marionette":"gYtR1c"}],42:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -5881,7 +5885,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"./dashboard":41,"./plugins":43,"backbone.marionette":"Mn2A9x"}],43:[function(_dereq_,module,exports){
+},{"./dashboard":41,"./plugins":43,"backbone.marionette":"gYtR1c"}],43:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -5952,7 +5956,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../../ui/plugins/index":75,"../collections/plugins":40,"../models/plugin":45,"backbone.marionette":"Mn2A9x"}],44:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":75,"../collections/plugins":40,"../models/plugin":45,"backbone.marionette":"gYtR1c"}],44:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -6066,7 +6070,7 @@ var Model = Backbone.Model.extend({
 
 module.exports = Model;
 
-},{"backbone":"atSdsZ","hoodie.admin":35}],47:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","hoodie.admin":35}],47:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6086,15 +6090,13 @@ var Controller = Marionette.Controller.extend({
       el: 'section',
     });
 
-    console.info('show:content');
-
     this.container.show(new Layout);
   }
 });
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],48:[function(_dereq_,module,exports){
+},{"backbone.marionette":"gYtR1c"}],48:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -6163,12 +6165,10 @@ var Controller = Marionette.Controller.extend({
   showAppLayout: function (tmpl) {
     var Layout = this.createLayout(tmpl);
 
-    this.container.reset();
     this.container.show(new Layout);
 
     _dereq_('../../sidebar/index');
     _dereq_('../../content/index');
-
     _dereq_('../../../ui/logo/index');
     _dereq_('../../../ui/navigation/index');
     _dereq_('../../../ui/info/index');
@@ -6192,7 +6192,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"../../../ui/info/index":58,"../../../ui/login/index":63,"../../../ui/logo/index":67,"../../../ui/navigation/index":71,"../../content/index":48,"../../sidebar/index":55,"backbone.marionette":"Mn2A9x"}],51:[function(_dereq_,module,exports){
+},{"../../../ui/info/index":58,"../../../ui/login/index":63,"../../../ui/logo/index":67,"../../../ui/navigation/index":71,"../../content/index":48,"../../sidebar/index":55,"backbone.marionette":"gYtR1c"}],51:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 
@@ -6255,9 +6255,6 @@ var Controller = Marionette.Controller.extend({
   initialize: function (options) {
     this.options = options || {};
 
-    console.info('show:sidebar');
-
-
     // create layout object passing in a template string
     var Layout = Marionette.Layout.extend({
       template:  function () {
@@ -6275,7 +6272,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"Mn2A9x"}],55:[function(_dereq_,module,exports){
+},{"backbone.marionette":"gYtR1c"}],55:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -6295,6 +6292,7 @@ app.module('pocket.sidebar', function () {
   });
 
   this.on('before:start', function () {
+
     app.rm.addRegions({
       sidebar: 'aside',
       sidebar_logo: 'aside header',
@@ -6349,7 +6347,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":86,"../models/time":59,"../views/index":61,"backbone.marionette":"Mn2A9x"}],58:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":86,"../models/time":59,"../views/index":61,"backbone.marionette":"gYtR1c"}],58:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -6396,7 +6394,7 @@ var Model = Backbone.Model.extend({
 module.exports = Model;
 
 
-},{"backbone":"atSdsZ","moment":39}],60:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","moment":39}],60:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6431,7 +6429,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":82,"../templates/index.hbs":60,"backbone.marionette":"Mn2A9x"}],62:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":82,"../templates/index.hbs":60,"backbone.marionette":"gYtR1c"}],62:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6461,7 +6459,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"../../../pocket/models/user":46,"../views/index":65,"backbone.marionette":"Mn2A9x"}],63:[function(_dereq_,module,exports){
+},{"../../../pocket/models/user":46,"../views/index":65,"backbone.marionette":"gYtR1c"}],63:[function(_dereq_,module,exports){
 'use strict';
 
 var Controller = _dereq_('./controllers/index');
@@ -6556,7 +6554,7 @@ var View = Marionette.ItemView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":82,"../templates/index.hbs":64,"backbone.marionette":"Mn2A9x","backbone.syphon":"zpJqfl","backbone.validation":7}],66:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":82,"../templates/index.hbs":64,"backbone.marionette":"gYtR1c","backbone.syphon":"QSvLHL","backbone.validation":7}],66:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -6587,7 +6585,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":86,"../views/index":69,"backbone.marionette":"Mn2A9x"}],67:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":86,"../views/index":69,"backbone.marionette":"gYtR1c"}],67:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -6631,7 +6629,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 },{"hbsfy/runtime":17}],69:[function(_dereq_,module,exports){
 arguments[4][61][0].apply(exports,arguments)
-},{"../../../../helpers/handlebars":82,"../templates/index.hbs":68,"backbone.marionette":"Mn2A9x"}],70:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":82,"../templates/index.hbs":68,"backbone.marionette":"gYtR1c"}],70:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -6672,7 +6670,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":86,"../views/index":73,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],71:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":86,"../views/index":73,"backbone":"fZAJ/5","backbone.marionette":"gYtR1c"}],71:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -6740,7 +6738,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":82,"../templates/item.hbs":72,"backbone.marionette":"Mn2A9x"}],74:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":82,"../templates/item.hbs":72,"backbone.marionette":"gYtR1c"}],74:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -6793,7 +6791,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":86,"../views/edit":79,"../views/list":80,"../views/show":81,"backbone.marionette":"Mn2A9x"}],75:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":86,"../views/edit":79,"../views/list":80,"../views/show":81,"backbone.marionette":"gYtR1c"}],75:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -6887,7 +6885,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":82,"../templates/edit.hbs":76,"backbone.marionette":"Mn2A9x"}],80:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":82,"../templates/edit.hbs":76,"backbone.marionette":"gYtR1c"}],80:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6912,7 +6910,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":82,"../templates/list_item.hbs":77,"backbone.marionette":"Mn2A9x","gridster":"OOmgq/"}],81:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":82,"../templates/list_item.hbs":77,"backbone.marionette":"gYtR1c","gridster":"v3lzmR"}],81:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6931,7 +6929,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":82,"../templates/show.hbs":78,"backbone.marionette":"Mn2A9x"}],82:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":82,"../templates/show.hbs":78,"backbone.marionette":"gYtR1c"}],82:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('hbsfy/runtime');
@@ -6980,7 +6978,7 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 module.exports = SuperCollection;
 
 
-},{"backbone":"atSdsZ","underscore":"Y10LaM"}],84:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","underscore":"2Btyq2"}],84:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -6992,7 +6990,7 @@ var SuperModel = Backbone.Model.extend({
 module.exports = SuperModel;
 
 
-},{"backbone":"atSdsZ","jquery":"KvN3hc"}],85:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","jquery":"inqvBg"}],85:[function(_dereq_,module,exports){
 _dereq_('barf');
 
 var BaseRouter = Backbone.Router.extend({
@@ -7050,7 +7048,8 @@ module.exports = BaseRouter;
 
 
 },{"barf":8}],86:[function(_dereq_,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint -W079 */
+(function (global){
+/*jshint -W079 */
 'use strict';
 var Marionette = _dereq_('backbone.marionette');
 var Backbone = _dereq_('backbone');
@@ -7101,8 +7100,10 @@ app.on('initialize:after', function () {
 module.exports = app;
 
 
-},{"../components/pocket/models/user":46,"../models/config":91,"../router":92,"backbone":"atSdsZ","backbone.marionette":"Mn2A9x"}],87:[function(_dereq_,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};var storeError = _dereq_('./storeError');
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../components/pocket/models/user":46,"../models/config":91,"../router":92,"backbone":"fZAJ/5","backbone.marionette":"gYtR1c"}],87:[function(_dereq_,module,exports){
+(function (global){
+var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
 var app = _dereq_('../namespace');
 var $ = _dereq_('jquery');
@@ -7132,7 +7133,8 @@ app.addInitializer(function (config) {
 
 module.exports = app;
 
-},{"../namespace":86,"./storeError":88,"./storeSuccess":89,"jquery":"KvN3hc"}],88:[function(_dereq_,module,exports){
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../namespace":86,"./storeError":88,"./storeSuccess":89,"jquery":"inqvBg"}],88:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -7156,7 +7158,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"KvN3hc"}],89:[function(_dereq_,module,exports){
+},{"jquery":"inqvBg"}],89:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';

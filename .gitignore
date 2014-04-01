@@ -1,7 +1,7 @@
-.tmp
-data
-/dist
+data/
+dist/
 libs/
-.sass-cache
+node_modules/
 .DS_Store
-node_modules
+.tmp
+.sass-cache

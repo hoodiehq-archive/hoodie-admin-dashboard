@@ -31,7 +31,7 @@ module.exports = function (grunt) {
 
     watch: {
       files: ['<%= jshint.files %>', 'www/scss/*.scss', 'www/js/*.html', 'app/js/**/*.hbs'],
-      tasks: ['jshint', 'compass', 'browserify:app'],
+      tasks: ['compass', 'browserify:app', 'jshint'],
       options: {
         livereload: true
       }
@@ -216,7 +216,8 @@ module.exports = function (grunt) {
     'hoodie',
     'connect:server',
     'configureProxies:server',
+    'compass',
+    'browserify',
     'watch'
   ]);
-
 };
