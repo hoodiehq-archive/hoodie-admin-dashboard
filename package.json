@@ -32,7 +32,7 @@
   "homepage": "https://github.com/hoodiehq/pocket",
   "dependencies": {
     "hoodie-server": "^0.9.19",
-    "hoodie.admin": "git://github.com/hoodiehq/hoodie.admin.js.git#a0cb243",
+    "hoodie.admin": "git://github.com/hoodiehq/hoodie.admin.js.git#9be3b89",
     "hoodie-plugin-users": "~0.1.0",
     "hoodie-plugin-appconfig": "~0.2.0",
     "barf": "~1.0.2",
