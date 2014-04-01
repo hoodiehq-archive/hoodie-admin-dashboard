@@ -3220,9 +3220,7 @@ Backbone.Syphon.KeyJoiner = function(parentKey, childKey){
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"backbone":"fZAJ/5"}],"backbone.wreqr":[function(require,module,exports){
-module.exports=require('nPgDFi');
-},{}],"nPgDFi":[function(require,module,exports){
+},{"backbone":"fZAJ/5"}],"nPgDFi":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -3499,8 +3497,8 @@ Wreqr.EventAggregator = (function(Backbone, _){
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"backbone":"fZAJ/5"}],"backbone":[function(require,module,exports){
-module.exports=require('fZAJ/5');
+},{"backbone":"fZAJ/5"}],"backbone.wreqr":[function(require,module,exports){
+module.exports=require('nPgDFi');
 },{}],"fZAJ/5":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -5120,7 +5118,9 @@ module.exports=require('fZAJ/5');
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":"2Btyq2"}],"gridster":[function(require,module,exports){
+},{"underscore":"2Btyq2"}],"backbone":[function(require,module,exports){
+module.exports=require('fZAJ/5');
+},{}],"gridster":[function(require,module,exports){
 module.exports=require('v3lzmR');
 },{}],"v3lzmR":[function(require,module,exports){
 (function (global){
@@ -8983,9 +8983,7 @@ module.exports=require('v3lzmR');
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":"inqvBg"}],"jquery":[function(require,module,exports){
-module.exports=require('inqvBg');
-},{}],"inqvBg":[function(require,module,exports){
+},{"jquery":"inqvBg"}],"inqvBg":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /*!
@@ -17823,6 +17821,8 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"jquery":[function(require,module,exports){
+module.exports=require('inqvBg');
 },{}],"YaJGPR":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -24619,8 +24619,6 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"lodash":[function(require,module,exports){
 module.exports=require('YaJGPR');
-},{}],"underscore":[function(require,module,exports){
-module.exports=require('2Btyq2');
 },{}],"2Btyq2":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -25973,6 +25971,10 @@ module.exports=require('2Btyq2');
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"underscore":[function(require,module,exports){
+module.exports=require('2Btyq2');
+},{}],"barf":[function(require,module,exports){
+module.exports=require('j4nx7M');
 },{}],"j4nx7M":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -26091,6 +26093,4 @@ module.exports = Backbone;
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"backbone":"fZAJ/5"}],"barf":[function(require,module,exports){
-module.exports=require('j4nx7M');
-},{}]},{},[])
+},{"backbone":"fZAJ/5"}]},{},[])

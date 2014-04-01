@@ -6006,7 +6006,7 @@ var $ = Marionette.$;
 var PluginsCollection = _dereq_('../collections/plugins');
 var PluginModel = _dereq_('../models/plugin');
 
-var controller = Marionette.Controller.extend({
+var PluginsController = Marionette.Controller.extend({
 
   initialize: function (options) {
     var self = this;
@@ -6065,7 +6065,7 @@ var controller = Marionette.Controller.extend({
 
 });
 
-module.exports = controller;
+module.exports = PluginsController;
 
 
 },{"../../ui/plugins/index":77,"../collections/plugins":42,"../models/plugin":47,"backbone.marionette":"gYtR1c"}],46:[function(_dereq_,module,exports){
