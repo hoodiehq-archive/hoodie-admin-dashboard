@@ -1282,6 +1282,106 @@ module.exports = function extend() {
 };
 
 },{}],19:[function(_dereq_,module,exports){
+(function (global){
+// hoodie.checkConnection() & hoodie.isConnected()
+// =================================================
+
+
+var reject = _dereq_('../utils/promise/reject');
+var resolve = _dereq_('../utils/promise/resolve');
+
+//
+function hoodieConnection(hoodie) {
+
+  // state
+  var online = true;
+  var checkConnectionInterval = 30000;
+  var checkConnectionRequest = null;
+  var checkConnectionTimeout = null;
+
+  // Check Connection
+  // ------------------
+
+  // the `checkConnection` method is used, well, to check if
+  // the hoodie backend is reachable at `baseUrl` or not.
+  // Check Connection is automatically called on startup
+  // and then each 30 seconds. If it fails, it
+  //
+  // - sets `online = false`
+  // - triggers `offline` event
+  // - sets `checkConnectionInterval = 3000`
+  //
+  // when connection can be reestablished, it
+  //
+  // - sets `online = true`
+  // - triggers `online` event
+  // - sets `checkConnectionInterval = 30000`
+  //
+  hoodie.checkConnection = function checkConnection() {
+    var req = checkConnectionRequest;
+
+    if (req && req.state() === 'pending') {
+      return req;
+    }
+
+    global.clearTimeout(checkConnectionTimeout);
+
+    checkConnectionRequest = hoodie.request('GET', '/').then(
+      handleCheckConnectionSuccess,
+      handleCheckConnectionError
+    );
+
+    return checkConnectionRequest;
+  };
+
+
+  // isConnected
+  // -------------
+
+  //
+  hoodie.isConnected = function isConnected() {
+    return online;
+  };
+
+
+  //
+  //
+  //
+  function handleCheckConnectionSuccess() {
+    checkConnectionInterval = 30000;
+
+    checkConnectionTimeout = global.setTimeout(hoodie.checkConnection, checkConnectionInterval);
+
+    if (!hoodie.isConnected()) {
+      hoodie.trigger('reconnected');
+      online = true;
+    }
+
+    return resolve();
+  }
+
+
+  //
+  //
+  //
+  function handleCheckConnectionError() {
+    checkConnectionInterval = 3000;
+
+    checkConnectionTimeout = global.setTimeout(hoodie.checkConnection, checkConnectionInterval);
+
+    if (hoodie.isConnected()) {
+      hoodie.trigger('disconnected');
+      online = false;
+    }
+
+    return reject();
+  }
+}
+
+module.exports = hoodieConnection;
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../utils/promise/reject":33,"../utils/promise/resolve":35}],20:[function(_dereq_,module,exports){
 // Open stores
 // -------------
 
@@ -1312,7 +1412,7 @@ function hoodieOpen(hoodie) {
 
 module.exports = hoodieOpen;
 
-},{"../lib/store/remote":26,"extend":18}],20:[function(_dereq_,module,exports){
+},{"../lib/store/remote":27,"extend":18}],21:[function(_dereq_,module,exports){
 //
 // hoodie.request
 // ================
@@ -1468,7 +1568,7 @@ function hoodieRequest(hoodie) {
 
 module.exports = hoodieRequest;
 
-},{"../utils/hoodiefy_request_error_name":29,"../utils/promise/reject_with":33,"extend":18}],21:[function(_dereq_,module,exports){
+},{"../utils/hoodiefy_request_error_name":30,"../utils/promise/reject_with":34,"extend":18}],22:[function(_dereq_,module,exports){
 // Hoodie Error
 // -------------
 
@@ -1534,7 +1634,7 @@ HoodieError.prototype.constructor = HoodieError;
 module.exports = HoodieError;
 
 
-},{"extend":18}],22:[function(_dereq_,module,exports){
+},{"extend":18}],23:[function(_dereq_,module,exports){
 // Hoodie Invalid Type Or Id Error
 // -------------------------------
 
@@ -1561,7 +1661,7 @@ HoodieObjectIdError.prototype.rules = 'Lowercase letters, numbers and dashes all
 
 module.exports = HoodieObjectIdError;
 
-},{"./error":21}],23:[function(_dereq_,module,exports){
+},{"./error":22}],24:[function(_dereq_,module,exports){
 // Hoodie Invalid Type Or Id Error
 // -------------------------------
 
@@ -1595,7 +1695,7 @@ HoodieObjectTypeError.prototype.rules = 'lowercase letters, numbers and dashes a
 
 module.exports = HoodieObjectTypeError;
 
-},{"./error":21}],24:[function(_dereq_,module,exports){
+},{"./error":22}],25:[function(_dereq_,module,exports){
 // Events
 // ========
 //
@@ -1759,7 +1859,7 @@ function hoodieEvents(hoodie, options) {
 
 module.exports = hoodieEvents;
 
-},{}],25:[function(_dereq_,module,exports){
+},{}],26:[function(_dereq_,module,exports){
 // Store
 // ============
 
@@ -2195,7 +2295,7 @@ function hoodieStoreApi(hoodie, options) {
 
 module.exports = hoodieStoreApi;
 
-},{"../../utils/promise/defer":30,"../../utils/promise/is_promise":31,"../../utils/promise/reject_with":33,"../../utils/promise/resolve_with":34,"../error/error":21,"../error/object_id":22,"../error/object_type":23,"../events":24,"./scoped":27,"extend":18}],26:[function(_dereq_,module,exports){
+},{"../../utils/promise/defer":31,"../../utils/promise/is_promise":32,"../../utils/promise/reject_with":34,"../../utils/promise/resolve_with":36,"../error/error":22,"../error/object_id":23,"../error/object_type":24,"../events":25,"./scoped":28,"extend":18}],27:[function(_dereq_,module,exports){
 (function (global){
 // Remote
 // ========
@@ -2964,7 +3064,7 @@ function hoodieRemoteStore(hoodie, options) {
 module.exports = hoodieRemoteStore;
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/generate_id":28,"../../utils/promise/resolve_with":34,"./api":25,"extend":18}],27:[function(_dereq_,module,exports){
+},{"../../utils/generate_id":29,"../../utils/promise/resolve_with":36,"./api":26,"extend":18}],28:[function(_dereq_,module,exports){
 // scoped Store
 // ============
 
@@ -3077,7 +3177,7 @@ function hoodieScopedStoreApi(hoodie, storeApi, options) {
 
 module.exports = hoodieScopedStoreApi;
 
-},{"../events":24}],28:[function(_dereq_,module,exports){
+},{"../events":25}],29:[function(_dereq_,module,exports){
 var chars, i, radix;
 
 // uuids consist of numbers and lowercase letters only.
@@ -3107,7 +3207,7 @@ function generateId (length) {
 
 module.exports = generateId;
 
-},{}],29:[function(_dereq_,module,exports){
+},{}],30:[function(_dereq_,module,exports){
 var findLettersToUpperCase = /(^\w|_\w)/g;
 
 function hoodiefyRequestErrorName (name) {
@@ -3119,11 +3219,11 @@ function hoodiefyRequestErrorName (name) {
 }
 
 module.exports = hoodiefyRequestErrorName;
-},{}],30:[function(_dereq_,module,exports){
+},{}],31:[function(_dereq_,module,exports){
 (function (global){
 module.exports = global.jQuery.Deferred;
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],31:[function(_dereq_,module,exports){
+},{}],32:[function(_dereq_,module,exports){
 // returns true if passed object is a promise (but not a deferred),
 // otherwise false.
 function isPromise(object) {
@@ -3133,7 +3233,7 @@ function isPromise(object) {
 }
 
 module.exports = isPromise;
-},{}],32:[function(_dereq_,module,exports){
+},{}],33:[function(_dereq_,module,exports){
 var defer = _dereq_('./defer');
 //
 function reject() {
@@ -3141,7 +3241,7 @@ function reject() {
 }
 
 module.exports = reject;
-},{"./defer":30}],33:[function(_dereq_,module,exports){
+},{"./defer":31}],34:[function(_dereq_,module,exports){
 var getDefer = _dereq_('./defer');
 var HoodieError = _dereq_('../../lib/error/error');
 
@@ -3153,7 +3253,15 @@ function rejectWith(errorProperties) {
 
 module.exports = rejectWith;
 
-},{"../../lib/error/error":21,"./defer":30}],34:[function(_dereq_,module,exports){
+},{"../../lib/error/error":22,"./defer":31}],35:[function(_dereq_,module,exports){
+var defer = _dereq_('./defer');
+//
+function resolve() {
+  return defer().resolve().promise();
+}
+
+module.exports = resolve;
+},{"./defer":31}],36:[function(_dereq_,module,exports){
 var getDefer = _dereq_('./defer');
 
 //
@@ -3164,7 +3272,7 @@ function resolveWith() {
 
 module.exports = resolveWith;
 
-},{"./defer":30}],35:[function(_dereq_,module,exports){
+},{"./defer":31}],37:[function(_dereq_,module,exports){
 // Hoodie Admin
 // -------------
 //
@@ -3173,6 +3281,7 @@ module.exports = resolveWith;
 //
 var hoodieRequest = _dereq_('hoodie/src/hoodie/request');
 var hoodieOpen = _dereq_('hoodie/src/hoodie/open');
+var hoodieConnection = _dereq_('hoodie/src/hoodie/connection');
 
 var hoodieAdminAccount = _dereq_('./hoodie.admin/account');
 var hoodieAdminPlugin = _dereq_('./hoodie.admin/plugin');
@@ -3231,6 +3340,9 @@ function HoodieAdmin(baseUrl) {
   // * hoodieAdmin.open
   hoodieAdmin.extend(hoodieOpen);
 
+  // * hoodieAdmin.checkConnection
+  hoodieAdmin.extend(hoodieConnection);
+
   // * hoodieAdmin.account
   hoodieAdmin.extend(hoodieAdminAccount);
 
@@ -3271,7 +3383,7 @@ function applyExtensions(hoodie) {
 
 module.exports = HoodieAdmin;
 
-},{"./hoodie.admin/account":36,"./hoodie.admin/plugin":37,"./hoodie.admin/user":38,"hoodie/src/hoodie/open":19,"hoodie/src/hoodie/request":20,"hoodie/src/lib/events":24}],36:[function(_dereq_,module,exports){
+},{"./hoodie.admin/account":38,"./hoodie.admin/plugin":39,"./hoodie.admin/user":40,"hoodie/src/hoodie/connection":19,"hoodie/src/hoodie/open":20,"hoodie/src/hoodie/request":21,"hoodie/src/lib/events":25}],38:[function(_dereq_,module,exports){
 // HoodieAdmin Account
 // ===================
 
@@ -3376,7 +3488,7 @@ function hoodieAccount (hoodieAdmin) {
 module.exports = hoodieAccount;
 
 
-},{"hoodie/src/lib/events":24,"hoodie/src/utils/promise/reject":32,"hoodie/src/utils/promise/resolve_with":34}],37:[function(_dereq_,module,exports){
+},{"hoodie/src/lib/events":25,"hoodie/src/utils/promise/reject":33,"hoodie/src/utils/promise/resolve_with":36}],39:[function(_dereq_,module,exports){
 function hoodieAdminPlugin(hoodieAdmin) {
   hoodieAdmin.plugins = hoodieAdmin.open('plugins');
   hoodieAdmin.plugins.connect();
@@ -3385,7 +3497,7 @@ function hoodieAdminPlugin(hoodieAdmin) {
 module.exports = hoodieAdminPlugin;
 
 
-},{}],38:[function(_dereq_,module,exports){
+},{}],40:[function(_dereq_,module,exports){
 function hoodieAdminUser(hoodieAdmin) {
   hoodieAdmin.user = hoodieAdmin.open('_users', {
     prefix: 'org.couchdb.user:'
@@ -3395,7 +3507,7 @@ function hoodieAdminUser(hoodieAdmin) {
 module.exports = hoodieAdminUser;
 
 
-},{}],39:[function(_dereq_,module,exports){
+},{}],41:[function(_dereq_,module,exports){
 //! moment.js
 //! version : 2.5.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -5797,7 +5909,7 @@ module.exports = hoodieAdminUser;
     }
 }).call(this);
 
-},{}],40:[function(_dereq_,module,exports){
+},{}],42:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -5813,7 +5925,7 @@ var Collection = BaseCollection.extend({
 module.exports = Collection;
 
 
-},{"../../../helpers/mvc/collection":83,"../../../helpers/namespace":86,"../models/plugin":45}],41:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/collection":85,"../../../helpers/namespace":88,"../models/plugin":47}],43:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -5853,7 +5965,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../collections/plugins":40,"../models/plugin":45,"backbone.marionette":"gYtR1c"}],42:[function(_dereq_,module,exports){
+},{"../collections/plugins":42,"../models/plugin":47,"backbone.marionette":"gYtR1c"}],44:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -5885,7 +5997,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"./dashboard":41,"./plugins":43,"backbone.marionette":"gYtR1c"}],43:[function(_dereq_,module,exports){
+},{"./dashboard":43,"./plugins":45,"backbone.marionette":"gYtR1c"}],45:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -5956,7 +6068,7 @@ var controller = Marionette.Controller.extend({
 module.exports = controller;
 
 
-},{"../../ui/plugins/index":75,"../collections/plugins":40,"../models/plugin":45,"backbone.marionette":"gYtR1c"}],44:[function(_dereq_,module,exports){
+},{"../../ui/plugins/index":77,"../collections/plugins":42,"../models/plugin":47,"backbone.marionette":"gYtR1c"}],46:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var app = _dereq_('../../helpers/namespace');
 var Controller = _dereq_('./controllers/index');
@@ -5996,7 +6108,7 @@ app.module('pocket', function () {
 module.exports = app;
 
 
-},{"../../helpers/namespace":86,"../structural/layout/index":51,"./controllers/index":42}],45:[function(_dereq_,module,exports){
+},{"../../helpers/namespace":88,"../structural/layout/index":53,"./controllers/index":44}],47:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseModel = _dereq_('../../../helpers/mvc/model');
@@ -6031,7 +6143,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../../../helpers/mvc/model":84,"../../../helpers/namespace":86}],46:[function(_dereq_,module,exports){
+},{"../../../helpers/mvc/model":86,"../../../helpers/namespace":88}],48:[function(_dereq_,module,exports){
 var Backbone = _dereq_('backbone');
 var HoodieAdmin = _dereq_('hoodie.admin');
 
@@ -6070,7 +6182,7 @@ var Model = Backbone.Model.extend({
 
 module.exports = Model;
 
-},{"backbone":"fZAJ/5","hoodie.admin":35}],47:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","hoodie.admin":37}],49:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6096,7 +6208,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"gYtR1c"}],48:[function(_dereq_,module,exports){
+},{"backbone.marionette":"gYtR1c"}],50:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -6129,7 +6241,7 @@ app.module('pocket.content', function () {
 module.exports = app;
 
 
-},{"../../../helpers/namespace":86,"./controllers/index":47,"./templates/index.hbs":49}],49:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":49,"./templates/index.hbs":51}],51:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6141,7 +6253,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<header></header>\n<section class=\"pluginView\"></section>\n<footer></footer>\n";
   });
 
-},{"hbsfy/runtime":17}],50:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],52:[function(_dereq_,module,exports){
 var Marionette = _dereq_('backbone.marionette');
 
 var Controller = Marionette.Controller.extend({
@@ -6192,7 +6304,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"../../../ui/info/index":58,"../../../ui/login/index":63,"../../../ui/logo/index":67,"../../../ui/navigation/index":71,"../../content/index":48,"../../sidebar/index":55,"backbone.marionette":"gYtR1c"}],51:[function(_dereq_,module,exports){
+},{"../../../ui/info/index":60,"../../../ui/login/index":65,"../../../ui/logo/index":69,"../../../ui/navigation/index":73,"../../content/index":50,"../../sidebar/index":57,"backbone.marionette":"gYtR1c"}],53:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 
@@ -6222,7 +6334,7 @@ app.module('pocket.layout', function () {
 module.exports = app;
 
 
-},{"../../../helpers/namespace":86,"./controllers/index":50,"./templates/index.hbs":52,"./templates/login.hbs":53}],52:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":52,"./templates/index.hbs":54,"./templates/login.hbs":55}],54:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6234,7 +6346,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<aside class=\"sidebar\"> </aside>\n<section class=\"content\"> </section>\n";
   });
 
-},{"hbsfy/runtime":17}],53:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],55:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6246,7 +6358,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<section class=\"login\"></section>\n\n";
   });
 
-},{"hbsfy/runtime":17}],54:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],56:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6272,7 +6384,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"backbone.marionette":"gYtR1c"}],55:[function(_dereq_,module,exports){
+},{"backbone.marionette":"gYtR1c"}],57:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Controller = _dereq_('./controllers/index');
 var app = _dereq_('../../../helpers/namespace');
@@ -6306,7 +6418,7 @@ app.module('pocket.sidebar', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":86,"./controllers/index":54,"./templates/index.hbs":56}],56:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":56,"./templates/index.hbs":58}],58:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6318,7 +6430,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<header></header>\n<nav></nav>\n<footer></footer>\n<ul class=\"helpers\">\n  <li>Pocket guides</li>\n  <li>Hoodie</li>\n</ul>\n";
   });
 
-},{"hbsfy/runtime":17}],57:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],59:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -6347,7 +6459,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":86,"../models/time":59,"../views/index":61,"backbone.marionette":"gYtR1c"}],58:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":88,"../models/time":61,"../views/index":63,"backbone.marionette":"gYtR1c"}],60:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -6373,7 +6485,7 @@ app.module('pocket.info', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":86,"./controllers/index":57}],59:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":59}],61:[function(_dereq_,module,exports){
 var Backbone = _dereq_('backbone');
 var moment = _dereq_('moment');
 
@@ -6394,7 +6506,7 @@ var Model = Backbone.Model.extend({
 module.exports = Model;
 
 
-},{"backbone":"fZAJ/5","moment":39}],60:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","moment":41}],62:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6411,7 +6523,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],61:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],63:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6429,7 +6541,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":82,"../templates/index.hbs":60,"backbone.marionette":"gYtR1c"}],62:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":84,"../templates/index.hbs":62,"backbone.marionette":"gYtR1c"}],64:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6459,7 +6571,7 @@ var Controller = Marionette.Controller.extend({
 module.exports = Controller;
 
 
-},{"../../../pocket/models/user":46,"../views/index":65,"backbone.marionette":"gYtR1c"}],63:[function(_dereq_,module,exports){
+},{"../../../pocket/models/user":48,"../views/index":67,"backbone.marionette":"gYtR1c"}],65:[function(_dereq_,module,exports){
 'use strict';
 
 var Controller = _dereq_('./controllers/index');
@@ -6475,7 +6587,7 @@ app.module('pocket.login', function () {
 module.exports = app;
 
 
-},{"./controllers/index":62}],64:[function(_dereq_,module,exports){
+},{"./controllers/index":64}],66:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6487,7 +6599,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<fieldset>\n\n<!-- Form Name -->\n<div class=\"logo ir\">Hoodie Pocket</div>\n<h2 class=\"top\"> Welcome to appName here's Pocket</h2>\n\n<!-- Password input-->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"password\">Password</label>\n  <div class=\"controls\">\n    <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Password\" class=\"input-xlarge\" required=\"\">\n\n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"control-group\">\n  <label class=\"control-label\" for=\"\">Submit</label>\n  <div class=\"controls\">\n    <a id=\"submit\" name=\"\" class=\"btn btn-default\">Button</a>\n  </div>\n</div>\n\n</fieldset>\n";
   });
 
-},{"hbsfy/runtime":17}],65:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],67:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6554,7 +6666,7 @@ var View = Marionette.ItemView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":82,"../templates/index.hbs":64,"backbone.marionette":"gYtR1c","backbone.syphon":"QSvLHL","backbone.validation":7}],66:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":84,"../templates/index.hbs":66,"backbone.marionette":"gYtR1c","backbone.syphon":"QSvLHL","backbone.validation":7}],68:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -6585,7 +6697,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":86,"../views/index":69,"backbone.marionette":"gYtR1c"}],67:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":88,"../views/index":71,"backbone.marionette":"gYtR1c"}],69:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -6610,7 +6722,7 @@ app.module('pocket.logo', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":86,"./controllers/index":66}],68:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":68}],70:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6627,9 +6739,9 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],69:[function(_dereq_,module,exports){
-arguments[4][61][0].apply(exports,arguments)
-},{"../../../../helpers/handlebars":82,"../templates/index.hbs":68,"backbone.marionette":"gYtR1c"}],70:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],71:[function(_dereq_,module,exports){
+arguments[4][63][0].apply(exports,arguments)
+},{"../../../../helpers/handlebars":84,"../templates/index.hbs":70,"backbone.marionette":"gYtR1c"}],72:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -6670,7 +6782,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":86,"../views/index":73,"backbone":"fZAJ/5","backbone.marionette":"gYtR1c"}],71:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":88,"../views/index":75,"backbone":"fZAJ/5","backbone.marionette":"gYtR1c"}],73:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -6694,7 +6806,7 @@ app.module('pocket.navigation', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":86,"./controllers/index":70}],72:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":72}],74:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6715,7 +6827,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],73:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],75:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6738,7 +6850,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":82,"../templates/item.hbs":72,"backbone.marionette":"gYtR1c"}],74:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":84,"../templates/item.hbs":74,"backbone.marionette":"gYtR1c"}],76:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../../helpers/namespace');
@@ -6791,7 +6903,7 @@ var Controller = Marionette.Controller.extend({
 
 module.exports = Controller;
 
-},{"../../../../helpers/namespace":86,"../views/edit":79,"../views/list":80,"../views/show":81,"backbone.marionette":"gYtR1c"}],75:[function(_dereq_,module,exports){
+},{"../../../../helpers/namespace":88,"../views/edit":81,"../views/list":82,"../views/show":83,"backbone.marionette":"gYtR1c"}],77:[function(_dereq_,module,exports){
 'use strict';
 
 var app = _dereq_('../../../helpers/namespace');
@@ -6824,7 +6936,7 @@ app.module('pocket.plugins', function () {
 
 module.exports = app;
 
-},{"../../../helpers/namespace":86,"./controllers/index":74}],76:[function(_dereq_,module,exports){
+},{"../../../helpers/namespace":88,"./controllers/index":76}],78:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6836,7 +6948,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "edit\n";
   });
 
-},{"hbsfy/runtime":17}],77:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],79:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6853,7 +6965,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],78:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],80:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = _dereq_('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -6870,7 +6982,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":17}],79:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],81:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6885,7 +6997,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":82,"../templates/edit.hbs":76,"backbone.marionette":"gYtR1c"}],80:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":84,"../templates/edit.hbs":78,"backbone.marionette":"gYtR1c"}],82:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6910,7 +7022,7 @@ var View = Marionette.CollectionView.extend({
 module.exports = View;
 
 
-},{"../../../../helpers/handlebars":82,"../templates/list_item.hbs":77,"backbone.marionette":"gYtR1c","gridster":"v3lzmR"}],81:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":84,"../templates/list_item.hbs":79,"backbone.marionette":"gYtR1c","gridster":"v3lzmR"}],83:[function(_dereq_,module,exports){
 'use strict';
 
 var Marionette = _dereq_('backbone.marionette');
@@ -6929,7 +7041,7 @@ var View = Marionette.ItemView.extend({
 
 module.exports = View;
 
-},{"../../../../helpers/handlebars":82,"../templates/show.hbs":78,"backbone.marionette":"gYtR1c"}],82:[function(_dereq_,module,exports){
+},{"../../../../helpers/handlebars":84,"../templates/show.hbs":80,"backbone.marionette":"gYtR1c"}],84:[function(_dereq_,module,exports){
 /*global Handlebars:true */
 
 var Handlebars = _dereq_('hbsfy/runtime');
@@ -6955,7 +7067,7 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 
 module.exports = Handlebars;
 
-},{"hbsfy/runtime":17}],83:[function(_dereq_,module,exports){
+},{"hbsfy/runtime":17}],85:[function(_dereq_,module,exports){
 
 'use strict';
 
@@ -6978,7 +7090,7 @@ var SuperCollection = Backbone.SuperCollection = Backbone.Collection.extend({
 module.exports = SuperCollection;
 
 
-},{"backbone":"fZAJ/5","underscore":"2Btyq2"}],84:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","underscore":"2Btyq2"}],86:[function(_dereq_,module,exports){
 /*jshint -W079, -W098 */
 var $ = _dereq_('jquery');
 var Backbone = _dereq_('backbone');
@@ -6990,7 +7102,7 @@ var SuperModel = Backbone.Model.extend({
 module.exports = SuperModel;
 
 
-},{"backbone":"fZAJ/5","jquery":"inqvBg"}],85:[function(_dereq_,module,exports){
+},{"backbone":"fZAJ/5","jquery":"inqvBg"}],87:[function(_dereq_,module,exports){
 _dereq_('barf');
 
 var BaseRouter = Backbone.Router.extend({
@@ -7047,7 +7159,7 @@ var BaseRouter = Backbone.Router.extend({
 module.exports = BaseRouter;
 
 
-},{"barf":8}],86:[function(_dereq_,module,exports){
+},{"barf":8}],88:[function(_dereq_,module,exports){
 (function (global){
 /*jshint -W079 */
 'use strict';
@@ -7101,7 +7213,7 @@ module.exports = app;
 
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../components/pocket/models/user":46,"../models/config":91,"../router":92,"backbone":"fZAJ/5","backbone.marionette":"gYtR1c"}],87:[function(_dereq_,module,exports){
+},{"../components/pocket/models/user":48,"../models/config":93,"../router":94,"backbone":"fZAJ/5","backbone.marionette":"gYtR1c"}],89:[function(_dereq_,module,exports){
 (function (global){
 var storeError = _dereq_('./storeError');
 var storeSuccess = _dereq_('./storeSuccess');
@@ -7134,7 +7246,7 @@ app.addInitializer(function (config) {
 module.exports = app;
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../namespace":86,"./storeError":88,"./storeSuccess":89,"jquery":"inqvBg"}],88:[function(_dereq_,module,exports){
+},{"../namespace":88,"./storeError":90,"./storeSuccess":91,"jquery":"inqvBg"}],90:[function(_dereq_,module,exports){
 var $ = _dereq_('jquery');
 
 var errors = function (e, jqXHR) {
@@ -7158,7 +7270,7 @@ var errors = function (e, jqXHR) {
 
 module.exports = errors;
 
-},{"jquery":"inqvBg"}],89:[function(_dereq_,module,exports){
+},{"jquery":"inqvBg"}],91:[function(_dereq_,module,exports){
 var success = function (e, jqXHR, opts, res) {
 
   'use strict';
@@ -7177,7 +7289,7 @@ var success = function (e, jqXHR, opts, res) {
 
 module.exports = success;
 
-},{}],90:[function(_dereq_,module,exports){
+},{}],92:[function(_dereq_,module,exports){
 /*jshint -W079 */
 var Config = _dereq_('./models/config');
 var app = _dereq_('./helpers/namespace');
@@ -7193,7 +7305,7 @@ app.start(new Config().toJSON());
 module.exports = app;
 
 
-},{"./components/pocket/index":44,"./helpers/handlebars":82,"./helpers/namespace":86,"./helpers/storage/store":87,"./models/config":91}],91:[function(_dereq_,module,exports){
+},{"./components/pocket/index":46,"./helpers/handlebars":84,"./helpers/namespace":88,"./helpers/storage/store":89,"./models/config":93}],93:[function(_dereq_,module,exports){
 var BaseModel = _dereq_('../helpers/mvc/model');
 
 var Model = BaseModel.extend({
@@ -7234,7 +7346,7 @@ var Model = BaseModel.extend({
 
 module.exports = Model;
 
-},{"../helpers/mvc/model":84}],92:[function(_dereq_,module,exports){
+},{"../helpers/mvc/model":86}],94:[function(_dereq_,module,exports){
 'use strict';
 
 var BaseRouter = _dereq_('./helpers/mvc/router');
@@ -7279,6 +7391,6 @@ var Router = BaseRouter.extend({
 module.exports = Router;
 
 
-},{"./helpers/mvc/router":85}]},{},[90])
-(90)
+},{"./helpers/mvc/router":87}]},{},[92])
+(92)
 });
