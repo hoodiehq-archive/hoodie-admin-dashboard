@@ -1,4 +1,6 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"EqAmof":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"backbone.babysitter":[function(require,module,exports){
+module.exports=require('16+Cms');
+},{}],"16+Cms":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -168,9 +170,9 @@ Backbone.ChildViewContainer = (function(Backbone, _){
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"backbone":"fZAJ/5"}],"backbone.babysitter":[function(require,module,exports){
-module.exports=require('EqAmof');
-},{}],"gYtR1c":[function(require,module,exports){
+},{"backbone":"iaK0Bg"}],"backbone.marionette":[function(require,module,exports){
+module.exports=require('RfyxQ9');
+},{}],"RfyxQ9":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -2736,9 +2738,9 @@ _.extend(Marionette.Module, {
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"backbone":"fZAJ/5","jquery":"inqvBg","underscore":"2Btyq2"}],"backbone.marionette":[function(require,module,exports){
-module.exports=require('gYtR1c');
-},{}],"QSvLHL":[function(require,module,exports){
+},{"backbone":"iaK0Bg","jquery":"bVsBW5","underscore":"e+6VL2"}],"backbone.syphon":[function(require,module,exports){
+module.exports=require('k6VPeZ');
+},{}],"k6VPeZ":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -3218,11 +3220,9 @@ Backbone.Syphon.KeyJoiner = function(parentKey, childKey){
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"backbone":"fZAJ/5"}],"backbone.syphon":[function(require,module,exports){
-module.exports=require('QSvLHL');
-},{}],"backbone.wreqr":[function(require,module,exports){
-module.exports=require('nPgDFi');
-},{}],"nPgDFi":[function(require,module,exports){
+},{"backbone":"iaK0Bg"}],"backbone.wreqr":[function(require,module,exports){
+module.exports=require('aXh6Vo');
+},{}],"aXh6Vo":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -3499,7 +3499,9 @@ Wreqr.EventAggregator = (function(Backbone, _){
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"backbone":"fZAJ/5"}],"fZAJ/5":[function(require,module,exports){
+},{"backbone":"iaK0Bg"}],"backbone":[function(require,module,exports){
+module.exports=require('iaK0Bg');
+},{}],"iaK0Bg":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -5118,9 +5120,9 @@ Wreqr.EventAggregator = (function(Backbone, _){
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":"2Btyq2"}],"backbone":[function(require,module,exports){
-module.exports=require('fZAJ/5');
-},{}],"v3lzmR":[function(require,module,exports){
+},{"underscore":"e+6VL2"}],"gridster":[function(require,module,exports){
+module.exports=require('VncBPV');
+},{}],"VncBPV":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -8981,9 +8983,7 @@ module.exports=require('fZAJ/5');
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":"inqvBg"}],"gridster":[function(require,module,exports){
-module.exports=require('v3lzmR');
-},{}],"inqvBg":[function(require,module,exports){
+},{"jquery":"bVsBW5"}],"bVsBW5":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /*!
@@ -17822,8 +17822,10 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"jquery":[function(require,module,exports){
-module.exports=require('inqvBg');
-},{}],"YaJGPR":[function(require,module,exports){
+module.exports=require('bVsBW5');
+},{}],"lodash":[function(require,module,exports){
+module.exports=require('9eX6o6');
+},{}],"9eX6o6":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /**
@@ -24617,16 +24619,14 @@ module.exports=require('inqvBg');
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"lodash":[function(require,module,exports){
-module.exports=require('YaJGPR');
 },{}],"underscore":[function(require,module,exports){
-module.exports=require('2Btyq2');
-},{}],"2Btyq2":[function(require,module,exports){
+module.exports=require('e+6VL2');
+},{}],"e+6VL2":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
-//     Underscore.js 1.6.0
+//     Underscore.js 1.5.2
 //     http://underscorejs.org
-//     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+//     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
 
 (function() {
@@ -24691,7 +24691,7 @@ module.exports=require('2Btyq2');
   }
 
   // Current version.
-  _.VERSION = '1.6.0';
+  _.VERSION = '1.5.2';
 
   // Collection Functions
   // --------------------
@@ -24700,7 +24700,7 @@ module.exports=require('2Btyq2');
   // Handles objects with the built-in `forEach`, arrays, and raw objects.
   // Delegates to **ECMAScript 5**'s native `forEach` if available.
   var each = _.each = _.forEach = function(obj, iterator, context) {
-    if (obj == null) return obj;
+    if (obj == null) return;
     if (nativeForEach && obj.forEach === nativeForEach) {
       obj.forEach(iterator, context);
     } else if (obj.length === +obj.length) {
@@ -24713,7 +24713,6 @@ module.exports=require('2Btyq2');
         if (iterator.call(context, obj[keys[i]], keys[i], obj) === breaker) return;
       }
     }
-    return obj;
   };
 
   // Return the results of applying the iterator to each element.
@@ -24779,10 +24778,10 @@ module.exports=require('2Btyq2');
   };
 
   // Return the first value which passes a truth test. Aliased as `detect`.
-  _.find = _.detect = function(obj, predicate, context) {
+  _.find = _.detect = function(obj, iterator, context) {
     var result;
     any(obj, function(value, index, list) {
-      if (predicate.call(context, value, index, list)) {
+      if (iterator.call(context, value, index, list)) {
         result = value;
         return true;
       }
@@ -24793,33 +24792,33 @@ module.exports=require('2Btyq2');
   // Return all the elements that pass a truth test.
   // Delegates to **ECMAScript 5**'s native `filter` if available.
   // Aliased as `select`.
-  _.filter = _.select = function(obj, predicate, context) {
+  _.filter = _.select = function(obj, iterator, context) {
     var results = [];
     if (obj == null) return results;
-    if (nativeFilter && obj.filter === nativeFilter) return obj.filter(predicate, context);
+    if (nativeFilter && obj.filter === nativeFilter) return obj.filter(iterator, context);
     each(obj, function(value, index, list) {
-      if (predicate.call(context, value, index, list)) results.push(value);
+      if (iterator.call(context, value, index, list)) results.push(value);
     });
     return results;
   };
 
   // Return all the elements for which a truth test fails.
-  _.reject = function(obj, predicate, context) {
+  _.reject = function(obj, iterator, context) {
     return _.filter(obj, function(value, index, list) {
-      return !predicate.call(context, value, index, list);
+      return !iterator.call(context, value, index, list);
     }, context);
   };
 
   // Determine whether all of the elements match a truth test.
   // Delegates to **ECMAScript 5**'s native `every` if available.
   // Aliased as `all`.
-  _.every = _.all = function(obj, predicate, context) {
-    predicate || (predicate = _.identity);
+  _.every = _.all = function(obj, iterator, context) {
+    iterator || (iterator = _.identity);
     var result = true;
     if (obj == null) return result;
-    if (nativeEvery && obj.every === nativeEvery) return obj.every(predicate, context);
+    if (nativeEvery && obj.every === nativeEvery) return obj.every(iterator, context);
     each(obj, function(value, index, list) {
-      if (!(result = result && predicate.call(context, value, index, list))) return breaker;
+      if (!(result = result && iterator.call(context, value, index, list))) return breaker;
     });
     return !!result;
   };
@@ -24827,13 +24826,13 @@ module.exports=require('2Btyq2');
   // Determine if at least one element in the object matches a truth test.
   // Delegates to **ECMAScript 5**'s native `some` if available.
   // Aliased as `any`.
-  var any = _.some = _.any = function(obj, predicate, context) {
-    predicate || (predicate = _.identity);
+  var any = _.some = _.any = function(obj, iterator, context) {
+    iterator || (iterator = _.identity);
     var result = false;
     if (obj == null) return result;
-    if (nativeSome && obj.some === nativeSome) return obj.some(predicate, context);
+    if (nativeSome && obj.some === nativeSome) return obj.some(iterator, context);
     each(obj, function(value, index, list) {
-      if (result || (result = predicate.call(context, value, index, list))) return breaker;
+      if (result || (result = iterator.call(context, value, index, list))) return breaker;
     });
     return !!result;
   };
@@ -24859,19 +24858,25 @@ module.exports=require('2Btyq2');
 
   // Convenience version of a common use case of `map`: fetching a property.
   _.pluck = function(obj, key) {
-    return _.map(obj, _.property(key));
+    return _.map(obj, function(value){ return value[key]; });
   };
 
   // Convenience version of a common use case of `filter`: selecting only objects
   // containing specific `key:value` pairs.
-  _.where = function(obj, attrs) {
-    return _.filter(obj, _.matches(attrs));
+  _.where = function(obj, attrs, first) {
+    if (_.isEmpty(attrs)) return first ? void 0 : [];
+    return _[first ? 'find' : 'filter'](obj, function(value) {
+      for (var key in attrs) {
+        if (attrs[key] !== value[key]) return false;
+      }
+      return true;
+    });
   };
 
   // Convenience version of a common use case of `find`: getting the first object
   // containing specific `key:value` pairs.
   _.findWhere = function(obj, attrs) {
-    return _.find(obj, _.matches(attrs));
+    return _.where(obj, attrs, true);
   };
 
   // Return the maximum element or (element-based computation).
@@ -24881,15 +24886,13 @@ module.exports=require('2Btyq2');
     if (!iterator && _.isArray(obj) && obj[0] === +obj[0] && obj.length < 65535) {
       return Math.max.apply(Math, obj);
     }
-    var result = -Infinity, lastComputed = -Infinity;
+    if (!iterator && _.isEmpty(obj)) return -Infinity;
+    var result = {computed : -Infinity, value: -Infinity};
     each(obj, function(value, index, list) {
       var computed = iterator ? iterator.call(context, value, index, list) : value;
-      if (computed > lastComputed) {
-        result = value;
-        lastComputed = computed;
-      }
+      computed > result.computed && (result = {value : value, computed : computed});
     });
-    return result;
+    return result.value;
   };
 
   // Return the minimum element (or element-based computation).
@@ -24897,18 +24900,16 @@ module.exports=require('2Btyq2');
     if (!iterator && _.isArray(obj) && obj[0] === +obj[0] && obj.length < 65535) {
       return Math.min.apply(Math, obj);
     }
-    var result = Infinity, lastComputed = Infinity;
+    if (!iterator && _.isEmpty(obj)) return Infinity;
+    var result = {computed : Infinity, value: Infinity};
     each(obj, function(value, index, list) {
       var computed = iterator ? iterator.call(context, value, index, list) : value;
-      if (computed < lastComputed) {
-        result = value;
-        lastComputed = computed;
-      }
+      computed < result.computed && (result = {value : value, computed : computed});
     });
-    return result;
+    return result.value;
   };
 
-  // Shuffle an array, using the modern version of the
+  // Shuffle an array, using the modern version of the 
   // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
   _.shuffle = function(obj) {
     var rand;
@@ -24922,12 +24923,11 @@ module.exports=require('2Btyq2');
     return shuffled;
   };
 
-  // Sample **n** random values from a collection.
-  // If **n** is not specified, returns a single random element.
+  // Sample **n** random values from an array.
+  // If **n** is not specified, returns a single random element from the array.
   // The internal `guard` argument allows it to work with `map`.
   _.sample = function(obj, n, guard) {
-    if (n == null || guard) {
-      if (obj.length !== +obj.length) obj = _.values(obj);
+    if (arguments.length < 2 || guard) {
       return obj[_.random(obj.length - 1)];
     }
     return _.shuffle(obj).slice(0, Math.max(0, n));
@@ -24935,14 +24935,12 @@ module.exports=require('2Btyq2');
 
   // An internal function to generate lookup iterators.
   var lookupIterator = function(value) {
-    if (value == null) return _.identity;
-    if (_.isFunction(value)) return value;
-    return _.property(value);
+    return _.isFunction(value) ? value : function(obj){ return obj[value]; };
   };
 
   // Sort the object's values by a criterion produced by an iterator.
-  _.sortBy = function(obj, iterator, context) {
-    iterator = lookupIterator(iterator);
+  _.sortBy = function(obj, value, context) {
+    var iterator = lookupIterator(value);
     return _.pluck(_.map(obj, function(value, index, list) {
       return {
         value: value,
@@ -24962,9 +24960,9 @@ module.exports=require('2Btyq2');
 
   // An internal function used for aggregate "group by" operations.
   var group = function(behavior) {
-    return function(obj, iterator, context) {
+    return function(obj, value, context) {
       var result = {};
-      iterator = lookupIterator(iterator);
+      var iterator = value == null ? _.identity : lookupIterator(value);
       each(obj, function(value, index) {
         var key = iterator.call(context, value, index, obj);
         behavior(result, key, value);
@@ -24976,7 +24974,7 @@ module.exports=require('2Btyq2');
   // Groups the object's values by a criterion. Pass either a string attribute
   // to group by, or a function that returns the criterion.
   _.groupBy = group(function(result, key, value) {
-    _.has(result, key) ? result[key].push(value) : result[key] = [value];
+    (_.has(result, key) ? result[key] : (result[key] = [])).push(value);
   });
 
   // Indexes the object's values by a criterion, similar to `groupBy`, but for
@@ -24995,7 +24993,7 @@ module.exports=require('2Btyq2');
   // Use a comparator function to figure out the smallest index at which
   // an object should be inserted so as to maintain order. Uses binary search.
   _.sortedIndex = function(array, obj, iterator, context) {
-    iterator = lookupIterator(iterator);
+    iterator = iterator == null ? _.identity : lookupIterator(iterator);
     var value = iterator.call(context, obj);
     var low = 0, high = array.length;
     while (low < high) {
@@ -25027,9 +25025,7 @@ module.exports=require('2Btyq2');
   // allows it to work with `_.map`.
   _.first = _.head = _.take = function(array, n, guard) {
     if (array == null) return void 0;
-    if ((n == null) || guard) return array[0];
-    if (n < 0) return [];
-    return slice.call(array, 0, n);
+    return (n == null) || guard ? array[0] : slice.call(array, 0, n);
   };
 
   // Returns everything but the last entry of the array. Especially useful on
@@ -25044,8 +25040,11 @@ module.exports=require('2Btyq2');
   // values in the array. The **guard** check allows it to work with `_.map`.
   _.last = function(array, n, guard) {
     if (array == null) return void 0;
-    if ((n == null) || guard) return array[array.length - 1];
-    return slice.call(array, Math.max(array.length - n, 0));
+    if ((n == null) || guard) {
+      return array[array.length - 1];
+    } else {
+      return slice.call(array, Math.max(array.length - n, 0));
+    }
   };
 
   // Returns everything but the first entry of the array. Aliased as `tail` and `drop`.
@@ -25086,16 +25085,6 @@ module.exports=require('2Btyq2');
     return _.difference(array, slice.call(arguments, 1));
   };
 
-  // Split an array into two arrays: one whose elements all satisfy the given
-  // predicate, and one whose elements all do not satisfy the predicate.
-  _.partition = function(array, predicate) {
-    var pass = [], fail = [];
-    each(array, function(elem) {
-      (predicate(elem) ? pass : fail).push(elem);
-    });
-    return [pass, fail];
-  };
-
   // Produce a duplicate-free version of the array. If the array has already
   // been sorted, you have the option of using a faster algorithm.
   // Aliased as `unique`.
@@ -25129,7 +25118,7 @@ module.exports=require('2Btyq2');
     var rest = slice.call(arguments, 1);
     return _.filter(_.uniq(array), function(item) {
       return _.every(rest, function(other) {
-        return _.contains(other, item);
+        return _.indexOf(other, item) >= 0;
       });
     });
   };
@@ -25144,7 +25133,7 @@ module.exports=require('2Btyq2');
   // Zip together multiple lists into a single array -- elements that share
   // an index go together.
   _.zip = function() {
-    var length = _.max(_.pluck(arguments, 'length').concat(0));
+    var length = _.max(_.pluck(arguments, "length").concat(0));
     var results = new Array(length);
     for (var i = 0; i < length; i++) {
       results[i] = _.pluck(arguments, '' + i);
@@ -25250,27 +25239,19 @@ module.exports=require('2Btyq2');
   };
 
   // Partially apply a function by creating a version that has had some of its
-  // arguments pre-filled, without changing its dynamic `this` context. _ acts
-  // as a placeholder, allowing any combination of arguments to be pre-filled.
+  // arguments pre-filled, without changing its dynamic `this` context.
   _.partial = function(func) {
-    var boundArgs = slice.call(arguments, 1);
+    var args = slice.call(arguments, 1);
     return function() {
-      var position = 0;
-      var args = boundArgs.slice();
-      for (var i = 0, length = args.length; i < length; i++) {
-        if (args[i] === _) args[i] = arguments[position++];
-      }
-      while (position < arguments.length) args.push(arguments[position++]);
-      return func.apply(this, args);
+      return func.apply(this, args.concat(slice.call(arguments)));
     };
   };
 
-  // Bind a number of an object's methods to that object. Remaining arguments
-  // are the method names to be bound. Useful for ensuring that all callbacks
-  // defined on an object belong to it.
+  // Bind all of an object's methods to that object. Useful for ensuring that
+  // all callbacks defined on an object belong to it.
   _.bindAll = function(obj) {
     var funcs = slice.call(arguments, 1);
-    if (funcs.length === 0) throw new Error('bindAll must be passed function names');
+    if (funcs.length === 0) throw new Error("bindAll must be passed function names");
     each(funcs, function(f) { obj[f] = _.bind(obj[f], obj); });
     return obj;
   };
@@ -25309,13 +25290,12 @@ module.exports=require('2Btyq2');
     var previous = 0;
     options || (options = {});
     var later = function() {
-      previous = options.leading === false ? 0 : _.now();
+      previous = options.leading === false ? 0 : new Date;
       timeout = null;
       result = func.apply(context, args);
-      context = args = null;
     };
     return function() {
-      var now = _.now();
+      var now = new Date;
       if (!previous && options.leading === false) previous = now;
       var remaining = wait - (now - previous);
       context = this;
@@ -25325,7 +25305,6 @@ module.exports=require('2Btyq2');
         timeout = null;
         previous = now;
         result = func.apply(context, args);
-        context = args = null;
       } else if (!timeout && options.trailing !== false) {
         timeout = setTimeout(later, remaining);
       }
@@ -25339,33 +25318,24 @@ module.exports=require('2Btyq2');
   // leading edge, instead of the trailing.
   _.debounce = function(func, wait, immediate) {
     var timeout, args, context, timestamp, result;
-
-    var later = function() {
-      var last = _.now() - timestamp;
-      if (last < wait) {
-        timeout = setTimeout(later, wait - last);
-      } else {
-        timeout = null;
-        if (!immediate) {
-          result = func.apply(context, args);
-          context = args = null;
-        }
-      }
-    };
-
     return function() {
       context = this;
       args = arguments;
-      timestamp = _.now();
+      timestamp = new Date();
+      var later = function() {
+        var last = (new Date()) - timestamp;
+        if (last < wait) {
+          timeout = setTimeout(later, wait - last);
+        } else {
+          timeout = null;
+          if (!immediate) result = func.apply(context, args);
+        }
+      };
       var callNow = immediate && !timeout;
       if (!timeout) {
         timeout = setTimeout(later, wait);
       }
-      if (callNow) {
-        result = func.apply(context, args);
-        context = args = null;
-      }
-
+      if (callNow) result = func.apply(context, args);
       return result;
     };
   };
@@ -25387,7 +25357,11 @@ module.exports=require('2Btyq2');
   // allowing you to adjust arguments, run code before and after, and
   // conditionally execute the original function.
   _.wrap = function(func, wrapper) {
-    return _.partial(wrapper, func);
+    return function() {
+      var args = [func];
+      push.apply(args, arguments);
+      return wrapper.apply(this, args);
+    };
   };
 
   // Returns a function that is the composition of a list of functions, each
@@ -25417,9 +25391,8 @@ module.exports=require('2Btyq2');
 
   // Retrieve the names of an object's properties.
   // Delegates to **ECMAScript 5**'s native `Object.keys`
-  _.keys = function(obj) {
-    if (!_.isObject(obj)) return [];
-    if (nativeKeys) return nativeKeys(obj);
+  _.keys = nativeKeys || function(obj) {
+    if (obj !== Object(obj)) throw new TypeError('Invalid object');
     var keys = [];
     for (var key in obj) if (_.has(obj, key)) keys.push(key);
     return keys;
@@ -25574,8 +25547,7 @@ module.exports=require('2Btyq2');
     // from different frames are.
     var aCtor = a.constructor, bCtor = b.constructor;
     if (aCtor !== bCtor && !(_.isFunction(aCtor) && (aCtor instanceof aCtor) &&
-                             _.isFunction(bCtor) && (bCtor instanceof bCtor))
-                        && ('constructor' in a && 'constructor' in b)) {
+                             _.isFunction(bCtor) && (bCtor instanceof bCtor))) {
       return false;
     }
     // Add the first object to the stack of traversed objects.
@@ -25715,30 +25687,6 @@ module.exports=require('2Btyq2');
     return value;
   };
 
-  _.constant = function(value) {
-    return function () {
-      return value;
-    };
-  };
-
-  _.property = function(key) {
-    return function(obj) {
-      return obj[key];
-    };
-  };
-
-  // Returns a predicate for checking whether an object has a given set of `key:value` pairs.
-  _.matches = function(attrs) {
-    return function(obj) {
-      if (obj === attrs) return true; //avoid comparing an object to itself.
-      for (var key in attrs) {
-        if (attrs[key] !== obj[key])
-          return false;
-      }
-      return true;
-    }
-  };
-
   // Run a function **n** times.
   _.times = function(n, iterator, context) {
     var accum = Array(Math.max(0, n));
@@ -25754,9 +25702,6 @@ module.exports=require('2Btyq2');
     }
     return min + Math.floor(Math.random() * (max - min + 1));
   };
-
-  // A (possibly faster) way to get the current timestamp as an integer.
-  _.now = Date.now || function() { return new Date().getTime(); };
 
   // List of HTML entities for escaping.
   var entityMap = {
@@ -25954,18 +25899,6 @@ module.exports=require('2Btyq2');
 
   });
 
-  // AMD registration happens at the end for compatibility with AMD loaders
-  // that may not enforce next-turn semantics on modules. Even though general
-  // practice for AMD registration is to be anonymous, underscore registers
-  // as a named module because, like jQuery, it is a base library that is
-  // popular enough to be bundled in a third party lib, but not be part of
-  // an AMD load request. Those cases could generate an error when an
-  // anonymous define() is called outside of a loader request.
-  if (typeof define === 'function' && define.amd) {
-    define('underscore', [], function() {
-      return _;
-    });
-  }
 }).call(this);
 
 ; browserify_shim__define__module__export__(typeof _ != "undefined" ? _ : window._);
@@ -25973,9 +25906,7 @@ module.exports=require('2Btyq2');
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"barf":[function(require,module,exports){
-module.exports=require('j4nx7M');
-},{}],"j4nx7M":[function(require,module,exports){
+},{}],"DObBJ+":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -26093,4 +26024,6 @@ module.exports = Backbone;
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"backbone":"fZAJ/5"}]},{},[])
+},{"backbone":"iaK0Bg"}],"barf":[function(require,module,exports){
+module.exports=require('DObBJ+');
+},{}]},{},[])

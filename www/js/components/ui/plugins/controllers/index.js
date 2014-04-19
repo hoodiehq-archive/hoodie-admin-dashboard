@@ -23,6 +23,7 @@ var Controller = Marionette.Controller.extend({
   },
 
   show: function (opts) {
+    debugger;
     var view = new ShowView({
       collection: opts.collection,
       model: opts.model,

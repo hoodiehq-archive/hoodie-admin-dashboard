@@ -7,7 +7,8 @@ var PluginModel = require('../models/plugin');
 
 var Collection = BaseCollection.extend({
   url: app.request('config').api.url + '_plugins',
-  model: PluginModel
+  model: PluginModel,
+  comparator: 'name'
 });
 
 module.exports = Collection;
