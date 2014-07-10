@@ -1,6 +1,5 @@
 data/
-dist/
-libs/
+vendor/
 node_modules/
 .DS_Store
 .tmp

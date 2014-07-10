@@ -19,7 +19,10 @@
     "hoodie-plugin-appconfig": "~0.2.1",
     "hoodie-plugin-email": "~0.1.5",
     "hoodie-plugin-users": "~0.1.1",
-    "hoodie-server": "^0.9.19"
+    "hoodie-server": "^0.9.19",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-sass": "~0.7.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
