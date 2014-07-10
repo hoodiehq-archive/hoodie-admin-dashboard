@@ -7,17 +7,15 @@ app.module('pocket.layout', function () {
 
   this.addInitializer(function (options) {
     var layoutController;
+    var admin = app.request('admin');
 
     options.app.components.layout.template = require('./templates/index.hbs');
     layoutController = new LayoutController(options.app.components.layout);
 
-    app.vent.on('app:layout:login', function () {
-      layoutController.showLogin();
-    });
-
-    app.vent.on('app:layout:app', function () {
-      layoutController.showApp();
-    });
+    admin.account.on('signout', layoutController.showLogin);
+    admin.account.on('unauthenticated', layoutController.showLogin);
+    admin.account.on('signin', layoutController.showApp);
+    app.vent.on('app:plugins', layoutController.showApp);
   });
 
 });

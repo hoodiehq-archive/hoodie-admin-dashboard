@@ -5,6 +5,9 @@ var app = require('./helpers/namespace');
 require('./helpers/storage/store');
 require('./helpers/handlebars');
 
+// load entities
+require('./components/pocket/entities/adminEntity');
+
 // start the pocket component
 require('./components/pocket/index');
 

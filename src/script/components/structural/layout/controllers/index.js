@@ -1,10 +1,12 @@
 var Marionette = require('backbone.marionette');
+var _ = require('underscore');
 
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     options = options || {};
     this.options = options;
+    _.bindAll(this, 'showLogin', 'showApp');
 
     // create layout object passing in a template string
     var Layout = Marionette.Layout.extend({
@@ -29,16 +31,17 @@ var Controller = Marionette.Controller.extend({
     require('../../../ui/logo/index');
     require('../../../ui/navigation/index');
     require('../../../ui/info/index');
+    require('../../../ui/app/index');
   },
 
   showLogin: function () {
     this.container.$el.attr('data-state', 'signed-out');
+    this.container.$el.find('input:visible').eq(0).focus();
   },
 
   showApp: function () {
     this.container.$el.attr('data-state', 'signed-in');
-  },
-
+  }
 });
 
 module.exports = Controller;
