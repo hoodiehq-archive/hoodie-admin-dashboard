@@ -6,7 +6,8 @@ var Syphon = require('backbone.syphon');
 var tmpl = require('../templates/index.hbs');
 
 require('../../../../helpers/handlebars');
-require('backbone.validation');
+var Validation = require('backbone.validation');
+
 
 
 var View = Marionette.ItemView.extend({
@@ -15,7 +16,7 @@ var View = Marionette.ItemView.extend({
   className: 'form-horizontal',
 
   initialize: function () {
-    Backbone.Validation.bind(this);
+    Validation.bind(this);
   },
 
   events: {

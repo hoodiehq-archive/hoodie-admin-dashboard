@@ -1,5 +1,8 @@
 /*global module:false*/
 
+var shims = require('./config/shims');
+var sharedModules = Object.keys(shims);
+
 module.exports = function (grunt) {
 
   'use strict';
@@ -91,104 +94,16 @@ module.exports = function (grunt) {
     browserify: {
       vendor: {
         options: {
-          shim: {
-            jquery: {
-              path: 'vendor/jquery/jquery.js',
-              exports: '$'
-            },
-            lodash: {
-              path: 'vendor/lodash/dist/lodash.js',
-              exports: '_'
-            },
-            underscore: {
-              path: 'vendor/underscore/underscore.js',
-              exports: '_'
-            },
-            backbone: {
-              path: 'vendor/backbone/backbone.js',
-              exports: 'Backbone',
-              depends: {
-                underscore: 'underscore'
-              }
-            },
-            'backbone.babysitter': {
-              path: 'vendor/backbone.babysitter/lib/backbone.babysitter.js',
-              exports: 'Backbone.Babysitter',
-              depends: {
-                backbone: 'Backbone'
-              }
-            },
-            'backbone.wreqr': {
-              path: 'vendor/backbone.wreqr/lib/backbone.wreqr.js',
-              exports: 'Backbone.Wreqr',
-              depends: {
-                backbone: 'Backbone'
-              }
-            },
-            'backbone.marionette': {
-              path: 'vendor/backbone.marionette/lib/backbone.marionette.js',
-              exports: 'Marionette',
-              depends: {
-                jquery: '$',
-                backbone: 'Backbone',
-                underscore: '_'
-              }
-            },
-            gridster: {
-              path: 'vendor/jquery.gridster.with-extras.js/index.js',
-              exports: '$.fn.gridster',
-              depends: {
-                jquery: '$'
-              }
-            },
-            barf: {
-              path: 'node_modules/barf/dist/barf.js',
-              exports: 'Backbone.Router',
-              depends: {
-                backbone: 'Backbone'
-              }
-            },
-            'backbone.syphon': {
-              path: 'vendor/backbone.syphon/lib/backbone.syphon.js',
-              exports: 'Backbone.Syphon',
-              depends: {
-                backbone: 'Backbone'
-              }
-            }
-          }
+          transform: ['browserify-shim'],
+          require: sharedModules
         },
         src: ['./vendor/*.js'],
         dest: '.tmp/vendor.js'
       },
       app: {
         options: {
-          standalone: 'app',
-          //debug: true,
-          transform: [
-            'hbsfy'
-          ],
-          alias: [
-            './vendor/jquery/jquery.js:jquery',
-            './vendor/lodash/dist/lodash.js:lodash',
-            './vendor/underscore/underscore.js:underscore',
-            './vendor/backbone/backbone.js:backbone',
-            './vendor/backbone.babysitter/lib/backbone.babysitter.js:backbone.babysitter',
-            './vendor/backbone.wreqr/lib/backbone.wreqr.js:backbone.wreqr',
-            './vendor/backbone.marionette/lib/backbone.marionette.js:backbone.marionette',
-            './vendor/jquery.gridster.with-extras.js/index.js:gridster',
-            './vendor/backbone.syphon/lib/backbone.syphon.js:backbone.syphon'
-          ],
-          external: [
-            './vendor/jquery/jquery.js',
-            './vendor/lodash/dist/lodash.js',
-            './vendor/underscore/underscore.js',
-            './vendor/backbone/backbone.js',
-            './vendor/backbone.babysitter/lib/backbone.babysitter.js',
-            './vendor/backbone.wreqr/lib/backbone.wreqr.js',
-            './vendor/backbone.marionette/lib/backbone.marionette.js',
-            './vendor/jquery.gridster.with-extras.js/index.js',
-            './vendor/backbone.syphon/lib/backbone.syphon.js'
-          ]
+          transform: ['hbsfy'],
+          external: sharedModules
         },
         src: ['src/script/init.js'],
         dest: '.tmp/pocket.js',

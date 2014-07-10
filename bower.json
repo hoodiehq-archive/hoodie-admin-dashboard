@@ -1,14 +1,9 @@
 {
   "name": "hoodie-pocket",
   "version": "0.0.0",
-  "main": "./app/index.html",
+  "main": "./www/index.html",
   "dependencies": {
-    "jquery": "~2.0.3",
     "jquery.gridster.with-extras.js": "https://raw2.github.com/espy/gridster.js/master/dist/jquery.gridster.with-extras.js",
-    "lodash": "~2.4.1",
-    "backbone": "~1.1.0",
-    "backbone.marionette": "~1.6.1",
-    "underscore": "~1.5.2",
     "backbone.syphon": "~0.4.1"
   }
 }
