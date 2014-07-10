@@ -2,7 +2,7 @@
 
 var app = require('../../../../helpers/namespace');
 var Marionette = require('backbone.marionette');
-var Backbone = require('backbone');
+// var Backbone = require('backbone');
 var View = require('../views/index');
 
 var Controller = Marionette.Controller.extend({
@@ -13,13 +13,14 @@ var Controller = Marionette.Controller.extend({
 
   show: function (opts) {
 
-    opts.collection.add(new Backbone.Model({
+// @ToDo: add Dashboard to pocket
+/*    opts.collection.add(new Backbone.Model({
       name: 'dashboard',
       title: 'dashboard'
     }), {
       at: 0
     });
-
+*/
     var view = new View({
       collection: opts.collection,
       model: opts.model,
