@@ -3,7 +3,7 @@ var HoodieAdmin = require('hoodie.admin');
 
 var admin = new HoodieAdmin();
 
-var Model = Backbone.Model.extend({
+var AdminModel = Backbone.Model.extend({
 
   defaults: {
     password: ''
@@ -34,4 +34,4 @@ var Model = Backbone.Model.extend({
 
 });
 
-module.exports = Model;
+module.exports = AdminModel;

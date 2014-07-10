@@ -2,13 +2,12 @@
 
 var Marionette = require('backbone.marionette');
 var Syphon = require('backbone.syphon');
+var _ = require('underscore');
 
 var tmpl = require('../templates/index.hbs');
 
 require('../../../../helpers/handlebars');
-var Validation = require('backbone.validation');
-
-
+// var Validation = require('backbone.validation');
 
 var View = Marionette.ItemView.extend({
   template: tmpl,
@@ -16,49 +15,37 @@ var View = Marionette.ItemView.extend({
   className: 'form-horizontal',
 
   initialize: function () {
-    Validation.bind(this);
+    // Validation.bind(this);
+    _.bindAll(this, 'handleSignInSuccess', 'handleSignInError');
   },
 
   events: {
-    'click #submit' : 'submit',
-    'keydown input' : 'submitOnEnter'
+    'submit' : 'handleSubmit',
   },
 
-  invalid: function () {
-    console.log('invalid password');
+  handleSubmit: function (event) {
+    var admin, data;
+    event.preventDefault();
+
+    admin = app.request('admin');
+    data = Syphon.serialize(this);
+
+    this.$('input[name=password]').val('');
+
+    admin.account.signIn(data.password)
+    .done(this.handleSignInSuccess)
+    .fail(this.handleSignInError);
   },
 
-  valid: function () {
-    Backbone.history.navigate('', {
+  handleSignInError: function () {
+    alert('invalid password');
+  },
+
+  handleSignInSuccess: function () {
+    Backbone.history.navigate('plugins/appconfig/show', {
       trigger: true
     });
   },
-
-  modelEvents: {
-    'validated:invalid': 'invalid'
-  },
-
-  submitOnEnter: function (e) {
-    var key = e.keyCode || e.which;
-
-    if (key === 13) {
-      e.preventDefault();
-      this.submit();
-    }
-  },
-
-  submit: function () {
-    var self = this;
-    var data = Syphon.serialize(this);
-
-    this.model.signIn(data.password)
-    .done(function () {
-      self.valid();
-    })
-    .fail(function () {
-      self.invalid();
-    });
-  }
 
 });
 

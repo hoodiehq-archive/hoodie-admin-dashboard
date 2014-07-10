@@ -3,12 +3,17 @@
 var BaseRouter = require('./helpers/mvc/router');
 
 var Router = BaseRouter.extend({
-
   routes: {
-    'logout'                : 'logout',
-    // ''                      : 'dashboard',
+    ''                      : 'index',
+    'signIn'                : 'signIn',
+    'signOut'               : 'signOut',
     'plugins/:filter'       : 'plugins',
     '*defaults'             : 'plugins'
+  },
+
+  index: function () {
+    // no dashboard for now
+    this.navigate('plugins/appconfig/show', {trigger: true, replace: true});
   },
 
   plugins: function (filter) {
@@ -20,22 +25,15 @@ var Router = BaseRouter.extend({
     } else {
       app.vent.trigger('app:plugins');
     }
-
   },
 
   // dashboard: function () {
   //   app.vent.trigger('app:dashboard');
   // },
 
-  logout: function () {
-    app.vent.trigger('app:user:logout');
-    app.vent.trigger('app:layout:login');
+  signOut: function () {
+    app.vent.trigger('app:user:signout');
   },
-
-  login: function () {
-    app.vent.trigger('app:layout:login');
-    app.vent.trigger('app:user:logout');
-  }
 
 });
 

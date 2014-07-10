@@ -3,14 +3,11 @@
 var Marionette = require('backbone.marionette');
 var View = require('../views/index');
 
-var User =  require('../../../pocket/models/user');
-
 var Controller = Marionette.Controller.extend({
 
   initialize: function (options) {
     this.options = options || {};
 
-    this.user = new User();
     this.view = new View({
       model: this.user
     });
