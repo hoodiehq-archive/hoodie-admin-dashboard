@@ -8,8 +8,8 @@
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-compass": "~0.7.0",
     "grunt-contrib-jshint": "~0.8.0",
-    "browserify": "~3.24.1",
-    "grunt-browserify": "~1.3.0",
+    "grunt-browserify": "^2.0.8",
+    "browserify-shim": "^3.5.0",
     "grunt-contrib-uglify": "~0.3.2",
     "handlebars": "1.3.0",
     "hbsfy": "1.3.2",
@@ -19,7 +19,10 @@
     "hoodie-plugin-appconfig": "~0.2.1",
     "hoodie-plugin-email": "~0.1.5",
     "hoodie-plugin-users": "~0.1.1",
-    "hoodie-server": "^0.9.19"
+    "hoodie-server": "^0.9.19",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-sass": "~0.7.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -37,8 +40,12 @@
   "dependencies": {
     "backbone.validation": "~0.7.1",
     "barf": "~1.0.2",
-    "hoodie.admin": "git://github.com/hoodiehq/hoodie.admin.js.git#9be3b89",
-    "moment": "~2.5.1"
+    "hoodie.admin": "git://github.com/hoodiehq/hoodie.admin.js.git#new",
+    "moment": "~2.5.1",
+    "lodash": "~2.4.1",
+    "backbone": "~1.1.2",
+    "jquery": "~2.1.1",
+    "backbone.marionette": "~1.6.2"
   },
   "hoodie": {
     "plugins": [
@@ -46,5 +53,18 @@
       "hoodie-plugin-appconfig",
       "hoodie-plugin-email"
     ]
+  },
+  "browserify-shim": "./config/shims.js",
+  "browser": {
+    "jquery": "./node_modules/jquery/dist/jquery.js",
+    "lodash": "./node_modules/lodash/dist/lodash.js",
+    "underscore": "./node_modules/lodash/dist/lodash.compat.js",
+    "backbone": "./node_modules/backbone/backbone.js",
+    "backbone.marionette": "./node_modules/backbone.marionette/lib/backbone.marionette.js",
+    "backbone.babysitter": "./node_modules/backbone.marionette/node_modules/backbone.babysitter/lib/backbone.babysitter.js",
+    "backbone.wreqr": "./node_modules/backbone.marionette/node_modules/backbone.wreqr/lib/backbone.wreqr.js",
+    "gridster": "./vendor/jquery.gridster.with-extras.js/index.js",
+    "barf": "./node_modules/barf/dist/barf.js",
+    "backbone.syphon": "./vendor/backbone.syphon/lib/backbone.syphon.js"
   }
 }

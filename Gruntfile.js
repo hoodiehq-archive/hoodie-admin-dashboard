@@ -1,17 +1,21 @@
 /*global module:false*/
 
+var shims = require('./config/shims');
+var sharedModules = Object.keys(shims);
+
 module.exports = function (grunt) {
 
   'use strict';
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-browserify');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-
-  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-connect-proxy');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-hoodie');
 
   // Project configuration.
@@ -22,7 +26,7 @@ module.exports = function (grunt) {
     jshint: {
       files: [
         'Gruntfile.js',
-        'www/js/**/**/*.js'
+        'src/script/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -30,8 +34,8 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      files: ['<%= jshint.files %>', 'www/scss/*.scss', 'www/js/*.html', 'app/js/**/*.hbs'],
-      tasks: ['compass', 'browserify:app', 'jshint'],
+      files: ['<%= jshint.files %>', 'src/style/**/*.scss', 'app/js/**/*.hbs'],
+      tasks: ['sass', 'browserify:app', 'jshint'],
       options: {
         livereload: true
       }
@@ -51,7 +55,7 @@ module.exports = function (grunt) {
       server: {
         options: {
           port: 9000,
-          base: 'www',
+          base: '.tmp',
           hostname: '0.0.0.0',
           middleware: function (connect, options) {
             var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest;
@@ -74,150 +78,78 @@ module.exports = function (grunt) {
     },
 
 
-    compass: {
+    sass: {
       dist: {
-        options: {
-          sassDir: 'www/scss',
-          cssDir: 'www/css',
-          environment: 'production'
+        files: {
+          'www/app.css': 'src/style/index.scss'
         }
       },
       dev: {
-        options: {
-          sassDir: 'www/scss',
-          cssDir: 'www/css',
-          outputStyle: 'expanded'
+        files: {
+          '.tmp/app.css': 'src/style/index.scss'
         }
       }
-
     },
 
     browserify: {
-      libs: {
+      vendor: {
         options: {
-          shim: {
-            jquery: {
-              path: 'libs/jquery/jquery.js',
-              exports: '$'
-            },
-            lodash: {
-              path: 'libs/lodash/dist/lodash.js',
-              exports: '_'
-            },
-            underscore: {
-              path: 'libs/underscore/underscore.js',
-              exports: '_'
-            },
-            backbone: {
-              path: 'libs/backbone/backbone.js',
-              exports: 'Backbone',
-              depends: {
-                underscore: 'underscore'
-              }
-            },
-            'backbone.babysitter': {
-              path: 'libs/backbone.babysitter/lib/backbone.babysitter.js',
-              exports: 'Backbone.Babysitter',
-              depends: {
-                backbone: 'Backbone'
-              }
-            },
-            'backbone.wreqr': {
-              path: 'libs/backbone.wreqr/lib/backbone.wreqr.js',
-              exports: 'Backbone.Wreqr',
-              depends: {
-                backbone: 'Backbone'
-              }
-            },
-            'backbone.marionette': {
-              path: 'libs/backbone.marionette/lib/backbone.marionette.js',
-              exports: 'Marionette',
-              depends: {
-                jquery: '$',
-                backbone: 'Backbone',
-                underscore: '_'
-              }
-            },
-            gridster: {
-              path: 'libs/jquery.gridster.with-extras.js/index.js',
-              exports: '$.fn.gridster',
-              depends: {
-                jquery: '$'
-              }
-            },
-            barf: {
-              path: 'node_modules/barf/dist/barf.js',
-              exports: 'Backbone.Router',
-              depends: {
-                backbone: 'Backbone'
-              }
-            },
-            'backbone.syphon': {
-              path: 'libs/backbone.syphon/lib/backbone.syphon.js',
-              exports: 'Backbone.Syphon',
-              depends: {
-                backbone: 'Backbone'
-              }
-            }
-          }
+          transform: ['browserify-shim'],
+          require: sharedModules
         },
-        src: ['./libs/*.js'],
-        dest: 'www/dist/libs.js'
+        src: ['./vendor/*.js'],
+        dest: '.tmp/vendor.js'
       },
       app: {
         options: {
-          standalone: 'app',
-          //debug: true,
-          transform: [
-            'hbsfy'
-          ],
-          alias: [
-            './libs/jquery/jquery.js:jquery',
-            './libs/lodash/dist/lodash.js:lodash',
-            './libs/underscore/underscore.js:underscore',
-            './libs/backbone/backbone.js:backbone',
-            './libs/backbone.babysitter/lib/backbone.babysitter.js:backbone.babysitter',
-            './libs/backbone.wreqr/lib/backbone.wreqr.js:backbone.wreqr',
-            './libs/backbone.marionette/lib/backbone.marionette.js:backbone.marionette',
-            './libs/jquery.gridster.with-extras.js/index.js:gridster',
-            './libs/backbone.syphon/lib/backbone.syphon.js:backbone.syphon'
-          ],
-          external: [
-            './libs/jquery/jquery.js',
-            './libs/lodash/dist/lodash.js',
-            './libs/underscore/underscore.js',
-            './libs/backbone/backbone.js',
-            './libs/backbone.babysitter/lib/backbone.babysitter.js',
-            './libs/backbone.wreqr/lib/backbone.wreqr.js',
-            './libs/backbone.marionette/lib/backbone.marionette.js',
-            './libs/jquery.gridster.with-extras.js/index.js',
-            './libs/backbone.syphon/lib/backbone.syphon.js'
-          ]
+          transform: ['hbsfy'],
+          external: sharedModules
         },
-        src: ['www/js/init.js'],
-        dest: 'www/dist/pocket.js',
+        src: ['src/script/init.js'],
+        dest: '.tmp/pocket.js',
       }
     },
 
     uglify: {
       dist: {
         files: {
-          'www/dist/<%= pkg.name %>.min.js': ['www/dist/libs', 'www/dist/pocket.js']
+          'www/vendor.js': '.tmp/vendor.js',
+          'www/pocket.js': '.tmp/pocket.js'
         }
       }
     },
 
+    copy: {
+      dev: {
+        files: {
+          '.tmp/index.html': 'src/index.html'
+        }
+      },
+      dist: {
+        files: {
+          'www/index.html': 'src/index.html'
+        }
+      }
+    },
+
+    clean: {
+      dev: {
+        src: ['.tmp/']
+      }
+    }
   });
 
   // Default task.
   grunt.registerTask('default', ['jshint']);
-  grunt.registerTask('build', ['jshint', 'compass:production', 'browserify', 'uglify']);
+  grunt.registerTask('build', ['jshint', 'copy:dist', 'sass:dist', 'browserify', 'uglify']);
 
   grunt.registerTask('serve', [
+    'clean:dev',
     'hoodie',
     'connect:server',
     'configureProxies:server',
-    'compass:dev',
+    'copy:dev',
+    'sass:dev',
     'browserify',
     'watch'
   ]);
