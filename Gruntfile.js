@@ -136,6 +136,18 @@ module.exports = function (grunt) {
       dev: {
         src: ['.tmp/']
       }
+    },
+
+    release: {
+      bump: {
+        commitFiles: [
+          'package.json',
+          'bower.json',
+          'CHANGELOG.md',
+          'www/*'
+        ]
+      },
+      dotfiles: false
     }
   });
 
