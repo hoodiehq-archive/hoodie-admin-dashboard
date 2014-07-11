@@ -12,6 +12,7 @@
 
   "indent": 2,
   "node": true,
+  "browser": true,
   "devel": true,
 
   "globals": {
