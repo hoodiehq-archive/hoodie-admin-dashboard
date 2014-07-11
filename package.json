@@ -23,7 +23,8 @@
     "hoodie-plugin-appconfig": "^0.2.1",
     "hoodie-plugin-email": "^0.1.5",
     "hoodie-plugin-users": "^0.1.1",
-    "hoodie-server": "^0.9.19"
+    "hoodie-server": "^0.9.19",
+    "load-grunt-tasks": "^0.6.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
