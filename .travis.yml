@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+  - '0.10'
+before_install:
+  - npm install -g grunt-cli bower
+  - bower install
+script:
+  - grunt build
+after_success:
+  - grunt ghrelease
+notifications:
+  email: false
+env:
+  global:
+    - secure: "GGYvcNR9EpgvU/FLVUaiSVLzGr971x45arMfEUmPC74arBwoC9TQZEsEW2CwoQodvTXL3DXsJxKXFTV2OuOMHgKsWOkPGb3Xm5JF2XjWxcYnJy2gfLpGoY/rs4FZTkVe5YNIjk4oypM1gRXQGNVSX8YjHJTmD/iF2DkVrnTm1Gw="
+deploy:
+  provider: npm
+  email: stephan@boennemann.me
+  api_key:
+    secure: GQVUR5TAJ3O/oq1o+FF7RfYW0ttzVd7XHEBBW0tUN/nODrE/TugqUpAD6//VKuuoeil9MxrgSOuZiru/ZVd88uDOInLkAmCfPgJod7beR41I50V4kqfscdVtzIZfOkGA2cSoXc0To7lCQdmpdS2szNOt6jSzBdmKgHf1SiCkbKk=
+  on:
+    all_branches: true
+    tags: true
+    repo: hoodiehq/pocket
