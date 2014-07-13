@@ -1,5 +1,6 @@
 'use strict';
 
+/*jshint -W079 */
 var localStorage = {
 
   setItem: function (name, item) {
