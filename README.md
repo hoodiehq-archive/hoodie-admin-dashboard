@@ -1,4 +1,5 @@
 # Pocket rebuild
+[![Build Status](https://travis-ci.org/hoodiehq/pocket.svg?branch=snug)](https://travis-ci.org/hoodiehq/pocket)
 
 Static HTML for now. Currently includes a fluid version of gridster.js (check out https://github.com/espy/gridster.js/blob/master/README.md to see how that works).
 

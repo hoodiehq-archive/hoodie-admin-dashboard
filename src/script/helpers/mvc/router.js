@@ -41,7 +41,7 @@ var BaseRouter = Backbone.Router.extend({
       if (admin.account.isSignedIn()) {
         return next();
       }
-      admin.account.authenticate().done(next)
+      admin.account.authenticate().done(next);
     }
   }
 });

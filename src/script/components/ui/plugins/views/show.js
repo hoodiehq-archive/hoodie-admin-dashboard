@@ -17,7 +17,7 @@ var View = Marionette.ItemView.extend({
   ui: {
     iframe: 'iframe'
   },
-  onRender: function() {
+  onRender: function () {
     this.ui.iframe.on('load', this.injectHoodieAdmin);
   },
   injectHoodieAdmin: function () {

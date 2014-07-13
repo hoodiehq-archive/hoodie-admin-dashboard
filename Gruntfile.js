@@ -7,16 +7,7 @@ module.exports = function (grunt) {
 
   'use strict';
 
-  grunt.loadNpmTasks('grunt-browserify');
-  grunt.loadNpmTasks('grunt-connect-proxy');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-sass');
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-hoodie');
+  require('load-grunt-tasks')(grunt);
 
   // Project configuration.
   grunt.initConfig({
@@ -136,6 +127,18 @@ module.exports = function (grunt) {
       dev: {
         src: ['.tmp/']
       }
+    },
+
+    release: {
+      bump: {
+        commitFiles: [
+          'package.json',
+          'bower.json',
+          'CHANGELOG.md',
+          'www/*'
+        ]
+      },
+      dotfiles: false
     }
   });
 
