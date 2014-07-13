@@ -1,7 +1,6 @@
 'use strict';
 
-/*jshint -W079 */
-var localStorage = {
+module.exports = {
 
   setItem: function (name, item) {
     if (typeof item === 'object') {
@@ -32,6 +31,3 @@ var localStorage = {
   }
 
 };
-
-module.exports = localStorage;
-

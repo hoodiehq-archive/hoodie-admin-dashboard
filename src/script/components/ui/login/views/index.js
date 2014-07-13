@@ -42,7 +42,7 @@ var View = Marionette.ItemView.extend({
   },
 
   handleSignInSuccess: function () {
-    Backbone.history.navigate('plugins/appconfig/show', {
+    Backbone.history.navigate('plugin/appconfig', {
       trigger: true
     });
   },

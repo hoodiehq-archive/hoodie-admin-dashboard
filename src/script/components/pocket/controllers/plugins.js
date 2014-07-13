@@ -20,18 +20,7 @@ var PluginsController = Marionette.Controller.extend({
     this.collection = new PluginsCollection();
 
     $.when(this.collection.fetch()).done(function () {
-
-      switch (self.options.action) {
-        case 'show':
-          self.show(self.collection.get(self.options.name));
-          break;
-        case 'edit':
-          self.edit(self.collection.get(self.options.name));
-          break;
-        default:
-          self.list(self.collection);
-      }
-
+      self.show(self.collection.get(self.options.name));
       app.vent.trigger('app:nav:show', {
         model: self.collection.get(self.options.id),
         collection: self.collection,
@@ -48,21 +37,7 @@ var PluginsController = Marionette.Controller.extend({
       collection: model.collection,
       model: model
     });
-  },
-
-  edit: function (model) {
-    app.vent.trigger('app:plugins:edit', {
-      collection: model.collection,
-      model: model
-    });
-  },
-
-  list: function (collection) {
-    app.vent.trigger('app:plugins:list', {
-      collection: collection
-    });
   }
-
 });
 
 module.exports = PluginsController;
