@@ -20,6 +20,9 @@ var PluginsController = Marionette.Controller.extend({
     this.collection = new PluginsCollection();
 
     $.when(this.collection.fetch()).done(function () {
+
+      self.collection.remove('email');
+
       self.show(self.collection.get(self.options.name));
       app.vent.trigger('app:nav:show', {
         model: self.collection.get(self.options.id),
