@@ -6,24 +6,15 @@ var Controller = require('./controllers/index');
 app.module('pocket.plugins', function () {
 
   this.addInitializer(function (options) {
-    this._controller = new Controller(options);
+    this.controller = new Controller(options);
   });
 
   this.on('before:start', function () {
     var self = this;
 
-    app.vent.on('app:plugins:list', function (options) {
-      self._controller.list(options);
-    });
-
     app.vent.on('app:plugins:show', function (options) {
-      self._controller.show(options);
+      self.controller.show(options);
     });
-
-    app.vent.on('app:plugins:edit', function (options) {
-      self._controller.edit(options);
-    });
-
   });
 
 });

@@ -17,12 +17,29 @@ var View = Marionette.ItemView.extend({
   ui: {
     iframe: 'iframe'
   },
+  serializeData: function () {
+    var attributes = this.model.toJSON();
+
+    attributes.path = Backbone.history.fragment.replace(this.currentPath(), '');
+    return attributes;
+  },
   onRender: function () {
     this.ui.iframe.on('load', this.injectHoodieAdmin);
   },
   injectHoodieAdmin: function () {
-    this.ui.iframe[0].contentWindow.require = require;
-    this.ui.iframe[0].contentWindow.hoodieAdmin = app.request('admin');
+    var view = this;
+    var win = this.ui.iframe[0].contentWindow;
+    win.require = require;
+    win.hoodieAdmin = app.request('admin');
+
+    win.addEventListener('hashchange', function () {
+      var pluginPath = this.location.hash.replace(/#\/?/, '');
+
+      app.router.navigate(view.currentPath() + '/' + pluginPath);
+    });
+  },
+  currentPath: function () {
+    return 'plugin/' + this.model.get('name');
   }
 });
 
