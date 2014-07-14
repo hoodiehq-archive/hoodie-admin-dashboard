@@ -81,15 +81,15 @@ body {
   bottom: 0; }
 
 .sidebar header {
-  height: 5em;
-  line-height: 5em;
   padding: 0 0 0 1em;
   border-bottom: 1px solid; }
 
 .sidebar h1 {
-  margin-top: 0; }
+  margin-top: 0;
+  line-height: 1.75em; }
 
 .sidebar .helpers {
+  display: none;
   position: absolute;
   bottom: 0;
   padding: 0 0 0 1em; }
@@ -109,7 +109,7 @@ body {
 
 .pluginList a {
   height: 4em;
-  padding: 0 0 0 1em;
+  padding: 0 0 0 1.25em;
   border-bottom: 1px solid;
   display: block; }
 
@@ -123,17 +123,18 @@ body {
   height: 100%; }
 
 .content header {
-  height: 35px;
-  margin-top: 23px; }
-
-.content header h3 {
-  margin: 0 0 0 1.1rem; }
-
-.content header .placeMeta {
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 1px;
   position: absolute;
-  right: 1rem;
-  top: 0;
-  margin: 20px 1.0rem 0 0; }
+  right: 5px;
+  top: 5px;
+  z-index: 10; }
+  .content header a {
+    color: #DEDEDE; }
+    .content header a:hover {
+      color: #333; }
 
 .dashboard {
   width: 99%;
@@ -148,7 +149,7 @@ body {
 
 .pluginView {
   position: absolute;
-  top: 80px;
+  top: 0;
   bottom: 0;
   right: 0;
   left: 0; }
@@ -315,10 +316,10 @@ body, .dashboard, .pluginList .active a {
 
 /* light gray */
 .content {
-  background-color: #EEE; }
+  background-color: #FDFBFA; }
 
 /* white */
-.content header, .item .itemContent, .item .handle {
+.item .itemContent, .item .handle {
   background: #FFF; }
 
 /* ----- ### Font colours ----- */
@@ -437,16 +438,6 @@ a {
 .sidebar .helpers li {
   font-size: .75em;
   text-transform: uppercase; }
-
-/* ----- ### CONTENT ----- */
-.content header {
-  font-weight: 300;
-  font-size: 1.0em;
-  line-height: 35px;
-  letter-spacing: 1px; }
-
-.content header .placeMeta {
-  font-size: 0.9em; }
 
 /* ----- ### TILES / ITEMS ----- */
 .item .itemContent section {

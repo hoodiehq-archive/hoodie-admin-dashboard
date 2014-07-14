@@ -20,11 +20,12 @@ body, .dashboard, .pluginList .active a {
 
 /* light gray */
 .content {
-  background-color: #EEE;
+  //background-color: #EEE;
+  background-color: #FDFBFA;
 }
 
 /* white */
-    .content header,   .item .itemContent, .item .handle {
+    .item .itemContent, .item .handle {
       background: #FFF;
     }
 
