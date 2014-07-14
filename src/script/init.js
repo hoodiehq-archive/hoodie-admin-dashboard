@@ -6,10 +6,10 @@ require('./helpers/storage/store');
 require('./helpers/handlebars');
 
 // load entities
-require('./components/pocket/entities/adminEntity');
+require('./components/admin-dashboard/entities/adminEntity');
 
-// start the pocket component
-require('./components/pocket/index');
+// start the admin-dashboard component
+require('./components/admin-dashboard/index');
 
 app.start(new Config().toJSON());
 
