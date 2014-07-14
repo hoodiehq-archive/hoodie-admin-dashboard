@@ -25,7 +25,7 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      files: ['<%= jshint.files %>', 'src/style/**/*.scss', 'app/js/**/*.hbs'],
+      files: ['<%= jshint.files %>', 'src/style/**/*.scss', 'src/**/*.hbs'],
       tasks: ['sass', 'browserify:app', 'jshint'],
       options: {
         livereload: true
@@ -113,12 +113,14 @@ module.exports = function (grunt) {
     copy: {
       dev: {
         files: {
-          '.tmp/index.html': 'src/index.html'
+          '.tmp/index.html': 'src/index.html',
+          '.tmp/images/hoodie_logo.svg': 'src/images/hoodie_logo.svg'
         }
       },
       dist: {
         files: {
-          'www/index.html': 'src/index.html'
+          'www/index.html': 'src/index.html',
+          'www/images/hoodie_logo.svg': 'src/images/hoodie_logo.svg'
         }
       }
     },
