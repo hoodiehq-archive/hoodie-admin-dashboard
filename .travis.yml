@@ -1,27 +1,24 @@
 language: node_js
 node_js:
-  - '0.10'
+- '0.10'
 before_install:
-  - gem update --system
-  - gem install sass --version "=3.3.7"
-  - gem install compass --version "=0.12.3"
-  - npm install -g grunt-cli bower
-  - bower install
-script:
-  - grunt build
+- gem update --system
+- gem install sass --version "=3.3.7"
+- gem install compass --version "=0.12.3"
+- npm install -g grunt-cli bower
+- bower install
 after_success:
-  - grunt ghrelease
+- grunt ghrelease
 notifications:
   email: false
 env:
   global:
-    - secure: "GGYvcNR9EpgvU/FLVUaiSVLzGr971x45arMfEUmPC74arBwoC9TQZEsEW2CwoQodvTXL3DXsJxKXFTV2OuOMHgKsWOkPGb3Xm5JF2XjWxcYnJy2gfLpGoY/rs4FZTkVe5YNIjk4oypM1gRXQGNVSX8YjHJTmD/iF2DkVrnTm1Gw="
+  - secure: QnVxtgOZeKqcHUA7mTXhD3WaGusd62xOisWGMxSNCFy0H3Wu8xqjIBCMHpDc3zsbQlN/xJHPSHmXyT1YfH3eWtSN7NLDS/CdwrJDhUY3uIv5rSBMnMxUMsCVsk532LrsLTroWCQDM7glbGW1JF4q6LnqgWSDX1VtF+gOJleYBZI=
 deploy:
   provider: npm
-  email: stephan@boennemann.me
+  email: stephan@thehoodiefirm.com
   api_key:
-    secure: GQVUR5TAJ3O/oq1o+FF7RfYW0ttzVd7XHEBBW0tUN/nODrE/TugqUpAD6//VKuuoeil9MxrgSOuZiru/ZVd88uDOInLkAmCfPgJod7beR41I50V4kqfscdVtzIZfOkGA2cSoXc0To7lCQdmpdS2szNOt6jSzBdmKgHf1SiCkbKk=
+    secure: CGYk4sM1MCtgm1JTRxe4JlYPbfO5wiGz+vjsWWkPxC1/d5PmWqO5hhVDUwcCGjImjL4CAO1VnV1na2SMG4SjMoEjuVlpvPnFagI6IdhkkapaMdpz0AQVLFOrtPW04b1dsr7k+yGaXHai/SrBt/UwyXDGiObgmhU/yEZw8hbclCY=
   on:
     all_branches: true
     tags: true
-    repo: hoodiehq/hoodie-admin-dashboard
