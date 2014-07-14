@@ -1,6 +1,6 @@
 {
   "name": "hoodie-admin-dashboard",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "./www/index.html",
   "dependencies": {
     "jquery.gridster.with-extras.js": "https://raw2.github.com/espy/gridster.js/master/dist/jquery.gridster.with-extras.js",
