@@ -1,5 +1,5 @@
 {
-  "name": "hoodie-pocket",
+  "name": "hoodie-admin-dashboard",
   "version": "0.0.0",
   "main": "./www/index.html",
   "dependencies": {

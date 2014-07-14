@@ -24,4 +24,4 @@ deploy:
   on:
     all_branches: true
     tags: true
-    repo: hoodiehq/pocket
+    repo: hoodiehq/hoodie-admin-dashboard

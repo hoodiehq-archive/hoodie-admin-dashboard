@@ -1,4 +1,4 @@
-# Pocket rebuild
+# Admin Dashboard
 [![Build Status](https://travis-ci.org/hoodiehq/hoodie-admin-dashboard.svg?branch=snug)](https://travis-ci.org/hoodiehq/hoodie-admin-dashboard)
 
 Static HTML for now. Currently includes a fluid version of gridster.js (check out https://github.com/espy/gridster.js/blob/master/README.md to see how that works).
@@ -14,7 +14,7 @@ Build everything with `$ grunt build`
 
 # Setting up the dev environment
 
-This will enable you to work on Admin Dashboard, pocket UIKit and plugins.
+This will enable you to work on Admin Dashboard, UIKit and plugins.
 
 ## Working on Admin Dashboard
 
@@ -28,7 +28,7 @@ $ grunt browserify
 
 You'll also need to `$ grunt browserify` each time you add libraries to be compiled into `libs.js`.
 
-Then `$ grunt serve`. This will lauch Hoodie as well as the Grunt server and also connect the two, so there is no further config needed. Pocket will be running at http://0.0.0.0:9000, not at the Hoodie URLs.
+Then `$ grunt serve`. This will lauch Hoodie as well as the Grunt server and also connect the two, so there is no further config needed. Admin Dashboard will be running at http://0.0.0.0:9000, not at the Hoodie URLs.
 
 You can then `$ hoodie install pluginName` as usual.
 
@@ -46,6 +46,6 @@ Clone the plugin and do `$ npm link` in its directory. This will make a global n
 
 If the plugin exists in npm already, you can install it now via `$ hoodie install pluginName`.
 
-Now go to `pocketBackend/node_modules` and do `$ npm link hoodie-plugin-pluginName`.
+Now go to `yourHoodieApp/node_modules` and do `$ npm link hoodie-plugin-pluginName`.
 
 If the plugin is new and not installable through `$hoodie install`, you will have to add it to the package.json manually.
