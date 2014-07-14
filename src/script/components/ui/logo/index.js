@@ -3,7 +3,7 @@
 var app = require('../../../helpers/namespace');
 var Controller = require('./controllers/index');
 
-app.module('pocket.logo', function () {
+app.module('admin-dashboard.logo', function () {
 
   this.addInitializer(function (options) {
     this._controller = new Controller(options);

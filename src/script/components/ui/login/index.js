@@ -2,7 +2,7 @@
 
 var Controller = require('./controllers/index');
 
-app.module('pocket.login', function () {
+app.module('admin-dashboard.login', function () {
 
   this.addInitializer(function (options) {
     new Controller(options);

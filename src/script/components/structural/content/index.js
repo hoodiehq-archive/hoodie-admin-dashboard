@@ -2,7 +2,7 @@
 var Controller = require('./controllers/index');
 var app = require('../../../helpers/namespace');
 
-app.module('pocket.content', function () {
+app.module('admin-dashboard.content', function () {
 
   'use strict';
 

@@ -2,7 +2,7 @@
 var LayoutController = require('./controllers/index');
 var app = require('../../../helpers/namespace');
 
-app.module('pocket.layout', function () {
+app.module('admin-dashboard.layout', function () {
   'use strict';
 
   this.addInitializer(function (options) {

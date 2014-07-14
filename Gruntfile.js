@@ -97,7 +97,7 @@ module.exports = function (grunt) {
           external: sharedModules
         },
         src: ['src/script/init.js'],
-        dest: '.tmp/pocket.js',
+        dest: '.tmp/admin-dashboard.js',
       }
     },
 
@@ -105,7 +105,7 @@ module.exports = function (grunt) {
       dist: {
         files: {
           'www/vendor.js': '.tmp/vendor.js',
-          'www/pocket.js': '.tmp/pocket.js'
+          'www/admin-dashboard.js': '.tmp/admin-dashboard.js'
         }
       }
     },

@@ -12,7 +12,7 @@ var Model = BaseModel.extend({
   },
 
   setIframeUrl: function () {
-    var url =  config.api.url + '_plugins/' + this.get('name') + '/pocket/index.html';
+    var url =  config.api.url + '_plugins/' + this.get('name') + '/admin-dashboard/index.html';
     this.set({
       'iframeUrl': url
     });

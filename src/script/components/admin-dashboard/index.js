@@ -4,7 +4,7 @@ var Controller = require('./controllers/index');
 
 require('../structural/layout/index');
 
-app.module('pocket', function () {
+app.module('admin-dashboard', function () {
 
   'use strict';
 

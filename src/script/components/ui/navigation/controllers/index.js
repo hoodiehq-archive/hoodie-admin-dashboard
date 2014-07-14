@@ -13,7 +13,7 @@ var Controller = Marionette.Controller.extend({
 
   show: function (opts) {
 
-// @ToDo: add Dashboard to pocket
+// @ToDo: add Dashboard to admin-dashboard
 /*    opts.collection.add(new Backbone.Model({
       name: 'dashboard',
       title: 'dashboard'

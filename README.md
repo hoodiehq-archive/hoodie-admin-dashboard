@@ -1,5 +1,5 @@
 # Pocket rebuild
-[![Build Status](https://travis-ci.org/hoodiehq/pocket.svg?branch=snug)](https://travis-ci.org/hoodiehq/pocket)
+[![Build Status](https://travis-ci.org/hoodiehq/hoodie-admin-dashboard.svg?branch=snug)](https://travis-ci.org/hoodiehq/hoodie-admin-dashboard)
 
 Static HTML for now. Currently includes a fluid version of gridster.js (check out https://github.com/espy/gridster.js/blob/master/README.md to see how that works).
 
@@ -14,14 +14,14 @@ Build everything with `$ grunt build`
 
 # Setting up the dev environment
 
-This will enable you to work on Pocket, pocket UIKit and plugins.
+This will enable you to work on Admin Dashboard, pocket UIKit and plugins.
 
-## Working on Pocket
+## Working on Admin Dashboard
 
 This has improved considerably thanks to @svnlto. All you do is
 
 ````
-$ git clone git@github.com:hoodiehq/pocket.git
+$ git clone git@github.com:hoodiehq/hoodie-admin-dashboard.git
 $ npm install
 $ grunt browserify
 ````
@@ -32,13 +32,13 @@ Then `$ grunt serve`. This will lauch Hoodie as well as the Grunt server and als
 
 You can then `$ hoodie install pluginName` as usual.
 
-## Working on pocket-UIKit
+## Working on admin-dashboard-UIKit
 
-Clone `git@github.com:hoodiehq/hoodie-pocket-UIKit.git` and do `$ npm link` in its directory. This will make a global npm package named `hoodie-pocket-UIKit` available on your system.
+Clone `git@github.com:hoodiehq/hoodie-admin-dashboard-UIKit.git` and do `$ npm link` in its directory. This will make a global npm package named `hoodie-admin-dashboard-UIKit` available on your system.
 
-Now go to `pocketBackend/node_modules/hoodie-server/node_modules` and do `$ npm link hoodie-pocket-UIKit`.
+Now go to `yourHoodieApp/node_modules/hoodie-server/node_modules` and do `$ npm link hoodie-admin-dashboard-UIKit`.
 
-You can now work in your UIKit-folder and see the changes in your Pocket's plugins. Don't forget to `$ grunt build` the UIKit first.
+You can now work in your UIKit-folder and see the changes in your admin-dashboard's plugins. Don't forget to `$ grunt build` the UIKit first.
 
 ## Working on a plugin
 
