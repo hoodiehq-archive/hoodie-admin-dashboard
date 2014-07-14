@@ -132,15 +132,17 @@ module.exports = function (grunt) {
     },
 
     release: {
-      bump: {
-        commitFiles: [
-          'package.json',
-          'bower.json',
-          'CHANGELOG.md',
-          'www/*'
-        ]
-      },
-      dotfiles: false
+      options: {
+        bump: {
+          commitFiles: [
+            'package.json',
+            'bower.json',
+            'CHANGELOG.md',
+            'www/*'
+          ]
+        },
+        dotfiles: false
+      }
     }
   });
 
