@@ -5,7 +5,7 @@ Static HTML for now. Currently includes a fluid version of gridster.js (check ou
 
 Remember to `$ npm install` and `$ bower install` :)
 
-Start dev server with `$ grunt serve` and open `http://localhost:4444`.
+Start dev server with `$ grunt serve` and open `http://localhost:9000`.
 You need the livereload plugin for Chrome if you want livereload.
 
 Build CSS with `$ grunt compass`
