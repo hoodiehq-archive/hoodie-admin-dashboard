@@ -3,7 +3,7 @@
 
 Static HTML for now. Currently includes a fluid version of gridster.js (check out https://github.com/espy/gridster.js/blob/master/README.md to see how that works).
 
-Remember to `$ npm install` :)
+Remember to `$ npm install` and `$ bower install` :)
 
 Start dev server with `$ grunt serve` and open `http://localhost:4444`.
 You need the livereload plugin for Chrome if you want livereload.
