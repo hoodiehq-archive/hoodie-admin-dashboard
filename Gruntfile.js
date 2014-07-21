@@ -149,6 +149,7 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('default', ['jshint']);
   grunt.registerTask('build', ['jshint', 'copy:dist', 'sass:dist', 'browserify', 'uglify']);
+  grunt.registerTask('ci', ['build', 'integration-test']);
 
   grunt.registerTask('serve', [
     'clean:dev',
