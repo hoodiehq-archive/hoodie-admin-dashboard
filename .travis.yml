@@ -7,18 +7,18 @@ before_install:
 - gem install compass --version "=0.12.3"
 - npm install -g grunt-cli bower
 - bower install
-after_success:
-- grunt ghrelease
 notifications:
   email: false
 env:
   global:
-  - secure: QnVxtgOZeKqcHUA7mTXhD3WaGusd62xOisWGMxSNCFy0H3Wu8xqjIBCMHpDc3zsbQlN/xJHPSHmXyT1YfH3eWtSN7NLDS/CdwrJDhUY3uIv5rSBMnMxUMsCVsk532LrsLTroWCQDM7glbGW1JF4q6LnqgWSDX1VtF+gOJleYBZI=
+  - secure: WMvD6gt/aldXZZrHTVXOUr1XZOJBGLwK952WF8zkusghzfRZRKvN2Nzb8zcWy01rbLSxJudkIhhMrZPTpCvOcIfGL0a28Z6J9waDk9A3Xjwd1lCaLvaJKhWr9mM+Bc5Q6lYdilbcXrIw7vc8smV398Pmx+bpxB2TyOtsEiQ26X4=
 deploy:
   provider: npm
   email: stephan@thehoodiefirm.com
-  api_key:
-    secure: CGYk4sM1MCtgm1JTRxe4JlYPbfO5wiGz+vjsWWkPxC1/d5PmWqO5hhVDUwcCGjImjL4CAO1VnV1na2SMG4SjMoEjuVlpvPnFagI6IdhkkapaMdpz0AQVLFOrtPW04b1dsr7k+yGaXHai/SrBt/UwyXDGiObgmhU/yEZw8hbclCY=
   on:
     all_branches: true
     tags: true
+before_deploy:
+- grunt before-deploy
+after_deploy:
+- grunt after-deploy

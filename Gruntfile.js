@@ -133,14 +133,6 @@ module.exports = function (grunt) {
 
     release: {
       options: {
-        bump: {
-          commitFiles: [
-            'package.json',
-            'bower.json',
-            'CHANGELOG.md',
-            'www/*'
-          ]
-        },
         dotfiles: false
       }
     }
