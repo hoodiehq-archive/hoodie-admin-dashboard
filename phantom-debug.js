@@ -34,6 +34,8 @@ page.open('http://localhost:9000/', function() {
     // console.log($('[data-state] [data-component=login]').is(':visible'));
   });
 
-  page.render('debug.png');
-  phantom.exit();
+  setTimeout(function() {
+    page.render('debug.png');
+    phantom.exit();
+  }, 1000);
 });
