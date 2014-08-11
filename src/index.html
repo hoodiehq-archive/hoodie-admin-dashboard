@@ -4,6 +4,32 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <link rel="stylesheet" href="app.css">
   <title>Admin Dashboard</title>
+  <script>
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (oThis) {
+        if (typeof this !== "function") {
+          // closest thing possible to the ECMAScript 5
+          // internal IsCallable function
+          throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+        }
+
+        var aArgs = Array.prototype.slice.call(arguments, 1),
+            fToBind = this,
+            fNOP = function () {},
+            fBound = function () {
+              return fToBind.apply(this instanceof fNOP && oThis
+                     ? this
+                     : oThis,
+                     aArgs.concat(Array.prototype.slice.call(arguments)));
+            };
+
+        fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
+
+        return fBound;
+      };
+    }
+  </script>
 </head>
 <body id="container">
   <div id="content"></div>
