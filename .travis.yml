@@ -9,6 +9,8 @@ before_install:
 - bower install
 notifications:
   email: false
+  slack:
+    secure: d7BezCHlNfbEE25WP+bGfvm6Q1l/zW02ecMYS6HiTxpyZ/H8yZn74h14M8Eh91p87k1Ly5nFZcMXeEpJVZQwAQL8nOe/19HJTJnJSztLiJtXKD9xI17nwnXlIFkOzGYnnkbK2ReTurBpwrAqeDu8uql37Zb9maI/+uHk3hGEupI=
 env:
   global:
   - secure: WMvD6gt/aldXZZrHTVXOUr1XZOJBGLwK952WF8zkusghzfRZRKvN2Nzb8zcWy01rbLSxJudkIhhMrZPTpCvOcIfGL0a28Z6J9waDk9A3Xjwd1lCaLvaJKhWr9mM+Bc5Q6lYdilbcXrIw7vc8smV398Pmx+bpxB2TyOtsEiQ26X4=
