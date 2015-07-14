@@ -1,0 +1,23 @@
+body, html{
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.sidebar{
+  background: #F7F4F2;
+  width: 300px;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 0 1em;
+}
+
+.main{
+  background: #FDFBFA;
+  position: absolute;
+  top: 0;
+  left: 300px;
+  min-height: 100vh;
+  width: calc(100% - 300px);
+  padding: 0 1em;
+}

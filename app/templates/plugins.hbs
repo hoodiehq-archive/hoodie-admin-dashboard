@@ -1,0 +1,14 @@
+<div class="sidebar">
+  <h4>Plugin list</h4>
+  <h3>Welcome to {{model.appName}}</h3>
+  <ul>
+    {{#each model.pluginList as |plugin|}}
+    <li>
+      {{#link-to 'plugins.plugin' plugin}}{{plugin.id}}{{/link-to}}
+    </li>
+    {{/each}}
+  </ul>
+</div>
+<div class="main">
+  {{outlet}}
+</div>
