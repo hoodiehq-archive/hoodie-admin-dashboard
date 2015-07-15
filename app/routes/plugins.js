@@ -2,6 +2,8 @@ import AuthenticatedRoute from '../routes/authenticated';
 
 export default AuthenticatedRoute.extend({
   model: function() {
-    return this.store.findAll('plugin');
+    var plugins = this.store.findAll('plugin');
+    console.log('plugins: ',plugins);
+    return plugins;
   }
 });
