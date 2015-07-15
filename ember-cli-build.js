@@ -20,12 +20,11 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   /*
+  */
   app.import('bower_components/hoodie.admin.js/src/hoodie.admin.js', {
     type: 'vendor',
-    prepend: true,
     exports: 'HoodieAdmin'
   });
-  */
 
   return app.toTree();
 };
