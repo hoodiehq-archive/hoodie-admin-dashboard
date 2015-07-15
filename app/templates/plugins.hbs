@@ -1,12 +1,17 @@
 <div class="sidebar">
-  <h4>Plugin list</h4>
-  <h3>Welcome to {{model.appName}}</h3>
-  <ul>
+  <header>
+    <h1>{{#link-to 'index'}}Admin Dashboard{{/link-to}}</h1>
+  </header>
+
+  <ul class="plugin-list">
     {{#each model.pluginList as |plugin|}}
     <li>
-      {{#link-to 'plugins.plugin' plugin}}{{plugin.id}}{{/link-to}}
+      {{#link-to 'plugins.plugin' plugin}}{{plugin.name}}{{/link-to}}
     </li>
     {{/each}}
+  </ul>
+  <ul class="helpers">
+    <li>{{#link-to 'logout'}}logout{{/link-to}}</li>
   </ul>
 </div>
 <div class="main">

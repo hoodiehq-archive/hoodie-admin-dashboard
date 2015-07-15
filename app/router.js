@@ -6,12 +6,11 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  var router = this;
+  this.route('login');
+  this.route('logout');
   this.route('plugins', { path: '/plugins'}, function(){
     this.route('plugin', { path: ':plugin_id'});
   });
-
-
 });
 
 export default Router;

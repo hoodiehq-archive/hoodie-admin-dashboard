@@ -1,6 +1,9 @@
-export default Ember.Route.extend({
+import AuthenticatedRoute from '../authenticated';
+
+export default AuthenticatedRoute.extend({
   model: function(params) {
-    console.log('params: ',params);
-    return {id: params.plugin_id};
+    var plugins = this.modelFor('plugins');
+    debugger;
+    return plugins.findBy('id', params.plugin_id)
   }
 });
