@@ -4,7 +4,7 @@
   </header>
 
   <ul class="plugin-list">
-    {{#each plugin in model}}
+    {{#each model as |plugin|}}
     <li>
       {{#link-to 'plugins.plugin' plugin}}{{plugin.name}}{{/link-to}}
     </li>
