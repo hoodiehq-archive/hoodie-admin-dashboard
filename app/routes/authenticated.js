@@ -14,10 +14,22 @@ export default Ember.Route.extend({
     this.transitionTo('login');
   },
 
-  // Not really needed
+  // This allows all routes to fetch models that require authentication, such as
+  /*
+
+  Ember.$.getJSON('/_api/app/config').then(function(data){
+    console.log('data: ',data);
+  });
+
+  */
   getJSONWithToken: function(url) {
     var token = this.controllerFor('login').get('token');
-    return $.getJSON(url, { token: token });
+    Ember.$.ajaxSetup({
+      headers: {
+        'Authorization': 'Bearer ' + window.hoodieAdmin.account.bearerToken
+      }
+    });
+    return Ember.$.getJSON(url, { token: token });
   },
 
   actions: {
