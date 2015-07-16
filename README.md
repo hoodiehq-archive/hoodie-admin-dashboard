@@ -1,7 +1,8 @@
 # Admin-dashboard
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+Ember version of the Hoodie Admin Dashboard. Currently lets you log in and out, fetch all the plugin info, display plugin backends, and is ready to handle requests to Hoodie that require authentication. All Ajax requests done through Ember will transmit the bearerToken correctly once the admin has signed in.
+
+**Important:** Building the app hasn't been taken care of yet. It might work, it might not. Still work in progress. 
 
 ## Prerequisites
 
@@ -22,8 +23,16 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
-* `ember server`
+This admin dashboard is meant to run in conjunction with an actual Hoodie app, so you'll need to tell Ember where the `WWW`-endpoint of that Hoodie app is. For example:
+
+* `ember server --proxy http://127.0.0.1:6096`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
+
+This'll handle all requests to the Hoodie API without any CORS trouble or additional config
+
+### Oddities of Note
+
+This app embeds **iframes**, the sources of which are provided by the proxied Hoodie API. This only works if the Ember environment variable `locationType` is set to `hash` in `config/emvironment.js`. Otherwise, Ember will expect a route handler for the iframe src, and that will mess everything up. This means that the app's URLs use hashes.
 
 ### Code Generators
 

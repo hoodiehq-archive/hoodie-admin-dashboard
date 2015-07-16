@@ -1,8 +1,7 @@
 import Ember from 'ember';
+import AuthenticatedRoute from '../routes/authenticated';
 
-export default Ember.Route.extend({
-  model: function() {
-  },
+export default AuthenticatedRoute.extend({
   afterModel: function() {
     this.transitionTo('plugins');
   }

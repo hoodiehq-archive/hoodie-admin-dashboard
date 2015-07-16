@@ -74,6 +74,13 @@ a{
   header {
     padding: 0 0 0 1em;
     border-bottom:1px solid #585858;
+    .subline{
+      display: block;
+      margin: -15px 0 2px 1px;
+      font-size: 0.8rem;
+      color: #7F7F7F;
+      text-transform: uppercase;
+    }
   }
   h1 {
     font-weight: normal;

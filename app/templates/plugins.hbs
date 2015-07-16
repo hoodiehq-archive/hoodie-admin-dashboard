@@ -1,9 +1,10 @@
 <div class="sidebar">
   <header>
     <h1>{{#link-to 'index'}}Dashboard{{/link-to}}</h1>
+    <span class="subline">{{model.config.config.app_name}}</span>
   </header>
   <ul class="plugin-list">
-    {{#each model.plugins as |plugin|}}
+    {{#each model.plugins.plugins as |plugin|}}
     <li>
       {{#link-to 'plugins.plugin' plugin}}{{plugin.title}}{{/link-to}}
     </li>
