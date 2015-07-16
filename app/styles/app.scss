@@ -7,15 +7,8 @@ body, .sidebar{
 }
 
 body, html{
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
-
-body{
   margin:0;
   padding:0;
-  background-color:#EEE;
   font-size:100%;
   font-family:"Helvetica Neue", Helvetica, Arial, sans-serif
 }
@@ -141,7 +134,7 @@ a{
 }
 
 .login input {
-  width: 100%;
+  width: 72%;
   height: 2.75em;
   padding: 0 .5em;
   font-size: 16px;
@@ -162,7 +155,7 @@ a{
 }
 
 .login [type="submit"] {
-  max-width: 50%;
+  max-width: 25%;
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -174,7 +167,7 @@ a{
   font-size: 16px;
   line-height: 1.75;
   border-radius: 4px;
-  margin: .5em 0;
+  margin: .5em 0 .5em 1%;
   background: white;
   border: 1px solid #CCC;
   color: #555555;
