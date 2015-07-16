@@ -35,7 +35,6 @@ export default AuthenticatedRoute.extend({
     };
 
     return Ember.RSVP.hash(promises).then(function(data) {
-      console.log('1. PLUGINS data: ',data);
       return data;
     });
   }
