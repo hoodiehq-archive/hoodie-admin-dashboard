@@ -3,11 +3,15 @@ import AuthenticatedRoute from '../routes/authenticated';
 
 export default AuthenticatedRoute.extend({
   model: function() {
-    var plugins = this.store.findAll('plugin');
-    return plugins;
-  },
-  afterModel: function (plugins) {
-    var m = Ember.inspect(plugins);
-    console.log('m: ',m);
+    var url = '/_api/_plugins';
+    return Ember.$.getJSON(url).then(function(data) {
+      Ember.$.each(data, function (index, plugin) {
+        plugin.id = plugin.name;
+      });
+      var plugins = {
+        plugins: data
+      };
+      return plugins;
+    });
   }
 });

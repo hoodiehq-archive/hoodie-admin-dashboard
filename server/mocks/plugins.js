@@ -3,8 +3,7 @@ module.exports = function(app) {
   var pluginsRouter = express.Router();
 
   pluginsRouter.get('/', function(req, res) {
-    res.send({
-      'plugins': [
+    res.send([
         {
           "name":"appconfig",
           "title":"appconfig",
@@ -22,7 +21,7 @@ module.exports = function(app) {
           "version":"2.2.2"
         }
       ]
-    });
+    );
   });
 
   pluginsRouter.post('/', function(req, res) {

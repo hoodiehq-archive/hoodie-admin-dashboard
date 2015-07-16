@@ -3,9 +3,9 @@
     <h1>{{#link-to 'index'}}Admin Dashboard{{/link-to}}</h1>
   </header>
   <ul class="plugin-list">
-    {{#each model as |plugin|}}
+    {{#each model.plugins as |plugin|}}
     <li>
-      {{#link-to 'plugins.plugin' plugin}}{{plugin.name}}{{/link-to}}
+      {{#link-to 'plugins.plugin' plugin}}{{plugin.title}}{{/link-to}}
     </li>
     {{/each}}
   </ul>
