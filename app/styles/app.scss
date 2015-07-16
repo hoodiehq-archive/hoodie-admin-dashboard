@@ -1,12 +1,11 @@
 @import "reset";
 
 $creamWhite: #f7f4f2;
-
-body, .sidebar{
-  background: $creamWhite;
-}
+$slate:      #333333;
+$mediumGrey: #F1F1F1;
 
 body, html{
+  background: $creamWhite;
   margin:0;
   padding:0;
   font-size:100%;
@@ -14,15 +13,11 @@ body, html{
 }
 .sidebar{
   width:240px;
-  background-color:#333;
-  //color:#FDFBFA;
+  background-color: $slate;
+  color: $mediumGrey;
   height:100%
 }
-.sidebar header{
-  height:4em;
-  padding:0 0 0 1em;
-  border-bottom:1px solid #585858
-}
+
 .plugin-list{
   margin:0;
   padding:0
@@ -45,9 +40,10 @@ body, html{
 }
 a{
   text-decoration:none;
-  color: #222;
+  color: $mediumGrey;
 }
 .plugin-list a{
+  color: $mediumGrey;
   height:4em;
   line-height:4em;
   padding:0 0 0 1em;
@@ -56,6 +52,7 @@ a{
   font-size:.9em;
   letter-spacing:1px;
   text-transform:uppercase;
+  transition: background-color 0.25s;
 }
 .plugin-list a:hover{
   background-color:#585858;
@@ -68,20 +65,19 @@ a{
 
 
 .sidebar{
-  background: #F7F4F2;
   width: 240px;
   min-height: 100vh;
   overflow: hidden;
   padding: 0;
   header {
     padding: 0 0 0 1em;
-    border-bottom: 1px solid;
+    border-bottom:1px solid #585858;
   }
   h1 {
-    margin-top:0;
-    line-height: 4rem;
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: normal;
+    font-size: 2em;
+    margin-top: 0;
+    line-height: 1.775em;
   }
   .plugin-list {
     margin: 0;
@@ -90,7 +86,6 @@ a{
   .plugin-list a {
     height: 4em;
     padding: 0 0 0 1.25em;
-    border-bottom: 1px solid;
     display: block;
   }
 }
