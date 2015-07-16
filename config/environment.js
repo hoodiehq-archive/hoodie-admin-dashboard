@@ -5,7 +5,8 @@ module.exports = function(environment) {
     modulePrefix: 'admin-dashboard',
     environment: environment,
     baseURL: '/',
-    locationType: 'auto',
+    // HOODIE: 'hash' is what allows iframes to work
+    locationType: 'hash',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build

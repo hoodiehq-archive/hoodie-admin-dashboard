@@ -2,11 +2,17 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   model: function() {
-    return {
-      appName: "Pocket"
-    };
+    // TODO: we're not using this atm
+    Ember.$.ajaxSetup({
+      headers: {
+        'Authorization': 'Bearer ' + window.hoodieAdmin.account.bearerToken
+      }
+    });
+    Ember.$.getJSON('/_api/app/config').then(function(data){
+      console.log('data: ',data);
+    });
   },
-  beforeModel: function() {
+  afterModel: function() {
     this.transitionTo('plugins');
   }
 });

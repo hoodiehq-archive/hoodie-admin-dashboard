@@ -1,10 +1,6 @@
 import Ember from 'ember';
-import Hoodie from "npm:hoodie";
-import HoodieAdmin from "npm:hoodie.admin";
-
 
 export default Ember.Controller.extend({
-  admin: new HoodieAdmin(),
   reset: function() {
     this.setProperties({
       // Username is always 'admin'
@@ -19,59 +15,34 @@ export default Ember.Controller.extend({
     localStorage.token = this.get('token');
   }.observes('token'),
 
+  gotoRoute: function (self) {
+    var attemptedTransition = self.get('attemptedTransition');
+    if (attemptedTransition) {
+      attemptedTransition.retry();
+      self.set('attemptedTransition', null);
+    } else {
+      // Redirect to 'plugins' by default.
+      self.transitionToRoute('');
+    }
+  },
+
   login: function() {
-    var self = this, data = this.getProperties('username', 'password');
+    var self = this;
+    var data = this.getProperties('username', 'password');
 
     // Clear out any error messages.
     this.set('errorMessage', null);
+    if(window.hoodieAdmin.account.bearerToken){
+      self.gotoRoute(self);
+    }
 
-    this.admin.account.signIn(data.password)
+    window.hoodieAdmin.account.signIn(data.password)
       .done(function(res){
         self.set('token', res.bearerToken);
-        var attemptedTransition = self.get('attemptedTransition');
-        if (attemptedTransition) {
-          attemptedTransition.retry();
-          self.set('attemptedTransition', null);
-        } else {
-          // Redirect to 'plugins' by default.
-          self.transitionToRoute('plugins');
-        }
+        self.gotoRoute(self);
       })
       .fail(function(err) {
-        console.log('signin err: ',err);
+        self.set('errorMessage', 'Error: '+err.message);
       });
-    /*
-    // FIX: this should obviously use hoodie.admin to log in
-    if (data.password === 'admin') {
-      // FIX: also just a placeholder
-      var attemptedTransition = self.get('attemptedTransition');
-      if (attemptedTransition) {
-        attemptedTransition.retry();
-        self.set('attemptedTransition', null);
-      } else {
-        // Redirect to 'plugins' by default.
-        self.transitionToRoute('plugins');
-      }
-    }
-    */
-    /*
-    $.post('/auth.json', data).then(function(response) {
-
-      self.set('errorMessage', response.message);
-      if (response.success) {
-        alert('Login succeeded!');
-        self.set('token', response.token);
-
-        var attemptedTransition = self.get('attemptedTransition');
-        if (attemptedTransition) {
-          attemptedTransition.retry();
-          self.set('attemptedTransition', null);
-        } else {
-          // Redirect to 'plugins' by default.
-          self.transitionToRoute('plugins');
-        }
-      }
-    });
-    */
   }
 });

@@ -6,8 +6,8 @@
     <label for="password">Please enter your admin password:</label>
     {{input id="password" value=password type="password" placeholder="Admin password"}}
     {{input class="btn" type="submit" value="Log In"}}
+    {{#if errorMessage}}
+      <p class="warning">{{errorMessage}}</p>
+    {{/if}}
   </form>
-  {{#if errorMessage}}
-    <div class="alert alert-error">{{errorMessage}}</div>
-  {{/if}}
 {{/if}}

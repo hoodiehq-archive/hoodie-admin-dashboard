@@ -14,6 +14,7 @@ export default Ember.Route.extend({
     this.transitionTo('login');
   },
 
+  // Not really needed
   getJSONWithToken: function(url) {
     var token = this.controllerFor('login').get('token');
     return $.getJSON(url, { token: token });

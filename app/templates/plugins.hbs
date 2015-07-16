@@ -1,6 +1,6 @@
 <div class="sidebar">
   <header>
-    <h1>{{#link-to 'index'}}Admin Dashboard{{/link-to}}</h1>
+    <h1>{{#link-to 'index'}}Dashboard{{/link-to}}</h1>
   </header>
   <ul class="plugin-list">
     {{#each model.plugins as |plugin|}}
@@ -13,6 +13,9 @@
     <li>{{#link-to 'logout'}}logout{{/link-to}}</li>
   </ul>
 </div>
-<div class="main">
-  {{outlet}}
+<div class="content">
+    {{outlet 'dashboard'}}
+  <div class="pluginView">
+    {{outlet}}
+  </div>
 </div>
