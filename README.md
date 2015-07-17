@@ -28,7 +28,7 @@ This admin dashboard is meant to run in conjunction with an actual Hoodie app, s
 
 This'll handle all requests to the Hoodie API without any CORS trouble or additional config
 
-### Oddities of Note
+#### Oddities of Note
 
 This app embeds **iframes**, the sources of which are provided by the proxied Hoodie API. This only works if the Ember environment variable `locationType` is set to `hash` in `config/environment.js`. Otherwise, Ember will expect a route handler for the iframe src, and that will mess everything up. This means that the app's URLs use hashes.
 
