@@ -2,8 +2,6 @@
 
 Ember version of the Hoodie Admin Dashboard. Currently lets you log in and out, fetch all the plugin info, display plugin backends, and is ready to handle requests to Hoodie that require authentication. All Ajax requests done through Ember will transmit the bearerToken correctly once the admin has signed in.
 
-**Important:** Building the app hasn't been taken care of yet. It might work, it might not. Still work in progress. 
-
 ## Prerequisites
 
 You will need the following things properly installed on your computer.
@@ -32,7 +30,25 @@ This'll handle all requests to the Hoodie API without any CORS trouble or additi
 
 ### Oddities of Note
 
-This app embeds **iframes**, the sources of which are provided by the proxied Hoodie API. This only works if the Ember environment variable `locationType` is set to `hash` in `config/emvironment.js`. Otherwise, Ember will expect a route handler for the iframe src, and that will mess everything up. This means that the app's URLs use hashes.
+This app embeds **iframes**, the sources of which are provided by the proxied Hoodie API. This only works if the Ember environment variable `locationType` is set to `hash` in `config/environment.js`. Otherwise, Ember will expect a route handler for the iframe src, and that will mess everything up. This means that the app's URLs use hashes.
+
+#### Working on admin-dashboard-UIKit
+
+Clone `git@github.com:hoodiehq/hoodie-admin-dashboard-UIKit.git` and do `$ npm link` in its directory. This will make a global npm package named `hoodie-admin-dashboard-UIKit` available on your system.
+
+Now go to `yourHoodieTestApp/node_modules/hoodie-server/node_modules` and do `$ npm link hoodie-admin-dashboard-UIKit`.
+
+You can now work in your UIKit-folder and see the changes in your admin-dashboard's plugins. Don't forget to `$ grunt build` the UIKit first.
+
+#### Working on a plugin
+
+Clone the plugin and do `$ npm link` in its directory. This will make a global npm package named `hoodie-plugin-pluginName` available on your system.
+
+If the plugin exists in npm already, you can install it now via `$ hoodie install pluginName`.
+
+Now go to `yourHoodieTestApp/node_modules` and do `$ npm link hoodie-plugin-pluginName`.
+
+If the plugin is new and not installable through `$hoodie install`, you will have to add it to the package.json manually.
 
 ### Code Generators
 
@@ -48,9 +64,11 @@ Make use of the many generators for code, try `ember help generate` for more det
 * `ember build` (development)
 * `ember build --environment production` (production)
 
-### Deploying
+The app is built into `www` to match the path in the existing dashboard. It's set in `.ember-cli`.
 
-Specify what it takes to deploy your app.
+### Release Process
+
+TBD.
 
 ## Further Reading / Useful Links
 
