@@ -5,7 +5,7 @@ export default Ember.Controller.extend({
     this.setProperties({
       // Username is always 'admin'
       username: 'admin',
-      password: '',
+      password: 'admin',
       errorMessage: ''
     });
   },
