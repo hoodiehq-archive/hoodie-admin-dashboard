@@ -25,6 +25,15 @@
         <p class="currentSearchMetrics muted">Showing <strong>{{model.users.length}}</strong> {{pluralize-word model.users.length 'user'}} {{#if activeSearch}} matching <strong>{{activeSearch}}</strong> {{/if}}out of a total of <strong>{{model.totalUsers}}</strong>.</p>
       </div>
       {{#if model.users}}
+
+      Page number: {{pageNumber}}
+
+      {{#if skipFactor}}
+      <button class="btn previous" {{action 'previous'}}>Previous</button>
+      {{/if}}
+      {{#unless isLastPage}}
+      <button class="btn next" {{action 'next'}}>Next</button>
+      {{/unless}}
       <table id="userList" class="table users table-striped">
         <thead class="{{if model.sortDesc 'desc' 'asc'}}">
           <tr>
