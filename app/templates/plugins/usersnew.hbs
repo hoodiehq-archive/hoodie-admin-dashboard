@@ -9,10 +9,10 @@
       <fieldset>
         <div class="group">
           <label for="">Search term</label>
-          {{input value=model.searchTerm type="text" class="form-control search-query" placeholder="Username"}}
+          {{input value=searchTerm type="text" class="form-control search-query" placeholder="Username"}}
           <p class="help-block">Search only applies to usernames.</p>
           <button class="submit btn ok" type="submit">Search</button>
-          {{#if model.searchTerm}}
+          {{#if searchTerm}}
           <button class="btn clearSearch" {{action 'clearSearch'}}>Clear search</button>
           {{/if}}
         </div>
@@ -22,7 +22,7 @@
     <h2>Your users</h2>
     <div class="content centered">
       <div class="tableStatus">
-        <p class="currentSearchMetrics muted">Showing <strong>{{model.users.length}}</strong> {{pluralize-word model.users.length 'user'}} {{#if model.searchTerm}} matching <strong>{{model.searchTerm}}</strong> {{/if}}out of a total of <strong>{{model.totalUsers}}</strong>.</p>
+        <p class="currentSearchMetrics muted">Showing <strong>{{model.users.length}}</strong> {{pluralize-word model.users.length 'user'}} {{#if activeSearch}} matching <strong>{{activeSearch}}</strong> {{/if}}out of a total of <strong>{{model.totalUsers}}</strong>.</p>
       </div>
       {{#if model.users}}
       <table id="userList" class="table users table-striped">
@@ -50,8 +50,8 @@
         </tbody>
       </table>
       {{else}}
-        {{#if model.searchTerm}}
-          <span class="alert alert-warning">No results for <strong>{{model.searchTerm}}</strong>. Please note that the search only matches exact strings from the first character onwards at the moment.</span>
+        {{#if activeSearch}}
+          <span class="alert alert-warning">No results for <strong>{{activeSearch}}</strong>. Please note that the search only matches exact strings from the first character onwards at the moment.</span>
         {{else}}
           <span>You don't have any users yet.</span>
         {{/if}}

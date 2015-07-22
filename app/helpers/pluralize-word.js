@@ -18,14 +18,12 @@ export function pluralizeWord(params) {
   var count = params[0];
   var singular = params[1];
   var plural = params[2];
-  console.log('description', count, singular, plural);
   if (count === 1) {
     return singular;
   } else {
     if(plural){
       return plural;
     } else {
-      console.log('plural', pluralize(singular));
       return pluralize(singular);
     }
   }

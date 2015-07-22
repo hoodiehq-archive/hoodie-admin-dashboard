@@ -2,62 +2,42 @@ import Ember from 'ember';
 import AuthenticatedRoute from '../authenticated';
 
 export default AuthenticatedRoute.extend({
-  init: function() {
-    this.setProperties({
-      pageLength: 5,
-      sortBy: 'created-at',
-      sortDesc: true,
-      searchTerm: ''
-    });
-    this._super.apply(this, arguments);
-  },
+  // necessary, because ember doesn't pick up
+  // controllers/plugins/usersnew correctly
+  controllerName: 'usersnew',
   model: function () {
-    var route = this;
-    var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-'+this.get('sortBy')+'?descending='+this.get('sortDesc')+'&limit='+this.get('pageLength');
-    if(this.get('searchTerm')){
-      url = '/_api/_users/_design/hoodie-plugin-users/_view/by-name?descending=false&limit='+this.get('pageLength')+'&startkey="'+this.get('searchTerm')+'"'+'&endkey="'+this.get('searchTerm')+'\ufff0"';
+    var controller = this.controllerFor('usersnew');
+    var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-'+controller.get('sortBy')+'?descending='+controller.get('sortDesc')+'&limit='+controller.get('pageLength');
+    if(controller.get('activeSearch')){
+      url = '/_api/_users/_design/hoodie-plugin-users/_view/by-name?descending=false&limit='+controller.get('pageLength')+'&startkey="'+controller.get('activeSearch')+'"'+'&endkey="'+controller.get('activeSearch')+'\ufff0"';
     }
     return Ember.$.getJSON(url).then(function(users) {
 
       var result = {
         'users': users.rows,
         'totalUsers': users.total_rows,
-        'pageLength': route.get('pageLength'),
-        'sortBy': route.get('sortBy'),
-        'sortDesc': route.get('sortDesc'),
-        'searchTerm': route.get('searchTerm')
       };
 
       return result;
     });
   },
 
-  computed: function () {
-
-  }.property('sortBy', 'sortDesc', 'searchTerm'),
-
-
+  // We let the actions bubble up from the controller by returning 'true' there,
+  // so that this route can refresh the model.
   actions: {
     updateUserList: function () {
       this.refresh();
+      return false;
     },
     search: function () {
-      this.set('searchTerm', this.currentModel.searchTerm);
       this.refresh();
       return false;
     },
     clearSearch: function () {
-      this.set('searchTerm', '');
       this.refresh();
       return false;
     },
     sortBy: function (sortBy) {
-      // If it's a double click we're probably flipping the sort order
-      if(sortBy === this.get('sortBy')){
-        this.toggleProperty('sortDesc');
-      } else {
-        this.set('sortBy', sortBy);
-      }
       this.refresh();
       return false;
     }

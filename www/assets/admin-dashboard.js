@@ -165,6 +165,45 @@ define('admin-dashboard/controllers/object', ['exports', 'ember'], function (exp
 	exports['default'] = Ember['default'].Controller;
 
 });
+define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+    searchTerm: '',
+    activeSearch: '',
+    pageLength: 5,
+    sortBy: 'created-at',
+    sortDesc: true,
+
+    // We let the actions bubble up to the route by returning 'true',
+    // so that the route can refresh the model.
+    actions: {
+      updateUserList: function updateUserList() {
+        return true;
+      },
+      search: function search() {
+        this.set('activeSearch', this.get('searchTerm'));
+        return true;
+      },
+      clearSearch: function clearSearch() {
+        this.set('activeSearch', '');
+        this.set('searchTerm', '');
+        return true;
+      },
+      sortBy: function sortBy(_sortBy) {
+        // If it's a double click we're probably flipping the sort order
+        if (_sortBy === this.get('sortBy')) {
+          this.toggleProperty('sortDesc');
+        } else {
+          this.set('sortBy', _sortBy);
+        }
+        return true;
+      }
+    }
+  });
+
+});
 define('admin-dashboard/helpers/convert-iso-to-timestamp', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -189,7 +228,6 @@ define('admin-dashboard/helpers/is-active-table-header', ['exports', 'ember'], f
   exports.isActiveTableHeader = isActiveTableHeader;
 
   function isActiveTableHeader(params) {
-    console.log('params: ', params);
     if (params[0] === params[1]) {
       return 'active';
     } else {
@@ -237,14 +275,12 @@ define('admin-dashboard/helpers/pluralize-word', ['exports', 'ember'], function 
     var count = params[0];
     var singular = params[1];
     var plural = params[2];
-    console.log('description', count, singular, plural);
     if (count === 1) {
       return singular;
     } else {
       if (plural) {
         return plural;
       } else {
-        console.log('plural', pluralize(singular));
         return pluralize(singular);
       }
     }
@@ -463,59 +499,42 @@ define('admin-dashboard/routes/plugins/usersnew', ['exports', 'ember', 'admin-da
   'use strict';
 
   exports['default'] = AuthenticatedRoute['default'].extend({
-    init: function init() {
-      this.setProperties({
-        pageLength: 5,
-        sortBy: 'created-at',
-        sortDesc: true,
-        searchTerm: ''
-      });
-      this._super.apply(this, arguments);
-    },
+    // necessary, because ember doesn't pick up
+    // controllers/plugins/usersnew correctly
+    controllerName: 'usersnew',
     model: function model() {
-      var route = this;
-      var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-' + this.get('sortBy') + '?descending=' + this.get('sortDesc') + '&limit=' + this.get('pageLength');
-      if (this.get('searchTerm')) {
-        url = '/_api/_users/_design/hoodie-plugin-users/_view/by-name?descending=false&limit=' + this.get('pageLength') + '&startkey="' + this.get('searchTerm') + '"' + '&endkey="' + this.get('searchTerm') + '￰"';
+      var controller = this.controllerFor('usersnew');
+      var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-' + controller.get('sortBy') + '?descending=' + controller.get('sortDesc') + '&limit=' + controller.get('pageLength');
+      if (controller.get('activeSearch')) {
+        url = '/_api/_users/_design/hoodie-plugin-users/_view/by-name?descending=false&limit=' + controller.get('pageLength') + '&startkey="' + controller.get('activeSearch') + '"' + '&endkey="' + controller.get('activeSearch') + '￰"';
       }
       return Ember['default'].$.getJSON(url).then(function (users) {
 
         var result = {
           'users': users.rows,
-          'totalUsers': users.total_rows,
-          'pageLength': route.get('pageLength'),
-          'sortBy': route.get('sortBy'),
-          'sortDesc': route.get('sortDesc'),
-          'searchTerm': route.get('searchTerm')
+          'totalUsers': users.total_rows
         };
 
         return result;
       });
     },
 
-    computed: (function () {}).property('sortBy', 'sortDesc', 'searchTerm'),
-
+    // We let the actions bubble up from the controller by returning 'true' there,
+    // so that this route can refresh the model.
     actions: {
       updateUserList: function updateUserList() {
         this.refresh();
+        return false;
       },
       search: function search() {
-        this.set('searchTerm', this.currentModel.searchTerm);
         this.refresh();
         return false;
       },
       clearSearch: function clearSearch() {
-        this.set('searchTerm', '');
         this.refresh();
         return false;
       },
       sortBy: function sortBy(_sortBy) {
-        // If it's a double click we're probably flipping the sort order
-        if (_sortBy === this.get('sortBy')) {
-          this.toggleProperty('sortDesc');
-        } else {
-          this.set('sortBy', _sortBy);
-        }
         this.refresh();
         return false;
       }
@@ -1403,7 +1422,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             },
             "end": {
               "line": 25,
-              "column": 211
+              "column": 203
             }
           },
           "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
@@ -1429,7 +1448,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return morphs;
         },
         statements: [
-          ["content","model.searchTerm",["loc",[null,[25,181],[25,201]]]]
+          ["content","activeSearch",["loc",[null,[25,177],[25,193]]]]
         ],
         locals: [],
         templates: []
@@ -1705,7 +1724,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             return morphs;
           },
           statements: [
-            ["content","model.searchTerm",["loc",[null,[54,67],[54,87]]]]
+            ["content","activeSearch",["loc",[null,[54,67],[54,83]]]]
           ],
           locals: [],
           templates: []
@@ -1784,7 +1803,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return morphs;
         },
         statements: [
-          ["block","if",[["get","model.searchTerm",["loc",[null,[53,14],[53,30]]]]],[],0,1,["loc",[null,[53,8],[57,15]]]]
+          ["block","if",[["get","activeSearch",["loc",[null,[53,14],[53,26]]]]],[],0,1,["loc",[null,[53,8],[57,15]]]]
         ],
         locals: [],
         templates: [child0, child1]
@@ -1963,12 +1982,12 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
       statements: [
         ["inline","add-user",[],["action","updateUserList"],["loc",[null,[5,4],[5,40]]]],
         ["element","action",["search"],["on","submit"],["loc",[null,[8,29],[8,60]]]],
-        ["inline","input",[],["value",["subexpr","@mut",[["get","model.searchTerm",["loc",[null,[12,24],[12,40]]]]],[],[]],"type","text","class","form-control search-query","placeholder","Username"],["loc",[null,[12,10],[12,111]]]],
-        ["block","if",[["get","model.searchTerm",["loc",[null,[15,16],[15,32]]]]],[],0,null,["loc",[null,[15,10],[17,17]]]],
+        ["inline","input",[],["value",["subexpr","@mut",[["get","searchTerm",["loc",[null,[12,24],[12,34]]]]],[],[]],"type","text","class","form-control search-query","placeholder","Username"],["loc",[null,[12,10],[12,105]]]],
+        ["block","if",[["get","searchTerm",["loc",[null,[15,16],[15,26]]]]],[],0,null,["loc",[null,[15,10],[17,17]]]],
         ["content","model.users.length",["loc",[null,[25,62],[25,84]]]],
         ["inline","pluralize-word",[["get","model.users.length",["loc",[null,[25,111],[25,129]]]],"user"],[],["loc",[null,[25,94],[25,138]]]],
-        ["block","if",[["get","model.searchTerm",["loc",[null,[25,145],[25,161]]]]],[],1,null,["loc",[null,[25,139],[25,218]]]],
-        ["content","model.totalUsers",["loc",[null,[25,244],[25,264]]]],
+        ["block","if",[["get","activeSearch",["loc",[null,[25,145],[25,157]]]]],[],1,null,["loc",[null,[25,139],[25,210]]]],
+        ["content","model.totalUsers",["loc",[null,[25,236],[25,256]]]],
         ["block","if",[["get","model.users",["loc",[null,[27,12],[27,23]]]]],[],2,3,["loc",[null,[27,6],[58,13]]]]
       ],
       locals: [],
@@ -2024,6 +2043,16 @@ define('admin-dashboard/tests/controllers/logout.jshint', function () {
   module('JSHint - controllers');
   test('controllers/logout.js should pass jshint', function() { 
     ok(true, 'controllers/logout.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/controllers/usersnew.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - controllers');
+  test('controllers/usersnew.js should pass jshint', function() { 
+    ok(true, 'controllers/usersnew.js should pass jshint.'); 
   });
 
 });
@@ -2343,7 +2372,7 @@ define('admin-dashboard/tests/routes/plugins/usersnew.jshint', function () {
 
   module('JSHint - routes/plugins');
   test('routes/plugins/usersnew.js should pass jshint', function() { 
-    ok(true, 'routes/plugins/usersnew.js should pass jshint.'); 
+    ok(false, 'routes/plugins/usersnew.js should pass jshint.\nroutes/plugins/usersnew.js: line 40, col 23, \'sortBy\' is defined but never used.\n\n1 error'); 
   });
 
 });
@@ -2413,6 +2442,58 @@ define('admin-dashboard/tests/unit/controllers/logout-test.jshint', function () 
   module('JSHint - unit/controllers');
   test('unit/controllers/logout-test.js should pass jshint', function() { 
     ok(true, 'unit/controllers/logout-test.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/unit/controllers/plugins/usersnew-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('controller:plugins/usersnew', {});
+
+  // Replace this with your real tests.
+  ember_qunit.test('it exists', function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('admin-dashboard/tests/unit/controllers/plugins/usersnew-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/controllers/plugins');
+  test('unit/controllers/plugins/usersnew-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/plugins/usersnew-test.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/unit/controllers/usersnew-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('controller:usersnew', {});
+
+  // Replace this with your real tests.
+  ember_qunit.test('it exists', function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('admin-dashboard/tests/unit/controllers/usersnew-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/controllers');
+  test('unit/controllers/usersnew-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/usersnew-test.js should pass jshint.'); 
   });
 
 });
