@@ -35,10 +35,10 @@
       <button class="btn next" {{action 'next'}}>Next</button>
       {{/unless}}
       <table id="userList" class="table users table-striped">
-        <thead class="{{if model.sortDesc 'desc' 'asc'}}">
+        <thead class="{{if sortDesc 'desc' 'asc'}}">
           <tr>
-            <th {{action 'sortBy' 'name'}} class="{{is-active-table-header 'name' model.sortBy}}">Username</th>
-            <th {{action 'sortBy' 'created-at'}} class="{{is-active-table-header 'created-at' model.sortBy}}">Signup date</th>
+            <th {{action 'sortBy' 'name'}} class="{{is-active-table-header 'name' sortBy}}">Username</th>
+            <th {{action 'sortBy' 'created-at'}} class="{{is-active-table-header 'created-at' sortBy}}">Signup date</th>
             <th data-sort-by="state" {{action 'sortBy' 'state'}}>State</th>
             <th class="no-sort"></th>
           </tr>

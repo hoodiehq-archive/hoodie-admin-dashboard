@@ -27,10 +27,12 @@ export default Ember.Controller.extend({
       return true;
     },
     search: function () {
+      this.set('skipFactor', 0);
       this.set('activeSearch', this.get('searchTerm'));
       return true;
     },
     clearSearch: function () {
+      this.set('skipFactor', 0);
       this.set('activeSearch', '');
       this.set('searchTerm', '');
       return true;

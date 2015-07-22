@@ -196,10 +196,12 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
         return true;
       },
       search: function search() {
+        this.set('skipFactor', 0);
         this.set('activeSearch', this.get('searchTerm'));
         return true;
       },
       clearSearch: function clearSearch() {
+        this.set('skipFactor', 0);
         this.set('activeSearch', '');
         this.set('searchTerm', '');
         return true;
@@ -1808,10 +1810,10 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           ["content","pageNumber",["loc",[null,[29,19],[29,33]]]],
           ["block","if",[["get","skipFactor",["loc",[null,[31,12],[31,22]]]]],[],0,null,["loc",[null,[31,6],[33,13]]]],
           ["block","unless",[["get","isLastPage",["loc",[null,[34,16],[34,26]]]]],[],1,null,["loc",[null,[34,6],[36,17]]]],
-          ["attribute","class",["concat",[["subexpr","if",[["get","model.sortDesc",["loc",[null,[38,27],[38,41]]]],"desc","asc"],[],["loc",[null,[38,22],[38,56]]]]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","model.sortBy",["loc",[null,[40,82],[40,94]]]]],[],["loc",[null,[40,50],[40,96]]]]]]],
+          ["attribute","class",["concat",[["subexpr","if",[["get","sortDesc",["loc",[null,[38,27],[38,35]]]],"desc","asc"],[],["loc",[null,[38,22],[38,50]]]]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","sortBy",["loc",[null,[40,82],[40,88]]]]],[],["loc",[null,[40,50],[40,90]]]]]]],
           ["element","action",["sortBy","name"],[],["loc",[null,[40,16],[40,42]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","model.sortBy",["loc",[null,[41,94],[41,106]]]]],[],["loc",[null,[41,56],[41,108]]]]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","sortBy",["loc",[null,[41,94],[41,100]]]]],[],["loc",[null,[41,56],[41,102]]]]]]],
           ["element","action",["sortBy","created-at"],[],["loc",[null,[41,16],[41,48]]]],
           ["element","action",["sortBy","state"],[],["loc",[null,[42,37],[42,64]]]],
           ["block","each",[["get","model.users",["loc",[null,[47,18],[47,29]]]]],[],2,null,["loc",[null,[47,10],[58,19]]]]
