@@ -18,20 +18,10 @@ export default AuthenticatedRoute.extend({
       url = '/_api/_users/_design/hoodie-plugin-users/_view/by-name?descending=false&limit='+this.get('pageLength')+'&startkey="'+this.get('searchTerm')+'"'+'&endkey="'+this.get('searchTerm')+'\ufff0"';
     }
     return Ember.$.getJSON(url).then(function(users) {
-      var resultsDesc = 'Currently displaying all '+users.total_rows+' users';
-      switch(users.length){
-        case 1:
-          resultsDesc = 'You have a single user';
-        break;
-        case 0:
-          resultsDesc = 'You have no users yet';
-        break;
-      }
 
       var result = {
         'users': users.rows,
         'totalUsers': users.total_rows,
-        'resultsDesc': resultsDesc,
         'pageLength': route.get('pageLength'),
         'sortBy': route.get('sortBy'),
         'sortDesc': route.get('sortDesc'),

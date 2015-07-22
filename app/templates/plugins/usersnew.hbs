@@ -22,8 +22,7 @@
     <h2>Your users</h2>
     <div class="content centered">
       <div class="tableStatus">
-        <p class="currentSearchTerm muted">{{{model.resultsDesc}}}</p>
-        <p class="currentSearchMetrics muted">Showing <strong>{{model.users.length}}</strong> out of a total of <strong>{{model.totalUsers}}</strong> users.</p>
+        <p class="currentSearchMetrics muted">Showing <strong>{{model.users.length}}</strong> {{pluralize-word model.users.length 'user'}} {{#if model.searchTerm}} matching <strong>{{model.searchTerm}}</strong> {{/if}}out of a total of <strong>{{model.totalUsers}}</strong>.</p>
       </div>
       {{#if model.users}}
       <table id="userList" class="table users table-striped">
@@ -50,6 +49,12 @@
           {{/each}}
         </tbody>
       </table>
+      {{else}}
+        {{#if model.searchTerm}}
+          <span class="alert alert-warning">No results for <strong>{{model.searchTerm}}</strong>. Please note that the search only matches exact strings from the first character onwards at the moment.</span>
+        {{else}}
+          <span>You don't have any users yet.</span>
+        {{/if}}
       {{/if}}
     </div>
   </div>

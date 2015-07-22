@@ -1,0 +1,13 @@
+<h2>Add new user</h2>
+<form class="addUser" {{action 'addUser' on="submit"}}>
+  <fieldset>
+    <div class="group">
+      <label for="">New user's name</label>
+      {{input type="text" class="form-control username" placeholder="User name" required="" value=newUserName disabled=disableAdd}}
+      <label for="">New user's password</label>
+      {{input type="text" class="form-control password" placeholder="Password" required="" value=newUserPassword disabled=disableAdd}}
+      <button class="submit btn ok" type="submit" disabled={{disableAdd}}>Add user</button>
+      <span class="submitMessage"></span>
+    </div>
+  </fieldset>
+</form>
