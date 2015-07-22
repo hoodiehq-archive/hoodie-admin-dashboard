@@ -48,6 +48,9 @@ export default AuthenticatedRoute.extend({
 
 
   actions: {
+    updateUserList: function () {
+      this.refresh();
+    },
     search: function () {
       this.set('searchTerm', this.currentModel.searchTerm);
       this.refresh();

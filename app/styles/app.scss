@@ -5,6 +5,14 @@ $slate:           #333333;
 $mediumGrey:      #F1F1F1;
 $brightWhite:     #FDFBFA;
 
+a:hover,
+a:focus{
+  outline: none;
+  text-decoration: none;
+  color: #1ABC9C;
+  border-bottom: 2px currentColor solid;
+}
+
 body, html{
   background: $creamWhite;
   margin:0;
@@ -212,6 +220,19 @@ body, html{
     box-shadow: 0 0 0 3px #9fcaec;
     outline: none;
   }
+}
+
+.internalPlugin{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow-y: scroll;
+}
+
+.addUser .submitMessage{
+  margin-left: 1em;
 }
 
 table{

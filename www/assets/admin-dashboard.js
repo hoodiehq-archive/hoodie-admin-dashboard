@@ -23,6 +23,53 @@ define('admin-dashboard/app', ['exports', 'ember', 'ember/resolver', 'ember/load
   exports['default'] = App;
 
 });
+define('admin-dashboard/components/add-user', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    init: function init() {
+      this.setProperties({
+        'newUserName': '',
+        'newUserPassword': '',
+        disableAdd: false
+      });
+      this._super.apply(this, arguments);
+    },
+    actions: {
+      addUser: function addUser() {
+        var route = this;
+        this.set('disableAdd', true);
+
+        var hoodieId = Math.random().toString().substr(2);
+        var newUser = {
+          id: this.get('newUserName'),
+          name: 'user/' + this.get('newUserName'),
+          hoodieId: hoodieId,
+          database: 'user/' + hoodieId,
+          signedUpAt: new Date(),
+          roles: [],
+          password: this.get('newUserPassword')
+        };
+
+        window.hoodieAdmin.user.add('user', newUser).done(function (response) {
+          route.$('.submitMessage').text('Success: added "' + response.id + '" as a new user.');
+          route.set('disableAdd', false);
+          route.sendAction();
+        }).fail(function (error) {
+          console.log('error: ', error);
+          route.set('disableAdd', false);
+          if (error.name === 'HoodieConflictError') {
+            route.$('.submitMessage').text('Sorry, the user "' + username + '" already exists.');
+          } else {
+            route.$('.submitMessage').text('Error: ' + error.status + ' - ' + error.responseText);
+          }
+        });
+      }
+    }
+  });
+
+});
 define('admin-dashboard/controllers/array', ['exports', 'ember'], function (exports, Ember) {
 
 	'use strict';
@@ -419,6 +466,9 @@ define('admin-dashboard/routes/plugins/usersnew', ['exports', 'ember', 'admin-da
     computed: (function () {}).property('sortBy', 'sortDesc', 'searchTerm'),
 
     actions: {
+      updateUserList: function updateUserList() {
+        this.refresh();
+      },
       search: function search() {
         this.set('searchTerm', this.currentModel.searchTerm);
         this.refresh();
@@ -483,6 +533,116 @@ define('admin-dashboard/templates/application', ['exports'], function (exports) 
       },
       statements: [
         ["content","outlet",["loc",[null,[1,0],[1,10]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('admin-dashboard/templates/components/add-user', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 13,
+            "column": 7
+          }
+        },
+        "moduleName": "admin-dashboard/templates/components/add-user.hbs"
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h2");
+        var el2 = dom.createTextNode("Add new user");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("form");
+        dom.setAttribute(el1,"class","addUser");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("fieldset");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","group");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("label");
+        dom.setAttribute(el4,"for","");
+        var el5 = dom.createTextNode("New user's name");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("label");
+        dom.setAttribute(el4,"for","");
+        var el5 = dom.createTextNode("New user's password");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("button");
+        dom.setAttribute(el4,"class","submit btn ok");
+        dom.setAttribute(el4,"type","submit");
+        var el5 = dom.createTextNode("Add user");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("span");
+        dom.setAttribute(el4,"class","submitMessage");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [2]);
+        var element1 = dom.childAt(element0, [1, 1]);
+        var element2 = dom.childAt(element1, [9]);
+        var morphs = new Array(4);
+        morphs[0] = dom.createElementMorph(element0);
+        morphs[1] = dom.createMorphAt(element1,3,3);
+        morphs[2] = dom.createMorphAt(element1,7,7);
+        morphs[3] = dom.createAttrMorph(element2, 'disabled');
+        return morphs;
+      },
+      statements: [
+        ["element","action",["addUser"],["on","submit"],["loc",[null,[2,22],[2,54]]]],
+        ["inline","input",[],["type","text","class","form-control username","placeholder","User name","required","","value",["subexpr","@mut",[["get","newUserName",["loc",[null,[6,98],[6,109]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disableAdd",["loc",[null,[6,119],[6,129]]]]],[],[]]],["loc",[null,[6,6],[6,131]]]],
+        ["inline","input",[],["type","text","class","form-control password","placeholder","Password","required","","value",["subexpr","@mut",[["get","newUserPassword",["loc",[null,[8,97],[8,112]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disableAdd",["loc",[null,[8,122],[8,132]]]]],[],[]]],["loc",[null,[8,6],[8,134]]]],
+        ["attribute","disabled",["get","disableAdd",["loc",[null,[9,61],[9,71]]]]]
       ],
       locals: [],
       templates: []
@@ -1162,12 +1322,12 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           "loc": {
             "source": null,
             "start": {
-              "line": 12,
-              "column": 8
+              "line": 15,
+              "column": 10
             },
             "end": {
-              "line": 14,
-              "column": 8
+              "line": 17,
+              "column": 10
             }
           },
           "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
@@ -1177,7 +1337,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("          ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1,"class","btn clearSearch");
@@ -1195,7 +1355,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return morphs;
         },
         statements: [
-          ["element","action",["clearSearch"],[],["loc",[null,[13,40],[13,64]]]]
+          ["element","action",["clearSearch"],[],["loc",[null,[16,42],[16,66]]]]
         ],
         locals: [],
         templates: []
@@ -1209,12 +1369,12 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "loc": {
               "source": null,
               "start": {
-                "line": 36,
-                "column": 8
+                "line": 39,
+                "column": 10
               },
               "end": {
-                "line": 47,
-                "column": 8
+                "line": 50,
+                "column": 10
               }
             },
             "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
@@ -1224,41 +1384,44 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("          ");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("tr");
             dom.setAttribute(el1,"class","user");
-            var el2 = dom.createTextNode("\n          ");
+            var el2 = dom.createTextNode("\n            ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("td");
             var el3 = dom.createComment("");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n          ");
+            var el2 = dom.createTextNode("\n            ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("td");
             dom.setAttribute(el2,"class","timeago");
             var el3 = dom.createComment("");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n          ");
+            var el2 = dom.createTextNode("\n            ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
+            var el3 = dom.createElement("span");
+            dom.setAttribute(el3,"class","pill");
+            var el4 = dom.createComment("");
+            dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n          ");
+            var el2 = dom.createTextNode("\n            ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("td");
             dom.setAttribute(el2,"class","no-sort");
-            var el3 = dom.createTextNode("\n            ");
+            var el3 = dom.createTextNode("\n              ");
             dom.appendChild(el2, el3);
             var el3 = dom.createElement("a");
             dom.setAttribute(el3,"class","edit");
             var el4 = dom.createTextNode("edit");
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode(" /\n            ");
+            var el3 = dom.createTextNode(" /\n              ");
             dom.appendChild(el2, el3);
             var el3 = dom.createElement("a");
             dom.setAttribute(el3,"href","#");
@@ -1266,16 +1429,16 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             var el4 = dom.createTextNode("delete");
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode(" /\n            ");
+            var el3 = dom.createTextNode(" /\n              ");
             dom.appendChild(el2, el3);
             var el3 = dom.createElement("a");
             var el4 = dom.createTextNode("futon");
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode("\n          ");
+            var el3 = dom.createTextNode("\n            ");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n        ");
+            var el2 = dom.createTextNode("\n          ");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -1294,20 +1457,20 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             morphs[2] = dom.createAttrMorph(element1, 'data-sort');
             morphs[3] = dom.createAttrMorph(element1, 'title');
             morphs[4] = dom.createMorphAt(element1,0,0);
-            morphs[5] = dom.createMorphAt(dom.childAt(element0, [5]),0,0);
+            morphs[5] = dom.createMorphAt(dom.childAt(element0, [5, 0]),0,0);
             morphs[6] = dom.createAttrMorph(element3, 'href');
             morphs[7] = dom.createAttrMorph(element4, 'href');
             return morphs;
           },
           statements: [
-            ["attribute","data-id",["concat",[["get","user.value.id",["loc",[null,[37,23],[37,36]]]]]]],
-            ["content","user.value.name",["loc",[null,[38,14],[38,33]]]],
-            ["attribute","data-sort",["concat",[["subexpr","convert-ISO-to-timestamp",[["get","user.value.createdAt",["loc",[null,[39,52],[39,72]]]]],[],["loc",[null,[39,25],[39,74]]]]]]],
-            ["attribute","title",["concat",[["get","user.value.createdAt",["loc",[null,[39,101],[39,121]]]]]]],
-            ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[39,145],[39,165]]]]],[],["loc",[null,[39,125],[39,167]]]],
-            ["content","user.value.state",["loc",[null,[40,14],[40,34]]]],
-            ["attribute","href",["concat",["#user/",["get","user.id",["loc",[null,[42,29],[42,36]]]]]]],
-            ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[44,42],[44,51]]]]],[],["loc",[null,[44,21],[44,53]]]]]]]
+            ["attribute","data-id",["concat",[["get","user.value.id",["loc",[null,[40,25],[40,38]]]]]]],
+            ["content","user.value.name",["loc",[null,[41,16],[41,35]]]],
+            ["attribute","data-sort",["concat",[["subexpr","convert-ISO-to-timestamp",[["get","user.value.createdAt",["loc",[null,[42,54],[42,74]]]]],[],["loc",[null,[42,27],[42,76]]]]]]],
+            ["attribute","title",["concat",[["get","user.value.createdAt",["loc",[null,[42,103],[42,123]]]]]]],
+            ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[42,147],[42,167]]]]],[],["loc",[null,[42,127],[42,169]]]],
+            ["content","user.value.state",["loc",[null,[43,35],[43,55]]]],
+            ["attribute","href",["concat",["#user/",["get","user.id",["loc",[null,[45,31],[45,38]]]]]]],
+            ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[47,44],[47,53]]]]],[],["loc",[null,[47,23],[47,55]]]]]]]
           ],
           locals: ["user"],
           templates: []
@@ -1319,12 +1482,12 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           "loc": {
             "source": null,
             "start": {
-              "line": 25,
-              "column": 4
+              "line": 28,
+              "column": 6
             },
             "end": {
-              "line": 50,
-              "column": 4
+              "line": 53,
+              "column": 6
             }
           },
           "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
@@ -1334,58 +1497,58 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("      ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("table");
           dom.setAttribute(el1,"id","userList");
           dom.setAttribute(el1,"class","table users table-striped");
-          var el2 = dom.createTextNode("\n      ");
+          var el2 = dom.createTextNode("\n        ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("thead");
-          var el3 = dom.createTextNode("\n        ");
+          var el3 = dom.createTextNode("\n          ");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("tr");
-          var el4 = dom.createTextNode("\n          ");
+          var el4 = dom.createTextNode("\n            ");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("th");
           var el5 = dom.createTextNode("Username");
           dom.appendChild(el4, el5);
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n          ");
+          var el4 = dom.createTextNode("\n            ");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("th");
           var el5 = dom.createTextNode("Signup date");
           dom.appendChild(el4, el5);
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n          ");
+          var el4 = dom.createTextNode("\n            ");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("th");
           dom.setAttribute(el4,"data-sort-by","state");
           var el5 = dom.createTextNode("State");
           dom.appendChild(el4, el5);
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n          ");
+          var el4 = dom.createTextNode("\n            ");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("th");
           dom.setAttribute(el4,"class","no-sort");
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n        ");
+          var el4 = dom.createTextNode("\n          ");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n      ");
+          var el3 = dom.createTextNode("\n        ");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n      ");
+          var el2 = dom.createTextNode("\n        ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("tbody");
           var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("      ");
+          var el3 = dom.createTextNode("        ");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -1410,13 +1573,13 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return morphs;
         },
         statements: [
-          ["attribute","class",["concat",[["subexpr","if",[["get","model.sortDesc",["loc",[null,[27,25],[27,39]]]],"desc","asc"],[],["loc",[null,[27,20],[27,54]]]]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","model.sortBy",["loc",[null,[29,80],[29,92]]]]],[],["loc",[null,[29,48],[29,94]]]]]]],
-          ["element","action",["sortBy","name"],[],["loc",[null,[29,14],[29,40]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","model.sortBy",["loc",[null,[30,92],[30,104]]]]],[],["loc",[null,[30,54],[30,106]]]]]]],
-          ["element","action",["sortBy","created-at"],[],["loc",[null,[30,14],[30,46]]]],
-          ["element","action",["sortBy","state"],[],["loc",[null,[31,35],[31,62]]]],
-          ["block","each",[["get","model.users",["loc",[null,[36,16],[36,27]]]]],[],0,null,["loc",[null,[36,8],[47,17]]]]
+          ["attribute","class",["concat",[["subexpr","if",[["get","model.sortDesc",["loc",[null,[30,27],[30,41]]]],"desc","asc"],[],["loc",[null,[30,22],[30,56]]]]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","model.sortBy",["loc",[null,[32,82],[32,94]]]]],[],["loc",[null,[32,50],[32,96]]]]]]],
+          ["element","action",["sortBy","name"],[],["loc",[null,[32,16],[32,42]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","model.sortBy",["loc",[null,[33,94],[33,106]]]]],[],["loc",[null,[33,56],[33,108]]]]]]],
+          ["element","action",["sortBy","created-at"],[],["loc",[null,[33,16],[33,48]]]],
+          ["element","action",["sortBy","state"],[],["loc",[null,[34,37],[34,64]]]],
+          ["block","each",[["get","model.users",["loc",[null,[39,18],[39,29]]]]],[],0,null,["loc",[null,[39,10],[50,19]]]]
         ],
         locals: [],
         templates: [child0]
@@ -1432,7 +1595,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "column": 0
           },
           "end": {
-            "line": 52,
+            "line": 56,
             "column": 6
           }
         },
@@ -1444,113 +1607,128 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","container");
+        dom.setAttribute(el1,"class","internalPlugin");
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
-        var el2 = dom.createElement("h1");
-        var el3 = dom.createTextNode("New Ember Users Plugin");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("h2");
-        var el3 = dom.createTextNode("Search for users");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("form");
-        dom.setAttribute(el2,"class","userSearch");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","container");
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("fieldset");
+        var el3 = dom.createElement("h1");
+        var el4 = dom.createTextNode("New Ember Users Plugin");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("h2");
+        var el4 = dom.createTextNode("Search for users");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("form");
+        dom.setAttribute(el3,"class","userSearch");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("fieldset");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","group");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("label");
+        dom.setAttribute(el6,"for","");
+        var el7 = dom.createTextNode("Search term");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("p");
+        dom.setAttribute(el6,"class","help-block");
+        var el7 = dom.createTextNode("Search only applies to usernames.");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("button");
+        dom.setAttribute(el6,"class","submit btn ok");
+        dom.setAttribute(el6,"type","submit");
+        var el7 = dom.createTextNode("Search");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("h2");
+        var el4 = dom.createTextNode("Your users");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","content centered");
         var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","group");
+        dom.setAttribute(el4,"class","tableStatus");
         var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
-        var el5 = dom.createElement("label");
-        dom.setAttribute(el5,"for","");
-        var el6 = dom.createTextNode("Search term");
+        var el5 = dom.createElement("p");
+        dom.setAttribute(el5,"class","currentSearchTerm muted");
+        var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("p");
-        dom.setAttribute(el5,"class","help-block");
-        var el6 = dom.createTextNode("Search only applies to usernames.");
+        dom.setAttribute(el5,"class","currentSearchMetrics muted");
+        var el6 = dom.createTextNode("Showing ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("strong");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode(" out of a total of ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("strong");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode(" users.");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("button");
-        dom.setAttribute(el5,"class","submit btn ok");
-        dom.setAttribute(el5,"type","submit");
-        var el6 = dom.createTextNode("Search");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createComment("");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("      ");
+        var el5 = dom.createTextNode("\n      ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
+        var el4 = dom.createTextNode("\n");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("h2");
-        var el3 = dom.createTextNode("Your users");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","content centered");
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","tableStatus");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("p");
-        dom.setAttribute(el4,"class","currentSearchTerm muted");
-        var el5 = dom.createComment("");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("p");
-        dom.setAttribute(el4,"class","currentSearchMetrics muted");
-        var el5 = dom.createTextNode("Showing ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createComment("");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode(" out of a total of ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createComment("");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode(" users");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -1559,30 +1737,32 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element12 = dom.childAt(fragment, [0]);
-        var element13 = dom.childAt(element12, [5]);
+        var element12 = dom.childAt(fragment, [0, 1]);
+        var element13 = dom.childAt(element12, [7]);
         var element14 = dom.childAt(element13, [1, 1]);
-        var element15 = dom.childAt(element12, [9]);
+        var element15 = dom.childAt(element12, [11]);
         var element16 = dom.childAt(element15, [1]);
         var element17 = dom.childAt(element16, [3]);
-        var morphs = new Array(7);
-        morphs[0] = dom.createElementMorph(element13);
-        morphs[1] = dom.createMorphAt(element14,3,3);
-        morphs[2] = dom.createMorphAt(element14,9,9);
-        morphs[3] = dom.createUnsafeMorphAt(dom.childAt(element16, [1]),0,0);
-        morphs[4] = dom.createMorphAt(element17,1,1);
-        morphs[5] = dom.createMorphAt(element17,3,3);
-        morphs[6] = dom.createMorphAt(element15,3,3);
+        var morphs = new Array(8);
+        morphs[0] = dom.createMorphAt(element12,3,3);
+        morphs[1] = dom.createElementMorph(element13);
+        morphs[2] = dom.createMorphAt(element14,3,3);
+        morphs[3] = dom.createMorphAt(element14,9,9);
+        morphs[4] = dom.createUnsafeMorphAt(dom.childAt(element16, [1]),0,0);
+        morphs[5] = dom.createMorphAt(dom.childAt(element17, [1]),0,0);
+        morphs[6] = dom.createMorphAt(dom.childAt(element17, [3]),0,0);
+        morphs[7] = dom.createMorphAt(element15,3,3);
         return morphs;
       },
       statements: [
-        ["element","action",["search"],["on","submit"],["loc",[null,[5,27],[5,58]]]],
-        ["inline","input",[],["value",["subexpr","@mut",[["get","model.searchTerm",["loc",[null,[9,22],[9,38]]]]],[],[]],"type","text","class","form-control search-query","placeholder","Username"],["loc",[null,[9,8],[9,109]]]],
-        ["block","if",[["get","model.searchTerm",["loc",[null,[12,14],[12,30]]]]],[],0,null,["loc",[null,[12,8],[14,15]]]],
-        ["content","model.resultsDesc",["loc",[null,[22,41],[22,64]]]],
-        ["content","model.users.length",["loc",[null,[23,52],[23,74]]]],
-        ["content","model.totalUsers",["loc",[null,[23,93],[23,113]]]],
-        ["block","if",[["get","model.users",["loc",[null,[25,10],[25,21]]]]],[],1,null,["loc",[null,[25,4],[50,11]]]]
+        ["inline","add-user",[],["action","updateUserList"],["loc",[null,[5,4],[5,40]]]],
+        ["element","action",["search"],["on","submit"],["loc",[null,[8,29],[8,60]]]],
+        ["inline","input",[],["value",["subexpr","@mut",[["get","model.searchTerm",["loc",[null,[12,24],[12,40]]]]],[],[]],"type","text","class","form-control search-query","placeholder","Username"],["loc",[null,[12,10],[12,111]]]],
+        ["block","if",[["get","model.searchTerm",["loc",[null,[15,16],[15,32]]]]],[],0,null,["loc",[null,[15,10],[17,17]]]],
+        ["content","model.resultsDesc",["loc",[null,[25,43],[25,66]]]],
+        ["content","model.users.length",["loc",[null,[26,62],[26,84]]]],
+        ["content","model.totalUsers",["loc",[null,[26,120],[26,140]]]],
+        ["block","if",[["get","model.users",["loc",[null,[28,12],[28,23]]]]],[],1,null,["loc",[null,[28,6],[53,13]]]]
       ],
       locals: [],
       templates: [child0, child1]
@@ -1597,6 +1777,16 @@ define('admin-dashboard/tests/app.jshint', function () {
   module('JSHint - .');
   test('app.js should pass jshint', function() { 
     ok(true, 'app.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/components/add-user.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - components');
+  test('components/add-user.js should pass jshint', function() { 
+    ok(false, 'components/add-user.js should pass jshint.\ncomponents/add-user.js: line 37, col 62, \'username\' is not defined.\n\n1 error'); 
   });
 
 });
@@ -1714,6 +1904,149 @@ define('admin-dashboard/tests/helpers/start-app.jshint', function () {
   module('JSHint - helpers');
   test('helpers/start-app.js should pass jshint', function() { 
     ok(true, 'helpers/start-app.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/integration/components/add-user-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForComponent('add-user', 'Integration | Component | add user', {
+    integration: true
+  });
+
+  ember_qunit.test('it renders', function (assert) {
+    assert.expect(2);
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'revision': 'Ember@1.13.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 12
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'add-user', ['loc', [null, [1, 0], [1, 12]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'revision': 'Ember@1.13.3',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'revision': 'Ember@1.13.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'add-user', [], [], 0, null, ['loc', [null, [2, 4], [4, 17]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+
+});
+define('admin-dashboard/tests/integration/components/add-user-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - integration/components');
+  test('integration/components/add-user-test.js should pass jshint', function() { 
+    ok(true, 'integration/components/add-user-test.js should pass jshint.'); 
   });
 
 });
@@ -2038,7 +2371,7 @@ catch(err) {
 if (runningTests) {
   require("admin-dashboard/tests/test-helper");
 } else {
-  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+b9d43436"});
+  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+c8b13532"});
 }
 
 /* jshint ignore:end */

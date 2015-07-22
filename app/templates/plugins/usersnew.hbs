@@ -1,52 +1,56 @@
-<div class="container">
-  <h1>New Ember Users Plugin</h1>
+<div class="internalPlugin">
+  <div class="container">
+    <h1>New Ember Users Plugin</h1>
 
-  <h2>Search for users</h2>
-  <form class="userSearch" {{action 'search' on="submit"}}>
-    <fieldset>
-      <div class="group">
-        <label for="">Search term</label>
-        {{input value=model.searchTerm type="text" class="form-control search-query" placeholder="Username"}}
-        <p class="help-block">Search only applies to usernames.</p>
-        <button class="submit btn ok" type="submit">Search</button>
-        {{#if model.searchTerm}}
-        <button class="btn clearSearch" {{action 'clearSearch'}}>Clear search</button>
-        {{/if}}
+    {{add-user action='updateUserList'}}
+
+    <h2>Search for users</h2>
+    <form class="userSearch" {{action 'search' on="submit"}}>
+      <fieldset>
+        <div class="group">
+          <label for="">Search term</label>
+          {{input value=model.searchTerm type="text" class="form-control search-query" placeholder="Username"}}
+          <p class="help-block">Search only applies to usernames.</p>
+          <button class="submit btn ok" type="submit">Search</button>
+          {{#if model.searchTerm}}
+          <button class="btn clearSearch" {{action 'clearSearch'}}>Clear search</button>
+          {{/if}}
+        </div>
+      </fieldset>
+    </form>
+
+    <h2>Your users</h2>
+    <div class="content centered">
+      <div class="tableStatus">
+        <p class="currentSearchTerm muted">{{{model.resultsDesc}}}</p>
+        <p class="currentSearchMetrics muted">Showing <strong>{{model.users.length}}</strong> out of a total of <strong>{{model.totalUsers}}</strong> users.</p>
       </div>
-    </fieldset>
-  </form>
-
-  <h2>Your users</h2>
-  <div class="content centered">
-    <div class="tableStatus">
-      <p class="currentSearchTerm muted">{{{model.resultsDesc}}}</p>
-      <p class="currentSearchMetrics muted">Showing {{model.users.length}} out of a total of {{model.totalUsers}} users</p>
+      {{#if model.users}}
+      <table id="userList" class="table users table-striped">
+        <thead class="{{if model.sortDesc 'desc' 'asc'}}">
+          <tr>
+            <th {{action 'sortBy' 'name'}} class="{{is-active-table-header 'name' model.sortBy}}">Username</th>
+            <th {{action 'sortBy' 'created-at'}} class="{{is-active-table-header 'created-at' model.sortBy}}">Signup date</th>
+            <th data-sort-by="state" {{action 'sortBy' 'state'}}>State</th>
+            <th class="no-sort"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each model.users as |user|}}
+          <tr data-id="{{user.value.id}}" class="user">
+            <td>{{user.value.name}}</td>
+            <td data-sort="{{convert-ISO-to-timestamp user.value.createdAt}}" class="timeago" title="{{user.value.createdAt}}">{{time-ago-in-words user.value.createdAt}}</td>
+            <td><span class="pill">{{user.value.state}}</span></td>
+            <td class="no-sort">
+              <a href="#user/{{user.id}}" class="edit">edit</a> /
+              <a href="#" class="removeUserPrompt">delete</a> /
+              <a href="{{link-to-futon-user user.name}}">futon</a>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{/if}}
     </div>
-    {{#if model.users}}
-    <table id="userList" class="table users table-striped">
-      <thead class="{{if model.sortDesc 'desc' 'asc'}}">
-        <tr>
-          <th {{action 'sortBy' 'name'}} class="{{is-active-table-header 'name' model.sortBy}}">Username</th>
-          <th {{action 'sortBy' 'created-at'}} class="{{is-active-table-header 'created-at' model.sortBy}}">Signup date</th>
-          <th data-sort-by="state" {{action 'sortBy' 'state'}}>State</th>
-          <th class="no-sort"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each model.users as |user|}}
-        <tr data-id="{{user.value.id}}" class="user">
-          <td>{{user.value.name}}</td>
-          <td data-sort="{{convert-ISO-to-timestamp user.value.createdAt}}" class="timeago" title="{{user.value.createdAt}}">{{time-ago-in-words user.value.createdAt}}</td>
-          <td>{{user.value.state}}</td>
-          <td class="no-sort">
-            <a href="#user/{{user.id}}" class="edit">edit</a> /
-            <a href="#" class="removeUserPrompt">delete</a> /
-            <a href="{{link-to-futon-user user.name}}">futon</a>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
   </div>
 </div>

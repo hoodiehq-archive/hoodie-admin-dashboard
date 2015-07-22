@@ -1,4 +1,11 @@
 @charset "UTF-8";
+a:hover,
+a:focus {
+  outline: none;
+  text-decoration: none;
+  color: #1ABC9C;
+  border-bottom: 2px currentColor solid; }
+
 body, html {
   background: #f7f4f2;
   margin: 0;
@@ -183,6 +190,17 @@ body, html {
   .login [type="submit"]:focus {
     box-shadow: 0 0 0 3px #9fcaec;
     outline: none; }
+
+.internalPlugin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow-y: scroll; }
+
+.addUser .submitMessage {
+  margin-left: 1em; }
 
 table thead.asc th.active:after {
   content: "▼";
