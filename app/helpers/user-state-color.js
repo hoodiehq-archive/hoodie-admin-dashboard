@@ -4,7 +4,6 @@ import Ember from 'ember';
 // user state
 
 export function userStateColor(params) {
-  console.log('params: ',params);
   switch(params[0]){
     case 'confirmed':
     return 'success';

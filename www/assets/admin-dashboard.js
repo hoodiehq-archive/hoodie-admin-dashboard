@@ -366,7 +366,6 @@ define('admin-dashboard/helpers/user-state-color', ['exports', 'ember'], functio
   exports.userStateColor = userStateColor;
 
   function userStateColor(params) {
-    console.log('params: ', params);
     switch (params[0]) {
       case 'confirmed':
         return 'success';
