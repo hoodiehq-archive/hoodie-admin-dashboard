@@ -229,3 +229,6 @@ table thead.asc th.active:after {
 table thead.desc th.active:after {
   content: "▲";
   margin-left: 0.25em; }
+
+.modal-footer .btn {
+  margin: 0; }

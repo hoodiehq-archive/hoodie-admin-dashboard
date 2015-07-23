@@ -9,8 +9,8 @@
         {{yield}}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" {{action 'confirm'}}>OK</button>
+        <button type="button" class="btn unobtrusive" data-dismiss="modal">No, cancel.</button>
+        <button type="button" class="btn danger" {{action 'confirm'}}>Yes, go ahead.</button>
       </div>
     </div>
   </div>

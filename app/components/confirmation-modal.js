@@ -1,14 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  model: 'test',
   actions: {
     confirm: function() {
       this.$('.modal').modal('hide');
-      this.sendAction('ok');
+      this.sendAction('confirm', this.get('model'));
     }
   },
   show: function() {
-    console.log('this: ',this);
     this.$('.modal').modal().on('hidden.bs.modal', function() {
       this.sendAction('cancel');
     }.bind(this));

@@ -74,17 +74,20 @@ export default Ember.Controller.extend({
       return false;
     },
     promptToDeleteUser: function (user) {
-      console.log('delete user: ',user);
       this.setProperties({
         'deletingUser': true,
         'selectedUser': user
       });
     },
-    deleteUser: function (user) {
-      console.log('really deleteUser: ',user);
+    deleteUser: function (model) {
+      var self = this;
+      window.hoodieAdmin.user.remove('user', model.value.name).then(function(){
+        self.send("updateUserList");
+      });
+      return false;
     },
+    // Also handles cleanup after deleting
     cancelDelete: function (user) {
-      console.log('delete user: ',user);
       this.setProperties({
         'deletingUser': false,
         'selectedUser': undefined

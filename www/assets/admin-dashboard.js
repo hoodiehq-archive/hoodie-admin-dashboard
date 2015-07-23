@@ -75,14 +75,14 @@ define('admin-dashboard/components/confirmation-modal', ['exports', 'ember'], fu
   'use strict';
 
   exports['default'] = Ember['default'].Component.extend({
+    model: 'test',
     actions: {
       confirm: function confirm() {
         this.$('.modal').modal('hide');
-        this.sendAction('ok');
+        this.sendAction('confirm', this.get('model'));
       }
     },
     show: (function () {
-      console.log('this: ', this);
       this.$('.modal').modal().on('hidden.bs.modal', (function () {
         this.sendAction('cancel');
       }).bind(this));
@@ -293,17 +293,20 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
         return false;
       },
       promptToDeleteUser: function promptToDeleteUser(user) {
-        console.log('delete user: ', user);
         this.setProperties({
           'deletingUser': true,
           'selectedUser': user
         });
       },
-      deleteUser: function deleteUser(user) {
-        console.log('really deleteUser: ', user);
+      deleteUser: function deleteUser(model) {
+        var self = this;
+        window.hoodieAdmin.user.remove('user', model.value.name).then(function () {
+          self.send('updateUserList');
+        });
+        return false;
       },
+      // Also handles cleanup after deleting
       cancelDelete: function cancelDelete(user) {
-        console.log('delete user: ', user);
         this.setProperties({
           'deletingUser': false,
           'selectedUser': undefined
@@ -898,17 +901,17 @@ define('admin-dashboard/templates/components/confirmation-modal', ['exports'], f
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("button");
         dom.setAttribute(el5,"type","button");
-        dom.setAttribute(el5,"class","btn btn-default");
+        dom.setAttribute(el5,"class","btn unobtrusive");
         dom.setAttribute(el5,"data-dismiss","modal");
-        var el6 = dom.createTextNode("Cancel");
+        var el6 = dom.createTextNode("No, cancel.");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("button");
         dom.setAttribute(el5,"type","button");
-        dom.setAttribute(el5,"class","btn btn-primary");
-        var el6 = dom.createTextNode("OK");
+        dom.setAttribute(el5,"class","btn danger");
+        var el6 = dom.createTextNode("Yes, go ahead.");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n      ");
@@ -937,7 +940,7 @@ define('admin-dashboard/templates/components/confirmation-modal', ['exports'], f
       statements: [
         ["content","title",["loc",[null,[6,32],[6,41]]]],
         ["content","yield",["loc",[null,[9,8],[9,17]]]],
-        ["element","action",["confirm"],[],["loc",[null,[13,54],[13,74]]]]
+        ["element","action",["confirm"],[],["loc",[null,[13,49],[13,69]]]]
       ],
       locals: [],
       templates: []
@@ -2169,7 +2172,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
                 "column": 2
               },
               "end": {
-                "line": 74,
+                "line": 75,
                 "column": 2
               }
             },
@@ -2180,21 +2183,37 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("  Are you sure you want to delete ");
+            var el1 = dom.createTextNode("  ");
             dom.appendChild(el0, el1);
-            var el1 = dom.createComment("");
+            var el1 = dom.createElement("p");
+            var el2 = dom.createTextNode("Are you sure you want to delete the user ");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("strong");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createTextNode(" and all their data?");
+            dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode(" and all their data? There is no way to undo this.\n");
+            var el1 = dom.createTextNode("\n  ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createElement("p");
+            var el2 = dom.createElement("strong");
+            var el3 = dom.createTextNode("There is no way to undo this.");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
             var morphs = new Array(1);
-            morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+            morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1, 1]),0,0);
             return morphs;
           },
           statements: [
-            ["content","selectedUser.value.name",["loc",[null,[73,34],[73,61]]]]
+            ["content","selectedUser.value.name",["loc",[null,[73,54],[73,81]]]]
           ],
           locals: [],
           templates: []
@@ -2210,7 +2229,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
               "column": 0
             },
             "end": {
-              "line": 75,
+              "line": 76,
               "column": 0
             }
           },
@@ -2233,7 +2252,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return morphs;
         },
         statements: [
-          ["block","confirmation-modal",[],["user",["subexpr","@mut",[["get","selectedUser",["loc",[null,[72,29],[72,41]]]]],[],[]],"actionLabel","Delete!","title","Really delete the user?","confirm","deleteUser","cancel","cancelDelete"],0,null,["loc",[null,[72,2],[74,25]]]]
+          ["block","confirmation-modal",[],["model",["subexpr","@mut",[["get","selectedUser",["loc",[null,[72,30],[72,42]]]]],[],[]],"title","Really delete the user?","confirm","deleteUser","cancel","cancelDelete"],0,null,["loc",[null,[72,2],[75,25]]]]
         ],
         locals: [],
         templates: [child0]
@@ -2249,7 +2268,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "column": 0
           },
           "end": {
-            "line": 75,
+            "line": 76,
             "column": 7
           }
         },
@@ -2436,7 +2455,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         ["block","if",[["get","activeSearch",["loc",[null,[25,145],[25,157]]]]],[],1,null,["loc",[null,[25,139],[25,210]]]],
         ["content","model.totalUsers",["loc",[null,[25,236],[25,256]]]],
         ["block","if",[["get","model.users",["loc",[null,[27,12],[27,23]]]]],[],2,3,["loc",[null,[27,6],[66,13]]]],
-        ["block","if",[["get","deletingUser",["loc",[null,[71,6],[71,18]]]]],[],4,null,["loc",[null,[71,0],[75,7]]]]
+        ["block","if",[["get","deletingUser",["loc",[null,[71,6],[71,18]]]]],[],4,null,["loc",[null,[71,0],[76,7]]]]
       ],
       locals: [],
       templates: [child0, child1, child2, child3, child4]
@@ -2520,7 +2539,7 @@ define('admin-dashboard/tests/controllers/usersnew.jshint', function () {
 
   module('JSHint - controllers');
   test('controllers/usersnew.js should pass jshint', function() { 
-    ok(true, 'controllers/usersnew.js should pass jshint.'); 
+    ok(false, 'controllers/usersnew.js should pass jshint.\ncontrollers/usersnew.js: line 90, col 29, \'user\' is defined but never used.\n\n1 error'); 
   });
 
 });

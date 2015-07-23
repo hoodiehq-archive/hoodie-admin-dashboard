@@ -69,7 +69,8 @@
 </div>
 
 {{#if deletingUser}}
-  {{#confirmation-modal user=selectedUser actionLabel='Delete!' title='Really delete the user?' confirm='deleteUser' cancel='cancelDelete'}}
-  Are you sure you want to delete {{selectedUser.value.name}} and all their data? There is no way to undo this.
+  {{#confirmation-modal model=selectedUser title='Really delete the user?' confirm='deleteUser' cancel='cancelDelete'}}
+  <p>Are you sure you want to delete the user <strong>{{selectedUser.value.name}}</strong> and all their data?</p>
+  <p><strong>There is no way to undo this.</strong></p>
   {{/confirmation-modal}}
 {{/if}}
