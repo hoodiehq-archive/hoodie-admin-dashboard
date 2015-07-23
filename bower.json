@@ -14,6 +14,7 @@
     "qunit": "~1.17.1",
     "hoodie.admin.js": "hoodiehq/hoodie.admin.js#~1.0.1",
     "hoodie": "~2.1.1",
-    "ember-cli-moment-shim": "~0.2.0"
+    "ember-cli-moment-shim": "~0.2.0",
+    "bootstrap": "~3.3.5"
   }
 }

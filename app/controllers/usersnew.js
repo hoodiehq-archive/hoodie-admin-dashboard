@@ -7,6 +7,8 @@ export default Ember.Controller.extend({
   skipFactor: 0,
   sortBy: 'created-at',
   sortDesc: true,
+  deletingUser: false,
+  selectedUser: undefined,
 
   pageNumber: function () {
     return this.get('skipFactor') + 1;
@@ -70,6 +72,23 @@ export default Ember.Controller.extend({
       }
       this.send("updateUserList");
       return false;
+    },
+    promptToDeleteUser: function (user) {
+      console.log('delete user: ',user);
+      this.setProperties({
+        'deletingUser': true,
+        'selectedUser': user
+      });
+    },
+    deleteUser: function (user) {
+      console.log('really deleteUser: ',user);
+    },
+    cancelDelete: function (user) {
+      console.log('delete user: ',user);
+      this.setProperties({
+        'deletingUser': false,
+        'selectedUser': undefined
+      });
     }
   }
 });

@@ -47,7 +47,7 @@
             </td>
             <td class="no-sort">
               <a href="#user/{{user.id}}" class="edit">edit</a> /
-              <a href="#" class="removeUserPrompt">delete</a> /
+              <a href="#" class="removeUserPrompt" {{action 'promptToDeleteUser' user}}>delete</a> /
               <a href="{{link-to-futon-user user.name}}">futon</a>
             </td>
           </tr>
@@ -67,3 +67,9 @@
     </div>
   </div>
 </div>
+
+{{#if deletingUser}}
+  {{#confirmation-modal user=selectedUser actionLabel='Delete!' title='Really delete the user?' confirm='deleteUser' cancel='cancelDelete'}}
+  Are you sure you want to delete {{selectedUser.value.name}} and all their data? There is no way to undo this.
+  {{/confirmation-modal}}
+{{/if}}

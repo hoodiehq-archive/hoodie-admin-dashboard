@@ -70,6 +70,26 @@ define('admin-dashboard/components/add-user', ['exports', 'ember'], function (ex
   });
 
 });
+define('admin-dashboard/components/confirmation-modal', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    actions: {
+      confirm: function confirm() {
+        this.$('.modal').modal('hide');
+        this.sendAction('ok');
+      }
+    },
+    show: (function () {
+      console.log('this: ', this);
+      this.$('.modal').modal().on('hidden.bs.modal', (function () {
+        this.sendAction('cancel');
+      }).bind(this));
+    }).on('didInsertElement')
+  });
+
+});
 define('admin-dashboard/components/user-table-pagination', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -206,6 +226,8 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
     skipFactor: 0,
     sortBy: 'created-at',
     sortDesc: true,
+    deletingUser: false,
+    selectedUser: undefined,
 
     pageNumber: (function () {
       return this.get('skipFactor') + 1;
@@ -269,6 +291,23 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
         }
         this.send('updateUserList');
         return false;
+      },
+      promptToDeleteUser: function promptToDeleteUser(user) {
+        console.log('delete user: ', user);
+        this.setProperties({
+          'deletingUser': true,
+          'selectedUser': user
+        });
+      },
+      deleteUser: function deleteUser(user) {
+        console.log('really deleteUser: ', user);
+      },
+      cancelDelete: function cancelDelete(user) {
+        console.log('delete user: ', user);
+        this.setProperties({
+          'deletingUser': false,
+          'selectedUser': undefined
+        });
       }
     }
   });
@@ -773,6 +812,132 @@ define('admin-dashboard/templates/components/add-user', ['exports'], function (e
         ["inline","input",[],["type","text","class","form-control username","placeholder","User name","required","","value",["subexpr","@mut",[["get","newUserName",["loc",[null,[6,98],[6,109]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disableAdd",["loc",[null,[6,119],[6,129]]]]],[],[]]],["loc",[null,[6,6],[6,131]]]],
         ["inline","input",[],["type","text","class","form-control password","placeholder","Password","required","","value",["subexpr","@mut",[["get","newUserPassword",["loc",[null,[8,97],[8,112]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disableAdd",["loc",[null,[8,122],[8,132]]]]],[],[]]],["loc",[null,[8,6],[8,134]]]],
         ["attribute","disabled",["get","disableAdd",["loc",[null,[9,61],[9,71]]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('admin-dashboard/templates/components/confirmation-modal', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 17,
+            "column": 6
+          }
+        },
+        "moduleName": "admin-dashboard/templates/components/confirmation-modal.hbs"
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","modal fade");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","modal-dialog");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","modal-content");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","modal-header");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("button");
+        dom.setAttribute(el5,"type","button");
+        dom.setAttribute(el5,"class","close");
+        dom.setAttribute(el5,"data-dismiss","modal");
+        dom.setAttribute(el5,"aria-hidden","true");
+        var el6 = dom.createTextNode("×");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("h4");
+        dom.setAttribute(el5,"class","modal-title");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","modal-body");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","modal-footer");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("button");
+        dom.setAttribute(el5,"type","button");
+        dom.setAttribute(el5,"class","btn btn-default");
+        dom.setAttribute(el5,"data-dismiss","modal");
+        var el6 = dom.createTextNode("Cancel");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("button");
+        dom.setAttribute(el5,"type","button");
+        dom.setAttribute(el5,"class","btn btn-primary");
+        var el6 = dom.createTextNode("OK");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0, 1, 1]);
+        var element1 = dom.childAt(element0, [5, 3]);
+        var morphs = new Array(3);
+        morphs[0] = dom.createMorphAt(dom.childAt(element0, [1, 3]),0,0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element0, [3]),1,1);
+        morphs[2] = dom.createElementMorph(element1);
+        return morphs;
+      },
+      statements: [
+        ["content","title",["loc",[null,[6,32],[6,41]]]],
+        ["content","yield",["loc",[null,[9,8],[9,17]]]],
+        ["element","action",["confirm"],[],["loc",[null,[13,54],[13,74]]]]
       ],
       locals: [],
       templates: []
@@ -1560,9 +1725,9 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element12 = dom.childAt(fragment, [1]);
+          var element13 = dom.childAt(fragment, [1]);
           var morphs = new Array(1);
-          morphs[0] = dom.createElementMorph(element12);
+          morphs[0] = dom.createElementMorph(element13);
           return morphs;
         },
         statements: [
@@ -1709,8 +1874,9 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             var element2 = dom.childAt(element0, [5, 1]);
             var element3 = dom.childAt(element0, [7]);
             var element4 = dom.childAt(element3, [1]);
-            var element5 = dom.childAt(element3, [5]);
-            var morphs = new Array(9);
+            var element5 = dom.childAt(element3, [3]);
+            var element6 = dom.childAt(element3, [5]);
+            var morphs = new Array(10);
             morphs[0] = dom.createAttrMorph(element0, 'data-id');
             morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
             morphs[2] = dom.createAttrMorph(element1, 'data-sort');
@@ -1719,7 +1885,8 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             morphs[5] = dom.createAttrMorph(element2, 'class');
             morphs[6] = dom.createMorphAt(element2,0,0);
             morphs[7] = dom.createAttrMorph(element4, 'href');
-            morphs[8] = dom.createAttrMorph(element5, 'href');
+            morphs[8] = dom.createElementMorph(element5);
+            morphs[9] = dom.createAttrMorph(element6, 'href');
             return morphs;
           },
           statements: [
@@ -1731,6 +1898,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             ["attribute","class",["concat",["pill ",["subexpr","user-state-color",[["get","user.value.state",["loc",[null,[46,49],[46,65]]]]],[],["loc",[null,[46,30],[46,67]]]]]]],
             ["content","user.value.state",["loc",[null,[46,69],[46,89]]]],
             ["attribute","href",["concat",["#user/",["get","user.id",["loc",[null,[49,31],[49,38]]]]]]],
+            ["element","action",["promptToDeleteUser",["get","user",["loc",[null,[50,81],[50,85]]]]],[],["loc",[null,[50,51],[50,87]]]],
             ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[51,44],[51,53]]]]],[],["loc",[null,[51,23],[51,55]]]]]]]
           ],
           locals: ["user"],
@@ -1825,21 +1993,21 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element6 = dom.childAt(fragment, [3]);
-          var element7 = dom.childAt(element6, [1]);
+          var element7 = dom.childAt(fragment, [3]);
           var element8 = dom.childAt(element7, [1]);
           var element9 = dom.childAt(element8, [1]);
-          var element10 = dom.childAt(element8, [3]);
-          var element11 = dom.childAt(element8, [5]);
+          var element10 = dom.childAt(element9, [1]);
+          var element11 = dom.childAt(element9, [3]);
+          var element12 = dom.childAt(element9, [5]);
           var morphs = new Array(9);
           morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
-          morphs[1] = dom.createAttrMorph(element7, 'class');
-          morphs[2] = dom.createAttrMorph(element9, 'class');
-          morphs[3] = dom.createElementMorph(element9);
-          morphs[4] = dom.createAttrMorph(element10, 'class');
-          morphs[5] = dom.createElementMorph(element10);
-          morphs[6] = dom.createElementMorph(element11);
-          morphs[7] = dom.createMorphAt(dom.childAt(element6, [3]),1,1);
+          morphs[1] = dom.createAttrMorph(element8, 'class');
+          morphs[2] = dom.createAttrMorph(element10, 'class');
+          morphs[3] = dom.createElementMorph(element10);
+          morphs[4] = dom.createAttrMorph(element11, 'class');
+          morphs[5] = dom.createElementMorph(element11);
+          morphs[6] = dom.createElementMorph(element12);
+          morphs[7] = dom.createMorphAt(dom.childAt(element7, [3]),1,1);
           morphs[8] = dom.createMorphAt(fragment,5,5,contextualElement);
           return morphs;
         },
@@ -1989,6 +2157,88 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         templates: [child0, child1]
       };
     }());
+    var child4 = (function() {
+      var child0 = (function() {
+        return {
+          meta: {
+            "revision": "Ember@1.13.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 72,
+                "column": 2
+              },
+              "end": {
+                "line": 74,
+                "column": 2
+              }
+            },
+            "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+          },
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("  Are you sure you want to delete ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode(" and all their data? There is no way to undo this.\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+            return morphs;
+          },
+          statements: [
+            ["content","selectedUser.value.name",["loc",[null,[73,34],[73,61]]]]
+          ],
+          locals: [],
+          templates: []
+        };
+      }());
+      return {
+        meta: {
+          "revision": "Ember@1.13.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 71,
+              "column": 0
+            },
+            "end": {
+              "line": 75,
+              "column": 0
+            }
+          },
+          "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["block","confirmation-modal",[],["user",["subexpr","@mut",[["get","selectedUser",["loc",[null,[72,29],[72,41]]]]],[],[]],"actionLabel","Delete!","title","Really delete the user?","confirm","deleteUser","cancel","cancelDelete"],0,null,["loc",[null,[72,2],[74,25]]]]
+        ],
+        locals: [],
+        templates: [child0]
+      };
+    }());
     return {
       meta: {
         "revision": "Ember@1.13.3",
@@ -1999,8 +2249,8 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "column": 0
           },
           "end": {
-            "line": 69,
-            "column": 6
+            "line": 75,
+            "column": 7
           }
         },
         "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
@@ -2145,27 +2395,33 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element13 = dom.childAt(fragment, [0, 1]);
-        var element14 = dom.childAt(element13, [7]);
-        var element15 = dom.childAt(element14, [1, 1]);
-        var element16 = dom.childAt(element13, [9]);
-        var element17 = dom.childAt(element13, [11]);
-        var element18 = dom.childAt(element17, [1, 1]);
-        var morphs = new Array(11);
-        morphs[0] = dom.createMorphAt(element13,3,3);
-        morphs[1] = dom.createElementMorph(element14);
-        morphs[2] = dom.createMorphAt(element15,3,3);
-        morphs[3] = dom.createMorphAt(element15,9,9);
-        morphs[4] = dom.createMorphAt(element16,1,1);
-        morphs[5] = dom.createMorphAt(element16,3,3);
-        morphs[6] = dom.createMorphAt(dom.childAt(element18, [1]),0,0);
-        morphs[7] = dom.createMorphAt(element18,3,3);
-        morphs[8] = dom.createMorphAt(element18,5,5);
-        morphs[9] = dom.createMorphAt(dom.childAt(element18, [7]),0,0);
-        morphs[10] = dom.createMorphAt(element17,3,3);
+        var element14 = dom.childAt(fragment, [0, 1]);
+        var element15 = dom.childAt(element14, [7]);
+        var element16 = dom.childAt(element15, [1, 1]);
+        var element17 = dom.childAt(element14, [9]);
+        var element18 = dom.childAt(element14, [11]);
+        var element19 = dom.childAt(element18, [1, 1]);
+        var morphs = new Array(12);
+        morphs[0] = dom.createMorphAt(element14,3,3);
+        morphs[1] = dom.createElementMorph(element15);
+        morphs[2] = dom.createMorphAt(element16,3,3);
+        morphs[3] = dom.createMorphAt(element16,9,9);
+        morphs[4] = dom.createMorphAt(element17,1,1);
+        morphs[5] = dom.createMorphAt(element17,3,3);
+        morphs[6] = dom.createMorphAt(dom.childAt(element19, [1]),0,0);
+        morphs[7] = dom.createMorphAt(element19,3,3);
+        morphs[8] = dom.createMorphAt(element19,5,5);
+        morphs[9] = dom.createMorphAt(dom.childAt(element19, [7]),0,0);
+        morphs[10] = dom.createMorphAt(element18,3,3);
+        morphs[11] = dom.createMorphAt(fragment,2,2,contextualElement);
+        dom.insertBoundary(fragment, null);
         return morphs;
       },
       statements: [
@@ -2179,10 +2435,11 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         ["inline","pluralize-word",[["get","model.users.length",["loc",[null,[25,111],[25,129]]]],"user"],[],["loc",[null,[25,94],[25,138]]]],
         ["block","if",[["get","activeSearch",["loc",[null,[25,145],[25,157]]]]],[],1,null,["loc",[null,[25,139],[25,210]]]],
         ["content","model.totalUsers",["loc",[null,[25,236],[25,256]]]],
-        ["block","if",[["get","model.users",["loc",[null,[27,12],[27,23]]]]],[],2,3,["loc",[null,[27,6],[66,13]]]]
+        ["block","if",[["get","model.users",["loc",[null,[27,12],[27,23]]]]],[],2,3,["loc",[null,[27,6],[66,13]]]],
+        ["block","if",[["get","deletingUser",["loc",[null,[71,6],[71,18]]]]],[],4,null,["loc",[null,[71,0],[75,7]]]]
       ],
       locals: [],
-      templates: [child0, child1, child2, child3]
+      templates: [child0, child1, child2, child3, child4]
     };
   }()));
 
@@ -2204,6 +2461,16 @@ define('admin-dashboard/tests/components/add-user.jshint', function () {
   module('JSHint - components');
   test('components/add-user.js should pass jshint', function() { 
     ok(false, 'components/add-user.js should pass jshint.\ncomponents/add-user.js: line 37, col 62, \'username\' is not defined.\n\n1 error'); 
+  });
+
+});
+define('admin-dashboard/tests/components/confirmation-modal.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - components');
+  test('components/confirmation-modal.js should pass jshint', function() { 
+    ok(true, 'components/confirmation-modal.js should pass jshint.'); 
   });
 
 });
@@ -3069,7 +3336,7 @@ catch(err) {
 if (runningTests) {
   require("admin-dashboard/tests/test-helper");
 } else {
-  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+c8b13532"});
+  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+bd977f85"});
 }
 
 /* jshint ignore:end */
