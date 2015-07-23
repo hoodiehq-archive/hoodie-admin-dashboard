@@ -23,30 +23,10 @@ export default AuthenticatedRoute.extend({
     });
   },
 
-  // We let the actions bubble up from the controller by returning 'true' there,
+  // We let some actions bubble up from the controller by returning 'true' there,
   // so that this route can refresh the model.
   actions: {
     updateUserList: function () {
-      this.refresh();
-      return false;
-    },
-    search: function () {
-      this.refresh();
-      return false;
-    },
-    clearSearch: function () {
-      this.refresh();
-      return false;
-    },
-    previous: function () {
-      this.refresh();
-      return false;
-    },
-    next: function () {
-      this.refresh();
-      return false;
-    },
-    sortBy: function (sortBy) {
       this.refresh();
       return false;
     }

@@ -199,8 +199,28 @@ body, html {
   left: 0;
   overflow-y: scroll; }
 
-.addUser .submitMessage {
+.usersPlugin .addUser .submitMessage {
   margin-left: 1em; }
+
+.usersPlugin .user-table-pagination {
+  position: relative;
+  height: auto;
+  margin: 0.5em 0;
+  -webkit-user-select: none; }
+  .usersPlugin .user-table-pagination .previous {
+    margin: 0;
+    position: absolute;
+    left: 0; }
+  .usersPlugin .user-table-pagination .pageNumber {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    line-height: 2.7em; }
+  .usersPlugin .user-table-pagination .next {
+    position: absolute;
+    top: 0;
+    margin: 0;
+    right: 0; }
 
 table thead.asc th.active:after {
   content: "▼";

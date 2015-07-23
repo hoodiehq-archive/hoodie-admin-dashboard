@@ -1,4 +1,4 @@
-<div class="internalPlugin">
+<div class="internalPlugin usersPlugin">
   <div class="container">
     <h1>New Ember Users Plugin</h1>
 
@@ -19,21 +19,15 @@
       </fieldset>
     </form>
 
-    <h2>Your users</h2>
+    <h2>Your {{model.totalUsers}} {{pluralize-word model.totalUsers 'user'}}</h2>
     <div class="content centered">
       <div class="tableStatus">
         <p class="currentSearchMetrics muted">Showing <strong>{{model.users.length}}</strong> {{pluralize-word model.users.length 'user'}} {{#if activeSearch}} matching <strong>{{activeSearch}}</strong> {{/if}}out of a total of <strong>{{model.totalUsers}}</strong>.</p>
       </div>
       {{#if model.users}}
 
-      Page number: {{pageNumber}}
+      {{user-table-pagination pageNumber=pageNumber isLastPage=isLastPage action="changePage"}}
 
-      {{#if skipFactor}}
-      <button class="btn previous" {{action 'previous'}}>Previous</button>
-      {{/if}}
-      {{#unless isLastPage}}
-      <button class="btn next" {{action 'next'}}>Next</button>
-      {{/unless}}
       <table id="userList" class="table users table-striped">
         <thead class="{{if sortDesc 'desc' 'asc'}}">
           <tr>
@@ -58,6 +52,9 @@
           {{/each}}
         </tbody>
       </table>
+
+      {{user-table-pagination pageNumber=pageNumber isLastPage=isLastPage action="changePage"}}
+
       {{else}}
         {{#if activeSearch}}
           <span class="alert alert-warning">No results for <strong>{{activeSearch}}</strong>. Please note that the search only matches exact strings from the first character onwards at the moment.</span>

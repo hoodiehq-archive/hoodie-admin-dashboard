@@ -70,6 +70,36 @@ define('admin-dashboard/components/add-user', ['exports', 'ember'], function (ex
   });
 
 });
+define('admin-dashboard/components/user-table-pagination', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    disableNext: (function () {
+      return this.get('isLastPage');
+    }).property('isLastPage'),
+
+    disablePrevious: (function () {
+      if (this.get('pageNumber') === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }).property('pageNumber'),
+
+    actions: {
+      previous: function previous() {
+        this.sendAction('action', 'previous');
+        return false;
+      },
+      next: function next() {
+        this.sendAction('action', 'next');
+        return false;
+      }
+    }
+  });
+
+});
 define('admin-dashboard/controllers/array', ['exports', 'ember'], function (exports, Ember) {
 
 	'use strict';
@@ -172,7 +202,7 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
   exports['default'] = Ember['default'].Controller.extend({
     searchTerm: '',
     activeSearch: '',
-    pageLength: 5,
+    pageLength: 25,
     skipFactor: 0,
     sortBy: 'created-at',
     sortDesc: true,
@@ -189,7 +219,20 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
       }
     }).property('skipFactor', 'pageLength', 'model'),
 
-    // We let the actions bubble up to the route by returning 'true',
+    previous: function previous() {
+      var newSkipFactor = this.get('skipFactor') - 1;
+      if (newSkipFactor < 0) {
+        newSkipFactor = 0;
+      }
+      this.set('skipFactor', newSkipFactor);
+      this.send('updateUserList');
+    },
+    next: function next() {
+      this.set('skipFactor', this.get('skipFactor') + 1);
+      this.send('updateUserList');
+    },
+
+    // We let some actions bubble up to the route by returning 'true',
     // so that the route can refresh the model.
     actions: {
       updateUserList: function updateUserList() {
@@ -198,25 +241,24 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
       search: function search() {
         this.set('skipFactor', 0);
         this.set('activeSearch', this.get('searchTerm'));
-        return true;
+        this.send('updateUserList');
+        return false;
       },
       clearSearch: function clearSearch() {
         this.set('skipFactor', 0);
         this.set('activeSearch', '');
         this.set('searchTerm', '');
-        return true;
+        this.send('updateUserList');
+        return false;
       },
-      previous: function previous() {
-        var newSkipFactor = this.get('skipFactor') - 1;
-        if (newSkipFactor < 0) {
-          newSkipFactor = 0;
+      changePage: function changePage(direction) {
+        if (direction === 'previous') {
+          this.previous();
+        } else {
+          this.next();
         }
-        this.set('skipFactor', newSkipFactor);
-        return true;
-      },
-      next: function next() {
-        this.set('skipFactor', this.get('skipFactor') + 1);
-        return true;
+        this.send('updateUserList');
+        return false;
       },
       sortBy: function sortBy(_sortBy) {
         // If it's a double click we're probably flipping the sort order
@@ -225,7 +267,8 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
         } else {
           this.set('sortBy', _sortBy);
         }
-        return true;
+        this.send('updateUserList');
+        return false;
       }
     }
   });
@@ -547,30 +590,10 @@ define('admin-dashboard/routes/plugins/usersnew', ['exports', 'ember', 'admin-da
       });
     },
 
-    // We let the actions bubble up from the controller by returning 'true' there,
+    // We let some actions bubble up from the controller by returning 'true' there,
     // so that this route can refresh the model.
     actions: {
       updateUserList: function updateUserList() {
-        this.refresh();
-        return false;
-      },
-      search: function search() {
-        this.refresh();
-        return false;
-      },
-      clearSearch: function clearSearch() {
-        this.refresh();
-        return false;
-      },
-      previous: function previous() {
-        this.refresh();
-        return false;
-      },
-      next: function next() {
-        this.refresh();
-        return false;
-      },
-      sortBy: function sortBy(_sortBy) {
         this.refresh();
         return false;
       }
@@ -728,6 +751,87 @@ define('admin-dashboard/templates/components/add-user', ['exports'], function (e
         ["inline","input",[],["type","text","class","form-control username","placeholder","User name","required","","value",["subexpr","@mut",[["get","newUserName",["loc",[null,[6,98],[6,109]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disableAdd",["loc",[null,[6,119],[6,129]]]]],[],[]]],["loc",[null,[6,6],[6,131]]]],
         ["inline","input",[],["type","text","class","form-control password","placeholder","Password","required","","value",["subexpr","@mut",[["get","newUserPassword",["loc",[null,[8,97],[8,112]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disableAdd",["loc",[null,[8,122],[8,132]]]]],[],[]]],["loc",[null,[8,6],[8,134]]]],
         ["attribute","disabled",["get","disableAdd",["loc",[null,[9,61],[9,71]]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('admin-dashboard/templates/components/user-table-pagination', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 5,
+            "column": 6
+          }
+        },
+        "moduleName": "admin-dashboard/templates/components/user-table-pagination.hbs"
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","user-table-pagination");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("button");
+        dom.setAttribute(el2,"class","btn previous");
+        var el3 = dom.createTextNode("Previous");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","pageNumber");
+        var el3 = dom.createTextNode("Page ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("button");
+        dom.setAttribute(el2,"class","btn next");
+        var el3 = dom.createTextNode("Next");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var element1 = dom.childAt(element0, [1]);
+        var element2 = dom.childAt(element0, [5]);
+        var morphs = new Array(5);
+        morphs[0] = dom.createAttrMorph(element1, 'disabled');
+        morphs[1] = dom.createElementMorph(element1);
+        morphs[2] = dom.createMorphAt(dom.childAt(element0, [3]),1,1);
+        morphs[3] = dom.createAttrMorph(element2, 'disabled');
+        morphs[4] = dom.createElementMorph(element2);
+        return morphs;
+      },
+      statements: [
+        ["attribute","disabled",["get","disablePrevious",["loc",[null,[2,64],[2,79]]]]],
+        ["element","action",["previous"],[],["loc",[null,[2,31],[2,52]]]],
+        ["content","pageNumber",["loc",[null,[3,31],[3,45]]]],
+        ["attribute","disabled",["get","disableNext",["loc",[null,[4,56],[4,67]]]]],
+        ["element","action",["next"],[],["loc",[null,[4,27],[4,44]]]]
       ],
       locals: [],
       templates: []
@@ -1434,9 +1538,9 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element13 = dom.childAt(fragment, [1]);
+          var element11 = dom.childAt(fragment, [1]);
           var morphs = new Array(1);
-          morphs[0] = dom.createElementMorph(element13);
+          morphs[0] = dom.createElementMorph(element11);
           return morphs;
         },
         statements: [
@@ -1498,103 +1602,11 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "loc": {
               "source": null,
               "start": {
-                "line": 31,
-                "column": 6
-              },
-              "end": {
-                "line": 33,
-                "column": 6
-              }
-            },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
-          },
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("      ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            dom.setAttribute(el1,"class","btn previous");
-            var el2 = dom.createTextNode("Previous");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element6 = dom.childAt(fragment, [1]);
-            var morphs = new Array(1);
-            morphs[0] = dom.createElementMorph(element6);
-            return morphs;
-          },
-          statements: [
-            ["element","action",["previous"],[],["loc",[null,[32,35],[32,56]]]]
-          ],
-          locals: [],
-          templates: []
-        };
-      }());
-      var child1 = (function() {
-        return {
-          meta: {
-            "revision": "Ember@1.13.3",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 34,
-                "column": 6
-              },
-              "end": {
-                "line": 36,
-                "column": 6
-              }
-            },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
-          },
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("      ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            dom.setAttribute(el1,"class","btn next");
-            var el2 = dom.createTextNode("Next");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element5 = dom.childAt(fragment, [1]);
-            var morphs = new Array(1);
-            morphs[0] = dom.createElementMorph(element5);
-            return morphs;
-          },
-          statements: [
-            ["element","action",["next"],[],["loc",[null,[35,31],[35,48]]]]
-          ],
-          locals: [],
-          templates: []
-        };
-      }());
-      var child2 = (function() {
-        return {
-          meta: {
-            "revision": "Ember@1.13.3",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 47,
+                "line": 41,
                 "column": 10
               },
               "end": {
-                "line": 58,
+                "line": 52,
                 "column": 10
               }
             },
@@ -1684,14 +1696,14 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             return morphs;
           },
           statements: [
-            ["attribute","data-id",["concat",[["get","user.value.id",["loc",[null,[48,25],[48,38]]]]]]],
-            ["content","user.value.name",["loc",[null,[49,16],[49,35]]]],
-            ["attribute","data-sort",["concat",[["subexpr","convert-ISO-to-timestamp",[["get","user.value.createdAt",["loc",[null,[50,54],[50,74]]]]],[],["loc",[null,[50,27],[50,76]]]]]]],
-            ["attribute","title",["concat",[["get","user.value.createdAt",["loc",[null,[50,103],[50,123]]]]]]],
-            ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[50,147],[50,167]]]]],[],["loc",[null,[50,127],[50,169]]]],
-            ["content","user.value.state",["loc",[null,[51,35],[51,55]]]],
-            ["attribute","href",["concat",["#user/",["get","user.id",["loc",[null,[53,31],[53,38]]]]]]],
-            ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[55,44],[55,53]]]]],[],["loc",[null,[55,23],[55,55]]]]]]]
+            ["attribute","data-id",["concat",[["get","user.value.id",["loc",[null,[42,25],[42,38]]]]]]],
+            ["content","user.value.name",["loc",[null,[43,16],[43,35]]]],
+            ["attribute","data-sort",["concat",[["subexpr","convert-ISO-to-timestamp",[["get","user.value.createdAt",["loc",[null,[44,54],[44,74]]]]],[],["loc",[null,[44,27],[44,76]]]]]]],
+            ["attribute","title",["concat",[["get","user.value.createdAt",["loc",[null,[44,103],[44,123]]]]]]],
+            ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[44,147],[44,167]]]]],[],["loc",[null,[44,127],[44,169]]]],
+            ["content","user.value.state",["loc",[null,[45,35],[45,55]]]],
+            ["attribute","href",["concat",["#user/",["get","user.id",["loc",[null,[47,31],[47,38]]]]]]],
+            ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[49,44],[49,53]]]]],[],["loc",[null,[49,23],[49,55]]]]]]]
           ],
           locals: ["user"],
           templates: []
@@ -1707,7 +1719,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
               "column": 6
             },
             "end": {
-              "line": 61,
+              "line": 58,
               "column": 6
             }
           },
@@ -1718,17 +1730,11 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("\n      Page number: ");
+          var el1 = dom.createTextNode("\n      ");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n\n");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createComment("");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createComment("");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("      ");
+          var el1 = dom.createTextNode("\n\n      ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("table");
           dom.setAttribute(el1,"id","userList");
@@ -1782,44 +1788,46 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n");
+          var el1 = dom.createTextNode("\n\n      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n\n");
           dom.appendChild(el0, el1);
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element7 = dom.childAt(fragment, [6]);
+          var element5 = dom.childAt(fragment, [3]);
+          var element6 = dom.childAt(element5, [1]);
+          var element7 = dom.childAt(element6, [1]);
           var element8 = dom.childAt(element7, [1]);
-          var element9 = dom.childAt(element8, [1]);
-          var element10 = dom.childAt(element9, [1]);
-          var element11 = dom.childAt(element9, [3]);
-          var element12 = dom.childAt(element9, [5]);
-          var morphs = new Array(10);
+          var element9 = dom.childAt(element7, [3]);
+          var element10 = dom.childAt(element7, [5]);
+          var morphs = new Array(9);
           morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
-          morphs[1] = dom.createMorphAt(fragment,3,3,contextualElement);
-          morphs[2] = dom.createMorphAt(fragment,4,4,contextualElement);
-          morphs[3] = dom.createAttrMorph(element8, 'class');
-          morphs[4] = dom.createAttrMorph(element10, 'class');
-          morphs[5] = dom.createElementMorph(element10);
-          morphs[6] = dom.createAttrMorph(element11, 'class');
-          morphs[7] = dom.createElementMorph(element11);
-          morphs[8] = dom.createElementMorph(element12);
-          morphs[9] = dom.createMorphAt(dom.childAt(element7, [3]),1,1);
+          morphs[1] = dom.createAttrMorph(element6, 'class');
+          morphs[2] = dom.createAttrMorph(element8, 'class');
+          morphs[3] = dom.createElementMorph(element8);
+          morphs[4] = dom.createAttrMorph(element9, 'class');
+          morphs[5] = dom.createElementMorph(element9);
+          morphs[6] = dom.createElementMorph(element10);
+          morphs[7] = dom.createMorphAt(dom.childAt(element5, [3]),1,1);
+          morphs[8] = dom.createMorphAt(fragment,5,5,contextualElement);
           return morphs;
         },
         statements: [
-          ["content","pageNumber",["loc",[null,[29,19],[29,33]]]],
-          ["block","if",[["get","skipFactor",["loc",[null,[31,12],[31,22]]]]],[],0,null,["loc",[null,[31,6],[33,13]]]],
-          ["block","unless",[["get","isLastPage",["loc",[null,[34,16],[34,26]]]]],[],1,null,["loc",[null,[34,6],[36,17]]]],
-          ["attribute","class",["concat",[["subexpr","if",[["get","sortDesc",["loc",[null,[38,27],[38,35]]]],"desc","asc"],[],["loc",[null,[38,22],[38,50]]]]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","sortBy",["loc",[null,[40,82],[40,88]]]]],[],["loc",[null,[40,50],[40,90]]]]]]],
-          ["element","action",["sortBy","name"],[],["loc",[null,[40,16],[40,42]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","sortBy",["loc",[null,[41,94],[41,100]]]]],[],["loc",[null,[41,56],[41,102]]]]]]],
-          ["element","action",["sortBy","created-at"],[],["loc",[null,[41,16],[41,48]]]],
-          ["element","action",["sortBy","state"],[],["loc",[null,[42,37],[42,64]]]],
-          ["block","each",[["get","model.users",["loc",[null,[47,18],[47,29]]]]],[],2,null,["loc",[null,[47,10],[58,19]]]]
+          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[29,41],[29,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[29,63],[29,73]]]]],[],[]],"action","changePage"],["loc",[null,[29,6],[29,95]]]],
+          ["attribute","class",["concat",[["subexpr","if",[["get","sortDesc",["loc",[null,[32,27],[32,35]]]],"desc","asc"],[],["loc",[null,[32,22],[32,50]]]]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","sortBy",["loc",[null,[34,82],[34,88]]]]],[],["loc",[null,[34,50],[34,90]]]]]]],
+          ["element","action",["sortBy","name"],[],["loc",[null,[34,16],[34,42]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","sortBy",["loc",[null,[35,94],[35,100]]]]],[],["loc",[null,[35,56],[35,102]]]]]]],
+          ["element","action",["sortBy","created-at"],[],["loc",[null,[35,16],[35,48]]]],
+          ["element","action",["sortBy","state"],[],["loc",[null,[36,37],[36,64]]]],
+          ["block","each",[["get","model.users",["loc",[null,[41,18],[41,29]]]]],[],0,null,["loc",[null,[41,10],[52,19]]]],
+          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[56,41],[56,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[56,63],[56,73]]]]],[],[]],"action","changePage"],["loc",[null,[56,6],[56,95]]]]
         ],
         locals: [],
-        templates: [child0, child1, child2]
+        templates: [child0]
       };
     }());
     var child3 = (function() {
@@ -1830,11 +1838,11 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "loc": {
               "source": null,
               "start": {
-                "line": 62,
+                "line": 59,
                 "column": 8
               },
               "end": {
-                "line": 64,
+                "line": 61,
                 "column": 8
               }
             },
@@ -1868,7 +1876,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             return morphs;
           },
           statements: [
-            ["content","activeSearch",["loc",[null,[63,67],[63,83]]]]
+            ["content","activeSearch",["loc",[null,[60,67],[60,83]]]]
           ],
           locals: [],
           templates: []
@@ -1881,11 +1889,11 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "loc": {
               "source": null,
               "start": {
-                "line": 64,
+                "line": 61,
                 "column": 8
               },
               "end": {
-                "line": 66,
+                "line": 63,
                 "column": 8
               }
             },
@@ -1920,11 +1928,11 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           "loc": {
             "source": null,
             "start": {
-              "line": 61,
+              "line": 58,
               "column": 6
             },
             "end": {
-              "line": 67,
+              "line": 64,
               "column": 6
             }
           },
@@ -1947,7 +1955,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return morphs;
         },
         statements: [
-          ["block","if",[["get","activeSearch",["loc",[null,[62,14],[62,26]]]]],[],0,1,["loc",[null,[62,8],[66,15]]]]
+          ["block","if",[["get","activeSearch",["loc",[null,[59,14],[59,26]]]]],[],0,1,["loc",[null,[59,8],[63,15]]]]
         ],
         locals: [],
         templates: [child0, child1]
@@ -1963,7 +1971,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "column": 0
           },
           "end": {
-            "line": 70,
+            "line": 67,
             "column": 6
           }
         },
@@ -1975,7 +1983,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","internalPlugin");
+        dom.setAttribute(el1,"class","internalPlugin usersPlugin");
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
@@ -2049,7 +2057,13 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("h2");
-        var el4 = dom.createTextNode("Your users");
+        var el4 = dom.createTextNode("Your ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode(" ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
@@ -2106,21 +2120,24 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element14 = dom.childAt(fragment, [0, 1]);
-        var element15 = dom.childAt(element14, [7]);
-        var element16 = dom.childAt(element15, [1, 1]);
-        var element17 = dom.childAt(element14, [11]);
-        var element18 = dom.childAt(element17, [1, 1]);
-        var morphs = new Array(9);
-        morphs[0] = dom.createMorphAt(element14,3,3);
-        morphs[1] = dom.createElementMorph(element15);
-        morphs[2] = dom.createMorphAt(element16,3,3);
-        morphs[3] = dom.createMorphAt(element16,9,9);
-        morphs[4] = dom.createMorphAt(dom.childAt(element18, [1]),0,0);
-        morphs[5] = dom.createMorphAt(element18,3,3);
-        morphs[6] = dom.createMorphAt(element18,5,5);
-        morphs[7] = dom.createMorphAt(dom.childAt(element18, [7]),0,0);
-        morphs[8] = dom.createMorphAt(element17,3,3);
+        var element12 = dom.childAt(fragment, [0, 1]);
+        var element13 = dom.childAt(element12, [7]);
+        var element14 = dom.childAt(element13, [1, 1]);
+        var element15 = dom.childAt(element12, [9]);
+        var element16 = dom.childAt(element12, [11]);
+        var element17 = dom.childAt(element16, [1, 1]);
+        var morphs = new Array(11);
+        morphs[0] = dom.createMorphAt(element12,3,3);
+        morphs[1] = dom.createElementMorph(element13);
+        morphs[2] = dom.createMorphAt(element14,3,3);
+        morphs[3] = dom.createMorphAt(element14,9,9);
+        morphs[4] = dom.createMorphAt(element15,1,1);
+        morphs[5] = dom.createMorphAt(element15,3,3);
+        morphs[6] = dom.createMorphAt(dom.childAt(element17, [1]),0,0);
+        morphs[7] = dom.createMorphAt(element17,3,3);
+        morphs[8] = dom.createMorphAt(element17,5,5);
+        morphs[9] = dom.createMorphAt(dom.childAt(element17, [7]),0,0);
+        morphs[10] = dom.createMorphAt(element16,3,3);
         return morphs;
       },
       statements: [
@@ -2128,11 +2145,13 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         ["element","action",["search"],["on","submit"],["loc",[null,[8,29],[8,60]]]],
         ["inline","input",[],["value",["subexpr","@mut",[["get","searchTerm",["loc",[null,[12,24],[12,34]]]]],[],[]],"type","text","class","form-control search-query","placeholder","Username"],["loc",[null,[12,10],[12,105]]]],
         ["block","if",[["get","searchTerm",["loc",[null,[15,16],[15,26]]]]],[],0,null,["loc",[null,[15,10],[17,17]]]],
+        ["content","model.totalUsers",["loc",[null,[22,13],[22,33]]]],
+        ["inline","pluralize-word",[["get","model.totalUsers",["loc",[null,[22,51],[22,67]]]],"user"],[],["loc",[null,[22,34],[22,76]]]],
         ["content","model.users.length",["loc",[null,[25,62],[25,84]]]],
         ["inline","pluralize-word",[["get","model.users.length",["loc",[null,[25,111],[25,129]]]],"user"],[],["loc",[null,[25,94],[25,138]]]],
         ["block","if",[["get","activeSearch",["loc",[null,[25,145],[25,157]]]]],[],1,null,["loc",[null,[25,139],[25,210]]]],
         ["content","model.totalUsers",["loc",[null,[25,236],[25,256]]]],
-        ["block","if",[["get","model.users",["loc",[null,[27,12],[27,23]]]]],[],2,3,["loc",[null,[27,6],[67,13]]]]
+        ["block","if",[["get","model.users",["loc",[null,[27,12],[27,23]]]]],[],2,3,["loc",[null,[27,6],[64,13]]]]
       ],
       locals: [],
       templates: [child0, child1, child2, child3]
@@ -2157,6 +2176,16 @@ define('admin-dashboard/tests/components/add-user.jshint', function () {
   module('JSHint - components');
   test('components/add-user.js should pass jshint', function() { 
     ok(false, 'components/add-user.js should pass jshint.\ncomponents/add-user.js: line 37, col 62, \'username\' is not defined.\n\n1 error'); 
+  });
+
+});
+define('admin-dashboard/tests/components/user-table-pagination.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - components');
+  test('components/user-table-pagination.js should pass jshint', function() { 
+    ok(true, 'components/user-table-pagination.js should pass jshint.'); 
   });
 
 });
@@ -2440,6 +2469,149 @@ define('admin-dashboard/tests/integration/components/add-user-test.jshint', func
   });
 
 });
+define('admin-dashboard/tests/integration/components/user-table-pagination-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForComponent('user-table-pagination', 'Integration | Component | user table pagination', {
+    integration: true
+  });
+
+  ember_qunit.test('it renders', function (assert) {
+    assert.expect(2);
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'revision': 'Ember@1.13.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 25
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'user-table-pagination', ['loc', [null, [1, 0], [1, 25]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'revision': 'Ember@1.13.3',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'revision': 'Ember@1.13.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'user-table-pagination', [], [], 0, null, ['loc', [null, [2, 4], [4, 30]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+
+});
+define('admin-dashboard/tests/integration/components/user-table-pagination-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - integration/components');
+  test('integration/components/user-table-pagination-test.js should pass jshint', function() { 
+    ok(true, 'integration/components/user-table-pagination-test.js should pass jshint.'); 
+  });
+
+});
 define('admin-dashboard/tests/router.jshint', function () {
 
   'use strict';
@@ -2516,7 +2688,7 @@ define('admin-dashboard/tests/routes/plugins/usersnew.jshint', function () {
 
   module('JSHint - routes/plugins');
   test('routes/plugins/usersnew.js should pass jshint', function() { 
-    ok(false, 'routes/plugins/usersnew.js should pass jshint.\nroutes/plugins/usersnew.js: line 49, col 23, \'sortBy\' is defined but never used.\n\n1 error'); 
+    ok(true, 'routes/plugins/usersnew.js should pass jshint.'); 
   });
 
 });

@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   searchTerm: '',
   activeSearch: '',
-  pageLength: 5,
+  pageLength: 25,
   skipFactor: 0,
   sortBy: 'created-at',
   sortDesc: true,
@@ -20,7 +20,20 @@ export default Ember.Controller.extend({
     }
   }.property('skipFactor', 'pageLength', 'model'),
 
-  // We let the actions bubble up to the route by returning 'true',
+  previous: function () {
+    var newSkipFactor = this.get('skipFactor') - 1;
+    if(newSkipFactor < 0){
+      newSkipFactor = 0;
+    }
+    this.set('skipFactor', newSkipFactor);
+    this.send("updateUserList");
+  },
+  next: function () {
+    this.set('skipFactor', this.get('skipFactor') + 1);
+    this.send("updateUserList");
+  },
+
+  // We let some actions bubble up to the route by returning 'true',
   // so that the route can refresh the model.
   actions: {
     updateUserList: function () {
@@ -29,25 +42,24 @@ export default Ember.Controller.extend({
     search: function () {
       this.set('skipFactor', 0);
       this.set('activeSearch', this.get('searchTerm'));
-      return true;
+      this.send("updateUserList");
+      return false;
     },
     clearSearch: function () {
       this.set('skipFactor', 0);
       this.set('activeSearch', '');
       this.set('searchTerm', '');
-      return true;
+      this.send("updateUserList");
+      return false;
     },
-    previous: function () {
-      var newSkipFactor = this.get('skipFactor') - 1;
-      if(newSkipFactor < 0){
-        newSkipFactor = 0;
+    changePage: function (direction) {
+      if(direction === 'previous'){
+        this.previous();
+      } else {
+        this.next();
       }
-      this.set('skipFactor', newSkipFactor);
-      return true;
-    },
-    next: function () {
-      this.set('skipFactor', this.get('skipFactor') + 1);
-      return true;
+      this.send("updateUserList");
+      return false;
     },
     sortBy: function (sortBy) {
       // If it's a double click we're probably flipping the sort order
@@ -56,7 +68,8 @@ export default Ember.Controller.extend({
       } else {
         this.set('sortBy', sortBy);
       }
-      return true;
+      this.send("updateUserList");
+      return false;
     }
   }
 });
