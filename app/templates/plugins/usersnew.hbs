@@ -42,7 +42,9 @@
           <tr data-id="{{user.value.id}}" class="user">
             <td>{{user.value.name}}</td>
             <td data-sort="{{convert-ISO-to-timestamp user.value.createdAt}}" class="timeago" title="{{user.value.createdAt}}">{{time-ago-in-words user.value.createdAt}}</td>
-            <td><span class="pill">{{user.value.state}}</span></td>
+            <td>
+            <span class="pill {{user-state-color user.value.state}}">{{user.value.state}}</span>
+            </td>
             <td class="no-sort">
               <a href="#user/{{user.id}}" class="edit">edit</a> /
               <a href="#" class="removeUserPrompt">delete</a> /
