@@ -99,6 +99,9 @@ body, html{
     font-size: 2em;
     margin: 0;
     line-height: 1.775em;
+    a:hover{
+      border: none;
+    }
   }
   .plugin-list {
     margin: 0;
@@ -231,11 +234,7 @@ body, html{
   overflow-y: scroll;
 }
 
-
 .usersPlugin{
-  .addUser .submitMessage{
-    margin-left: 1em;
-  }
   .user-table-pagination {
     position: relative;
     height: auto;
@@ -277,4 +276,8 @@ table{
 
 .modal-footer .btn {
   margin: 0;
+}
+
+.submitMessage{
+  margin-left: 1em;
 }

@@ -1,0 +1,14 @@
+<div class="internalPlugin">
+  <div class="container">
+  <h1>Edit user: {{model.proper_name}}</h1>
+    <form class="updatePassword" data-id="{{model.id}}" {{action 'updatePassword' newPassword on='submit'}}>
+      <fieldset>
+        <label for="input-1">{{model.proper_name}}'s password</label>
+        {{input type="text" class="form-control" name="password" placeholder="password can not be empty" value=newPassword}}
+        <button class="btn" type="submit">Update password</button>
+        <span class="submitMessage">{{submitMessage}}</span>
+      </fieldset>
+    </form>
+    {{#link-to 'plugins.usersnew'}}Back{{/link-to}}
+  </div>
+</div>

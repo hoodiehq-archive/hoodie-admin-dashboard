@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   init: function() {
     this.setProperties({
+      'submitMessage': '',
       'newUserName': '',
       'newUserPassword': '',
       disableAdd: false
@@ -27,16 +28,30 @@ export default Ember.Component.extend({
 
       window.hoodieAdmin.user.add('user', newUser)
       .done(function (response) {
-        route.$('.submitMessage').text('Success: added "'+response.id+'" as a new user.');
-        route.set('disableAdd', false);
+        route.setProperties({
+          'submitMessage': 'Success: added "'+response.id+'" as a new user.',
+          'newUserName': '',
+          'newUserPassword': '',
+          'disableAdd': false
+        });
         route.sendAction();
       }).fail(function (error) {
         console.log('error: ',error);
         route.set('disableAdd', false);
         if (error.name === "HoodieConflictError"){
-          route.$('.submitMessage').text('Sorry, the user "'+username+'" already exists.');
+          route.setProperties({
+            'submitMessage': 'Sorry, the user "'+error.id+'" already exists.',
+            'newUserName': '',
+            'newUserPassword': '',
+            'disableAdd': false
+          });
         } else {
-          route.$('.submitMessage').text('Error: '+error.status+' - '+error.responseText);
+          route.setProperties({
+            'submitMessage': 'Error: '+error.status+' - '+error.responseText,
+            'newUserName': '',
+            'newUserPassword': '',
+            'disableAdd': false
+          });
         }
       });
     },

@@ -46,7 +46,7 @@
             <span class="pill {{user-state-color user.value.state}}">{{user.value.state}}</span>
             </td>
             <td class="no-sort">
-              <a href="#user/{{user.id}}" class="edit">edit</a> /
+              {{#link-to 'plugins.usersnew.user' user.value.name}}edit{{/link-to}} /
               <a href="#" class="removeUserPrompt" {{action 'promptToDeleteUser' user}}>delete</a> /
               <a href="{{link-to-futon-user user.name}}">futon</a>
             </td>

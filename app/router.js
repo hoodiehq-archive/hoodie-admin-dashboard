@@ -12,6 +12,7 @@ Router.map(function() {
     this.route('plugin', { path: ':plugin_id'});
     this.route('usersnew', { path: 'usersnew'}, function(){
       this.route('user', { path: ':user_id'});
+      this.route('users');
     });
   });
 });

@@ -30,6 +30,7 @@ define('admin-dashboard/components/add-user', ['exports', 'ember'], function (ex
   exports['default'] = Ember['default'].Component.extend({
     init: function init() {
       this.setProperties({
+        'submitMessage': '',
         'newUserName': '',
         'newUserPassword': '',
         disableAdd: false
@@ -53,16 +54,30 @@ define('admin-dashboard/components/add-user', ['exports', 'ember'], function (ex
         };
 
         window.hoodieAdmin.user.add('user', newUser).done(function (response) {
-          route.$('.submitMessage').text('Success: added "' + response.id + '" as a new user.');
-          route.set('disableAdd', false);
+          route.setProperties({
+            'submitMessage': 'Success: added "' + response.id + '" as a new user.',
+            'newUserName': '',
+            'newUserPassword': '',
+            'disableAdd': false
+          });
           route.sendAction();
         }).fail(function (error) {
           console.log('error: ', error);
           route.set('disableAdd', false);
           if (error.name === 'HoodieConflictError') {
-            route.$('.submitMessage').text('Sorry, the user "' + username + '" already exists.');
+            route.setProperties({
+              'submitMessage': 'Sorry, the user "' + error.id + '" already exists.',
+              'newUserName': '',
+              'newUserPassword': '',
+              'disableAdd': false
+            });
           } else {
-            route.$('.submitMessage').text('Error: ' + error.status + ' - ' + error.responseText);
+            route.setProperties({
+              'submitMessage': 'Error: ' + error.status + ' - ' + error.responseText,
+              'newUserName': '',
+              'newUserPassword': '',
+              'disableAdd': false
+            });
           }
         });
       }
@@ -213,6 +228,34 @@ define('admin-dashboard/controllers/object', ['exports', 'ember'], function (exp
 	'use strict';
 
 	exports['default'] = Ember['default'].Controller;
+
+});
+define('admin-dashboard/controllers/plugins/usersnew/user', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+    submitMessage: '',
+    newPassword: '',
+    actions: {
+      updatePassword: function updatePassword(password) {
+        var controller = this;
+        window.hoodieAdmin.user.update('user', this.model.proper_name, {
+          password: password
+        }).done(function () {
+          controller.setProperties({
+            'submitMessage': 'Successfully updated password.',
+            'newPassword': ''
+          });
+        }).fail(function (error) {
+          controller.setProperties({
+            'submitMessage': 'Error: ' + error.status + ' - ' + error.responseText,
+            'newPassword': ''
+          });
+        });
+      }
+    }
+  });
 
 });
 define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (exports, Ember) {
@@ -504,6 +547,7 @@ define('admin-dashboard/router', ['exports', 'ember', 'admin-dashboard/config/en
       this.route('plugin', { path: ':plugin_id' });
       this.route('usersnew', { path: 'usersnew' }, function () {
         this.route('user', { path: ':user_id' });
+        this.route('users');
       });
     });
   });
@@ -628,7 +672,7 @@ define('admin-dashboard/routes/plugins/plugin', ['exports', 'ember', 'admin-dash
   });
 
 });
-define('admin-dashboard/routes/plugins/usersnew', ['exports', 'ember', 'admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
+define('admin-dashboard/routes/plugins/usersnew/index', ['exports', 'ember', 'admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
 
   'use strict';
 
@@ -661,6 +705,21 @@ define('admin-dashboard/routes/plugins/usersnew', ['exports', 'ember', 'admin-da
         this.refresh();
         return false;
       }
+    }
+  });
+
+});
+define('admin-dashboard/routes/plugins/usersnew/user', ['exports', 'ember', 'admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
+
+  'use strict';
+
+  exports['default'] = AuthenticatedRoute['default'].extend({
+    model: function model(params) {
+      var url = '/_api/_users/org.couchdb.user%3Auser%2F' + params.user_id;
+      return Ember['default'].$.getJSON(url).then(function (user) {
+        user.proper_name = user.name.replace('user/', '');
+        return user;
+      });
     }
   });
 
@@ -787,6 +846,8 @@ define('admin-dashboard/templates/components/add-user', ['exports'], function (e
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("span");
         dom.setAttribute(el4,"class","submitMessage");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
@@ -803,18 +864,20 @@ define('admin-dashboard/templates/components/add-user', ['exports'], function (e
         var element0 = dom.childAt(fragment, [2]);
         var element1 = dom.childAt(element0, [1, 1]);
         var element2 = dom.childAt(element1, [9]);
-        var morphs = new Array(4);
+        var morphs = new Array(5);
         morphs[0] = dom.createElementMorph(element0);
         morphs[1] = dom.createMorphAt(element1,3,3);
         morphs[2] = dom.createMorphAt(element1,7,7);
         morphs[3] = dom.createAttrMorph(element2, 'disabled');
+        morphs[4] = dom.createMorphAt(dom.childAt(element1, [11]),0,0);
         return morphs;
       },
       statements: [
         ["element","action",["addUser"],["on","submit"],["loc",[null,[2,22],[2,54]]]],
         ["inline","input",[],["type","text","class","form-control username","placeholder","User name","required","","value",["subexpr","@mut",[["get","newUserName",["loc",[null,[6,98],[6,109]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disableAdd",["loc",[null,[6,119],[6,129]]]]],[],[]]],["loc",[null,[6,6],[6,131]]]],
         ["inline","input",[],["type","text","class","form-control password","placeholder","Password","required","","value",["subexpr","@mut",[["get","newUserPassword",["loc",[null,[8,97],[8,112]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disableAdd",["loc",[null,[8,122],[8,132]]]]],[],[]]],["loc",[null,[8,6],[8,134]]]],
-        ["attribute","disabled",["get","disableAdd",["loc",[null,[9,61],[9,71]]]]]
+        ["attribute","disabled",["get","disableAdd",["loc",[null,[9,61],[9,71]]]]],
+        ["content","submitMessage",["loc",[null,[10,34],[10,51]]]]
       ],
       locals: [],
       templates: []
@@ -1689,7 +1752,7 @@ define('admin-dashboard/templates/plugins/plugin', ['exports'], function (export
   }()));
 
 });
-define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (exports) {
+define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function (exports) {
 
   'use strict';
 
@@ -1709,7 +1772,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
               "column": 10
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -1728,9 +1791,9 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element13 = dom.childAt(fragment, [1]);
+          var element12 = dom.childAt(fragment, [1]);
           var morphs = new Array(1);
-          morphs[0] = dom.createElementMorph(element13);
+          morphs[0] = dom.createElementMorph(element12);
           return morphs;
         },
         statements: [
@@ -1755,7 +1818,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
               "column": 203
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -1786,6 +1849,40 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
     }());
     var child2 = (function() {
       var child0 = (function() {
+        var child0 = (function() {
+          return {
+            meta: {
+              "revision": "Ember@1.13.3",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 49,
+                  "column": 14
+                },
+                "end": {
+                  "line": 49,
+                  "column": 70
+                }
+              },
+              "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+            },
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createTextNode("edit");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes() { return []; },
+            statements: [
+
+            ],
+            locals: [],
+            templates: []
+          };
+        }());
         return {
           meta: {
             "revision": "Ember@1.13.3",
@@ -1800,7 +1897,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
                 "column": 10
               }
             },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+            "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
           },
           arity: 1,
           cachedFragment: null,
@@ -1842,10 +1939,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             dom.setAttribute(el2,"class","no-sort");
             var el3 = dom.createTextNode("\n              ");
             dom.appendChild(el2, el3);
-            var el3 = dom.createElement("a");
-            dom.setAttribute(el3,"class","edit");
-            var el4 = dom.createTextNode("edit");
-            dom.appendChild(el3, el4);
+            var el3 = dom.createComment("");
             dom.appendChild(el2, el3);
             var el3 = dom.createTextNode(" /\n              ");
             dom.appendChild(el2, el3);
@@ -1876,9 +1970,8 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             var element1 = dom.childAt(element0, [3]);
             var element2 = dom.childAt(element0, [5, 1]);
             var element3 = dom.childAt(element0, [7]);
-            var element4 = dom.childAt(element3, [1]);
-            var element5 = dom.childAt(element3, [3]);
-            var element6 = dom.childAt(element3, [5]);
+            var element4 = dom.childAt(element3, [3]);
+            var element5 = dom.childAt(element3, [5]);
             var morphs = new Array(10);
             morphs[0] = dom.createAttrMorph(element0, 'data-id');
             morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
@@ -1887,9 +1980,9 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             morphs[4] = dom.createMorphAt(element1,0,0);
             morphs[5] = dom.createAttrMorph(element2, 'class');
             morphs[6] = dom.createMorphAt(element2,0,0);
-            morphs[7] = dom.createAttrMorph(element4, 'href');
-            morphs[8] = dom.createElementMorph(element5);
-            morphs[9] = dom.createAttrMorph(element6, 'href');
+            morphs[7] = dom.createMorphAt(element3,1,1);
+            morphs[8] = dom.createElementMorph(element4);
+            morphs[9] = dom.createAttrMorph(element5, 'href');
             return morphs;
           },
           statements: [
@@ -1900,12 +1993,12 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[44,147],[44,167]]]]],[],["loc",[null,[44,127],[44,169]]]],
             ["attribute","class",["concat",["pill ",["subexpr","user-state-color",[["get","user.value.state",["loc",[null,[46,49],[46,65]]]]],[],["loc",[null,[46,30],[46,67]]]]]]],
             ["content","user.value.state",["loc",[null,[46,69],[46,89]]]],
-            ["attribute","href",["concat",["#user/",["get","user.id",["loc",[null,[49,31],[49,38]]]]]]],
+            ["block","link-to",["plugins.usersnew.user",["get","user.value.name",["loc",[null,[49,49],[49,64]]]]],[],0,null,["loc",[null,[49,14],[49,82]]]],
             ["element","action",["promptToDeleteUser",["get","user",["loc",[null,[50,81],[50,85]]]]],[],["loc",[null,[50,51],[50,87]]]],
             ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[51,44],[51,53]]]]],[],["loc",[null,[51,23],[51,55]]]]]]]
           ],
           locals: ["user"],
-          templates: []
+          templates: [child0]
         };
       }());
       return {
@@ -1922,7 +2015,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
               "column": 6
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -1996,21 +2089,21 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element7 = dom.childAt(fragment, [3]);
+          var element6 = dom.childAt(fragment, [3]);
+          var element7 = dom.childAt(element6, [1]);
           var element8 = dom.childAt(element7, [1]);
           var element9 = dom.childAt(element8, [1]);
-          var element10 = dom.childAt(element9, [1]);
-          var element11 = dom.childAt(element9, [3]);
-          var element12 = dom.childAt(element9, [5]);
+          var element10 = dom.childAt(element8, [3]);
+          var element11 = dom.childAt(element8, [5]);
           var morphs = new Array(9);
           morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
-          morphs[1] = dom.createAttrMorph(element8, 'class');
-          morphs[2] = dom.createAttrMorph(element10, 'class');
-          morphs[3] = dom.createElementMorph(element10);
-          morphs[4] = dom.createAttrMorph(element11, 'class');
-          morphs[5] = dom.createElementMorph(element11);
-          morphs[6] = dom.createElementMorph(element12);
-          morphs[7] = dom.createMorphAt(dom.childAt(element7, [3]),1,1);
+          morphs[1] = dom.createAttrMorph(element7, 'class');
+          morphs[2] = dom.createAttrMorph(element9, 'class');
+          morphs[3] = dom.createElementMorph(element9);
+          morphs[4] = dom.createAttrMorph(element10, 'class');
+          morphs[5] = dom.createElementMorph(element10);
+          morphs[6] = dom.createElementMorph(element11);
+          morphs[7] = dom.createMorphAt(dom.childAt(element6, [3]),1,1);
           morphs[8] = dom.createMorphAt(fragment,5,5,contextualElement);
           return morphs;
         },
@@ -2045,7 +2138,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
                 "column": 8
               }
             },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+            "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
           },
           arity: 0,
           cachedFragment: null,
@@ -2096,7 +2189,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
                 "column": 8
               }
             },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+            "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
           },
           arity: 0,
           cachedFragment: null,
@@ -2135,7 +2228,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
               "column": 6
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -2176,7 +2269,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
                 "column": 2
               }
             },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+            "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
           },
           arity: 0,
           cachedFragment: null,
@@ -2233,7 +2326,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
               "column": 0
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -2272,7 +2365,7 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
             "column": 7
           }
         },
-        "moduleName": "admin-dashboard/templates/plugins/usersnew.hbs"
+        "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
       },
       arity: 0,
       cachedFragment: null,
@@ -2421,24 +2514,24 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element14 = dom.childAt(fragment, [0, 1]);
-        var element15 = dom.childAt(element14, [7]);
-        var element16 = dom.childAt(element15, [1, 1]);
-        var element17 = dom.childAt(element14, [9]);
-        var element18 = dom.childAt(element14, [11]);
-        var element19 = dom.childAt(element18, [1, 1]);
+        var element13 = dom.childAt(fragment, [0, 1]);
+        var element14 = dom.childAt(element13, [7]);
+        var element15 = dom.childAt(element14, [1, 1]);
+        var element16 = dom.childAt(element13, [9]);
+        var element17 = dom.childAt(element13, [11]);
+        var element18 = dom.childAt(element17, [1, 1]);
         var morphs = new Array(12);
-        morphs[0] = dom.createMorphAt(element14,3,3);
-        morphs[1] = dom.createElementMorph(element15);
-        morphs[2] = dom.createMorphAt(element16,3,3);
-        morphs[3] = dom.createMorphAt(element16,9,9);
-        morphs[4] = dom.createMorphAt(element17,1,1);
-        morphs[5] = dom.createMorphAt(element17,3,3);
-        morphs[6] = dom.createMorphAt(dom.childAt(element19, [1]),0,0);
-        morphs[7] = dom.createMorphAt(element19,3,3);
-        morphs[8] = dom.createMorphAt(element19,5,5);
-        morphs[9] = dom.createMorphAt(dom.childAt(element19, [7]),0,0);
-        morphs[10] = dom.createMorphAt(element18,3,3);
+        morphs[0] = dom.createMorphAt(element13,3,3);
+        morphs[1] = dom.createElementMorph(element14);
+        morphs[2] = dom.createMorphAt(element15,3,3);
+        morphs[3] = dom.createMorphAt(element15,9,9);
+        morphs[4] = dom.createMorphAt(element16,1,1);
+        morphs[5] = dom.createMorphAt(element16,3,3);
+        morphs[6] = dom.createMorphAt(dom.childAt(element18, [1]),0,0);
+        morphs[7] = dom.createMorphAt(element18,3,3);
+        morphs[8] = dom.createMorphAt(element18,5,5);
+        morphs[9] = dom.createMorphAt(dom.childAt(element18, [7]),0,0);
+        morphs[10] = dom.createMorphAt(element17,3,3);
         morphs[11] = dom.createMorphAt(fragment,2,2,contextualElement);
         dom.insertBoundary(fragment, null);
         return morphs;
@@ -2463,6 +2556,164 @@ define('admin-dashboard/templates/plugins/usersnew', ['exports'], function (expo
   }()));
 
 });
+define('admin-dashboard/templates/plugins/usersnew/user', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 12,
+              "column": 4
+            },
+            "end": {
+              "line": 12,
+              "column": 39
+            }
+          },
+          "moduleName": "admin-dashboard/templates/plugins/usersnew/user.hbs"
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("Back");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "revision": "Ember@1.13.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 15,
+            "column": 0
+          }
+        },
+        "moduleName": "admin-dashboard/templates/plugins/usersnew/user.hbs"
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","internalPlugin");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","container");
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("h1");
+        var el4 = dom.createTextNode("Edit user: ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("form");
+        dom.setAttribute(el3,"class","updatePassword");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("fieldset");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("label");
+        dom.setAttribute(el5,"for","input-1");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("'s password");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("button");
+        dom.setAttribute(el5,"class","btn");
+        dom.setAttribute(el5,"type","submit");
+        var el6 = dom.createTextNode("Update password");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("span");
+        dom.setAttribute(el5,"class","submitMessage");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0, 1]);
+        var element1 = dom.childAt(element0, [3]);
+        var element2 = dom.childAt(element1, [1]);
+        var morphs = new Array(7);
+        morphs[0] = dom.createMorphAt(dom.childAt(element0, [1]),1,1);
+        morphs[1] = dom.createAttrMorph(element1, 'data-id');
+        morphs[2] = dom.createElementMorph(element1);
+        morphs[3] = dom.createMorphAt(dom.childAt(element2, [1]),0,0);
+        morphs[4] = dom.createMorphAt(element2,3,3);
+        morphs[5] = dom.createMorphAt(dom.childAt(element2, [7]),0,0);
+        morphs[6] = dom.createMorphAt(element0,5,5);
+        return morphs;
+      },
+      statements: [
+        ["content","model.proper_name",["loc",[null,[3,17],[3,38]]]],
+        ["attribute","data-id",["concat",[["get","model.id",["loc",[null,[4,44],[4,52]]]]]]],
+        ["element","action",["updatePassword",["get","newPassword",["loc",[null,[4,82],[4,93]]]]],["on","submit"],["loc",[null,[4,56],[4,107]]]],
+        ["content","model.proper_name",["loc",[null,[6,29],[6,50]]]],
+        ["inline","input",[],["type","text","class","form-control","name","password","placeholder","password can not be empty","value",["subexpr","@mut",[["get","newPassword",["loc",[null,[7,111],[7,122]]]]],[],[]]],["loc",[null,[7,8],[7,124]]]],
+        ["content","submitMessage",["loc",[null,[9,36],[9,53]]]],
+        ["block","link-to",["plugins.usersnew"],[],0,null,["loc",[null,[12,4],[12,51]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
 define('admin-dashboard/tests/app.jshint', function () {
 
   'use strict';
@@ -2479,7 +2730,7 @@ define('admin-dashboard/tests/components/add-user.jshint', function () {
 
   module('JSHint - components');
   test('components/add-user.js should pass jshint', function() { 
-    ok(false, 'components/add-user.js should pass jshint.\ncomponents/add-user.js: line 37, col 62, \'username\' is not defined.\n\n1 error'); 
+    ok(true, 'components/add-user.js should pass jshint.'); 
   });
 
 });
@@ -2530,6 +2781,16 @@ define('admin-dashboard/tests/controllers/logout.jshint', function () {
   module('JSHint - controllers');
   test('controllers/logout.js should pass jshint', function() { 
     ok(true, 'controllers/logout.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/controllers/plugins/usersnew/user.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - controllers/plugins/usersnew');
+  test('controllers/plugins/usersnew/user.js should pass jshint', function() { 
+    ok(true, 'controllers/plugins/usersnew/user.js should pass jshint.'); 
   });
 
 });
@@ -3006,13 +3267,23 @@ define('admin-dashboard/tests/routes/plugins/plugin.jshint', function () {
   });
 
 });
-define('admin-dashboard/tests/routes/plugins/usersnew.jshint', function () {
+define('admin-dashboard/tests/routes/plugins/usersnew/index.jshint', function () {
 
   'use strict';
 
-  module('JSHint - routes/plugins');
-  test('routes/plugins/usersnew.js should pass jshint', function() { 
-    ok(true, 'routes/plugins/usersnew.js should pass jshint.'); 
+  module('JSHint - routes/plugins/usersnew');
+  test('routes/plugins/usersnew/index.js should pass jshint', function() { 
+    ok(true, 'routes/plugins/usersnew/index.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/routes/plugins/usersnew/user.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/plugins/usersnew');
+  test('routes/plugins/usersnew/user.js should pass jshint', function() { 
+    ok(true, 'routes/plugins/usersnew/user.js should pass jshint.'); 
   });
 
 });
@@ -3108,6 +3379,32 @@ define('admin-dashboard/tests/unit/controllers/plugins/usersnew-test.jshint', fu
   module('JSHint - unit/controllers/plugins');
   test('unit/controllers/plugins/usersnew-test.js should pass jshint', function() { 
     ok(true, 'unit/controllers/plugins/usersnew-test.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/unit/controllers/plugins/usersnew/user-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('controller:plugins/usersnew/user', {});
+
+  // Replace this with your real tests.
+  ember_qunit.test('it exists', function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('admin-dashboard/tests/unit/controllers/plugins/usersnew/user-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/controllers/plugins/usersnew');
+  test('unit/controllers/plugins/usersnew/user-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/plugins/usersnew/user-test.js should pass jshint.'); 
   });
 
 });
@@ -3327,6 +3624,56 @@ define('admin-dashboard/tests/unit/routes/plugins/usersnew-test.jshint', functio
   });
 
 });
+define('admin-dashboard/tests/unit/routes/plugins/usersnew/index-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('route:plugins/usersnew/index', 'Unit | Route | plugins/usersnew/index', {});
+
+  ember_qunit.test('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('admin-dashboard/tests/unit/routes/plugins/usersnew/index-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/routes/plugins/usersnew');
+  test('unit/routes/plugins/usersnew/index-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/plugins/usersnew/index-test.js should pass jshint.'); 
+  });
+
+});
+define('admin-dashboard/tests/unit/routes/plugins/usersnew/users-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('route:plugins/usersnew/users', 'Unit | Route | plugins/usersnew/users', {});
+
+  ember_qunit.test('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('admin-dashboard/tests/unit/routes/plugins/usersnew/users-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/routes/plugins/usersnew');
+  test('unit/routes/plugins/usersnew/users-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/plugins/usersnew/users-test.js should pass jshint.'); 
+  });
+
+});
 /* jshint ignore:start */
 
 /* jshint ignore:end */
@@ -3355,7 +3702,7 @@ catch(err) {
 if (runningTests) {
   require("admin-dashboard/tests/test-helper");
 } else {
-  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+bd977f85"});
+  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+3843c843"});
 }
 
 /* jshint ignore:end */

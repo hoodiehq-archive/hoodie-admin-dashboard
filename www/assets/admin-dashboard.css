@@ -84,6 +84,8 @@ body, html {
     font-size: 2em;
     margin: 0;
     line-height: 1.775em; }
+    .sidebar h1 a:hover {
+      border: none; }
   .sidebar .plugin-list {
     margin: 0;
     padding: 0; }
@@ -199,9 +201,6 @@ body, html {
   left: 0;
   overflow-y: scroll; }
 
-.usersPlugin .addUser .submitMessage {
-  margin-left: 1em; }
-
 .usersPlugin .user-table-pagination {
   position: relative;
   height: auto;
@@ -232,3 +231,6 @@ table thead.desc th.active:after {
 
 .modal-footer .btn {
   margin: 0; }
+
+.submitMessage {
+  margin-left: 1em; }
