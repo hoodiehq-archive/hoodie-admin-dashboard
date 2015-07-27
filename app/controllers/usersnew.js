@@ -10,6 +10,7 @@ export default Ember.Controller.extend({
   deletingUser: false,
   selectedUser: undefined,
   newUsers: 0,
+  additionalDatabases: '',
 
   pageNumber: function () {
     return this.get('skipFactor') + 1;

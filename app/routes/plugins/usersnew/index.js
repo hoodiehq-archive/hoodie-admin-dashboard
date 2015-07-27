@@ -17,11 +17,17 @@ export default AuthenticatedRoute.extend({
       url = '/_api/_users/_design/hoodie-plugin-users/_view/by-name?descending=false&limit='+controller.get('pageLength')+'&startkey="'+controller.get('activeSearch')+'"'+'&endkey="'+controller.get('activeSearch')+'\ufff0"&skip='+skip;
     }
 
+    // Fetch config data to populate 'additional databases'-input
+    var baseModel = this.modelFor('plugins');
+    if(baseModel.config.config.additional_user_dbs){
+      controller.set('additionalDatabases', baseModel.config.config.additional_user_dbs.join(', '));
+    }
+
     return Ember.$.getJSON(url).then(function(users) {
       route.set('update_seq', users.update_seq);
       var result = {
         'users': users.rows,
-        'totalUsers': users.total_rows,
+        'totalUsers': users.total_rows
       };
 
       return result;
@@ -74,6 +80,24 @@ export default AuthenticatedRoute.extend({
     updateUserList: function () {
       this.cleanupPolling();
       this.refresh();
+      return false;
+    },
+    updateAdditionalDatabases: function () {
+      var controller = this.controllerFor('usersnew');
+      var dbArray = controller.get('additionalDatabases').replace(/ /g, "").split(",");
+
+      window.hoodieAdmin.request('GET', '/app/config')
+      .done(function(config){
+        config.config.additional_user_dbs = dbArray;
+        window.hoodieAdmin.request('PUT', '/app/config', {data: JSON.stringify(config)})
+        .done(function(){
+
+        }).fail(function(error){
+          console.log('error: ',error);
+        });
+      }).fail(function(error){
+        console.log('error: ',error);
+      });
       return false;
     }
   },
