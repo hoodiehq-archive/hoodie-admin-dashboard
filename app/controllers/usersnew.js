@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   searchTerm: '',
   activeSearch: '',
-  pageLength: 25,
+  pageLength: 20,
   skipFactor: 0,
   sortBy: 'created-at',
   sortDesc: true,

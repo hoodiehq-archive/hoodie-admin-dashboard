@@ -200,6 +200,18 @@ body, html {
   right: 0;
   left: 0;
   overflow-y: scroll; }
+  @media (max-width: 1007px) {
+    .internalPlugin .container {
+      width: 100%; } }
+  @media (min-width: 1008px) {
+    .internalPlugin .container {
+      width: 750px; } }
+  @media (min-width: 1232px) {
+    .internalPlugin .container {
+      width: 970px; } }
+  @media (min-width: 1440px) {
+    .internalPlugin .container {
+      width: 1170px; } }
 
 .usersPlugin .user-table-pagination {
   position: relative;

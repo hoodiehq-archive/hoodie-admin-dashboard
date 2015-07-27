@@ -5,6 +5,8 @@ $slate:           #333333;
 $mediumGrey:      #F1F1F1;
 $brightWhite:     #FDFBFA;
 
+$sidebarWidth:    240px;
+
 a:hover,
 a:focus{
   outline: none;
@@ -27,7 +29,7 @@ body, html{
 }
 
 .sidebar{
-  width:240px;
+  width:$sidebarWidth;
   background-color: $slate;
   color: $mediumGrey;
   height:100%;
@@ -79,7 +81,7 @@ body, html{
 
 
 .sidebar{
-  width: 240px;
+  width: $sidebarWidth;
   min-height: 100vh;
   overflow: hidden;
   padding: 0;
@@ -120,7 +122,7 @@ body, html{
   left: 0;
   right: 0;
   bottom: 0;
-  margin: 0 0 0 240px;
+  margin: 0 0 0 $sidebarWidth;
   height: 100%;
   background-color: $brightWhite;
   .pluginView{
@@ -232,6 +234,26 @@ body, html{
   right: 0;
   left: 0;
   overflow-y: scroll;
+  @media (max-width: 767px + $sidebarWidth){
+    .container{
+      width: 100%;
+    }
+  }
+  @media (min-width: 768px + $sidebarWidth){
+    .container{
+      width: 750px;
+    }
+  }
+  @media (min-width: 992px + $sidebarWidth){
+    .container{
+      width: 970px;
+    }
+  }
+  @media (min-width: 1200px + $sidebarWidth){
+    .container {
+      width: 1170px;
+    }
+  }
 }
 
 .usersPlugin{
@@ -281,3 +303,5 @@ table{
 .submitMessage{
   margin-left: 1em;
 }
+
+

@@ -265,7 +265,7 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
   exports['default'] = Ember['default'].Controller.extend({
     searchTerm: '',
     activeSearch: '',
-    pageLength: 25,
+    pageLength: 20,
     skipFactor: 0,
     sortBy: 'created-at',
     sortDesc: true,
@@ -1842,9 +1842,9 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element15 = dom.childAt(fragment, [1]);
+          var element14 = dom.childAt(fragment, [1]);
           var morphs = new Array(1);
-          morphs[0] = dom.createElementMorph(element15);
+          morphs[0] = dom.createElementMorph(element14);
           return morphs;
         },
         statements: [
@@ -1882,13 +1882,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           dom.setAttribute(el1,"class","alert alert-info");
           var el2 = dom.createTextNode("Hey! ");
           dom.appendChild(el1, el2);
-          var el2 = dom.createElement("strong");
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode(" new ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode(" new ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode(" signed up since you opened this page. ");
           dom.appendChild(el1, el2);
@@ -1906,18 +1904,17 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
           var element12 = dom.childAt(fragment, [1]);
-          var element13 = dom.childAt(element12, [1]);
-          var element14 = dom.childAt(element12, [3]);
+          var element13 = dom.childAt(element12, [5]);
           var morphs = new Array(3);
-          morphs[0] = dom.createMorphAt(element13,0,0);
-          morphs[1] = dom.createMorphAt(element13,2,2);
-          morphs[2] = dom.createElementMorph(element14);
+          morphs[0] = dom.createMorphAt(element12,1,1);
+          morphs[1] = dom.createMorphAt(element12,3,3);
+          morphs[2] = dom.createElementMorph(element13);
           return morphs;
         },
         statements: [
-          ["content","newUsers",["loc",[null,[25,47],[25,59]]]],
-          ["inline","pluralize-word",[["get","newUsers",["loc",[null,[25,81],[25,89]]]],"user"],[],["loc",[null,[25,64],[25,98]]]],
-          ["element","action",["updateUserList"],[],["loc",[null,[25,157],[25,184]]]]
+          ["content","newUsers",["loc",[null,[25,39],[25,51]]]],
+          ["inline","pluralize-word",[["get","newUsers",["loc",[null,[25,73],[25,81]]]],"user"],[],["loc",[null,[25,56],[25,90]]]],
+          ["element","action",["updateUserList"],[],["loc",[null,[25,140],[25,167]]]]
         ],
         locals: [],
         templates: []
@@ -2638,25 +2635,25 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element16 = dom.childAt(fragment, [0, 1]);
-        var element17 = dom.childAt(element16, [7]);
-        var element18 = dom.childAt(element17, [1, 1]);
-        var element19 = dom.childAt(element16, [9]);
-        var element20 = dom.childAt(element16, [13]);
-        var element21 = dom.childAt(element20, [1, 1]);
+        var element15 = dom.childAt(fragment, [0, 1]);
+        var element16 = dom.childAt(element15, [7]);
+        var element17 = dom.childAt(element16, [1, 1]);
+        var element18 = dom.childAt(element15, [9]);
+        var element19 = dom.childAt(element15, [13]);
+        var element20 = dom.childAt(element19, [1, 1]);
         var morphs = new Array(13);
-        morphs[0] = dom.createMorphAt(element16,3,3);
-        morphs[1] = dom.createElementMorph(element17);
-        morphs[2] = dom.createMorphAt(element18,3,3);
-        morphs[3] = dom.createMorphAt(element18,9,9);
-        morphs[4] = dom.createMorphAt(element19,1,1);
-        morphs[5] = dom.createMorphAt(element19,3,3);
-        morphs[6] = dom.createMorphAt(element16,11,11);
-        morphs[7] = dom.createMorphAt(dom.childAt(element21, [1]),0,0);
-        morphs[8] = dom.createMorphAt(element21,3,3);
-        morphs[9] = dom.createMorphAt(element21,5,5);
-        morphs[10] = dom.createMorphAt(dom.childAt(element21, [7]),0,0);
-        morphs[11] = dom.createMorphAt(element20,3,3);
+        morphs[0] = dom.createMorphAt(element15,3,3);
+        morphs[1] = dom.createElementMorph(element16);
+        morphs[2] = dom.createMorphAt(element17,3,3);
+        morphs[3] = dom.createMorphAt(element17,9,9);
+        morphs[4] = dom.createMorphAt(element18,1,1);
+        morphs[5] = dom.createMorphAt(element18,3,3);
+        morphs[6] = dom.createMorphAt(element15,11,11);
+        morphs[7] = dom.createMorphAt(dom.childAt(element20, [1]),0,0);
+        morphs[8] = dom.createMorphAt(element20,3,3);
+        morphs[9] = dom.createMorphAt(element20,5,5);
+        morphs[10] = dom.createMorphAt(dom.childAt(element20, [7]),0,0);
+        morphs[11] = dom.createMorphAt(element19,3,3);
         morphs[12] = dom.createMorphAt(fragment,2,2,contextualElement);
         dom.insertBoundary(fragment, null);
         return morphs;
