@@ -20,18 +20,18 @@ export default AuthenticatedRoute.extend({
     });
 
     var plugins = Ember.$.getJSON('/_api/_plugins').then(function(data) {
+      var activePlugins = [];
       Ember.$.each(data, function (index, plugin) {
         // We don't want the users-plugin to show up twice, so we ignore
         // it when the server returns the plugin list, because we're
         // doing the UI for that in this app
-        if(plugin.id === 'hoodie-plugin-users'){
-          data.splice(index,1);
-        } else {
+        if(plugin.name !== 'users'){
           plugin.id = plugin.name;
+          activePlugins.push(plugin);
         }
       });
       var plugins = {
-        plugins: data
+        plugins: activePlugins
       };
       return plugins;
     });

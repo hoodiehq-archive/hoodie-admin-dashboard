@@ -158,7 +158,7 @@ define('admin-dashboard/controllers/login', ['exports', 'ember'], function (expo
       this.setProperties({
         // Username is always 'admin'
         username: 'admin',
-        password: 'admin',
+        password: '',
         errorMessage: ''
       });
     },
@@ -202,7 +202,7 @@ define('admin-dashboard/controllers/login', ['exports', 'ember'], function (expo
         self.gotoRoute(self);
       }
 
-      window.hoodieAdmin.account.signIn(data.password).done(function (res) {
+      window.hoodieAdmin.account.signIn(data.password).done(function () {
         self.gotoRoute(self);
       }).fail(function (err) {
         self.set('errorMessage', 'Error: ' + err.message);
@@ -353,7 +353,7 @@ define('admin-dashboard/controllers/users', ['exports', 'ember'], function (expo
         return false;
       },
       // Also handles cleanup after deleting
-      cancelDelete: function cancelDelete(user) {
+      cancelDelete: function cancelDelete() {
         this.setProperties({
           'deletingUser': false,
           'selectedUser': undefined
@@ -588,7 +588,7 @@ define('admin-dashboard/routes/authenticated', ['exports', 'ember'], function (e
   });
 
 });
-define('admin-dashboard/routes/index', ['exports', 'ember', 'admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
+define('admin-dashboard/routes/index', ['exports', 'admin-dashboard/routes/authenticated'], function (exports, AuthenticatedRoute) {
 
   'use strict';
 
@@ -635,11 +635,18 @@ define('admin-dashboard/routes/plugins', ['exports', 'ember', 'admin-dashboard/r
       });
 
       var plugins = Ember['default'].$.getJSON('/_api/_plugins').then(function (data) {
+        var activePlugins = [];
         Ember['default'].$.each(data, function (index, plugin) {
-          plugin.id = plugin.name;
+          // We don't want the users-plugin to show up twice, so we ignore
+          // it when the server returns the plugin list, because we're
+          // doing the UI for that in this app
+          if (plugin.name !== 'users') {
+            plugin.id = plugin.name;
+            activePlugins.push(plugin);
+          }
         });
         var plugins = {
-          plugins: data
+          plugins: activePlugins
         };
         return plugins;
       });
@@ -3002,7 +3009,7 @@ define('admin-dashboard/tests/controllers/login.jshint', function () {
 
   module('JSHint - controllers');
   test('controllers/login.js should pass jshint', function() { 
-    ok(false, 'controllers/login.js should pass jshint.\ncontrollers/login.js: line 53, col 22, \'res\' is defined but never used.\n\n1 error'); 
+    ok(true, 'controllers/login.js should pass jshint.'); 
   });
 
 });
@@ -3032,7 +3039,7 @@ define('admin-dashboard/tests/controllers/users.jshint', function () {
 
   module('JSHint - controllers');
   test('controllers/users.js should pass jshint', function() { 
-    ok(false, 'controllers/users.js should pass jshint.\ncontrollers/users.js: line 94, col 29, \'user\' is defined but never used.\n\n1 error'); 
+    ok(true, 'controllers/users.js should pass jshint.'); 
   });
 
 });
@@ -3455,7 +3462,7 @@ define('admin-dashboard/tests/routes/index.jshint', function () {
 
   module('JSHint - routes');
   test('routes/index.js should pass jshint', function() { 
-    ok(false, 'routes/index.js should pass jshint.\nroutes/index.js: line 1, col 8, \'Ember\' is defined but never used.\n\n1 error'); 
+    ok(true, 'routes/index.js should pass jshint.'); 
   });
 
 });
@@ -3934,7 +3941,7 @@ catch(err) {
 if (runningTests) {
   require("admin-dashboard/tests/test-helper");
 } else {
-  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+d4f8ca25"});
+  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+1eabd262"});
 }
 
 /* jshint ignore:end */
