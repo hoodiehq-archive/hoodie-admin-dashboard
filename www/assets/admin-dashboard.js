@@ -271,6 +271,7 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
     sortDesc: true,
     deletingUser: false,
     selectedUser: undefined,
+    newUsers: 0,
 
     pageNumber: (function () {
       return this.get('skipFactor') + 1;
@@ -301,6 +302,7 @@ define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (e
     // so that the route can refresh the model.
     actions: {
       updateUserList: function updateUserList() {
+        this.set('newUsers', 0);
         return true;
       },
       search: function search() {
@@ -680,15 +682,20 @@ define('admin-dashboard/routes/plugins/usersnew/index', ['exports', 'ember', 'ad
     // necessary, because ember doesn't pick up
     // controllers/plugins/usersnew correctly
     controllerName: 'usersnew',
+    update_seq: '',
+    pollster: undefined,
     model: function model() {
+      var route = this;
       var controller = this.controllerFor('usersnew');
       var skip = controller.get('skipFactor') * controller.get('pageLength');
-      var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-' + controller.get('sortBy') + '?descending=' + controller.get('sortDesc') + '&limit=' + controller.get('pageLength') + '&skip=' + skip;
+      var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-' + controller.get('sortBy') + '?descending=' + controller.get('sortDesc') + '&limit=' + controller.get('pageLength') + '&skip=' + skip + '&update_seq=true';
+
       if (controller.get('activeSearch')) {
         url = '/_api/_users/_design/hoodie-plugin-users/_view/by-name?descending=false&limit=' + controller.get('pageLength') + '&startkey="' + controller.get('activeSearch') + '"' + '&endkey="' + controller.get('activeSearch') + '￰"&skip=' + skip;
       }
-      return Ember['default'].$.getJSON(url).then(function (users) {
 
+      return Ember['default'].$.getJSON(url).then(function (users) {
+        route.set('update_seq', users.update_seq);
         var result = {
           'users': users.rows,
           'totalUsers': users.total_rows
@@ -698,13 +705,57 @@ define('admin-dashboard/routes/plugins/usersnew/index', ['exports', 'ember', 'ad
       });
     },
 
+    afterModel: function afterModel() {
+      this.pollUserChangesFeed();
+    },
+
+    pollUserChangesFeed: function pollUserChangesFeed() {
+      var controller = this.controllerFor('usersnew');
+      // If we have an update_seq, poll the changes feed every 30 seconds
+      if (this.get('update_seq')) {
+        var interval = 1000 * 30;
+        var url = '_api/_users/_changes?since=' + this.get('update_seq');
+
+        this.pollster = Ember['default'].run.later(this, function () {
+          this.pollUserChangesFeed();
+          return Ember['default'].$.getJSON(url).then(function (users) {
+            // save the current number of new users if their revisions are <=2
+            // This includes new users and those that have been auto-confirmed
+            // (hence the second revision). This isn't future proof, plugins might
+            // do more stuff to users immediately upon signup.
+            // This feature will then simply stop working, but nothing will break.
+            var newUsers = Ember['default'].$.map(users.results, function (user) {
+              var revIndex = parseInt(user.changes[0].rev.split('-')[0]);
+              if (revIndex <= 2) {
+                return user;
+              } else {
+                return null;
+              }
+            });
+            controller.set('newUsers', newUsers.length);
+          });
+        }, interval);
+      }
+    },
+
+    cleanupPolling: function cleanupPolling() {
+      Ember['default'].run.cancel(this.pollster);
+      this.setProperties({
+        'update_seq': ''
+      });
+    },
+
     // We let some actions bubble up from the controller by returning 'true' there,
     // so that this route can refresh the model.
     actions: {
       updateUserList: function updateUserList() {
+        this.cleanupPolling();
         this.refresh();
         return false;
       }
+    },
+    deactivate: function deactivate() {
+      this.cleanupPolling();
     }
   });
 
@@ -1791,9 +1842,9 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element12 = dom.childAt(fragment, [1]);
+          var element15 = dom.childAt(fragment, [1]);
           var morphs = new Array(1);
-          morphs[0] = dom.createElementMorph(element12);
+          morphs[0] = dom.createElementMorph(element15);
           return morphs;
         },
         statements: [
@@ -1810,11 +1861,80 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           "loc": {
             "source": null,
             "start": {
-              "line": 25,
+              "line": 24,
+              "column": 4
+            },
+            "end": {
+              "line": 26,
+              "column": 4
+            }
+          },
+          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","alert alert-info");
+          var el2 = dom.createTextNode("Hey! ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("strong");
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode(" new ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode(" signed up since you opened this page. ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("a");
+          dom.setAttribute(el2,"href","");
+          var el3 = dom.createTextNode("Refresh the user list");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode(" to see them.");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element12 = dom.childAt(fragment, [1]);
+          var element13 = dom.childAt(element12, [1]);
+          var element14 = dom.childAt(element12, [3]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createMorphAt(element13,0,0);
+          morphs[1] = dom.createMorphAt(element13,2,2);
+          morphs[2] = dom.createElementMorph(element14);
+          return morphs;
+        },
+        statements: [
+          ["content","newUsers",["loc",[null,[25,47],[25,59]]]],
+          ["inline","pluralize-word",[["get","newUsers",["loc",[null,[25,81],[25,89]]]],"user"],[],["loc",[null,[25,64],[25,98]]]],
+          ["element","action",["updateUserList"],[],["loc",[null,[25,157],[25,184]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child2 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 30,
               "column": 139
             },
             "end": {
-              "line": 25,
+              "line": 30,
               "column": 203
             }
           },
@@ -1841,13 +1961,13 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           return morphs;
         },
         statements: [
-          ["content","activeSearch",["loc",[null,[25,177],[25,193]]]]
+          ["content","activeSearch",["loc",[null,[30,177],[30,193]]]]
         ],
         locals: [],
         templates: []
       };
     }());
-    var child2 = (function() {
+    var child3 = (function() {
       var child0 = (function() {
         var child0 = (function() {
           return {
@@ -1856,11 +1976,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 49,
+                  "line": 54,
                   "column": 14
                 },
                 "end": {
-                  "line": 49,
+                  "line": 54,
                   "column": 70
                 }
               },
@@ -1889,11 +2009,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             "loc": {
               "source": null,
               "start": {
-                "line": 41,
+                "line": 46,
                 "column": 10
               },
               "end": {
-                "line": 54,
+                "line": 59,
                 "column": 10
               }
             },
@@ -1986,16 +2106,16 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             return morphs;
           },
           statements: [
-            ["attribute","data-id",["concat",[["get","user.value.id",["loc",[null,[42,25],[42,38]]]]]]],
-            ["content","user.value.name",["loc",[null,[43,16],[43,35]]]],
-            ["attribute","data-sort",["concat",[["subexpr","convert-ISO-to-timestamp",[["get","user.value.createdAt",["loc",[null,[44,54],[44,74]]]]],[],["loc",[null,[44,27],[44,76]]]]]]],
-            ["attribute","title",["concat",[["get","user.value.createdAt",["loc",[null,[44,103],[44,123]]]]]]],
-            ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[44,147],[44,167]]]]],[],["loc",[null,[44,127],[44,169]]]],
-            ["attribute","class",["concat",["pill ",["subexpr","user-state-color",[["get","user.value.state",["loc",[null,[46,49],[46,65]]]]],[],["loc",[null,[46,30],[46,67]]]]]]],
-            ["content","user.value.state",["loc",[null,[46,69],[46,89]]]],
-            ["block","link-to",["plugins.usersnew.user",["get","user.value.name",["loc",[null,[49,49],[49,64]]]]],[],0,null,["loc",[null,[49,14],[49,82]]]],
-            ["element","action",["promptToDeleteUser",["get","user",["loc",[null,[50,81],[50,85]]]]],[],["loc",[null,[50,51],[50,87]]]],
-            ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[51,44],[51,53]]]]],[],["loc",[null,[51,23],[51,55]]]]]]]
+            ["attribute","data-id",["concat",[["get","user.value.id",["loc",[null,[47,25],[47,38]]]]]]],
+            ["content","user.value.name",["loc",[null,[48,16],[48,35]]]],
+            ["attribute","data-sort",["concat",[["subexpr","convert-ISO-to-timestamp",[["get","user.value.createdAt",["loc",[null,[49,54],[49,74]]]]],[],["loc",[null,[49,27],[49,76]]]]]]],
+            ["attribute","title",["concat",[["get","user.value.createdAt",["loc",[null,[49,103],[49,123]]]]]]],
+            ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[49,147],[49,167]]]]],[],["loc",[null,[49,127],[49,169]]]],
+            ["attribute","class",["concat",["pill ",["subexpr","user-state-color",[["get","user.value.state",["loc",[null,[51,49],[51,65]]]]],[],["loc",[null,[51,30],[51,67]]]]]]],
+            ["content","user.value.state",["loc",[null,[51,69],[51,89]]]],
+            ["block","link-to",["plugins.usersnew.user",["get","user.value.name",["loc",[null,[54,49],[54,64]]]]],[],0,null,["loc",[null,[54,14],[54,82]]]],
+            ["element","action",["promptToDeleteUser",["get","user",["loc",[null,[55,81],[55,85]]]]],[],["loc",[null,[55,51],[55,87]]]],
+            ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[56,44],[56,53]]]]],[],["loc",[null,[56,23],[56,55]]]]]]]
           ],
           locals: ["user"],
           templates: [child0]
@@ -2007,11 +2127,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           "loc": {
             "source": null,
             "start": {
-              "line": 27,
+              "line": 32,
               "column": 6
             },
             "end": {
-              "line": 60,
+              "line": 65,
               "column": 6
             }
           },
@@ -2108,21 +2228,21 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           return morphs;
         },
         statements: [
-          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[29,41],[29,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[29,63],[29,73]]]]],[],[]],"action","changePage"],["loc",[null,[29,6],[29,95]]]],
-          ["attribute","class",["concat",[["subexpr","if",[["get","sortDesc",["loc",[null,[32,27],[32,35]]]],"desc","asc"],[],["loc",[null,[32,22],[32,50]]]]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","sortBy",["loc",[null,[34,82],[34,88]]]]],[],["loc",[null,[34,50],[34,90]]]]]]],
-          ["element","action",["sortBy","name"],[],["loc",[null,[34,16],[34,42]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","sortBy",["loc",[null,[35,94],[35,100]]]]],[],["loc",[null,[35,56],[35,102]]]]]]],
-          ["element","action",["sortBy","created-at"],[],["loc",[null,[35,16],[35,48]]]],
-          ["element","action",["sortBy","state"],[],["loc",[null,[36,37],[36,64]]]],
-          ["block","each",[["get","model.users",["loc",[null,[41,18],[41,29]]]]],[],0,null,["loc",[null,[41,10],[54,19]]]],
-          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[58,41],[58,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[58,63],[58,73]]]]],[],[]],"action","changePage"],["loc",[null,[58,6],[58,95]]]]
+          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[34,41],[34,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[34,63],[34,73]]]]],[],[]],"action","changePage"],["loc",[null,[34,6],[34,95]]]],
+          ["attribute","class",["concat",[["subexpr","if",[["get","sortDesc",["loc",[null,[37,27],[37,35]]]],"desc","asc"],[],["loc",[null,[37,22],[37,50]]]]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","sortBy",["loc",[null,[39,82],[39,88]]]]],[],["loc",[null,[39,50],[39,90]]]]]]],
+          ["element","action",["sortBy","name"],[],["loc",[null,[39,16],[39,42]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","sortBy",["loc",[null,[40,94],[40,100]]]]],[],["loc",[null,[40,56],[40,102]]]]]]],
+          ["element","action",["sortBy","created-at"],[],["loc",[null,[40,16],[40,48]]]],
+          ["element","action",["sortBy","state"],[],["loc",[null,[41,37],[41,64]]]],
+          ["block","each",[["get","model.users",["loc",[null,[46,18],[46,29]]]]],[],0,null,["loc",[null,[46,10],[59,19]]]],
+          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[63,41],[63,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[63,63],[63,73]]]]],[],[]],"action","changePage"],["loc",[null,[63,6],[63,95]]]]
         ],
         locals: [],
         templates: [child0]
       };
     }());
-    var child3 = (function() {
+    var child4 = (function() {
       var child0 = (function() {
         return {
           meta: {
@@ -2130,11 +2250,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             "loc": {
               "source": null,
               "start": {
-                "line": 61,
+                "line": 66,
                 "column": 8
               },
               "end": {
-                "line": 63,
+                "line": 68,
                 "column": 8
               }
             },
@@ -2168,7 +2288,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             return morphs;
           },
           statements: [
-            ["content","activeSearch",["loc",[null,[62,67],[62,83]]]]
+            ["content","activeSearch",["loc",[null,[67,67],[67,83]]]]
           ],
           locals: [],
           templates: []
@@ -2181,11 +2301,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             "loc": {
               "source": null,
               "start": {
-                "line": 63,
+                "line": 68,
                 "column": 8
               },
               "end": {
-                "line": 65,
+                "line": 70,
                 "column": 8
               }
             },
@@ -2220,11 +2340,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           "loc": {
             "source": null,
             "start": {
-              "line": 60,
+              "line": 65,
               "column": 6
             },
             "end": {
-              "line": 66,
+              "line": 71,
               "column": 6
             }
           },
@@ -2247,13 +2367,13 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           return morphs;
         },
         statements: [
-          ["block","if",[["get","activeSearch",["loc",[null,[61,14],[61,26]]]]],[],0,1,["loc",[null,[61,8],[65,15]]]]
+          ["block","if",[["get","activeSearch",["loc",[null,[66,14],[66,26]]]]],[],0,1,["loc",[null,[66,8],[70,15]]]]
         ],
         locals: [],
         templates: [child0, child1]
       };
     }());
-    var child4 = (function() {
+    var child5 = (function() {
       var child0 = (function() {
         return {
           meta: {
@@ -2261,11 +2381,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             "loc": {
               "source": null,
               "start": {
-                "line": 72,
+                "line": 77,
                 "column": 2
               },
               "end": {
-                "line": 75,
+                "line": 80,
                 "column": 2
               }
             },
@@ -2306,7 +2426,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             return morphs;
           },
           statements: [
-            ["content","selectedUser.value.name",["loc",[null,[73,54],[73,81]]]]
+            ["content","selectedUser.value.name",["loc",[null,[78,54],[78,81]]]]
           ],
           locals: [],
           templates: []
@@ -2318,11 +2438,11 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           "loc": {
             "source": null,
             "start": {
-              "line": 71,
+              "line": 76,
               "column": 0
             },
             "end": {
-              "line": 76,
+              "line": 81,
               "column": 0
             }
           },
@@ -2345,7 +2465,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
           return morphs;
         },
         statements: [
-          ["block","confirmation-modal",[],["model",["subexpr","@mut",[["get","selectedUser",["loc",[null,[72,30],[72,42]]]]],[],[]],"title","Really delete the user?","confirm","deleteUser","cancel","cancelDelete"],0,null,["loc",[null,[72,2],[75,25]]]]
+          ["block","confirmation-modal",[],["model",["subexpr","@mut",[["get","selectedUser",["loc",[null,[77,30],[77,42]]]]],[],[]],"title","Really delete the user?","confirm","deleteUser","cancel","cancelDelete"],0,null,["loc",[null,[77,2],[80,25]]]]
         ],
         locals: [],
         templates: [child0]
@@ -2361,7 +2481,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             "column": 0
           },
           "end": {
-            "line": 76,
+            "line": 81,
             "column": 7
           }
         },
@@ -2456,6 +2576,10 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
@@ -2514,25 +2638,26 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element13 = dom.childAt(fragment, [0, 1]);
-        var element14 = dom.childAt(element13, [7]);
-        var element15 = dom.childAt(element14, [1, 1]);
-        var element16 = dom.childAt(element13, [9]);
-        var element17 = dom.childAt(element13, [11]);
+        var element16 = dom.childAt(fragment, [0, 1]);
+        var element17 = dom.childAt(element16, [7]);
         var element18 = dom.childAt(element17, [1, 1]);
-        var morphs = new Array(12);
-        morphs[0] = dom.createMorphAt(element13,3,3);
-        morphs[1] = dom.createElementMorph(element14);
-        morphs[2] = dom.createMorphAt(element15,3,3);
-        morphs[3] = dom.createMorphAt(element15,9,9);
-        morphs[4] = dom.createMorphAt(element16,1,1);
-        morphs[5] = dom.createMorphAt(element16,3,3);
-        morphs[6] = dom.createMorphAt(dom.childAt(element18, [1]),0,0);
-        morphs[7] = dom.createMorphAt(element18,3,3);
-        morphs[8] = dom.createMorphAt(element18,5,5);
-        morphs[9] = dom.createMorphAt(dom.childAt(element18, [7]),0,0);
-        morphs[10] = dom.createMorphAt(element17,3,3);
-        morphs[11] = dom.createMorphAt(fragment,2,2,contextualElement);
+        var element19 = dom.childAt(element16, [9]);
+        var element20 = dom.childAt(element16, [13]);
+        var element21 = dom.childAt(element20, [1, 1]);
+        var morphs = new Array(13);
+        morphs[0] = dom.createMorphAt(element16,3,3);
+        morphs[1] = dom.createElementMorph(element17);
+        morphs[2] = dom.createMorphAt(element18,3,3);
+        morphs[3] = dom.createMorphAt(element18,9,9);
+        morphs[4] = dom.createMorphAt(element19,1,1);
+        morphs[5] = dom.createMorphAt(element19,3,3);
+        morphs[6] = dom.createMorphAt(element16,11,11);
+        morphs[7] = dom.createMorphAt(dom.childAt(element21, [1]),0,0);
+        morphs[8] = dom.createMorphAt(element21,3,3);
+        morphs[9] = dom.createMorphAt(element21,5,5);
+        morphs[10] = dom.createMorphAt(dom.childAt(element21, [7]),0,0);
+        morphs[11] = dom.createMorphAt(element20,3,3);
+        morphs[12] = dom.createMorphAt(fragment,2,2,contextualElement);
         dom.insertBoundary(fragment, null);
         return morphs;
       },
@@ -2543,15 +2668,16 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
         ["block","if",[["get","searchTerm",["loc",[null,[15,16],[15,26]]]]],[],0,null,["loc",[null,[15,10],[17,17]]]],
         ["content","model.totalUsers",["loc",[null,[22,13],[22,33]]]],
         ["inline","pluralize-word",[["get","model.totalUsers",["loc",[null,[22,51],[22,67]]]],"user"],[],["loc",[null,[22,34],[22,76]]]],
-        ["content","model.users.length",["loc",[null,[25,62],[25,84]]]],
-        ["inline","pluralize-word",[["get","model.users.length",["loc",[null,[25,111],[25,129]]]],"user"],[],["loc",[null,[25,94],[25,138]]]],
-        ["block","if",[["get","activeSearch",["loc",[null,[25,145],[25,157]]]]],[],1,null,["loc",[null,[25,139],[25,210]]]],
-        ["content","model.totalUsers",["loc",[null,[25,236],[25,256]]]],
-        ["block","if",[["get","model.users",["loc",[null,[27,12],[27,23]]]]],[],2,3,["loc",[null,[27,6],[66,13]]]],
-        ["block","if",[["get","deletingUser",["loc",[null,[71,6],[71,18]]]]],[],4,null,["loc",[null,[71,0],[76,7]]]]
+        ["block","if",[["get","newUsers",["loc",[null,[24,10],[24,18]]]]],[],1,null,["loc",[null,[24,4],[26,11]]]],
+        ["content","model.users.length",["loc",[null,[30,62],[30,84]]]],
+        ["inline","pluralize-word",[["get","model.users.length",["loc",[null,[30,111],[30,129]]]],"user"],[],["loc",[null,[30,94],[30,138]]]],
+        ["block","if",[["get","activeSearch",["loc",[null,[30,145],[30,157]]]]],[],2,null,["loc",[null,[30,139],[30,210]]]],
+        ["content","model.totalUsers",["loc",[null,[30,236],[30,256]]]],
+        ["block","if",[["get","model.users",["loc",[null,[32,12],[32,23]]]]],[],3,4,["loc",[null,[32,6],[71,13]]]],
+        ["block","if",[["get","deletingUser",["loc",[null,[76,6],[76,18]]]]],[],5,null,["loc",[null,[76,0],[81,7]]]]
       ],
       locals: [],
-      templates: [child0, child1, child2, child3, child4]
+      templates: [child0, child1, child2, child3, child4, child5]
     };
   }()));
 
@@ -2800,7 +2926,7 @@ define('admin-dashboard/tests/controllers/usersnew.jshint', function () {
 
   module('JSHint - controllers');
   test('controllers/usersnew.js should pass jshint', function() { 
-    ok(false, 'controllers/usersnew.js should pass jshint.\ncontrollers/usersnew.js: line 90, col 29, \'user\' is defined but never used.\n\n1 error'); 
+    ok(false, 'controllers/usersnew.js should pass jshint.\ncontrollers/usersnew.js: line 92, col 29, \'user\' is defined but never used.\n\n1 error'); 
   });
 
 });
@@ -3702,7 +3828,7 @@ catch(err) {
 if (runningTests) {
   require("admin-dashboard/tests/test-helper");
 } else {
-  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+3843c843"});
+  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+ee89b41d"});
 }
 
 /* jshint ignore:end */

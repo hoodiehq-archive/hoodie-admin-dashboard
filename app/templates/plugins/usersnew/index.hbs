@@ -20,6 +20,11 @@
     </form>
 
     <h2>Your {{model.totalUsers}} {{pluralize-word model.totalUsers 'user'}}</h2>
+
+    {{#if newUsers}}
+    <div class="alert alert-info">Hey! <strong>{{newUsers}} new {{pluralize-word newUsers 'user'}}</strong> signed up since you opened this page. <a href="" {{action 'updateUserList'}}>Refresh the user list</a> to see them.</div>
+    {{/if}}
+
     <div class="content centered">
       <div class="tableStatus">
         <p class="currentSearchMetrics muted">Showing <strong>{{model.users.length}}</strong> {{pluralize-word model.users.length 'user'}} {{#if activeSearch}} matching <strong>{{activeSearch}}</strong> {{/if}}out of a total of <strong>{{model.totalUsers}}</strong>.</p>
