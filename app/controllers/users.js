@@ -91,7 +91,7 @@ export default Ember.Controller.extend({
       return false;
     },
     // Also handles cleanup after deleting
-    cancelDelete: function (user) {
+    cancelDelete: function () {
       this.setProperties({
         'deletingUser': false,
         'selectedUser': undefined

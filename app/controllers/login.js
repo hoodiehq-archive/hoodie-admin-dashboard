@@ -50,7 +50,7 @@ export default Ember.Controller.extend({
     }
 
     window.hoodieAdmin.account.signIn(data.password)
-      .done(function(res){
+      .done(function(){
         self.gotoRoute(self);
       })
       .fail(function(err) {
