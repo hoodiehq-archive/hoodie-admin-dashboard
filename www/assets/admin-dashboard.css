@@ -32,7 +32,9 @@ body, html {
 
 .sidebar .helpers {
   position: absolute;
-  padding: 0 0 0 1em; }
+  padding: 0 0 0 1em;
+  bottom: 0;
+  margin: 0 0 0.5em 0; }
 
 .sidebar .helpers li {
   display: inline;
