@@ -91,9 +91,11 @@ export default AuthenticatedRoute.extend({
         config.config.additional_user_dbs = dbArray;
         window.hoodieAdmin.request('PUT', '/app/config', {data: JSON.stringify(config)})
         .done(function(){
-
+          controller.set('addDatabasesSubmitMessage', 'Saved <strong>'+dbArray.join(', ')+'</strong> successfully!');
         }).fail(function(error){
           console.log('error: ',error);
+          controller.set('addDatabasesSubmitMessage', 'Error: '+error.status+' - '+error.responseText);
+
         });
       }).fail(function(error){
         console.log('error: ',error);

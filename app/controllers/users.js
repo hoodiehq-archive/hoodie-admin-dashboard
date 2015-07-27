@@ -11,6 +11,7 @@ export default Ember.Controller.extend({
   selectedUser: undefined,
   newUsers: 0,
   additionalDatabases: '',
+  addDatabasesSubmitMessage: '',
 
   pageNumber: function () {
     return this.get('skipFactor') + 1;

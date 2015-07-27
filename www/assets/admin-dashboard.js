@@ -273,6 +273,7 @@ define('admin-dashboard/controllers/users', ['exports', 'ember'], function (expo
     selectedUser: undefined,
     newUsers: 0,
     additionalDatabases: '',
+    addDatabasesSubmitMessage: '',
 
     pageNumber: (function () {
       return this.get('skipFactor') + 1;
@@ -765,8 +766,11 @@ define('admin-dashboard/routes/plugins/users/index', ['exports', 'ember', 'admin
 
         window.hoodieAdmin.request('GET', '/app/config').done(function (config) {
           config.config.additional_user_dbs = dbArray;
-          window.hoodieAdmin.request('PUT', '/app/config', { data: JSON.stringify(config) }).done(function () {}).fail(function (error) {
+          window.hoodieAdmin.request('PUT', '/app/config', { data: JSON.stringify(config) }).done(function () {
+            controller.set('addDatabasesSubmitMessage', 'Saved <strong>' + dbArray.join(', ') + '</strong> successfully!');
+          }).fail(function (error) {
             console.log('error: ', error);
+            controller.set('addDatabasesSubmitMessage', 'Error: ' + error.status + ' - ' + error.responseText);
           });
         }).fail(function (error) {
           console.log('error: ', error);
@@ -1835,11 +1839,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           "loc": {
             "source": null,
             "start": {
-              "line": 28,
+              "line": 29,
               "column": 10
             },
             "end": {
-              "line": 30,
+              "line": 31,
               "column": 10
             }
           },
@@ -1868,7 +1872,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           return morphs;
         },
         statements: [
-          ["element","action",["clearSearch"],[],["loc",[null,[29,42],[29,66]]]]
+          ["element","action",["clearSearch"],[],["loc",[null,[30,42],[30,66]]]]
         ],
         locals: [],
         templates: []
@@ -1881,11 +1885,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           "loc": {
             "source": null,
             "start": {
-              "line": 37,
+              "line": 38,
               "column": 4
             },
             "end": {
-              "line": 39,
+              "line": 40,
               "column": 4
             }
           },
@@ -1932,9 +1936,9 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           return morphs;
         },
         statements: [
-          ["content","newUsers",["loc",[null,[38,39],[38,51]]]],
-          ["inline","pluralize-word",[["get","newUsers",["loc",[null,[38,73],[38,81]]]],"user"],[],["loc",[null,[38,56],[38,90]]]],
-          ["element","action",["updateUserList"],[],["loc",[null,[38,153],[38,180]]]]
+          ["content","newUsers",["loc",[null,[39,39],[39,51]]]],
+          ["inline","pluralize-word",[["get","newUsers",["loc",[null,[39,73],[39,81]]]],"user"],[],["loc",[null,[39,56],[39,90]]]],
+          ["element","action",["updateUserList"],[],["loc",[null,[39,153],[39,180]]]]
         ],
         locals: [],
         templates: []
@@ -1947,11 +1951,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           "loc": {
             "source": null,
             "start": {
-              "line": 43,
+              "line": 44,
               "column": 139
             },
             "end": {
-              "line": 43,
+              "line": 44,
               "column": 203
             }
           },
@@ -1978,7 +1982,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           return morphs;
         },
         statements: [
-          ["content","activeSearch",["loc",[null,[43,177],[43,193]]]]
+          ["content","activeSearch",["loc",[null,[44,177],[44,193]]]]
         ],
         locals: [],
         templates: []
@@ -1993,11 +1997,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 67,
+                  "line": 68,
                   "column": 14
                 },
                 "end": {
-                  "line": 67,
+                  "line": 68,
                   "column": 67
                 }
               },
@@ -2026,11 +2030,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
             "loc": {
               "source": null,
               "start": {
-                "line": 59,
+                "line": 60,
                 "column": 10
               },
               "end": {
-                "line": 72,
+                "line": 73,
                 "column": 10
               }
             },
@@ -2123,16 +2127,16 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
             return morphs;
           },
           statements: [
-            ["attribute","data-id",["concat",[["get","user.value.id",["loc",[null,[60,25],[60,38]]]]]]],
-            ["content","user.value.name",["loc",[null,[61,16],[61,35]]]],
-            ["attribute","data-sort",["concat",[["subexpr","convert-ISO-to-timestamp",[["get","user.value.createdAt",["loc",[null,[62,54],[62,74]]]]],[],["loc",[null,[62,27],[62,76]]]]]]],
-            ["attribute","title",["concat",[["get","user.value.createdAt",["loc",[null,[62,103],[62,123]]]]]]],
-            ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[62,147],[62,167]]]]],[],["loc",[null,[62,127],[62,169]]]],
-            ["attribute","class",["concat",["pill ",["subexpr","user-state-color",[["get","user.value.state",["loc",[null,[64,49],[64,65]]]]],[],["loc",[null,[64,30],[64,67]]]]]]],
-            ["content","user.value.state",["loc",[null,[64,69],[64,89]]]],
-            ["block","link-to",["plugins.users.user",["get","user.value.name",["loc",[null,[67,46],[67,61]]]]],[],0,null,["loc",[null,[67,14],[67,79]]]],
-            ["element","action",["promptToDeleteUser",["get","user",["loc",[null,[68,81],[68,85]]]]],[],["loc",[null,[68,51],[68,87]]]],
-            ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[69,44],[69,53]]]]],[],["loc",[null,[69,23],[69,55]]]]]]]
+            ["attribute","data-id",["concat",[["get","user.value.id",["loc",[null,[61,25],[61,38]]]]]]],
+            ["content","user.value.name",["loc",[null,[62,16],[62,35]]]],
+            ["attribute","data-sort",["concat",[["subexpr","convert-ISO-to-timestamp",[["get","user.value.createdAt",["loc",[null,[63,54],[63,74]]]]],[],["loc",[null,[63,27],[63,76]]]]]]],
+            ["attribute","title",["concat",[["get","user.value.createdAt",["loc",[null,[63,103],[63,123]]]]]]],
+            ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[63,147],[63,167]]]]],[],["loc",[null,[63,127],[63,169]]]],
+            ["attribute","class",["concat",["pill ",["subexpr","user-state-color",[["get","user.value.state",["loc",[null,[65,49],[65,65]]]]],[],["loc",[null,[65,30],[65,67]]]]]]],
+            ["content","user.value.state",["loc",[null,[65,69],[65,89]]]],
+            ["block","link-to",["plugins.users.user",["get","user.value.name",["loc",[null,[68,46],[68,61]]]]],[],0,null,["loc",[null,[68,14],[68,79]]]],
+            ["element","action",["promptToDeleteUser",["get","user",["loc",[null,[69,81],[69,85]]]]],[],["loc",[null,[69,51],[69,87]]]],
+            ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[70,44],[70,53]]]]],[],["loc",[null,[70,23],[70,55]]]]]]]
           ],
           locals: ["user"],
           templates: [child0]
@@ -2144,11 +2148,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           "loc": {
             "source": null,
             "start": {
-              "line": 45,
+              "line": 46,
               "column": 6
             },
             "end": {
-              "line": 78,
+              "line": 79,
               "column": 6
             }
           },
@@ -2245,15 +2249,15 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           return morphs;
         },
         statements: [
-          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[47,41],[47,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[47,63],[47,73]]]]],[],[]],"action","changePage"],["loc",[null,[47,6],[47,95]]]],
-          ["attribute","class",["concat",[["subexpr","if",[["get","sortDesc",["loc",[null,[50,27],[50,35]]]],"desc","asc"],[],["loc",[null,[50,22],[50,50]]]]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","sortBy",["loc",[null,[52,82],[52,88]]]]],[],["loc",[null,[52,50],[52,90]]]]]]],
-          ["element","action",["sortBy","name"],[],["loc",[null,[52,16],[52,42]]]],
-          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","sortBy",["loc",[null,[53,94],[53,100]]]]],[],["loc",[null,[53,56],[53,102]]]]]]],
-          ["element","action",["sortBy","created-at"],[],["loc",[null,[53,16],[53,48]]]],
-          ["element","action",["sortBy","state"],[],["loc",[null,[54,37],[54,64]]]],
-          ["block","each",[["get","model.users",["loc",[null,[59,18],[59,29]]]]],[],0,null,["loc",[null,[59,10],[72,19]]]],
-          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[76,41],[76,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[76,63],[76,73]]]]],[],[]],"action","changePage"],["loc",[null,[76,6],[76,95]]]]
+          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[48,41],[48,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[48,63],[48,73]]]]],[],[]],"action","changePage"],["loc",[null,[48,6],[48,95]]]],
+          ["attribute","class",["concat",[["subexpr","if",[["get","sortDesc",["loc",[null,[51,27],[51,35]]]],"desc","asc"],[],["loc",[null,[51,22],[51,50]]]]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["name",["get","sortBy",["loc",[null,[53,82],[53,88]]]]],[],["loc",[null,[53,50],[53,90]]]]]]],
+          ["element","action",["sortBy","name"],[],["loc",[null,[53,16],[53,42]]]],
+          ["attribute","class",["concat",[["subexpr","is-active-table-header",["created-at",["get","sortBy",["loc",[null,[54,94],[54,100]]]]],[],["loc",[null,[54,56],[54,102]]]]]]],
+          ["element","action",["sortBy","created-at"],[],["loc",[null,[54,16],[54,48]]]],
+          ["element","action",["sortBy","state"],[],["loc",[null,[55,37],[55,64]]]],
+          ["block","each",[["get","model.users",["loc",[null,[60,18],[60,29]]]]],[],0,null,["loc",[null,[60,10],[73,19]]]],
+          ["inline","user-table-pagination",[],["pageNumber",["subexpr","@mut",[["get","pageNumber",["loc",[null,[77,41],[77,51]]]]],[],[]],"isLastPage",["subexpr","@mut",[["get","isLastPage",["loc",[null,[77,63],[77,73]]]]],[],[]],"action","changePage"],["loc",[null,[77,6],[77,95]]]]
         ],
         locals: [],
         templates: [child0]
@@ -2267,11 +2271,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
             "loc": {
               "source": null,
               "start": {
-                "line": 79,
+                "line": 80,
                 "column": 8
               },
               "end": {
-                "line": 81,
+                "line": 82,
                 "column": 8
               }
             },
@@ -2305,7 +2309,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
             return morphs;
           },
           statements: [
-            ["content","activeSearch",["loc",[null,[80,67],[80,83]]]]
+            ["content","activeSearch",["loc",[null,[81,67],[81,83]]]]
           ],
           locals: [],
           templates: []
@@ -2318,11 +2322,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
             "loc": {
               "source": null,
               "start": {
-                "line": 81,
+                "line": 82,
                 "column": 8
               },
               "end": {
-                "line": 83,
+                "line": 84,
                 "column": 8
               }
             },
@@ -2357,11 +2361,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           "loc": {
             "source": null,
             "start": {
-              "line": 78,
+              "line": 79,
               "column": 6
             },
             "end": {
-              "line": 84,
+              "line": 85,
               "column": 6
             }
           },
@@ -2384,7 +2388,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           return morphs;
         },
         statements: [
-          ["block","if",[["get","activeSearch",["loc",[null,[79,14],[79,26]]]]],[],0,1,["loc",[null,[79,8],[83,15]]]]
+          ["block","if",[["get","activeSearch",["loc",[null,[80,14],[80,26]]]]],[],0,1,["loc",[null,[80,8],[84,15]]]]
         ],
         locals: [],
         templates: [child0, child1]
@@ -2398,11 +2402,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
             "loc": {
               "source": null,
               "start": {
-                "line": 90,
+                "line": 91,
                 "column": 2
               },
               "end": {
-                "line": 93,
+                "line": 94,
                 "column": 2
               }
             },
@@ -2443,7 +2447,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
             return morphs;
           },
           statements: [
-            ["content","selectedUser.value.name",["loc",[null,[91,54],[91,81]]]]
+            ["content","selectedUser.value.name",["loc",[null,[92,54],[92,81]]]]
           ],
           locals: [],
           templates: []
@@ -2455,11 +2459,11 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           "loc": {
             "source": null,
             "start": {
-              "line": 89,
+              "line": 90,
               "column": 0
             },
             "end": {
-              "line": 94,
+              "line": 95,
               "column": 0
             }
           },
@@ -2482,7 +2486,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           return morphs;
         },
         statements: [
-          ["block","confirmation-modal",[],["model",["subexpr","@mut",[["get","selectedUser",["loc",[null,[90,30],[90,42]]]]],[],[]],"title","Really delete the user?","confirm","deleteUser","cancel","cancelDelete"],0,null,["loc",[null,[90,2],[93,25]]]]
+          ["block","confirmation-modal",[],["model",["subexpr","@mut",[["get","selectedUser",["loc",[null,[91,30],[91,42]]]]],[],[]],"title","Really delete the user?","confirm","deleteUser","cancel","cancelDelete"],0,null,["loc",[null,[91,2],[94,25]]]]
         ],
         locals: [],
         templates: [child0]
@@ -2498,7 +2502,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
             "column": 0
           },
           "end": {
-            "line": 94,
+            "line": 95,
             "column": 7
           }
         },
@@ -2584,6 +2588,13 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
         dom.setAttribute(el6,"class","storeDatabases btn ok");
         dom.setAttribute(el6,"type","submit");
         var el7 = dom.createTextNode("Set extra databases");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("span");
+        dom.setAttribute(el6,"class","submitMessage");
+        var el7 = dom.createComment("");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
@@ -2727,27 +2738,29 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element15 = dom.childAt(fragment, [0, 1]);
         var element16 = dom.childAt(element15, [7]);
-        var element17 = dom.childAt(element15, [11]);
-        var element18 = dom.childAt(element17, [1, 1]);
-        var element19 = dom.childAt(element15, [13]);
-        var element20 = dom.childAt(element15, [17]);
-        var element21 = dom.childAt(element20, [1, 1]);
-        var morphs = new Array(15);
+        var element17 = dom.childAt(element16, [1, 1]);
+        var element18 = dom.childAt(element15, [11]);
+        var element19 = dom.childAt(element18, [1, 1]);
+        var element20 = dom.childAt(element15, [13]);
+        var element21 = dom.childAt(element15, [17]);
+        var element22 = dom.childAt(element21, [1, 1]);
+        var morphs = new Array(16);
         morphs[0] = dom.createMorphAt(element15,3,3);
         morphs[1] = dom.createElementMorph(element16);
-        morphs[2] = dom.createMorphAt(dom.childAt(element16, [1, 1]),3,3);
-        morphs[3] = dom.createElementMorph(element17);
-        morphs[4] = dom.createMorphAt(element18,3,3);
-        morphs[5] = dom.createMorphAt(element18,9,9);
-        morphs[6] = dom.createMorphAt(element19,1,1);
-        morphs[7] = dom.createMorphAt(element19,3,3);
-        morphs[8] = dom.createMorphAt(element15,15,15);
-        morphs[9] = dom.createMorphAt(dom.childAt(element21, [1]),0,0);
-        morphs[10] = dom.createMorphAt(element21,3,3);
-        morphs[11] = dom.createMorphAt(element21,5,5);
-        morphs[12] = dom.createMorphAt(dom.childAt(element21, [7]),0,0);
-        morphs[13] = dom.createMorphAt(element20,3,3);
-        morphs[14] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[2] = dom.createMorphAt(element17,3,3);
+        morphs[3] = dom.createUnsafeMorphAt(dom.childAt(element17, [11]),0,0);
+        morphs[4] = dom.createElementMorph(element18);
+        morphs[5] = dom.createMorphAt(element19,3,3);
+        morphs[6] = dom.createMorphAt(element19,9,9);
+        morphs[7] = dom.createMorphAt(element20,1,1);
+        morphs[8] = dom.createMorphAt(element20,3,3);
+        morphs[9] = dom.createMorphAt(element15,15,15);
+        morphs[10] = dom.createMorphAt(dom.childAt(element22, [1]),0,0);
+        morphs[11] = dom.createMorphAt(element22,3,3);
+        morphs[12] = dom.createMorphAt(element22,5,5);
+        morphs[13] = dom.createMorphAt(dom.childAt(element22, [7]),0,0);
+        morphs[14] = dom.createMorphAt(element21,3,3);
+        morphs[15] = dom.createMorphAt(fragment,2,2,contextualElement);
         dom.insertBoundary(fragment, null);
         return morphs;
       },
@@ -2755,18 +2768,19 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
         ["inline","add-user",[],["action","updateUserList"],["loc",[null,[5,4],[5,40]]]],
         ["element","action",["updateAdditionalDatabases"],["on","submit"],["loc",[null,[8,10],[8,60]]]],
         ["inline","input",[],["type","text","name","userDatabases","pattern","([a-z, -])+","class","form-control search-query","placeholder","Databases","value",["subexpr","@mut",[["get","additionalDatabases",["loc",[null,[12,137],[12,156]]]]],[],[]]],["loc",[null,[12,10],[12,158]]]],
-        ["element","action",["search"],["on","submit"],["loc",[null,[21,29],[21,60]]]],
-        ["inline","input",[],["value",["subexpr","@mut",[["get","searchTerm",["loc",[null,[25,24],[25,34]]]]],[],[]],"type","text","class","form-control search-query","placeholder","Username"],["loc",[null,[25,10],[25,105]]]],
-        ["block","if",[["get","searchTerm",["loc",[null,[28,16],[28,26]]]]],[],0,null,["loc",[null,[28,10],[30,17]]]],
-        ["content","model.totalUsers",["loc",[null,[35,13],[35,33]]]],
-        ["inline","pluralize-word",[["get","model.totalUsers",["loc",[null,[35,51],[35,67]]]],"user"],[],["loc",[null,[35,34],[35,76]]]],
-        ["block","if",[["get","newUsers",["loc",[null,[37,10],[37,18]]]]],[],1,null,["loc",[null,[37,4],[39,11]]]],
-        ["content","model.users.length",["loc",[null,[43,62],[43,84]]]],
-        ["inline","pluralize-word",[["get","model.users.length",["loc",[null,[43,111],[43,129]]]],"user"],[],["loc",[null,[43,94],[43,138]]]],
-        ["block","if",[["get","activeSearch",["loc",[null,[43,145],[43,157]]]]],[],2,null,["loc",[null,[43,139],[43,210]]]],
-        ["content","model.totalUsers",["loc",[null,[43,236],[43,256]]]],
-        ["block","if",[["get","model.users",["loc",[null,[45,12],[45,23]]]]],[],3,4,["loc",[null,[45,6],[84,13]]]],
-        ["block","if",[["get","deletingUser",["loc",[null,[89,6],[89,18]]]]],[],5,null,["loc",[null,[89,0],[94,7]]]]
+        ["content","addDatabasesSubmitMessage",["loc",[null,[16,38],[16,69]]]],
+        ["element","action",["search"],["on","submit"],["loc",[null,[22,29],[22,60]]]],
+        ["inline","input",[],["value",["subexpr","@mut",[["get","searchTerm",["loc",[null,[26,24],[26,34]]]]],[],[]],"type","text","class","form-control search-query","placeholder","Username"],["loc",[null,[26,10],[26,105]]]],
+        ["block","if",[["get","searchTerm",["loc",[null,[29,16],[29,26]]]]],[],0,null,["loc",[null,[29,10],[31,17]]]],
+        ["content","model.totalUsers",["loc",[null,[36,13],[36,33]]]],
+        ["inline","pluralize-word",[["get","model.totalUsers",["loc",[null,[36,51],[36,67]]]],"user"],[],["loc",[null,[36,34],[36,76]]]],
+        ["block","if",[["get","newUsers",["loc",[null,[38,10],[38,18]]]]],[],1,null,["loc",[null,[38,4],[40,11]]]],
+        ["content","model.users.length",["loc",[null,[44,62],[44,84]]]],
+        ["inline","pluralize-word",[["get","model.users.length",["loc",[null,[44,111],[44,129]]]],"user"],[],["loc",[null,[44,94],[44,138]]]],
+        ["block","if",[["get","activeSearch",["loc",[null,[44,145],[44,157]]]]],[],2,null,["loc",[null,[44,139],[44,210]]]],
+        ["content","model.totalUsers",["loc",[null,[44,236],[44,256]]]],
+        ["block","if",[["get","model.users",["loc",[null,[46,12],[46,23]]]]],[],3,4,["loc",[null,[46,6],[85,13]]]],
+        ["block","if",[["get","deletingUser",["loc",[null,[90,6],[90,18]]]]],[],5,null,["loc",[null,[90,0],[95,7]]]]
       ],
       locals: [],
       templates: [child0, child1, child2, child3, child4, child5]
@@ -3018,7 +3032,7 @@ define('admin-dashboard/tests/controllers/users.jshint', function () {
 
   module('JSHint - controllers');
   test('controllers/users.js should pass jshint', function() { 
-    ok(false, 'controllers/users.js should pass jshint.\ncontrollers/users.js: line 93, col 29, \'user\' is defined but never used.\n\n1 error'); 
+    ok(false, 'controllers/users.js should pass jshint.\ncontrollers/users.js: line 94, col 29, \'user\' is defined but never used.\n\n1 error'); 
   });
 
 });
