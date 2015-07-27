@@ -3,13 +3,13 @@ import AuthenticatedRoute from '../../authenticated';
 
 export default AuthenticatedRoute.extend({
   // necessary, because ember doesn't pick up
-  // controllers/plugins/usersnew correctly
-  controllerName: 'usersnew',
+  // controllers/plugins/users correctly
+  controllerName: 'users',
   update_seq: '',
   pollster: undefined,
   model: function () {
     var route = this;
-    var controller = this.controllerFor('usersnew');
+    var controller = this.controllerFor('users');
     var skip = controller.get('skipFactor') * controller.get('pageLength');
     var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-'+controller.get('sortBy')+'?descending='+controller.get('sortDesc')+'&limit='+controller.get('pageLength')+'&skip='+skip+'&update_seq=true';
 
@@ -39,7 +39,7 @@ export default AuthenticatedRoute.extend({
   },
 
   pollUserChangesFeed: function () {
-    var controller = this.controllerFor('usersnew');
+    var controller = this.controllerFor('users');
     // If we have an update_seq, poll the changes feed every 30 seconds
     if(this.get('update_seq')){
       var interval = 1000 * 30;
@@ -83,7 +83,7 @@ export default AuthenticatedRoute.extend({
       return false;
     },
     updateAdditionalDatabases: function () {
-      var controller = this.controllerFor('usersnew');
+      var controller = this.controllerFor('users');
       var dbArray = controller.get('additionalDatabases').replace(/ /g, "").split(",");
 
       window.hoodieAdmin.request('GET', '/app/config')

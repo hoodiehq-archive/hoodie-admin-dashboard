@@ -1,6 +1,6 @@
 <div class="internalPlugin usersPlugin">
   <div class="container">
-    <h1>New Ember Users Plugin</h1>
+    <h1>Users Plugin</h1>
 
     {{add-user action='updateUserList'}}
 
@@ -64,7 +64,7 @@
             <span class="pill {{user-state-color user.value.state}}">{{user.value.state}}</span>
             </td>
             <td class="no-sort">
-              {{#link-to 'plugins.usersnew.user' user.value.name}}edit{{/link-to}} /
+              {{#link-to 'plugins.users.user' user.value.name}}edit{{/link-to}} /
               <a href="#" class="removeUserPrompt" {{action 'promptToDeleteUser' user}}>delete</a> /
               <a href="{{link-to-futon-user user.name}}">futon</a>
             </td>

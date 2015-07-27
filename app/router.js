@@ -10,9 +10,8 @@ Router.map(function() {
   this.route('logout');
   this.route('plugins', { path: '/plugins'}, function(){
     this.route('plugin', { path: ':plugin_id'});
-    this.route('usersnew', { path: 'usersnew'}, function(){
+    this.route('users', { path: 'users'}, function(){
       this.route('user', { path: ':user_id'});
-      this.route('users');
     });
   });
 });

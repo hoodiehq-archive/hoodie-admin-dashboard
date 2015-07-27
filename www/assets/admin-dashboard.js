@@ -230,7 +230,7 @@ define('admin-dashboard/controllers/object', ['exports', 'ember'], function (exp
 	exports['default'] = Ember['default'].Controller;
 
 });
-define('admin-dashboard/controllers/plugins/usersnew/user', ['exports', 'ember'], function (exports, Ember) {
+define('admin-dashboard/controllers/plugins/users/user', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
 
@@ -258,7 +258,7 @@ define('admin-dashboard/controllers/plugins/usersnew/user', ['exports', 'ember']
   });
 
 });
-define('admin-dashboard/controllers/usersnew', ['exports', 'ember'], function (exports, Ember) {
+define('admin-dashboard/controllers/users', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
 
@@ -548,9 +548,8 @@ define('admin-dashboard/router', ['exports', 'ember', 'admin-dashboard/config/en
     this.route('logout');
     this.route('plugins', { path: '/plugins' }, function () {
       this.route('plugin', { path: ':plugin_id' });
-      this.route('usersnew', { path: 'usersnew' }, function () {
+      this.route('users', { path: 'users' }, function () {
         this.route('user', { path: ':user_id' });
-        this.route('users');
       });
     });
   });
@@ -675,19 +674,19 @@ define('admin-dashboard/routes/plugins/plugin', ['exports', 'ember', 'admin-dash
   });
 
 });
-define('admin-dashboard/routes/plugins/usersnew/index', ['exports', 'ember', 'admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
+define('admin-dashboard/routes/plugins/users/index', ['exports', 'ember', 'admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
 
   'use strict';
 
   exports['default'] = AuthenticatedRoute['default'].extend({
     // necessary, because ember doesn't pick up
-    // controllers/plugins/usersnew correctly
-    controllerName: 'usersnew',
+    // controllers/plugins/users correctly
+    controllerName: 'users',
     update_seq: '',
     pollster: undefined,
     model: function model() {
       var route = this;
-      var controller = this.controllerFor('usersnew');
+      var controller = this.controllerFor('users');
       var skip = controller.get('skipFactor') * controller.get('pageLength');
       var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-' + controller.get('sortBy') + '?descending=' + controller.get('sortDesc') + '&limit=' + controller.get('pageLength') + '&skip=' + skip + '&update_seq=true';
 
@@ -717,7 +716,7 @@ define('admin-dashboard/routes/plugins/usersnew/index', ['exports', 'ember', 'ad
     },
 
     pollUserChangesFeed: function pollUserChangesFeed() {
-      var controller = this.controllerFor('usersnew');
+      var controller = this.controllerFor('users');
       // If we have an update_seq, poll the changes feed every 30 seconds
       if (this.get('update_seq')) {
         var interval = 1000 * 30;
@@ -761,7 +760,7 @@ define('admin-dashboard/routes/plugins/usersnew/index', ['exports', 'ember', 'ad
         return false;
       },
       updateAdditionalDatabases: function updateAdditionalDatabases() {
-        var controller = this.controllerFor('usersnew');
+        var controller = this.controllerFor('users');
         var dbArray = controller.get('additionalDatabases').replace(/ /g, '').split(',');
 
         window.hoodieAdmin.request('GET', '/app/config').done(function (config) {
@@ -781,7 +780,7 @@ define('admin-dashboard/routes/plugins/usersnew/index', ['exports', 'ember', 'ad
   });
 
 });
-define('admin-dashboard/routes/plugins/usersnew/user', ['exports', 'ember', 'admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
+define('admin-dashboard/routes/plugins/users/user', ['exports', 'ember', 'admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
 
   'use strict';
 
@@ -1597,7 +1596,7 @@ define('admin-dashboard/templates/plugins', ['exports'], function (exports) {
             },
             "end": {
               "line": 12,
-              "column": 48
+              "column": 41
             }
           },
           "moduleName": "admin-dashboard/templates/plugins.hbs"
@@ -1607,7 +1606,7 @@ define('admin-dashboard/templates/plugins', ['exports'], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Users New");
+          var el1 = dom.createTextNode("Users");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -1767,7 +1766,7 @@ define('admin-dashboard/templates/plugins', ['exports'], function (exports) {
         ["block","link-to",["index"],[],0,null,["loc",[null,[3,8],[3,49]]]],
         ["content","model.config.config.app_name",["loc",[null,[4,26],[4,58]]]],
         ["block","each",[["get","model.plugins.plugins",["loc",[null,[7,12],[7,33]]]]],[],1,null,["loc",[null,[7,4],[11,13]]]],
-        ["block","link-to",["plugins.usersnew"],[],2,null,["loc",[null,[12,8],[12,60]]]],
+        ["block","link-to",["plugins.users"],[],2,null,["loc",[null,[12,8],[12,53]]]],
         ["block","link-to",["logout"],[],3,null,["loc",[null,[15,8],[15,47]]]],
         ["content","outlet",["loc",[null,[20,4],[20,14]]]]
       ],
@@ -1824,7 +1823,7 @@ define('admin-dashboard/templates/plugins/plugin', ['exports'], function (export
   }()));
 
 });
-define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function (exports) {
+define('admin-dashboard/templates/plugins/users/index', ['exports'], function (exports) {
 
   'use strict';
 
@@ -1844,7 +1843,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
               "column": 10
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -1890,7 +1889,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
               "column": 4
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -1956,7 +1955,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
               "column": 203
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -1999,10 +1998,10 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
                 },
                 "end": {
                   "line": 67,
-                  "column": 70
+                  "column": 67
                 }
               },
-              "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+              "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
             },
             arity: 0,
             cachedFragment: null,
@@ -2035,7 +2034,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
                 "column": 10
               }
             },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+            "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
           },
           arity: 1,
           cachedFragment: null,
@@ -2131,7 +2130,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             ["inline","time-ago-in-words",[["get","user.value.createdAt",["loc",[null,[62,147],[62,167]]]]],[],["loc",[null,[62,127],[62,169]]]],
             ["attribute","class",["concat",["pill ",["subexpr","user-state-color",[["get","user.value.state",["loc",[null,[64,49],[64,65]]]]],[],["loc",[null,[64,30],[64,67]]]]]]],
             ["content","user.value.state",["loc",[null,[64,69],[64,89]]]],
-            ["block","link-to",["plugins.usersnew.user",["get","user.value.name",["loc",[null,[67,49],[67,64]]]]],[],0,null,["loc",[null,[67,14],[67,82]]]],
+            ["block","link-to",["plugins.users.user",["get","user.value.name",["loc",[null,[67,46],[67,61]]]]],[],0,null,["loc",[null,[67,14],[67,79]]]],
             ["element","action",["promptToDeleteUser",["get","user",["loc",[null,[68,81],[68,85]]]]],[],["loc",[null,[68,51],[68,87]]]],
             ["attribute","href",["concat",[["subexpr","link-to-futon-user",[["get","user.name",["loc",[null,[69,44],[69,53]]]]],[],["loc",[null,[69,23],[69,55]]]]]]]
           ],
@@ -2153,7 +2152,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
               "column": 6
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -2276,7 +2275,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
                 "column": 8
               }
             },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+            "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
           },
           arity: 0,
           cachedFragment: null,
@@ -2327,7 +2326,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
                 "column": 8
               }
             },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+            "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
           },
           arity: 0,
           cachedFragment: null,
@@ -2366,7 +2365,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
               "column": 6
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -2407,7 +2406,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
                 "column": 2
               }
             },
-            "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+            "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
           },
           arity: 0,
           cachedFragment: null,
@@ -2464,7 +2463,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
               "column": 0
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -2503,7 +2502,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
             "column": 7
           }
         },
-        "moduleName": "admin-dashboard/templates/plugins/usersnew/index.hbs"
+        "moduleName": "admin-dashboard/templates/plugins/users/index.hbs"
       },
       arity: 0,
       cachedFragment: null,
@@ -2519,7 +2518,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("h1");
-        var el4 = dom.createTextNode("New Ember Users Plugin");
+        var el4 = dom.createTextNode("Users Plugin");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
@@ -2775,7 +2774,7 @@ define('admin-dashboard/templates/plugins/usersnew/index', ['exports'], function
   }()));
 
 });
-define('admin-dashboard/templates/plugins/usersnew/user', ['exports'], function (exports) {
+define('admin-dashboard/templates/plugins/users/user', ['exports'], function (exports) {
 
   'use strict';
 
@@ -2792,10 +2791,10 @@ define('admin-dashboard/templates/plugins/usersnew/user', ['exports'], function 
             },
             "end": {
               "line": 12,
-              "column": 39
+              "column": 36
             }
           },
-          "moduleName": "admin-dashboard/templates/plugins/usersnew/user.hbs"
+          "moduleName": "admin-dashboard/templates/plugins/users/user.hbs"
         },
         arity: 0,
         cachedFragment: null,
@@ -2828,7 +2827,7 @@ define('admin-dashboard/templates/plugins/usersnew/user', ['exports'], function 
             "column": 0
           }
         },
-        "moduleName": "admin-dashboard/templates/plugins/usersnew/user.hbs"
+        "moduleName": "admin-dashboard/templates/plugins/users/user.hbs"
       },
       arity: 0,
       cachedFragment: null,
@@ -2925,7 +2924,7 @@ define('admin-dashboard/templates/plugins/usersnew/user', ['exports'], function 
         ["content","model.proper_name",["loc",[null,[6,29],[6,50]]]],
         ["inline","input",[],["type","text","class","form-control","name","password","placeholder","password can not be empty","value",["subexpr","@mut",[["get","newPassword",["loc",[null,[7,111],[7,122]]]]],[],[]]],["loc",[null,[7,8],[7,124]]]],
         ["content","submitMessage",["loc",[null,[9,36],[9,53]]]],
-        ["block","link-to",["plugins.usersnew"],[],0,null,["loc",[null,[12,4],[12,51]]]]
+        ["block","link-to",["plugins.users"],[],0,null,["loc",[null,[12,4],[12,48]]]]
       ],
       locals: [],
       templates: [child0]
@@ -3003,23 +3002,23 @@ define('admin-dashboard/tests/controllers/logout.jshint', function () {
   });
 
 });
-define('admin-dashboard/tests/controllers/plugins/usersnew/user.jshint', function () {
+define('admin-dashboard/tests/controllers/plugins/users/user.jshint', function () {
 
   'use strict';
 
-  module('JSHint - controllers/plugins/usersnew');
-  test('controllers/plugins/usersnew/user.js should pass jshint', function() { 
-    ok(true, 'controllers/plugins/usersnew/user.js should pass jshint.'); 
+  module('JSHint - controllers/plugins/users');
+  test('controllers/plugins/users/user.js should pass jshint', function() { 
+    ok(true, 'controllers/plugins/users/user.js should pass jshint.'); 
   });
 
 });
-define('admin-dashboard/tests/controllers/usersnew.jshint', function () {
+define('admin-dashboard/tests/controllers/users.jshint', function () {
 
   'use strict';
 
   module('JSHint - controllers');
-  test('controllers/usersnew.js should pass jshint', function() { 
-    ok(false, 'controllers/usersnew.js should pass jshint.\ncontrollers/usersnew.js: line 93, col 29, \'user\' is defined but never used.\n\n1 error'); 
+  test('controllers/users.js should pass jshint', function() { 
+    ok(false, 'controllers/users.js should pass jshint.\ncontrollers/users.js: line 93, col 29, \'user\' is defined but never used.\n\n1 error'); 
   });
 
 });
@@ -3486,23 +3485,23 @@ define('admin-dashboard/tests/routes/plugins/plugin.jshint', function () {
   });
 
 });
-define('admin-dashboard/tests/routes/plugins/usersnew/index.jshint', function () {
+define('admin-dashboard/tests/routes/plugins/users/index.jshint', function () {
 
   'use strict';
 
-  module('JSHint - routes/plugins/usersnew');
-  test('routes/plugins/usersnew/index.js should pass jshint', function() { 
-    ok(true, 'routes/plugins/usersnew/index.js should pass jshint.'); 
+  module('JSHint - routes/plugins/users');
+  test('routes/plugins/users/index.js should pass jshint', function() { 
+    ok(true, 'routes/plugins/users/index.js should pass jshint.'); 
   });
 
 });
-define('admin-dashboard/tests/routes/plugins/usersnew/user.jshint', function () {
+define('admin-dashboard/tests/routes/plugins/users/user.jshint', function () {
 
   'use strict';
 
-  module('JSHint - routes/plugins/usersnew');
-  test('routes/plugins/usersnew/user.js should pass jshint', function() { 
-    ok(true, 'routes/plugins/usersnew/user.js should pass jshint.'); 
+  module('JSHint - routes/plugins/users');
+  test('routes/plugins/users/user.js should pass jshint', function() { 
+    ok(true, 'routes/plugins/users/user.js should pass jshint.'); 
   });
 
 });
@@ -3575,11 +3574,11 @@ define('admin-dashboard/tests/unit/controllers/logout-test.jshint', function () 
   });
 
 });
-define('admin-dashboard/tests/unit/controllers/plugins/usersnew-test', ['ember-qunit'], function (ember_qunit) {
+define('admin-dashboard/tests/unit/controllers/plugins/users-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:plugins/usersnew', {});
+  ember_qunit.moduleFor('controller:plugins/users', {});
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
@@ -3591,21 +3590,21 @@ define('admin-dashboard/tests/unit/controllers/plugins/usersnew-test', ['ember-q
   // needs: ['controller:foo']
 
 });
-define('admin-dashboard/tests/unit/controllers/plugins/usersnew-test.jshint', function () {
+define('admin-dashboard/tests/unit/controllers/plugins/users-test.jshint', function () {
 
   'use strict';
 
   module('JSHint - unit/controllers/plugins');
-  test('unit/controllers/plugins/usersnew-test.js should pass jshint', function() { 
-    ok(true, 'unit/controllers/plugins/usersnew-test.js should pass jshint.'); 
+  test('unit/controllers/plugins/users-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/plugins/users-test.js should pass jshint.'); 
   });
 
 });
-define('admin-dashboard/tests/unit/controllers/plugins/usersnew/user-test', ['ember-qunit'], function (ember_qunit) {
+define('admin-dashboard/tests/unit/controllers/plugins/users/user-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:plugins/usersnew/user', {});
+  ember_qunit.moduleFor('controller:plugins/users/user', {});
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
@@ -3617,21 +3616,21 @@ define('admin-dashboard/tests/unit/controllers/plugins/usersnew/user-test', ['em
   // needs: ['controller:foo']
 
 });
-define('admin-dashboard/tests/unit/controllers/plugins/usersnew/user-test.jshint', function () {
+define('admin-dashboard/tests/unit/controllers/plugins/users/user-test.jshint', function () {
 
   'use strict';
 
-  module('JSHint - unit/controllers/plugins/usersnew');
-  test('unit/controllers/plugins/usersnew/user-test.js should pass jshint', function() { 
-    ok(true, 'unit/controllers/plugins/usersnew/user-test.js should pass jshint.'); 
+  module('JSHint - unit/controllers/plugins/users');
+  test('unit/controllers/plugins/users/user-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/plugins/users/user-test.js should pass jshint.'); 
   });
 
 });
-define('admin-dashboard/tests/unit/controllers/usersnew-test', ['ember-qunit'], function (ember_qunit) {
+define('admin-dashboard/tests/unit/controllers/users-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:usersnew', {});
+  ember_qunit.moduleFor('controller:users', {});
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
@@ -3643,13 +3642,13 @@ define('admin-dashboard/tests/unit/controllers/usersnew-test', ['ember-qunit'], 
   // needs: ['controller:foo']
 
 });
-define('admin-dashboard/tests/unit/controllers/usersnew-test.jshint', function () {
+define('admin-dashboard/tests/unit/controllers/users-test.jshint', function () {
 
   'use strict';
 
   module('JSHint - unit/controllers');
-  test('unit/controllers/usersnew-test.js should pass jshint', function() { 
-    ok(true, 'unit/controllers/usersnew-test.js should pass jshint.'); 
+  test('unit/controllers/users-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/users-test.js should pass jshint.'); 
   });
 
 });
@@ -3818,11 +3817,11 @@ define('admin-dashboard/tests/unit/routes/logout-test.jshint', function () {
   });
 
 });
-define('admin-dashboard/tests/unit/routes/plugins/usersnew-test', ['ember-qunit'], function (ember_qunit) {
+define('admin-dashboard/tests/unit/routes/plugins/users-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
 
-  ember_qunit.moduleFor('route:plugins/usersnew', 'Unit | Route | plugins/usersnew', {});
+  ember_qunit.moduleFor('route:plugins/users', 'Unit | Route | plugins/users', {});
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
@@ -3833,21 +3832,21 @@ define('admin-dashboard/tests/unit/routes/plugins/usersnew-test', ['ember-qunit'
   // needs: ['controller:foo']
 
 });
-define('admin-dashboard/tests/unit/routes/plugins/usersnew-test.jshint', function () {
+define('admin-dashboard/tests/unit/routes/plugins/users-test.jshint', function () {
 
   'use strict';
 
   module('JSHint - unit/routes/plugins');
-  test('unit/routes/plugins/usersnew-test.js should pass jshint', function() { 
-    ok(true, 'unit/routes/plugins/usersnew-test.js should pass jshint.'); 
+  test('unit/routes/plugins/users-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/plugins/users-test.js should pass jshint.'); 
   });
 
 });
-define('admin-dashboard/tests/unit/routes/plugins/usersnew/index-test', ['ember-qunit'], function (ember_qunit) {
+define('admin-dashboard/tests/unit/routes/plugins/users/index-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
 
-  ember_qunit.moduleFor('route:plugins/usersnew/index', 'Unit | Route | plugins/usersnew/index', {});
+  ember_qunit.moduleFor('route:plugins/users/index', 'Unit | Route | plugins/users/index', {});
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
@@ -3858,21 +3857,21 @@ define('admin-dashboard/tests/unit/routes/plugins/usersnew/index-test', ['ember-
   // needs: ['controller:foo']
 
 });
-define('admin-dashboard/tests/unit/routes/plugins/usersnew/index-test.jshint', function () {
+define('admin-dashboard/tests/unit/routes/plugins/users/index-test.jshint', function () {
 
   'use strict';
 
-  module('JSHint - unit/routes/plugins/usersnew');
-  test('unit/routes/plugins/usersnew/index-test.js should pass jshint', function() { 
-    ok(true, 'unit/routes/plugins/usersnew/index-test.js should pass jshint.'); 
+  module('JSHint - unit/routes/plugins/users');
+  test('unit/routes/plugins/users/index-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/plugins/users/index-test.js should pass jshint.'); 
   });
 
 });
-define('admin-dashboard/tests/unit/routes/plugins/usersnew/users-test', ['ember-qunit'], function (ember_qunit) {
+define('admin-dashboard/tests/unit/routes/plugins/users/users-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
 
-  ember_qunit.moduleFor('route:plugins/usersnew/users', 'Unit | Route | plugins/usersnew/users', {});
+  ember_qunit.moduleFor('route:plugins/users/users', 'Unit | Route | plugins/users/users', {});
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
@@ -3883,13 +3882,13 @@ define('admin-dashboard/tests/unit/routes/plugins/usersnew/users-test', ['ember-
   // needs: ['controller:foo']
 
 });
-define('admin-dashboard/tests/unit/routes/plugins/usersnew/users-test.jshint', function () {
+define('admin-dashboard/tests/unit/routes/plugins/users/users-test.jshint', function () {
 
   'use strict';
 
-  module('JSHint - unit/routes/plugins/usersnew');
-  test('unit/routes/plugins/usersnew/users-test.js should pass jshint', function() { 
-    ok(true, 'unit/routes/plugins/usersnew/users-test.js should pass jshint.'); 
+  module('JSHint - unit/routes/plugins/users');
+  test('unit/routes/plugins/users/users-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/plugins/users/users-test.js should pass jshint.'); 
   });
 
 });
