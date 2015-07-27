@@ -1908,7 +1908,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode(" signed up since you opened this page. ");
+          var el2 = dom.createTextNode(" signed up or confirmed since you opened this page. ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("a");
           dom.setAttribute(el2,"href","");
@@ -1934,7 +1934,7 @@ define('admin-dashboard/templates/plugins/users/index', ['exports'], function (e
         statements: [
           ["content","newUsers",["loc",[null,[38,39],[38,51]]]],
           ["inline","pluralize-word",[["get","newUsers",["loc",[null,[38,73],[38,81]]]],"user"],[],["loc",[null,[38,56],[38,90]]]],
-          ["element","action",["updateUserList"],[],["loc",[null,[38,140],[38,167]]]]
+          ["element","action",["updateUserList"],[],["loc",[null,[38,153],[38,180]]]]
         ],
         locals: [],
         templates: []

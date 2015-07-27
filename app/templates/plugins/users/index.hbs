@@ -35,7 +35,7 @@
     <h2>Your {{model.totalUsers}} {{pluralize-word model.totalUsers 'user'}}</h2>
 
     {{#if newUsers}}
-    <div class="alert alert-info">Hey! {{newUsers}} new {{pluralize-word newUsers 'user'}} signed up since you opened this page. <a href="" {{action 'updateUserList'}}>Refresh the user list</a> to see them.</div>
+    <div class="alert alert-info">Hey! {{newUsers}} new {{pluralize-word newUsers 'user'}} signed up or confirmed since you opened this page. <a href="" {{action 'updateUserList'}}>Refresh the user list</a> to see them.</div>
     {{/if}}
 
     <div class="content centered">
