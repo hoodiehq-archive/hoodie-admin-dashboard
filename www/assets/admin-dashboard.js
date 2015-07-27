@@ -3934,7 +3934,7 @@ catch(err) {
 if (runningTests) {
   require("admin-dashboard/tests/test-helper");
 } else {
-  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+ee89b41d"});
+  require("admin-dashboard/app")["default"].create({"name":"admin-dashboard","version":"0.0.0+d4f8ca25"});
 }
 
 /* jshint ignore:end */
