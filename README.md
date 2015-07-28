@@ -21,18 +21,18 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
-This admin dashboard is meant to run in conjunction with an actual Hoodie app, so you'll need to tell Ember where the `WWW`-endpoint of that Hoodie app is. For example:
+This admin dashboard is meant to run in conjunction with an actual Hoodie app, so you'll need to run a Hoodie app locally and then tell Ember where the `WWW`-endpoint of that Hoodie app is. For example:
 
 * `ember server --proxy http://127.0.0.1:6096`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 
-This'll handle all requests to the Hoodie API without any CORS trouble or additional config
+This'll handle all requests to the Hoodie API without any CORS trouble or additional config. 
 
 #### Oddities of Note
 
-This app embeds **iframes**, the sources of which are provided by the proxied Hoodie API. This only works if the Ember environment variable `locationType` is set to `hash` in `config/environment.js`. Otherwise, Ember will expect a route handler for the iframe src, and that will mess everything up. This means that the app's URLs use hashes.
+This app embeds third-party plugin dashboards **iframes**, the sources of which are provided by the proxied Hoodie API. This only works if the Ember environment variable `locationType` is set to `hash` in `config/environment.js`. Otherwise, Ember will expect a route handler for the iframe src, and that will mess everything up. This means that the app's URLs use hashes.
 
-#### Working on admin-dashboard-UIKit
+#### Working on admin-dashboard-UIKit (needs revision)
 
 Clone `git@github.com:hoodiehq/hoodie-admin-dashboard-UIKit.git` and do `$ npm link` in its directory. This will make a global npm package named `hoodie-admin-dashboard-UIKit` available on your system.
 
@@ -40,7 +40,7 @@ Now go to `yourHoodieTestApp/node_modules/hoodie-server/node_modules` and do `$ 
 
 You can now work in your UIKit-folder and see the changes in your admin-dashboard's plugins. Don't forget to `$ grunt build` the UIKit first.
 
-#### Working on a plugin
+#### Working on a plugin (needs revision)
 
 Clone the plugin and do `$ npm link` in its directory. This will make a global npm package named `hoodie-plugin-pluginName` available on your system.
 
@@ -64,7 +64,9 @@ Make use of the many generators for code, try `ember help generate` for more det
 * `ember build` (development)
 * `ember build --environment production` (production)
 
-The app is built into `www` to match the path in the existing dashboard. It's set in `.ember-cli`.
+**Important:** Don't forget to set the environment when building for release, the difference in asset size is immense (the build with `--environment production` is 950Kb, without it's **12MB**).
+
+The app is built into the `www` folder to match the path in the existing dashboard. Ths path is set in `.ember-cli`.
 
 ### Release Process
 
