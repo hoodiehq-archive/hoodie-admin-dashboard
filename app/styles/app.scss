@@ -260,6 +260,15 @@ body, html{
 }
 
 .usersPlugin{
+  #userList td{
+    width: 20%;
+    &:first-child{
+      width: 40%;
+    }
+    &:last-child{
+      text-align: right;
+    }
+  }
   .user-table-pagination {
     position: relative;
     height: auto;
