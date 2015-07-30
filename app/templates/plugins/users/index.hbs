@@ -12,6 +12,7 @@
           {{input type="text" name="userDatabases" pattern="([a-z, -])+" class="form-control search-query" placeholder="Databases" value=additionalDatabases}}
           <p class="help-block">Enter a comma-separated list. Will generate a database called "userHash–databaseName" for each database entered, per user, i.e. <strong>"7nzj7rl-photos"</strong> for <strong>"photos"</strong>.</p>
           <p class="help-block">Please only use lower case letters and dashes, separated by commas. Spaces will be stripped.</p>
+          <p class="help-block"><strong>Important: This will not apply to existing users!</strong></p>
           <button class="storeDatabases btn ok" type="submit">Set extra databases</button>
           <span class="submitMessage">{{{addDatabasesSubmitMessage}}}</span>
         </div>
@@ -36,7 +37,7 @@
     <h2>Your {{model.totalUsers}} {{pluralize-word model.totalUsers 'user'}}</h2>
 
     {{#if newUsers}}
-    <div class="alert alert-info">Hey! {{newUsers}} new {{pluralize-word newUsers 'user'}} signed up or confirmed since you opened this page. <a href="" {{action 'updateUserList'}}>Refresh the user list</a> to see them.</div>
+    <div class="alert alert-info">Hey! <strong>{{newUsers}} new {{pluralize-word newUsers 'user'}} signed up or confirmed</strong> since you opened this page. <a href="" {{action 'updateUserList'}}>Refresh the user list</a> to see them.</div>
     {{/if}}
 
     <div class="content centered">
