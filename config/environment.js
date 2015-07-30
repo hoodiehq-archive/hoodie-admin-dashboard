@@ -2,7 +2,7 @@
 
 module.exports = function(environment) {
   var ENV = {
-    modulePrefix: 'admin-dashboard',
+    modulePrefix: 'hoodie-admin-dashboard',
     environment: environment,
     baseURL: '/',
     // HOODIE: 'hash' is what allows iframes to work
