@@ -66,8 +66,8 @@
             </td>
             <td class="no-sort">
               {{#link-to 'plugins.users.user' user.value.name}}edit{{/link-to}} /
-              <a href="#" class="removeUserPrompt" {{action 'promptToDeleteUser' user}}>delete</a> /
-              <a href="{{link-to-futon-user user.name}}">futon</a>
+              <a href="#" class="removeUserPrompt" {{action 'promptToDeleteUser' user}}>delete</a><!-- /
+              <a href="{{link-to-futon-user user.value.name}}">futon</a>-->
             </td>
           </tr>
           {{/each}}
