@@ -11,10 +11,10 @@ export default AuthenticatedRoute.extend({
     var route = this;
     var controller = this.controllerFor('users');
     var skip = controller.get('skipFactor') * controller.get('pageLength');
-    var url = '/_api/_users/_design/hoodie-plugin-users/_view/by-'+controller.get('sortBy')+'?descending='+controller.get('sortDesc')+'&limit='+controller.get('pageLength')+'&skip='+skip+'&update_seq=true';
+    var url = '/_api/_users/_design/views/_view/by-'+controller.get('sortBy')+'?descending='+controller.get('sortDesc')+'&limit='+controller.get('pageLength')+'&skip='+skip+'&update_seq=true';
 
     if(controller.get('activeSearch')){
-      url = '/_api/_users/_design/hoodie-plugin-users/_view/by-name?descending=false&limit='+controller.get('pageLength')+'&startkey="'+controller.get('activeSearch')+'"'+'&endkey="'+controller.get('activeSearch')+'\ufff0"&skip='+skip;
+      url = '/_api/_users/_design/views/_view/by-name?descending=false&limit='+controller.get('pageLength')+'&startkey="'+controller.get('activeSearch')+'"'+'&endkey="'+controller.get('activeSearch')+'\ufff0"&skip='+skip;
     }
 
     // Fetch config data to populate 'additional databases'-input
