@@ -29,7 +29,7 @@ export default Ember.Component.extend({
       window.hoodieAdmin.user.add('user', newUser)
       .done(function (response) {
         route.setProperties({
-          'submitMessage': 'Success: added "'+response.id+'" as a new user.',
+          'submitMessage': 'Success: added <strong>'+response.id+'</strong> as a new user.',
           'newUserName': '',
           'newUserPassword': '',
           'disableAdd': false
