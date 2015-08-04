@@ -1,24 +1,13 @@
 {
   "name": "hoodie-admin-dashboard",
-  "version": "0.0.0",
-  "description": "Small description for admin-dashboard goes here",
-  "private": true,
-  "directories": {
-    "doc": "doc",
-    "test": "tests"
+  "description": "The Hoodie admin panel ",
+  "bugs": {
+    "url": "https://github.com/hoodiehq/hoodie-admin-dashboard/issues"
   },
-  "scripts": {
-    "start": "ember server",
-    "build": "ember build",
-    "prepublish": "npm run build",
-    "test": "echo 'No tests yet ¯\\_(ツ)_/¯'"
+  "dependencies": {
+    "hoodie": "^2.1.1",
+    "hoodie.admin": "^1.0.1"
   },
-  "repository": "",
-  "engines": {
-    "node": ">= 0.10.0"
-  },
-  "author": "",
-  "license": "Apache-2.0",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.2",
     "ember-browserify": "^1.0.1",
@@ -41,10 +30,30 @@
     "ember-export-application-global": "^1.0.2",
     "express": "^4.13.1",
     "glob": "^4.5.3",
-    "morgan": "^1.6.1"
+    "morgan": "^1.6.1",
+    "semantic-release": "^4.0.1"
   },
-  "dependencies": {
-    "hoodie": "^2.1.1",
-    "hoodie.admin": "^1.0.1"
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "homepage": "https://github.com/hoodiehq/hoodie-admin-dashboard",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "tag": "next"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoodiehq/hoodie-admin-dashboard"
+  },
+  "scripts": {
+    "build": "ember build --environment production",
+    "prepublish": "npm run build",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "start": "ember server",
+    "test": "echo 'No tests yet ¯\\_(ツ)_/¯'"
   }
 }

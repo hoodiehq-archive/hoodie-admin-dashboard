@@ -5,6 +5,8 @@ node_js:
 cache:
   directories:
   - node_modules
+notifications:
+  email: false
 before_install:
 - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
 - npm config set spin false
@@ -12,4 +14,8 @@ before_install:
 install:
 - npm install -g bower
 - bower install
-- npm install
+- npm install --ignore-scripts
+before_script:
+- npm prune
+after_script:
+- npm run semantic-release

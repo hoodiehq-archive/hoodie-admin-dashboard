@@ -1,4 +1,6 @@
-# Admin-dashboard
+# hoodie-admin-dashboard
+
+[![Build Status](https://travis-ci.org/hoodiehq/hoodie-admin-dashboard.svg?branch=snug)](https://travis-ci.org/hoodiehq/hoodie-admin-dashboard)
 
 Ember version of the Hoodie Admin Dashboard. Currently lets you log in and out, fetch all the plugin info, display plugin backends, and is ready to handle requests to Hoodie that require authentication. All Ajax requests done through Ember will transmit the bearerToken correctly once the admin has signed in.
 
@@ -26,7 +28,7 @@ This admin dashboard is meant to run in conjunction with an actual Hoodie app, s
 * `ember server --proxy http://127.0.0.1:6096`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 
-This'll handle all requests to the Hoodie API without any CORS trouble or additional config. 
+This'll handle all requests to the Hoodie API without any CORS trouble or additional config.
 
 #### Oddities of Note
 
@@ -79,4 +81,3 @@ TBD.
 * Development Browser Extensions
   * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
   * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
-
