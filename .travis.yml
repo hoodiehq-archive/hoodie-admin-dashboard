@@ -1,30 +1,20 @@
+sudo: false
 language: node_js
+cache:
+  directories:
+  - node_modules
+notifications:
+  email: false
 node_js:
 - '0.10'
 before_install:
+- npm i -g npm@^2.0.0
 - gem update --system
 - gem install sass --version "=3.3.7"
 - gem install compass --version "=0.12.3"
 - npm install -g grunt-cli bower
 - bower install
-notifications:
-  email: false
-  slack:
-    secure: d7BezCHlNfbEE25WP+bGfvm6Q1l/zW02ecMYS6HiTxpyZ/H8yZn74h14M8Eh91p87k1Ly5nFZcMXeEpJVZQwAQL8nOe/19HJTJnJSztLiJtXKD9xI17nwnXlIFkOzGYnnkbK2ReTurBpwrAqeDu8uql37Zb9maI/+uHk3hGEupI=
-env:
-  global:
-  - secure: WMvD6gt/aldXZZrHTVXOUr1XZOJBGLwK952WF8zkusghzfRZRKvN2Nzb8zcWy01rbLSxJudkIhhMrZPTpCvOcIfGL0a28Z6J9waDk9A3Xjwd1lCaLvaJKhWr9mM+Bc5Q6lYdilbcXrIw7vc8smV398Pmx+bpxB2TyOtsEiQ26X4=
-deploy:
-  provider: npm
-  email: stephan@thehoodiefirm.com
-  on:
-    all_branches: true
-    tags: true
-before_deploy:
-- grunt before-deploy
-after_deploy:
-- grunt after-deploy
-sudo: false
-cache:
-  directories:
-  - node_modules
+before_script:
+- npm prune
+after_success:
+- npm run semantic-release

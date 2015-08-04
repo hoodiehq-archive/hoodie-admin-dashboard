@@ -1,8 +1,32 @@
 {
   "name": "hoodie-admin-dashboard",
-  "version": "2.0.0",
-  "description": "",
-  "main": "app/index.html",
+  "browser": {
+    "jquery": "./node_modules/jquery/dist/jquery.js",
+    "lodash": "./node_modules/lodash/dist/lodash.js",
+    "underscore": "./node_modules/lodash/dist/lodash.compat.js",
+    "backbone": "./node_modules/backbone/backbone.js",
+    "backbone.marionette": "./node_modules/backbone.marionette/lib/backbone.marionette.js",
+    "backbone.babysitter": "./node_modules/backbone.marionette/node_modules/backbone.babysitter/lib/backbone.babysitter.js",
+    "backbone.wreqr": "./node_modules/backbone.marionette/node_modules/backbone.wreqr/lib/backbone.wreqr.js",
+    "gridster": "./vendor/jquery.gridster.with-extras.js/index.js",
+    "barf": "./node_modules/barf/dist/barf.js",
+    "backbone.syphon": "./vendor/backbone.syphon/lib/backbone.syphon.js"
+  },
+  "browserify-shim": "./config/shims.js",
+  "bugs": {
+    "url": "https://github.com/hoodiehq/hoodie-admin-dashboard/issues"
+  },
+  "dependencies": {
+    "backbone": "^1.1.2",
+    "backbone.marionette": "^1.6.2",
+    "backbone.validation": "^0.7.1",
+    "barf": "^1.0.2",
+    "hoodie-plugin-appconfig": "^2.0.1",
+    "hoodie.admin": "^1.0.0",
+    "jquery": "^2.1.1",
+    "lodash": "^2.4.1",
+    "moment": "^2.5.1"
+  },
   "devDependencies": {
     "browserify-shim": "^3.6.0",
     "grunt": "^0.4.5",
@@ -24,32 +48,10 @@
     "hoodie-plugin-email": "^1.0.0",
     "hoodie-plugin-users": "^2.1.1",
     "hoodie-server": "^2.0.0",
-    "load-grunt-tasks": "^0.6.0"
-  },
-  "scripts": {
-    "test": "grunt ci"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hoodiehq/hoodie-admin-dashboard"
-  },
-  "author": "",
-  "license": "Apache 2 License",
-  "bugs": {
-    "url": "https://github.com/hoodiehq/hoodie-admin-dashboard/issues"
+    "load-grunt-tasks": "^0.6.0",
+    "semantic-release": "^4.0.1"
   },
   "homepage": "https://github.com/hoodiehq/hoodie-admin-dashboard",
-  "dependencies": {
-    "backbone": "^1.1.2",
-    "backbone.marionette": "^1.6.2",
-    "backbone.validation": "^0.7.1",
-    "barf": "^1.0.2",
-    "hoodie.admin": "^1.0.0",
-    "jquery": "^2.1.1",
-    "lodash": "^2.4.1",
-    "moment": "^2.5.1",
-    "hoodie-plugin-appconfig": "^2.0.1"
-  },
   "hoodie": {
     "plugins": [
       "hoodie-plugin-users",
@@ -57,17 +59,17 @@
       "hoodie-plugin-email"
     ]
   },
-  "browserify-shim": "./config/shims.js",
-  "browser": {
-    "jquery": "./node_modules/jquery/dist/jquery.js",
-    "lodash": "./node_modules/lodash/dist/lodash.js",
-    "underscore": "./node_modules/lodash/dist/lodash.compat.js",
-    "backbone": "./node_modules/backbone/backbone.js",
-    "backbone.marionette": "./node_modules/backbone.marionette/lib/backbone.marionette.js",
-    "backbone.babysitter": "./node_modules/backbone.marionette/node_modules/backbone.babysitter/lib/backbone.babysitter.js",
-    "backbone.wreqr": "./node_modules/backbone.marionette/node_modules/backbone.wreqr/lib/backbone.wreqr.js",
-    "gridster": "./vendor/jquery.gridster.with-extras.js/index.js",
-    "barf": "./node_modules/barf/dist/barf.js",
-    "backbone.syphon": "./vendor/backbone.syphon/lib/backbone.syphon.js"
+  "license": "Apache-2.0",
+  "main": "app/index.html",
+  "release": {
+    "branch": "v2.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoodiehq/hoodie-admin-dashboard"
+  },
+  "scripts": {
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "test": "grunt ci"
   }
 }
