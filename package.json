@@ -10,14 +10,15 @@
   "scripts": {
     "start": "ember server",
     "build": "ember build",
-    "test": "ember test"
+    "prepublish": "npm run build",
+    "test": "echo 'No tests yet ¯\\_(ツ)_/¯'"
   },
   "repository": "",
   "engines": {
     "node": ">= 0.10.0"
   },
   "author": "",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.2",
     "ember-browserify": "^1.0.1",
