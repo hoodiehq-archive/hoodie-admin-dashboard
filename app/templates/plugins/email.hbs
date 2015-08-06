@@ -1,0 +1,37 @@
+<div class="internalPlugin usersPlugin">
+  <div class="container">
+    <h2>Email Settings</h2>
+    <p>Set up all outgoing email from this Hoodie app</p>
+    <div class="alert alert-warning">To change any of these values, please edit the corresponding config files.</div>
+    <form id="emailForm" action="">
+      <fieldset>
+        <label for="fromEmail">Default From E-Mail Address</label>
+        <input name="fromEmail"class="form-control"  type="email" placeholder="Default from address" value="{{ model.email.outgoing.defaultfromaddress }}" disabled="disabled">
+        <p class="help-block">For password reset emails etc.</p>
+        <label>Email Service</label>
+        {{select-2 content=model.email.outgoing.availableservices value=model.email.outgoing.service name="emailService" enabled=false}}
+        <label for="username">Username</label>
+        <input name="emailUsername" type="email" class="form-control" id="username" placeholder="Username" value="{{ model.email.outgoing.auth.username }}" disabled="disabled">
+        <p class="help-block">Account name for the email service</p>
+        <label for="password">Password</label>
+        <input name="emailPassword" type="password" class="form-control" id="password" placeholder="Password" value="{{ model.email.outgoing.auth.password }}" disabled="disabled">
+        <p class="help-block">Email service password</p>
+        <!--
+        <button class="submit btn" type="submit">Save email config</button>
+        -->
+      </fieldset>
+    </form>
+    <h2>Email Templates</h2>
+    {{#each model.email.templates as |mailtemplate|}}
+    <form id="template-{{ mailtemplate.type }}" action="">
+      <fieldset>
+        <label for="template-{{ mailtemplate.type }}">{{ mailtemplate.name }}</label>
+        <textarea class="form-control" required rows="5" disabled="disabled">
+          {{~ mailtemplate.text ~}}
+        </textarea>
+        <p class="help-block">{{ mailtemplate.description }}</p>
+      </fieldset>
+    </form>
+    {{/each}}
+  </div>
+</div>

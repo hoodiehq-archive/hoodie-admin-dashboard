@@ -237,6 +237,10 @@ body, html{
   right: 0;
   left: 0;
   overflow-y: scroll;
+  .select2-container{
+    padding: 0;
+    border: none;
+  }
   @media (max-width: 767px + $sidebarWidth){
     .container{
       width: 100%;

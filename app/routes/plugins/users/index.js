@@ -19,8 +19,8 @@ export default AuthenticatedRoute.extend({
 
     // Fetch config data to populate 'additional databases'-input
     var baseModel = this.modelFor('plugins');
-    if(baseModel.config.config.additional_user_dbs){
-      controller.set('additionalDatabases', baseModel.config.config.additional_user_dbs.join(', '));
+    if(baseModel.appConfig.config.additional_user_dbs){
+      controller.set('additionalDatabases', baseModel.appConfig.config.additional_user_dbs.join(', '));
     }
 
     return Ember.$.getJSON(url).then(function(users) {
@@ -87,8 +87,8 @@ export default AuthenticatedRoute.extend({
       var dbArray = controller.get('additionalDatabases').replace(/ /g, "").split(",");
 
       window.hoodieAdmin.request('GET', '/app/config')
-      .done(function(config){
-        config.config.additional_user_dbs = dbArray;
+      .done(function(appConfig){
+        appConfig.config.additional_user_dbs = dbArray;
         window.hoodieAdmin.request('PUT', '/app/config', {data: JSON.stringify(config)})
         .done(function(){
           controller.set('addDatabasesSubmitMessage', 'Saved <strong>'+dbArray.join(', ')+'</strong> successfully!');
