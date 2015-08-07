@@ -705,7 +705,7 @@ define('hoodie-admin-dashboard/routes/plugins', ['exports', 'ember', 'hoodie-adm
   });
 
 });
-define('hoodie-admin-dashboard/routes/plugins/email', ['exports', 'ember', 'hoodie-admin-dashboard/routes/authenticated'], function (exports, Ember, AuthenticatedRoute) {
+define('hoodie-admin-dashboard/routes/plugins/email', ['exports', 'hoodie-admin-dashboard/routes/authenticated'], function (exports, AuthenticatedRoute) {
 
   'use strict';
 
@@ -830,7 +830,7 @@ define('hoodie-admin-dashboard/routes/plugins/users/index', ['exports', 'ember',
 
         window.hoodieAdmin.request('GET', '/app/config').done(function (appConfig) {
           appConfig.config.additional_user_dbs = dbArray;
-          window.hoodieAdmin.request('PUT', '/app/config', { data: JSON.stringify(config) }).done(function () {
+          window.hoodieAdmin.request('PUT', '/app/config', { data: JSON.stringify(appConfig) }).done(function () {
             controller.set('addDatabasesSubmitMessage', 'Saved <strong>' + dbArray.join(', ') + '</strong> successfully!');
           }).fail(function (error) {
             console.log('error: ', error);
@@ -3878,7 +3878,7 @@ define('hoodie-admin-dashboard/tests/routes/plugins/email.jshint', function () {
 
   module('JSHint - routes/plugins');
   test('routes/plugins/email.js should pass jshint', function() { 
-    ok(false, 'routes/plugins/email.js should pass jshint.\nroutes/plugins/email.js: line 1, col 8, \'Ember\' is defined but never used.\n\n1 error'); 
+    ok(true, 'routes/plugins/email.js should pass jshint.'); 
   });
 
 });
@@ -3898,7 +3898,7 @@ define('hoodie-admin-dashboard/tests/routes/plugins/users/index.jshint', functio
 
   module('JSHint - routes/plugins/users');
   test('routes/plugins/users/index.js should pass jshint', function() { 
-    ok(false, 'routes/plugins/users/index.js should pass jshint.\nroutes/plugins/users/index.js: line 92, col 80, \'config\' is not defined.\n\n1 error'); 
+    ok(true, 'routes/plugins/users/index.js should pass jshint.'); 
   });
 
 });
@@ -4327,7 +4327,7 @@ catch(err) {
 if (runningTests) {
   require("hoodie-admin-dashboard/tests/test-helper");
 } else {
-  require("hoodie-admin-dashboard/app")["default"].create({"name":"hoodie-admin-dashboard","version":"v3.0.0"});
+  require("hoodie-admin-dashboard/app")["default"].create({"name":"hoodie-admin-dashboard","version":"mock-config+5363333d"});
 }
 
 /* jshint ignore:end */
