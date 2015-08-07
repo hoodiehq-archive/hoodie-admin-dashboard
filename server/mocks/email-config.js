@@ -1,17 +1,18 @@
 module.exports = function(app) {
   var express = require('express');
-  var configRouter = express.Router();
+  var emailConfigRouter = express.Router();
 
-  configRouter.get('/', function(req, res) {
+  emailConfigRouter.get('/', function(req, res) {
     res.send({
-      'emailSettings': {
+      'email-config': {
+        'id': 'emailConfig',
         'outgoing':{
-          'defaultFromAddress': 'desk@minutes.io',
+          'default-from-address': 'desk@minutes.io',
           'service': {
             'id':'sendgrid',
             'text': 'SendGrid'
           },
-          'availableServices': [
+          'available-services': [
             {
               'id':'googlemail',
               'text': 'Google Mail'
@@ -56,29 +57,29 @@ module.exports = function(app) {
     });
   });
 
-  configRouter.post('/', function(req, res) {
+  emailConfigRouter.post('/', function(req, res) {
     res.status(201).end();
   });
 
-  configRouter.get('/:id', function(req, res) {
+  emailConfigRouter.get('/:id', function(req, res) {
     res.send({
-      'config': {
+      'email-config': {
         id: req.params.id
       }
     });
   });
 
-  configRouter.put('/:id', function(req, res) {
+  emailConfigRouter.put('/:id', function(req, res) {
     res.send({
-      'config': {
+      'email-config': {
         id: req.params.id
       }
     });
   });
 
-  configRouter.delete('/:id', function(req, res) {
+  emailConfigRouter.delete('/:id', function(req, res) {
     res.status(204).end();
   });
 
-  app.use('/_api/_config', configRouter);
+  app.use('/emailConfigs', emailConfigRouter);
 };

@@ -568,6 +568,27 @@ define('hoodie-admin-dashboard/instance-initializers/app-version', ['exports', '
   };
 
 });
+define('hoodie-admin-dashboard/models/email-config', ['exports', 'ember-data'], function (exports, DS) {
+
+  'use strict';
+
+  exports['default'] = DS['default'].Model.extend({
+    templates: DS['default'].hasMany('email-template'),
+    outgoing: DS['default'].attr()
+  });
+
+});
+define('hoodie-admin-dashboard/models/email-template', ['exports', 'ember-data'], function (exports, DS) {
+
+  'use strict';
+
+  exports['default'] = DS['default'].Model.extend({
+    name: DS['default'].attr('string'),
+    text: DS['default'].attr('string'),
+    description: DS['default'].attr('string')
+  });
+
+});
 define('hoodie-admin-dashboard/router', ['exports', 'ember', 'hoodie-admin-dashboard/config/environment'], function (exports, Ember, config) {
 
   'use strict';
@@ -661,7 +682,6 @@ define('hoodie-admin-dashboard/routes/plugins', ['exports', 'ember', 'hoodie-adm
   exports['default'] = AuthenticatedRoute['default'].extend({
 
     model: function model() {
-
       // The old appconfig that contains stuff like additional_user_dbs
       var appConfig = Ember['default'].$.getJSON('/_api/app/config').then(function (data) {
         data.id = data._id;
@@ -669,10 +689,22 @@ define('hoodie-admin-dashboard/routes/plugins', ['exports', 'ember', 'hoodie-adm
       });
 
       // The new, currently mocked config API (See /server/mocks/config.js)
-      var config = Ember['default'].$.getJSON('/_api/_config').then(function (data) {
+      /*
+      var store = this.store;
+      var config = store.findAll('email-config').then(function(emailConfig) {
+        console.log('emailConfig: ',emailConfig);
+        return {
+          emailConfig: emailConfig,
+          templates: store.peekAll('emailTemplate')
+        };
+      });
+      */
+      /*
+      var config = Ember.$.getJSON('/_api/_config').then(function(data) {
         data.id = data._id;
         return data.config;
       });
+      */
 
       var plugins = Ember['default'].$.getJSON('/_api/_plugins').then(function (data) {
         var activePlugins = [];
@@ -694,7 +726,7 @@ define('hoodie-admin-dashboard/routes/plugins', ['exports', 'ember', 'hoodie-adm
 
       var promises = {
         appConfig: appConfig,
-        config: config,
+        //config: config,
         plugins: plugins
       };
 
@@ -714,8 +746,15 @@ define('hoodie-admin-dashboard/routes/plugins/email', ['exports', 'hoodie-admin-
     // controllers/plugins/email correctly
     controllerName: 'email',
     model: function model() {
-      var appModel = this.modelFor('plugins');
-      return appModel.config;
+      var store = this.store;
+      // TODO: This only returns a single record, but I can't make
+      // it work with findRecord or just find with an id :/
+      return store.findAll('emailConfig').then(function (emailConfig) {
+        return {
+          config: emailConfig,
+          templates: store.peekAll('emailTemplate')
+        };
+      });
     }
   });
 
@@ -1888,11 +1927,158 @@ define('hoodie-admin-dashboard/templates/plugins/email', ['exports'], function (
           "loc": {
             "source": null,
             "start": {
-              "line": 25,
+              "line": 7,
               "column": 4
             },
             "end": {
-              "line": 35,
+              "line": 26,
+              "column": 4
+            }
+          },
+          "moduleName": "hoodie-admin-dashboard/templates/plugins/email.hbs"
+        },
+        arity: 1,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("form");
+          dom.setAttribute(el1,"id","emailForm");
+          dom.setAttribute(el1,"action","");
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("fieldset");
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("label");
+          dom.setAttribute(el3,"for","fromEmail");
+          var el4 = dom.createTextNode("Default From E-Mail Address");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("input");
+          dom.setAttribute(el3,"name","fromEmail");
+          dom.setAttribute(el3,"class","form-control");
+          dom.setAttribute(el3,"type","email");
+          dom.setAttribute(el3,"placeholder","Default from address");
+          dom.setAttribute(el3,"disabled","disabled");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("p");
+          dom.setAttribute(el3,"class","help-block");
+          var el4 = dom.createTextNode("For password reset emails etc.");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("label");
+          var el4 = dom.createTextNode("Email Service");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("label");
+          dom.setAttribute(el3,"for","username");
+          var el4 = dom.createTextNode("Username");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("input");
+          dom.setAttribute(el3,"name","emailUsername");
+          dom.setAttribute(el3,"type","email");
+          dom.setAttribute(el3,"class","form-control");
+          dom.setAttribute(el3,"id","username");
+          dom.setAttribute(el3,"placeholder","Username");
+          dom.setAttribute(el3,"disabled","disabled");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("p");
+          dom.setAttribute(el3,"class","help-block");
+          var el4 = dom.createTextNode("Account name for the email service");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("label");
+          dom.setAttribute(el3,"for","password");
+          var el4 = dom.createTextNode("Password");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("input");
+          dom.setAttribute(el3,"name","emailPassword");
+          dom.setAttribute(el3,"type","password");
+          dom.setAttribute(el3,"class","form-control");
+          dom.setAttribute(el3,"id","password");
+          dom.setAttribute(el3,"placeholder","Password");
+          dom.setAttribute(el3,"disabled","disabled");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("p");
+          dom.setAttribute(el3,"class","help-block");
+          var el4 = dom.createTextNode("Email service password");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createComment("\n        <button class=\"submit btn\" type=\"submit\">Save email config</button>\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n      ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n    ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element3 = dom.childAt(fragment, [1, 1]);
+          var element4 = dom.childAt(element3, [3]);
+          var element5 = dom.childAt(element3, [13]);
+          var element6 = dom.childAt(element3, [19]);
+          var morphs = new Array(4);
+          morphs[0] = dom.createAttrMorph(element4, 'value');
+          morphs[1] = dom.createMorphAt(element3,9,9);
+          morphs[2] = dom.createAttrMorph(element5, 'value');
+          morphs[3] = dom.createAttrMorph(element6, 'value');
+          return morphs;
+        },
+        statements: [
+          ["attribute","value",["concat",[["get","config.outgoing.default-from-address",["loc",[null,[11,111],[11,147]]]]]]],
+          ["inline","select-2",[],["content",["subexpr","@mut",[["get","config.outgoing.available-services",["loc",[null,[14,27],[14,61]]]]],[],[]],"value",["subexpr","@mut",[["get","config.outgoing.service",["loc",[null,[14,68],[14,91]]]]],[],[]],"name","emailService","enabled",false],["loc",[null,[14,8],[14,127]]]],
+          ["attribute","value",["concat",[["get","config.outgoing.auth.username",["loc",[null,[16,117],[16,146]]]]]]],
+          ["attribute","value",["concat",[["get","config.outgoing.auth.password",["loc",[null,[19,120],[19,149]]]]]]]
+        ],
+        locals: ["config"],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 28,
+              "column": 4
+            },
+            "end": {
+              "line": 38,
               "column": 4
             }
           },
@@ -1956,11 +2142,11 @@ define('hoodie-admin-dashboard/templates/plugins/email', ['exports'], function (
           return morphs;
         },
         statements: [
-          ["attribute","id",["concat",["template-",["get","mailtemplate.type",["loc",[null,[26,26],[26,43]]]]]]],
-          ["attribute","for",["concat",["template-",["get","mailtemplate.type",["loc",[null,[28,32],[28,49]]]]]]],
-          ["content","mailtemplate.name",["loc",[null,[28,54],[28,77]]]],
-          ["content","mailtemplate.text",["loc",[null,[30,10],[30,35]]]],
-          ["content","mailtemplate.description",["loc",[null,[32,30],[32,60]]]]
+          ["attribute","id",["concat",["template-",["get","mailtemplate.id",["loc",[null,[29,26],[29,41]]]]]]],
+          ["attribute","for",["concat",["template-",["get","mailtemplate.id",["loc",[null,[31,32],[31,47]]]]]]],
+          ["content","mailtemplate.name",["loc",[null,[31,52],[31,75]]]],
+          ["content","mailtemplate.text",["loc",[null,[33,10],[33,35]]]],
+          ["content","mailtemplate.description",["loc",[null,[35,30],[35,60]]]]
         ],
         locals: ["mailtemplate"],
         templates: []
@@ -1976,7 +2162,7 @@ define('hoodie-admin-dashboard/templates/plugins/email', ['exports'], function (
             "column": 0
           },
           "end": {
-            "line": 37,
+            "line": 40,
             "column": 6
           }
         },
@@ -2012,106 +2198,11 @@ define('hoodie-admin-dashboard/templates/plugins/email', ['exports'], function (
         var el4 = dom.createTextNode("To change any of these values, please edit the corresponding config files.");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("form");
-        dom.setAttribute(el3,"id","emailForm");
-        dom.setAttribute(el3,"action","");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("fieldset");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("label");
-        dom.setAttribute(el5,"for","fromEmail");
-        var el6 = dom.createTextNode("Default From E-Mail Address");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("input");
-        dom.setAttribute(el5,"name","fromEmail");
-        dom.setAttribute(el5,"class","form-control");
-        dom.setAttribute(el5,"type","email");
-        dom.setAttribute(el5,"placeholder","Default from address");
-        dom.setAttribute(el5,"disabled","disabled");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("p");
-        dom.setAttribute(el5,"class","help-block");
-        var el6 = dom.createTextNode("For password reset emails etc.");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("label");
-        var el6 = dom.createTextNode("Email Service");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createComment("");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("label");
-        dom.setAttribute(el5,"for","username");
-        var el6 = dom.createTextNode("Username");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("input");
-        dom.setAttribute(el5,"name","emailUsername");
-        dom.setAttribute(el5,"type","email");
-        dom.setAttribute(el5,"class","form-control");
-        dom.setAttribute(el5,"id","username");
-        dom.setAttribute(el5,"placeholder","Username");
-        dom.setAttribute(el5,"disabled","disabled");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("p");
-        dom.setAttribute(el5,"class","help-block");
-        var el6 = dom.createTextNode("Account name for the email service");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("label");
-        dom.setAttribute(el5,"for","password");
-        var el6 = dom.createTextNode("Password");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("input");
-        dom.setAttribute(el5,"name","emailPassword");
-        dom.setAttribute(el5,"type","password");
-        dom.setAttribute(el5,"class","form-control");
-        dom.setAttribute(el5,"id","password");
-        dom.setAttribute(el5,"placeholder","Password");
-        dom.setAttribute(el5,"disabled","disabled");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("p");
-        dom.setAttribute(el5,"class","help-block");
-        var el6 = dom.createTextNode("Email service password");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createComment("\n        <button class=\"submit btn\" type=\"submit\">Save email config</button>\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("h2");
         var el4 = dom.createTextNode("Email Templates");
@@ -2130,28 +2221,18 @@ define('hoodie-admin-dashboard/templates/plugins/email', ['exports'], function (
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element3 = dom.childAt(fragment, [0, 1]);
-        var element4 = dom.childAt(element3, [7, 1]);
-        var element5 = dom.childAt(element4, [3]);
-        var element6 = dom.childAt(element4, [13]);
-        var element7 = dom.childAt(element4, [19]);
-        var morphs = new Array(5);
-        morphs[0] = dom.createAttrMorph(element5, 'value');
-        morphs[1] = dom.createMorphAt(element4,9,9);
-        morphs[2] = dom.createAttrMorph(element6, 'value');
-        morphs[3] = dom.createAttrMorph(element7, 'value');
-        morphs[4] = dom.createMorphAt(element3,11,11);
+        var element7 = dom.childAt(fragment, [0, 1]);
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(element7,7,7);
+        morphs[1] = dom.createMorphAt(element7,11,11);
         return morphs;
       },
       statements: [
-        ["attribute","value",["concat",[["get","model.email.outgoing.defaultfromaddress",["loc",[null,[9,111],[9,150]]]]]]],
-        ["inline","select-2",[],["content",["subexpr","@mut",[["get","model.email.outgoing.availableservices",["loc",[null,[12,27],[12,65]]]]],[],[]],"value",["subexpr","@mut",[["get","model.email.outgoing.service",["loc",[null,[12,72],[12,100]]]]],[],[]],"name","emailService","enabled",false],["loc",[null,[12,8],[12,136]]]],
-        ["attribute","value",["concat",[["get","model.email.outgoing.auth.username",["loc",[null,[14,117],[14,151]]]]]]],
-        ["attribute","value",["concat",[["get","model.email.outgoing.auth.password",["loc",[null,[17,120],[17,154]]]]]]],
-        ["block","each",[["get","model.email.templates",["loc",[null,[25,12],[25,33]]]]],[],0,null,["loc",[null,[25,4],[35,13]]]]
+        ["block","each",[["get","model.config",["loc",[null,[7,12],[7,24]]]]],[],0,null,["loc",[null,[7,4],[26,13]]]],
+        ["block","each",[["get","model.templates",["loc",[null,[28,12],[28,27]]]]],[],1,null,["loc",[null,[28,4],[38,13]]]]
       ],
       locals: [],
-      templates: [child0]
+      templates: [child0, child1]
     };
   }()));
 
@@ -3812,6 +3893,26 @@ define('hoodie-admin-dashboard/tests/integration/components/user-table-paginatio
   });
 
 });
+define('hoodie-admin-dashboard/tests/models/email-config.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - models');
+  test('models/email-config.js should pass jshint', function() { 
+    ok(true, 'models/email-config.js should pass jshint.'); 
+  });
+
+});
+define('hoodie-admin-dashboard/tests/models/email-template.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - models');
+  test('models/email-template.js should pass jshint', function() { 
+    ok(true, 'models/email-template.js should pass jshint.'); 
+  });
+
+});
 define('hoodie-admin-dashboard/tests/router.jshint', function () {
 
   'use strict';
@@ -3926,6 +4027,58 @@ define('hoodie-admin-dashboard/tests/test-helper.jshint', function () {
   module('JSHint - .');
   test('test-helper.js should pass jshint', function() { 
     ok(true, 'test-helper.js should pass jshint.'); 
+  });
+
+});
+define('hoodie-admin-dashboard/tests/unit/adapters/application-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('adapter:application', 'Unit | Adapter | application', {
+    // Specify the other units that are required for this test.
+    // needs: ['serializer:foo']
+  });
+
+  // Replace this with your real tests.
+  ember_qunit.test('it exists', function (assert) {
+    var adapter = this.subject();
+    assert.ok(adapter);
+  });
+
+});
+define('hoodie-admin-dashboard/tests/unit/adapters/application-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/adapters');
+  test('unit/adapters/application-test.js should pass jshint', function() { 
+    ok(true, 'unit/adapters/application-test.js should pass jshint.'); 
+  });
+
+});
+define('hoodie-admin-dashboard/tests/unit/adapters/email-settings-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('adapter:email-settings', 'Unit | Adapter | email settings', {
+    // Specify the other units that are required for this test.
+    // needs: ['serializer:foo']
+  });
+
+  // Replace this with your real tests.
+  ember_qunit.test('it exists', function (assert) {
+    var adapter = this.subject();
+    assert.ok(adapter);
+  });
+
+});
+define('hoodie-admin-dashboard/tests/unit/adapters/email-settings-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/adapters');
+  test('unit/adapters/email-settings-test.js should pass jshint', function() { 
+    ok(true, 'unit/adapters/email-settings-test.js should pass jshint.'); 
   });
 
 });
@@ -4174,6 +4327,58 @@ define('hoodie-admin-dashboard/tests/unit/helpers/user-state-color-test.jshint',
   });
 
 });
+define('hoodie-admin-dashboard/tests/unit/models/email-settings-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForModel('email-settings', 'Unit | Model | email settings', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  ember_qunit.test('it exists', function (assert) {
+    var model = this.subject();
+    // var store = this.store();
+    assert.ok(!!model);
+  });
+
+});
+define('hoodie-admin-dashboard/tests/unit/models/email-settings-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/models');
+  test('unit/models/email-settings-test.js should pass jshint', function() { 
+    ok(true, 'unit/models/email-settings-test.js should pass jshint.'); 
+  });
+
+});
+define('hoodie-admin-dashboard/tests/unit/models/email-template-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForModel('email-template', 'Unit | Model | email template', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  ember_qunit.test('it exists', function (assert) {
+    var model = this.subject();
+    // var store = this.store();
+    assert.ok(!!model);
+  });
+
+});
+define('hoodie-admin-dashboard/tests/unit/models/email-template-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/models');
+  test('unit/models/email-template-test.js should pass jshint', function() { 
+    ok(true, 'unit/models/email-template-test.js should pass jshint.'); 
+  });
+
+});
 define('hoodie-admin-dashboard/tests/unit/routes/login-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -4327,7 +4532,7 @@ catch(err) {
 if (runningTests) {
   require("hoodie-admin-dashboard/tests/test-helper");
 } else {
-  require("hoodie-admin-dashboard/app")["default"].create({"name":"hoodie-admin-dashboard","version":"mock-config+5363333d"});
+  require("hoodie-admin-dashboard/app")["default"].create({"name":"hoodie-admin-dashboard","version":"mock-config+1d2fb308"});
 }
 
 /* jshint ignore:end */

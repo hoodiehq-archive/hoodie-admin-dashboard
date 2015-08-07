@@ -3,29 +3,32 @@
     <h2>Email Settings</h2>
     <p>Set up all outgoing email from this Hoodie app</p>
     <div class="alert alert-warning">To change any of these values, please edit the corresponding config files.</div>
+
+    {{#each model.config as |config|}}
     <form id="emailForm" action="">
       <fieldset>
         <label for="fromEmail">Default From E-Mail Address</label>
-        <input name="fromEmail"class="form-control"  type="email" placeholder="Default from address" value="{{ model.email.outgoing.defaultfromaddress }}" disabled="disabled">
+        <input name="fromEmail"class="form-control"  type="email" placeholder="Default from address" value="{{ config.outgoing.default-from-address }}" disabled="disabled">
         <p class="help-block">For password reset emails etc.</p>
         <label>Email Service</label>
-        {{select-2 content=model.email.outgoing.availableservices value=model.email.outgoing.service name="emailService" enabled=false}}
+        {{select-2 content=config.outgoing.available-services value=config.outgoing.service name="emailService" enabled=false}}
         <label for="username">Username</label>
-        <input name="emailUsername" type="email" class="form-control" id="username" placeholder="Username" value="{{ model.email.outgoing.auth.username }}" disabled="disabled">
+        <input name="emailUsername" type="email" class="form-control" id="username" placeholder="Username" value="{{ config.outgoing.auth.username }}" disabled="disabled">
         <p class="help-block">Account name for the email service</p>
         <label for="password">Password</label>
-        <input name="emailPassword" type="password" class="form-control" id="password" placeholder="Password" value="{{ model.email.outgoing.auth.password }}" disabled="disabled">
+        <input name="emailPassword" type="password" class="form-control" id="password" placeholder="Password" value="{{ config.outgoing.auth.password }}" disabled="disabled">
         <p class="help-block">Email service password</p>
         <!--
         <button class="submit btn" type="submit">Save email config</button>
         -->
       </fieldset>
     </form>
+    {{/each}}
     <h2>Email Templates</h2>
-    {{#each model.email.templates as |mailtemplate|}}
-    <form id="template-{{ mailtemplate.type }}" action="">
+    {{#each model.templates as |mailtemplate|}}
+    <form id="template-{{ mailtemplate.id }}" action="">
       <fieldset>
-        <label for="template-{{ mailtemplate.type }}">{{ mailtemplate.name }}</label>
+        <label for="template-{{ mailtemplate.id }}">{{ mailtemplate.name }}</label>
         <textarea class="form-control" required rows="5" disabled="disabled">
           {{~ mailtemplate.text ~}}
         </textarea>

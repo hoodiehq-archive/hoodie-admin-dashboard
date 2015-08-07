@@ -13,7 +13,6 @@ Also fetches the app's config object at the same time and munges everything toge
 export default AuthenticatedRoute.extend({
 
   model: function() {
-
     // The old appconfig that contains stuff like additional_user_dbs
     var appConfig = Ember.$.getJSON('/_api/app/config').then(function(data) {
       data.id = data._id;
@@ -21,10 +20,22 @@ export default AuthenticatedRoute.extend({
     });
 
     // The new, currently mocked config API (See /server/mocks/config.js)
+    /*
+    var store = this.store;
+    var config = store.findAll('email-config').then(function(emailConfig) {
+      console.log('emailConfig: ',emailConfig);
+      return {
+        emailConfig: emailConfig,
+        templates: store.peekAll('emailTemplate')
+      };
+    });
+  */
+    /*
     var config = Ember.$.getJSON('/_api/_config').then(function(data) {
       data.id = data._id;
       return data.config;
     });
+  */
 
     var plugins = Ember.$.getJSON('/_api/_plugins').then(function(data) {
       var activePlugins = [];
@@ -46,7 +57,7 @@ export default AuthenticatedRoute.extend({
 
     var promises = {
       appConfig: appConfig,
-      config: config,
+      //config: config,
       plugins: plugins
     };
 
