@@ -1,6 +1,10 @@
 <div class="validation {{if errors 'invalid' 'valid'}}">
   {{yield}}
+  {{#if errors}}
+    <ul class="errors">
   {{#each errors as |error|}}
-    <p style="color: red;">{{error}}</p>
+    <li>{{error}}</li>
   {{/each}}
+    </ul>
+  {{/if}}
 </div>

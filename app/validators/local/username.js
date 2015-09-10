@@ -2,10 +2,7 @@ import Base from 'ember-validations/validators/base';
 
 export default Base.extend({
   call: function(){
-    // We do 'property.replace' because the validation hash in the components uses 'model.valueName',
-    // which has a redundant 'model.' we need to get rid of
-    var username = this.model.get(this.property.replace('model.',''));
-    console.log('username: ',username);
+    var username = this.model.get(this.property);
     if(!username){
       this.errors.pushObject('The username cannot be empty');
     } else if(username.match(/[A-Z]/)){

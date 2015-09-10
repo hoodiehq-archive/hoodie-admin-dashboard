@@ -4,9 +4,6 @@ import EmberValidations from 'ember-validations';
 export default Ember.Component.extend(EmberValidations, {
   showErrors: false,
   validations: {
-    'valtest': {
-      presence: true
-    },
     'model.newUserName': {
       // app/validators/local/username.js
       username: true
@@ -19,71 +16,60 @@ export default Ember.Component.extend(EmberValidations, {
       }
     }
   },
-  init: function() {
-    this.setProperties({
-      'submitMessage': '',
-      'newUserName': 'heyA',
-      'newUserPassword': '',
-      'test': 'what the hell',
-      disableAdd: false
-    });
-    this._super.apply(this, arguments);
-    this.set('valTest', Ember.computed.alias(this.get('test')));
-    console.log('MODEL', Ember.computed.alias(this.get('test')));
+  model: {
+    'submitMessage': '',
+    'newUserName': '',
+    'newUserPassword': '',
+    disableAdd: true
   },
-  onChange: function () {
-    var route = this;
-    this.validate().then(function(res){
-      console.log('validate res: ',res);
-    }).catch(function(error){
-      console.log('password', route.get('newUserPassword'));
-      console.log('error: ',route.get('errors'));
-    });
-  }.observes('newUserName', 'newUserPassword', 'test').on('init'),
+  isValidForm: function () {
+    if(this.get('isInvalid')){
+      this.set('model.disableAdd', true);
+    } else {
+      this.set('model.disableAdd', false);
+    }
+  }.observes('model.newUserName', 'model.newUserPassword'),
   actions: {
     addUser: function () {
-      var route = this;
-      this.set('disableAdd', true);
-
-
-      return;
+      var component = this;
+      this.set('model.disableAdd', true);
 
       var hoodieId = Math.random().toString().substr(2);
       var newUser = {
-        id : this.get('newUserName'),
-        name : 'user/'+this.get('newUserName'),
+        id : this.get('model.newUserName'),
+        name : 'user/'+this.get('model.newUserName'),
         hoodieId : hoodieId,
         database : 'user/'+hoodieId,
         signedUpAt : new Date(),
         roles : [],
-        password : this.get('newUserPassword')
+        password : this.get('model.newUserPassword')
       };
 
       window.hoodieAdmin.user.add('user', newUser)
       .done(function (response) {
-        route.setProperties({
-          'submitMessage': 'Success: added <strong>'+response.id+'</strong> as a new user.',
-          'newUserName': '',
-          'newUserPassword': '',
-          'disableAdd': false
+        component.setProperties({
+          'model.submitMessage': 'Success: added <strong>'+response.id+'</strong> as a new user.',
+          'model.newUserName': '',
+          'model.newUserPassword': '',
+          'model.disableAdd': false
         });
-        route.sendAction();
+        component.sendAction();
       }).fail(function (error) {
         console.log('error: ',error);
-        route.set('disableAdd', false);
+        component.set('model.disableAdd', false);
         if (error.name === "HoodieConflictError"){
-          route.setProperties({
-            'submitMessage': 'Sorry, the user "'+error.id+'" already exists.',
-            'newUserName': '',
-            'newUserPassword': '',
-            'disableAdd': false
+          component.setProperties({
+            'model.submitMessage': 'Sorry, the user "'+error.id+'" already exists.',
+            'model.newUserName': '',
+            'model.newUserPassword': '',
+            'model.disableAdd': false
           });
         } else {
-          route.setProperties({
-            'submitMessage': 'Error: '+error.status+' - '+error.responseText,
-            'newUserName': '',
-            'newUserPassword': '',
-            'disableAdd': false
+          component.setProperties({
+            'model.submitMessage': 'Error: '+error.status+' - '+error.responseText,
+            'model.newUserName': '',
+            'model.newUserPassword': '',
+            'model.disableAdd': false
           });
         }
       });
