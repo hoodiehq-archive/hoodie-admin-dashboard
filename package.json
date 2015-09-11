@@ -1,6 +1,6 @@
 {
   "name": "hoodie-admin-dashboard",
-  "description": "The Hoodie admin panel ",
+  "description": "The Hoodie admin panel",
   "bugs": {
     "url": "https://github.com/hoodiehq/hoodie-admin-dashboard/issues"
   },
@@ -42,6 +42,7 @@
   },
   "homepage": "https://github.com/hoodiehq/hoodie-admin-dashboard",
   "license": "Apache-2.0",
+  "main": "www/index.html",
   "publishConfig": {
     "tag": "next"
   },
