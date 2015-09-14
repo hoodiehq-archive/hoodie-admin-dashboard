@@ -17,9 +17,9 @@ export default Ember.Component.extend(EmberValidations, {
     }
   },
   model: {
-    'submitMessage': '',
-    'newUserName': '',
-    'newUserPassword': '',
+    submitMessage: '',
+    newUserName: '',
+    newUserPassword: '',
     disableAdd: true
   },
   isValidForm: function () {
