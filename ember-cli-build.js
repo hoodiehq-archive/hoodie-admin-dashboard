@@ -28,12 +28,8 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
+  // The JS files get appended to www/assets/vendor.js, which already includes ember
   app.import('bower_components/bootstrap/js/modal.js');
-
-  app.import('bower_components/dropzone/dist/dropzone.css');
-  app.import('bower_components/jquery-icheck/skins/flat/green.css');
-  //app.import('bower_components/select2/select2.css');
-  app.import('bower_components/prism/themes/prism.css"');
 
   return app.toTree();
 };
