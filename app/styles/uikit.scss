@@ -1,7 +1,13 @@
 $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap";
 
-// Use own version of bootstrap
 @import '../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+
+// Import css files needed for UIKit. If we added the file suffix, these would be turned
+// into import statements, without, they're properly imported
+@import '../../bower_components/dropzone/dist/dropzone';
+@import '../../bower_components/jquery-icheck/skins/flat/green';
+//@import '../../bower_components/select2/select2';
+@import '../../bower_components/prism/themes/prism';
 
 $line-height:     1.75em;
 $inputHeight:     2.75em;
