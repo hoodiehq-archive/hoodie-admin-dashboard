@@ -57,6 +57,21 @@ $disabledBorder:  #CCCCCC;
   outline: none;
 }
 
+// _forms.scss "fixes" from the old dashboard
+
+.form-inline{
+  background-color: rgba(0,200,0,.25);
+}
+
+legend{
+  margin-bottom: 1.5rem;
+}
+
+.form-group{
+  margin-bottom: 0;
+  background: none;
+}
+
 // Set your grid dimensions here
 $body-width: 960px;
 $font-size: 16px;
