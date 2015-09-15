@@ -30,5 +30,10 @@ module.exports = function(defaults) {
 
   app.import('bower_components/bootstrap/js/modal.js');
 
+  app.import('bower_components/dropzone/dist/dropzone.css');
+  app.import('bower_components/jquery-icheck/skins/flat/green.css');
+  //app.import('bower_components/select2/select2.css');
+  app.import('bower_components/prism/themes/prism.css"');
+
   return app.toTree();
 };

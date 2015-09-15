@@ -9,13 +9,21 @@
     "ember-qunit": "0.4.1",
     "ember-qunit-notifications": "0.0.7",
     "ember-resolver": "~0.1.18",
-    "jquery": "^1.11.1",
+    "jquery": "~2.1.4",
     "loader.js": "ember-cli/loader.js#3.2.0",
     "qunit": "~1.17.1",
     "hoodie.admin.js": "hoodiehq/hoodie.admin.js#~1.0.1",
     "hoodie": "~2.1.1",
     "ember-cli-moment-shim": "~0.2.0",
     "bootstrap": "~3.3.5",
-    "bootstrap-sass": "~3.3.5"
+    "bootstrap-sass": "~3.3.5",
+    "dropzone": "~4.0.1",
+    "select2": "~4.0.0",
+    "jquery-icheck": "~1.0.2",
+    "prism": "~1.0.1"
+  },
+  "resolutions": {
+    "jquery": "~2.1.4",
+    "select2": "~4.0.0"
   }
 }
