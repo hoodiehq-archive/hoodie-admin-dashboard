@@ -4,6 +4,15 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
     // Add options here
+    outputPaths: {
+        app: {
+          css: {
+            'app': '/assets/hoodie-admin-dashboard.css',
+            'uikit': '/assets/uikit.css',
+            'uikit-guide': '/assets/uikit-guide.css'
+          }
+        }
+      }
   });
 
   // Use `app.import` to add additional libraries to the generated
