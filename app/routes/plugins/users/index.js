@@ -43,7 +43,7 @@ export default AuthenticatedRoute.extend({
     // If we have an update_seq, poll the changes feed every 30 seconds
     if(this.get('update_seq')){
       var interval = 1000 * 30;
-      var url = '_api/_users/_changes?since='+this.get('update_seq');
+      var url = '/_api/_users/_changes?since='+this.get('update_seq');
 
       this.pollster = Ember.run.later(this, function() {
         this.pollUserChangesFeed();
