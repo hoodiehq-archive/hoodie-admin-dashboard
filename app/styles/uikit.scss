@@ -4,9 +4,9 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap";
 
 // Import css files needed for UIKit. If we added the file suffix, these would be turned
 // into import statements, without, they're properly imported
-@import '../../bower_components/dropzone/dist/dropzone';
+@import '../../bower_components/dropzone/downloads/css/dropzone';
 @import '../../bower_components/jquery-icheck/skins/flat/green';
-//@import '../../bower_components/select2/select2';
+@import '../../bower_components/select2/select2';
 @import '../../bower_components/prism/themes/prism';
 
 $line-height:     1.75em;
@@ -63,6 +63,13 @@ $disabledBorder:  #CCCCCC;
   outline: none;
 }
 
+// temporary fixes to new bootstrap
+
+.radio label, .checkbox label {
+  padding-left: 0;
+}
+
+
 // _forms.scss "fixes" from the old dashboard
 
 .form-inline{
@@ -76,6 +83,14 @@ legend{
 .form-group{
   margin-bottom: 0;
   background: none;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #333;
+  background-color: #fdfbfa;
 }
 
 // Set your grid dimensions here
@@ -377,7 +392,7 @@ fieldset, .group{
       &.valid,
       &:valid,
       &:required:valid{
-        background-image: url('../images/valid_form.png');
+        background-image: url('images/valid_form.png');
         background-repeat: no-repeat;
         background-position: calc(100% - 10px) center;
       }
@@ -385,21 +400,21 @@ fieldset, .group{
       &:required:invalid,
       &:focus:invalid,
       &.invalid{
-        background-image: url('../images/invalid_form.png');
+        background-image: url('images/invalid_form.png');
         background-repeat: no-repeat;
         background-position: calc(100% - 10px) center;
       }
     }
     &.valid,
     &:required:valid{
-      background-image: url('../images/valid_form.png');
+      background-image: url('images/valid_form.png');
       background-repeat: no-repeat;
       background-position: calc(100% - 10px) center;
     }
     &:required:invalid,
     &:focus:invalid,
     &.invalid{
-      background-image: url('../images/invalid_form.png');
+      background-image: url('images/invalid_form.png');
       background-repeat: no-repeat;
       background-position: calc(100% - 10px) center;
     }
@@ -706,6 +721,33 @@ p .pill{
   margin: 1.25em 0 .75em;
   background: $lightGreen;
   color: $white;
+  border: 1px solid rgba(0,0,0,0.03);
+  width: 70%;
+  float: right;
+  min-height: 2.625em;
+  border-radius: 3px;
+  padding: 0;
+  .dz-default.dz-message {
+    padding: .5em;
+    line-height: 1.625em;
+    opacity: 1;
+    background: none;
+    filter: none;
+    transition: opacity 0.3s ease-in-out;
+    background-image: none;
+    width: auto;
+    height: auto;
+    margin: 0;
+    top: 0;
+    left: 0;
+    span{
+      display: inline;
+    }
+  }
+  &.dz-started .dz-message {
+    display: none;
+    opacity: 0;
+  }
   /*
   &:first-of-type{
     margin-top: .25em;
@@ -805,13 +847,27 @@ div.select2-container-active .select2-choices {
   }
 }
 
+// New select overrides
+
+.select2-container--default .select2-choice--single .select2-choice__rendered{
+  line-height: 2.75em;
+}
+
+.select2-container--default .select2-choice--single .select2-choice__arrow{
+  height: 2.75em;
+}
+
 .select2-choice{
   border: 1px solid #CCC;
 }
 
+body > .select2-container{
+  margin: 0px;
+}
+
 .select2-container{
   width: 70%;
-  margin: 1.25em 0 1.25em 30%;
+  margin: 0.25em 0 1.25em 30%;
   display: block;
   .select2-choice{
     height: 2.75em;

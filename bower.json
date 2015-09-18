@@ -17,8 +17,8 @@
     "ember-cli-moment-shim": "~0.2.0",
     "bootstrap": "~3.3.5",
     "bootstrap-sass": "~3.3.5",
-    "dropzone": "~4.0.1",
-    "select2": "~4.0.0",
+    "dropzone": "~3.7.1",
+    "select2": "3.4.5",
     "jquery-icheck": "~1.0.2",
     "prism": "~1.0.1"
   },
