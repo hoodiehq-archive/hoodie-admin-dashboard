@@ -2,10 +2,10 @@ import Ember from 'ember';
 import EmberValidations from 'ember-validations';
 
 export default Ember.Component.extend(EmberValidations, {
-  showErrors: false,
+  // ember-validations
   validations: {
     'model.newUserName': {
-      // app/validators/local/username.js
+      // Custom validator at app/validators/local/username.js
       username: true
     },
     'model.newUserPassword': {
@@ -22,18 +22,34 @@ export default Ember.Component.extend(EmberValidations, {
     newUserPassword: '',
     disableAdd: true
   },
-  isValidForm: function () {
+  // Track whether any input has been made on each model
+  // We only want to show validation messages after actual inputs,
+  // and we want to be able to reset them
+  pristine:{
+    model: {
+      newUserName: true,
+      newUserPassword: true
+    }
+  },
+
+  // Prevent submission if form is invalid
+  isValidForm: function (classInfo, modelName) {
     if(this.get('isInvalid')){
       this.set('model.disableAdd', true);
     } else {
       this.set('model.disableAdd', false);
     }
+    this.set('pristine.'+modelName, false);
   }.observes('model.newUserName', 'model.newUserPassword'),
+
   actions: {
     addUser: function () {
       var component = this;
+
+      // Block repeated submission while submitting
       this.set('model.disableAdd', true);
 
+      // Generate new user object
       var hoodieId = Math.random().toString().substr(2);
       var newUser = {
         id : this.get('model.newUserName'),
@@ -45,34 +61,34 @@ export default Ember.Component.extend(EmberValidations, {
         password : this.get('model.newUserPassword')
       };
 
+      // Send new user object to Hoodie
       window.hoodieAdmin.user.add('user', newUser)
       .done(function (response) {
-        component.setProperties({
-          'model.submitMessage': 'Success: added <strong>'+response.id+'</strong> as a new user.',
-          'model.newUserName': '',
-          'model.newUserPassword': '',
-          'model.disableAdd': false
-        });
-        component.sendAction();
+        // On success, reset form and show success message
+        component.reset('Success: added <strong>'+response.id+'</strong> as a new user.');
       }).fail(function (error) {
-        console.log('error: ',error);
-        component.set('model.disableAdd', false);
+        // On conflict (user already exists), reset form and show conflict message
         if (error.name === "HoodieConflictError"){
-          component.setProperties({
-            'model.submitMessage': 'Sorry, the user "'+error.id+'" already exists.',
-            'model.newUserName': '',
-            'model.newUserPassword': '',
-            'model.disableAdd': false
-          });
+          component.reset('Sorry, the user <strong>'+error.id+'</strong> already exists.');
         } else {
-          component.setProperties({
-            'model.submitMessage': 'Error: '+error.status+' - '+error.responseText,
-            'model.newUserName': '',
-            'model.newUserPassword': '',
-            'model.disableAdd': false
-          });
+          // On any other error, reset form and show error message
+          component.reset('<strong>Error:</strong> '+error.status+' - '+error.responseText);
+          console.log('error: ',error);
         }
       });
-    },
+    }
+  },
+
+  // Reset the inputs, the message, re-enable the submit button, and set pristine to
+  // true for all inputs
+  reset: function (message) {
+    this.setProperties({
+      'model.submitMessage': message,
+      'model.newUserName': '',
+      'model.newUserPassword': '',
+      'model.disableAdd': false
+    });
+    this.set('pristine.model.newUserName', true);
+    this.set('pristine.model.newUserPassword', true);
   }
 });

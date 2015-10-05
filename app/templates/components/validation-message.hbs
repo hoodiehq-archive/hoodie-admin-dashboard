@@ -1,10 +1,12 @@
-<div class="validation {{if errors 'invalid' 'valid'}}">
+<div class="validation {{if errors 'invalid' 'valid'}} {{if pristine 'pristine'}}">
   {{yield}}
   {{#if errors}}
-    <ul class="errors">
-  {{#each errors as |error|}}
-    <li>{{error}}</li>
-  {{/each}}
-    </ul>
+    {{#unless pristine }}
+      <ul class="errors">
+    {{#each errors as |error|}}
+      <li>{{error}}</li>
+    {{/each}}
+      </ul>
+    {{/unless}}
   {{/if}}
 </div>

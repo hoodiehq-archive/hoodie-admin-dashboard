@@ -24,8 +24,9 @@ body, html{
   overflow: hidden;
 }
 
+// Where did this come from?
 [data-ember-action] {
-  cursor: pointer;
+  //cursor: pointer;
 }
 
 .sidebar{
@@ -343,6 +344,14 @@ table{
     background-repeat: no-repeat;
     background-position: -webkit-calc(100% - 10px) center;
     background-position: calc(100% - 10px) center;
+  }
+  &.pristine {
+    input{
+      background-image: none;
+    }
+    .errors{
+      display: none;
+    }
   }
 }
 
