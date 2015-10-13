@@ -24,8 +24,9 @@ body, html{
   overflow: hidden;
 }
 
+// Where did this come from?
 [data-ember-action] {
-  cursor: pointer;
+  //cursor: pointer;
 }
 
 .sidebar{
@@ -317,4 +318,47 @@ table{
   margin-left: 1em;
 }
 
+.validation {
+  .errors{
+    color: #F8282B;
+    margin-left: 0;
+    font-weight: bold;
+    margin-top: -0.75em;
+  }
+  input, textarea {
+    width: 100%;
+    margin-left: 0;
+  }
+  &.valid input{
+    //background-image: url("../images/valid_form.png");
+    // ^ this is the correct path in UIKit
+    background-image: url("/_api/_plugins/_assets/images/valid_form.png");
+    background-repeat: no-repeat;
+    background-position: -webkit-calc(100% - 10px) center;
+    background-position: calc(100% - 10px) center;
+  }
+  &.invalid input{
+    //background-image: url("../images/invalid_form.png");
+    // ^ this is the correct path in UIKit
+    background-image: url("/_api/_plugins/_assets/images/invalid_form.png");
+    background-repeat: no-repeat;
+    background-position: -webkit-calc(100% - 10px) center;
+    background-position: calc(100% - 10px) center;
+  }
+  &.pristine {
+    input{
+      background-image: none;
+    }
+    .errors{
+      display: none;
+    }
+  }
+}
+
+// from fieldset input, .group input
+.validation {
+  display: block;
+  width: 70%;
+  margin: 0 0 0 30%;
+}
 
