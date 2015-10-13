@@ -332,7 +332,7 @@ table{
   &.valid input{
     //background-image: url("../images/valid_form.png");
     // ^ this is the correct path in UIKit
-    background-image: url("/_api/_plugins/_assets/images/valid_form.png");
+    background-image: url("/hoodie/admin/assets/images/valid_form.png");
     background-repeat: no-repeat;
     background-position: -webkit-calc(100% - 10px) center;
     background-position: calc(100% - 10px) center;
@@ -340,7 +340,7 @@ table{
   &.invalid input{
     //background-image: url("../images/invalid_form.png");
     // ^ this is the correct path in UIKit
-    background-image: url("/_api/_plugins/_assets/images/invalid_form.png");
+    background-image: url("/hoodie/admin/assets/images/invalid_form.png");
     background-repeat: no-repeat;
     background-position: -webkit-calc(100% - 10px) center;
     background-position: calc(100% - 10px) center;
