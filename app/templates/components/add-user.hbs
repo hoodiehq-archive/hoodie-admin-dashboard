@@ -2,12 +2,19 @@
 <form class="addUser" {{action 'addUser' on="submit"}}>
   <fieldset>
     <div class="group">
+
       <label for="">New user's name</label>
-      {{input type="text" class="form-control username" placeholder="User name" required="" value=newUserName disabled=disableAdd}}
+      {{#validation-message errors=errors.model.newUserName pristine=pristine.model.newUserName}}
+        {{input type="text" class="form-control username" placeholder="User name" required="" value=model.newUserName disabled=disableAdd}}
+      {{/validation-message}}
+
       <label for="">New user's password</label>
-      {{input type="text" class="form-control password" placeholder="Password" required="" value=newUserPassword disabled=disableAdd}}
-      <button class="submit btn ok" type="submit" disabled={{disableAdd}}>Add user</button>
-      <span class="submitMessage">{{{submitMessage}}}</span>
+      {{#validation-message errors=errors.model.newUserPassword pristine=pristine.model.newUserPassword}}
+        {{input type="text" class="form-control password" placeholder="Password" required="" value=model.newUserPassword disabled=disableAdd}}
+      {{/validation-message}}
+
+      <button class="submit btn ok" type="submit" disabled={{model.disableAdd}}>Add user</button>
+      <span class="submitMessage">{{{model.submitMessage}}}</span>
     </div>
   </fieldset>
 </form>
