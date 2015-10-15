@@ -394,7 +394,7 @@ fieldset, .group{
       &.valid,
       &:valid,
       &:required:valid{
-        background-image: url('/hoodie/admin/assets/images/valid_form.png');
+        background-image: url('images/valid_form.png');
         background-repeat: no-repeat;
         background-position: calc(100% - 10px) center;
       }
@@ -402,21 +402,21 @@ fieldset, .group{
       &:required:invalid,
       &:focus:invalid,
       &.invalid{
-        background-image: url('/hoodie/admin/assets/images/invalid_form.png');
+        background-image: url('images/invalid_form.png');
         background-repeat: no-repeat;
         background-position: calc(100% - 10px) center;
       }
     }
     &.valid,
     &:required:valid{
-      background-image: url('/hoodie/admin/assets/images/valid_form.png');
+      background-image: url('images/valid_form.png');
       background-repeat: no-repeat;
       background-position: calc(100% - 10px) center;
     }
     &:required:invalid,
     &:focus:invalid,
     &.invalid{
-      background-image: url('/hoodie/admin/assets/images/invalid_form.png');
+      background-image: url('images/invalid_form.png');
       background-repeat: no-repeat;
       background-position: calc(100% - 10px) center;
     }
