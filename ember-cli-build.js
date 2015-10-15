@@ -81,14 +81,19 @@ module.exports = function(defaults) {
   // Everything that needs to go into UIKit.js is
   // concatenated and minified here, everytime $ember build is run
   // TODO: should maybe include bootstrap js files
-  // TODO: should maybe include prism.js
-  var UIKitJS = concat('.', {
+  // TODO: should probably include prism.js
+  //
+  // IMPORTANT: concat produces a weird error when passing in the root folder as the
+  // first argument ('.'), and then having inputfiles from two different immediate
+  // subfolders of that root, i.e. `bower_components` and `vendor`.
+  // Hence this weird '../vendor' construction
+  var UIKitJS = concat('bower_components', {
     inputFiles: [
-      'bower_components/jquery/dist/jquery.js',
-      'bower_components/jquery-icheck/icheck.js',
-      'bower_components/dropzone/downloads/dropzone.js',
-      'bower_components/select2/select2.js',
-      'vendor/uikit-init.js'
+      'jquery/dist/jquery.js',
+      'jquery-icheck/icheck.js',
+      'dropzone/downloads/dropzone.js',
+      'select2/select2.js',
+      '../vendor/uikit-init.js'
     ],
     outputFile: '/assets/uikit.js'
   });

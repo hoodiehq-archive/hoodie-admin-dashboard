@@ -1,4 +1,0 @@
-{
-  "ignore_dirs": ["tmp", "node_modules"],
-  "fsevents_latency": 0.02
-}
