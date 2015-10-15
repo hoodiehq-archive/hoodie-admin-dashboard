@@ -81,7 +81,6 @@ module.exports = function(defaults) {
   // Everything that needs to go into UIKit.js is
   // concatenated and minified here, everytime $ember build is run
   // TODO: should maybe include bootstrap js files
-  // TODO: should probably include prism.js
   //
   // IMPORTANT: concat produces a weird error when passing in the root folder as the
   // first argument ('.'), and then having inputfiles from two different immediate
