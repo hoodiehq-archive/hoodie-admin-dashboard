@@ -142,18 +142,20 @@ body, html{
   }
 }
 
-
+.login-container{
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+}
 
 .login {
-  width: 50%;
+  width: 90%;
   max-width: 30em;
   background-color: #fff;
   color:#444;
-  position: absolute;
-  top: 22%;
-  left: 25%;
-  right: 25%;
-  padding: 19px 19px 15px 20px;
+  align-self: center;
+  margin-bottom: 15vh;
+  padding: 1rem;
   font-family: "helvetica neue", helvetica, sans-serif !important;
   font-weight: 300;
   letter-spacing: 0.1;
@@ -164,14 +166,16 @@ body, html{
     height: auto;
     margin-bottom: 1em;
   }
+  .inputs{
+    display: flex;
+  }
 }
 
 .login .warning{
   color: #FBB040;
   font-weight: 500;
   font-size: 0.8rem;
-  text-transform: uppercase;
-  margin-top: 0.4rem;
+  margin: 0.5em 0 0 0;
 }
 
 .login label {
@@ -181,8 +185,9 @@ body, html{
 }
 
 .login input {
-  width: 72%;
+  flex: 1 0 0em;
   height: 2.75em;
+  margin-right: 10px;
   padding: 0 .5em;
   font-size: 16px;
   line-height: 1.75;
@@ -202,23 +207,19 @@ body, html{
 }
 
 .login [type="submit"] {
-  max-width: 25%;
-  display: inline-block;
-  margin-bottom: 0;
+  flex: 0 0 auto;
+  margin: 0;
   font-weight: normal;
   text-align: center;
-  vertical-align: middle;
   cursor: pointer;
   border: 1px solid transparent;
   padding: 6px 12px;
   font-size: 16px;
   line-height: 1.75;
   border-radius: 4px;
-  margin: .5em 0 .5em 1%;
   background: white;
   border: 1px solid #CCC;
   color: #555555;
-  position: relative;
   transition: all ease 0.25s;
   &:hover, &:focus{
     background: #9fcaec;
