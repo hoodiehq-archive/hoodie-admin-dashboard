@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+
   reset: function() {
     this.setProperties({
       // Username is always 'admin'
@@ -54,7 +55,11 @@ export default Ember.Controller.extend({
         self.gotoRoute(self);
       })
       .fail(function(err) {
-        self.set('errorMessage', 'Error: '+err.message);
+        if(err.status === 401){
+          self.set('errorMessage', 'Error: The password is incorrect.');
+        } else {
+          self.set('errorMessage', 'Error: '+err.message);
+        }
       });
   }
 });

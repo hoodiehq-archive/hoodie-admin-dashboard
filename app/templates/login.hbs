@@ -1,13 +1,17 @@
 {{#if loggedIn}}
   <p>You are already logged in!</p>
 {{else}}
+<div class="login-container">
   <form class="form-inline login" {{action login on="submit"}}>
     <img src="assets/images/hoodie_logo.svg" alt="" class="fitWidth">
     <label for="password">Please enter your admin password:</label>
+    <div class="inputs">
     {{input id="password" value=password type="password" placeholder="Admin password" autofocus="autofocus"}}
     {{input class="btn" type="submit" value="Log In"}}
+    </div>
     {{#if errorMessage}}
       <p class="warning">{{errorMessage}}</p>
     {{/if}}
   </form>
+</div>
 {{/if}}
