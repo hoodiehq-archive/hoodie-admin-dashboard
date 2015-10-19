@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  queryParams: ['expired'],
+  expired: null,
 
   reset: function() {
     this.setProperties({
