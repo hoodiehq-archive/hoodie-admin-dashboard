@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  queryParams: ['expired'],
-  expired: null,
+  expired: false,
+  attemptedTransition: null,
 
   reset: function() {
     this.setProperties({
@@ -30,13 +30,14 @@ export default Ember.Controller.extend({
   // or go to a default route.
   gotoRoute: function (self) {
     self.setBearerToken();
+    self.set('expired', false);
     var attemptedTransition = self.get('attemptedTransition');
     if (attemptedTransition) {
       attemptedTransition.retry();
       self.set('attemptedTransition', null);
     } else {
       // Redirect to 'plugins' by default.
-      self.transitionToRoute('plugins');
+      self.transitionToRoute('plugins.users');
     }
   },
 

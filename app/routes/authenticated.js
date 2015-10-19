@@ -1,7 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-  // Before the model is loaded, check if the admin is signed in, and redirect to login if not
+  // Before the model is loaded, check if the admin is signed in,
+  // and redirect to login if not
   beforeModel: function(transition) {
     if (!window.hoodieAdmin.account.isSignedIn()) {
       this.redirectToLogin(transition, false);
@@ -13,7 +14,8 @@ export default Ember.Route.extend({
     expired = expired || false;
     var loginController = this.controllerFor('login');
     loginController.set('attemptedTransition', transition);
-    this.transitionTo('login', {expired: expired});
+    loginController.set('expired', expired);
+    this.transitionTo('login');
   },
 
   actions: {
