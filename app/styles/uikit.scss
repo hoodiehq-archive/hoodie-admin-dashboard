@@ -283,9 +283,16 @@ form{
     font-size: 16px;
     height: 44px;
     width: 70%;
+    box-shadow: none;
     &.select2-container{
       padding: 0;
       border: none;
+    }
+    &:focus {
+      border-color: $strongLightBlue;
+      outline: 0;
+      box-shadow: none;
+      box-shadow: 0 0 0 3px rgba(102, 175, 233, 0.6);
     }
   }
 }
