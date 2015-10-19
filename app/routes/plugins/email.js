@@ -6,6 +6,13 @@ export default Ember.Route.extend({
       data.id = data._id;
       // Set model defaults in case the plugin has never run before
       data.config.fromEmail = data.config.fromEmail || '';
+      data.config.availableEmailServices = data.config.availableEmailServices || [
+        {id: 'Gmail',text: 'Google Mail'},
+        {id: 'Mailgun',text: 'Mailgun'},
+        {id: 'Mandrill',text: 'Mandrill'},
+        {id: 'Postmark',text: 'Postmark'},
+        {id: 'SendGrid',text: 'SendGrid'}
+      ];
       data.config.emailService = data.config.emailService || '';
       data.config.emailUsername = data.config.emailUsername || '';
       data.config.emailPassword = data.config.emailPassword || '';

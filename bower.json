@@ -18,12 +18,11 @@
     "bootstrap": "~3.3.5",
     "bootstrap-sass": "~3.3.5",
     "dropzone": "~3.7.1",
-    "select2": "3.4.5",
+    "select2": "3.5.2",
     "jquery-icheck": "~1.0.2",
     "prism": "~1.0.1"
   },
   "resolutions": {
-    "jquery": "~2.1.4",
-    "select2": "~4.0.0"
+    "jquery": "~2.1.4"
   }
 }
