@@ -30,9 +30,9 @@ export default Ember.Controller.extend({
   // or go to a default route.
   gotoRoute: function (self) {
     self.setBearerToken();
-    self.set('expired', false);
+    self.set('expired', null);
     var attemptedTransition = self.get('attemptedTransition');
-    if (attemptedTransition) {
+    if (attemptedTransition && attemptedTransition.targetName !== 'index') {
       attemptedTransition.retry();
       self.set('attemptedTransition', null);
     } else {
