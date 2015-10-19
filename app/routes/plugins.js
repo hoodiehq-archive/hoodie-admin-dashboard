@@ -11,8 +11,10 @@ Also fetches the app's config object at the same time and munges everything toge
 */
 
 export default AuthenticatedRoute.extend({
-
+  ignorablePlugins: ['users', 'email'],
   model: function() {
+
+    var route = this;
 
     var config = Ember.$.getJSON('/_api/app/config').then(function(data) {
       data.id = data._id;
@@ -22,10 +24,10 @@ export default AuthenticatedRoute.extend({
     var plugins = Ember.$.getJSON('/_api/_plugins').then(function(data) {
       var activePlugins = [];
       Ember.$.each(data, function (index, plugin) {
-        // We don't want the users-plugin to show up twice, so we ignore
-        // it when the server returns the plugin list, because we're
-        // doing the UI for that in this app
-        if(plugin.name !== 'users'){
+        // We don't want these plugins to show up twice, so we ignore
+        // them when the server returns the plugin list, because we're
+        // doing the UI for them in this app
+        if(route.get('ignorablePlugins').indexOf(plugin.name) === -1){
           plugin.id = plugin.name;
           activePlugins.push(plugin);
         }

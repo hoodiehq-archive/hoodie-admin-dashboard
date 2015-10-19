@@ -1,0 +1,30 @@
+<div class="internalPlugin emailPlugin">
+  <div class="container">
+    <h1>Email Settings</h1>
+    {{outlet}}
+    <form id="emailForm" {{action 'updateEmailSettings' on='submit'}}>
+      <fieldset>
+        <label for="fromEmail">From E-Mail Address</label>
+        {{input type="text" name="fromEmail" class="form-control" placeholder="From address" value=model.config.fromEmail}}
+        <p class="help-block">For password reset emails etc.</p>
+        <label>Email Service</label>
+        <select name="emailService">
+          <option value="Gmail">Google Mail</option>
+          <option value="Mailgun">Mailgun</option>
+          <option value="Mandrill">Mandrill</option>
+          <option value="Postmark">Postmark</option>
+          <option value="SendGrid">SendGrid</option>
+        </select>
+        <label for="username">Username</label>
+        {{input type="text" name="emailUsername" type="email" class="form-control" id="username" placeholder="Username" value=model.config.emailUsername}}
+        <p class="help-block">Account name for the email service</p>
+        <label for="password">Password</label>
+        {{input type="text" name="emailPassword" class="form-control" id="password" placeholder="Password" value=model.config.emailPassword}}
+        <p class="help-block">Email service password</p>
+        <button class="submit btn" type="submit">Save email config</button>
+        <span class="submitMessage">{{{submitMessage}}}</span>
+      </fieldset>
+    </form>
+  </div>
+</div>
+

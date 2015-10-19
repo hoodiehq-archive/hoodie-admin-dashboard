@@ -4,12 +4,13 @@
     <span class="subline">{{model.config.name}}</span>
   </header>
   <ul class="plugin-list">
+    <li>{{#link-to 'plugins.users'}}Users{{/link-to}}</li>
+    <li>{{#link-to 'plugins.email'}}Email{{/link-to}}</li>
     {{#each model.plugins.plugins as |plugin|}}
     <li>
       {{#link-to 'plugins.plugin' plugin}}{{plugin.title}}{{/link-to}}
     </li>
     {{/each}}
-    <li>{{#link-to 'plugins.users'}}Users{{/link-to}}</li>
   </ul>
   <ul class="helpers">
     <li>{{#link-to 'logout'}}logout{{/link-to}}</li>
