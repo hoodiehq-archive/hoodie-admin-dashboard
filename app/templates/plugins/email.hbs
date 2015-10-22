@@ -5,21 +5,32 @@
     <form id="emailForm" {{action 'updateEmailSettings' on='submit'}}>
       <fieldset>
         <label for="fromEmail">From E-Mail Address</label>
-        {{input type="text" name="fromEmail" class="form-control" placeholder="From address" value=model.config.fromEmail}}
+
+        {{#validation-message errors=errors.model.fromEmail pristine=pristine.model.fromEmail}}
+          {{input type="text" name="fromEmail" class="form-control" placeholder="From address" value=model.fromEmail}}
+        {{/validation-message}}
         <p class="help-block">For password reset emails etc.</p>
+
         <label>Email Service</label>
         {{select-2
-            content=model.config.availableEmailServices
-            value=model.config.emailService
+            content=model.availableEmailServices
+            value=model.emailService
             placeholder="Email Service"
         }}
         <label for="username">Username</label>
-        {{input type="text" name="emailUsername" type="email" class="form-control" id="username" placeholder="Username" value=model.config.emailUsername}}
+        {{#validation-message errors=errors.model.emailUsername pristine=pristine.model.emailUsername}}
+          {{input type="text" name="emailUsername" type="email" class="form-control" id="username" placeholder="Username" value=model.emailUsername}}
+        {{/validation-message}}
+
         <p class="help-block">Account name for the email service</p>
+
         <label for="password">Password</label>
-        {{input type="text" name="emailPassword" class="form-control" id="password" placeholder="Password" value=model.config.emailPassword}}
+        {{#validation-message errors=errors.model.emailPassword pristine=pristine.model.emailPassword}}
+          {{input type="text" name="emailPassword" class="form-control" id="password" placeholder="Password" value=model.emailPassword}}
+        {{/validation-message}}
         <p class="help-block">Email service password</p>
-        <button class="submit btn" type="submit">Save email config</button>
+
+        <button class="submit btn" type="submit" disabled={{disableAdd}}>Save email config</button>
         <span class="submitMessage">{{{submitMessage}}}</span>
       </fieldset>
     </form>

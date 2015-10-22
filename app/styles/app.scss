@@ -309,6 +309,10 @@ table{
   }
 }
 
+div.ember-view + .help-block {
+  margin-top: 0em;
+}
+
 // move to UIKit:
 
 .modal-footer .btn {
@@ -320,6 +324,9 @@ table{
 }
 
 .validation {
+  .help-block{
+    margin-left: 0;
+  }
   .errors{
     color: #F8282B;
     margin-left: 0;

@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
+  // WHYYYYY do I need this?
+  controllerName: 'email',
   model: function () {
     return Ember.$.getJSON('/_api/app/config').then(function(data) {
       data.id = data._id;
@@ -16,7 +18,7 @@ export default Ember.Route.extend({
       data.config.emailService = data.config.emailService || '';
       data.config.emailUsername = data.config.emailUsername || '';
       data.config.emailPassword = data.config.emailPassword || '';
-      return data;
+      return data.config;
     });
   },
   actions:{
@@ -26,7 +28,7 @@ export default Ember.Route.extend({
       // Fetch the current config state
       window.hoodieAdmin.request('GET', '/app/config')
       .done(function(config){
-        var model = route.controller.get('model');
+        var model = {config: route.controller.get('model')};
         // Merge the current config and the model together
         Ember.merge(config, model);
         // Save the new config
